@@ -9,22 +9,6 @@
 #import <Foundation/Foundation.h>
 
 /**
- *  Typedef for SBBNetworkManager methods' success block.
- *
- *  @param task           The NSURLSessionDataTask just successfully completed.
- *  @param responseObject The JSON object from the response.
- */
-typedef void (^SBBNetworkManagerSuccessBlock)(NSURLSessionDataTask *task, id responseObject);
-
-/**
- *  Typedef for SBBNetworkManager methods' failure block.
- *
- *  @param task  The NSURLSessionDataTask that failed to complete.
- *  @param error The error that caused the failure.
- */
-typedef void (^SBBNetworkManagerFailureBlock)(NSURLSessionDataTask *task, NSError *error);
-
-/**
  *  Typedef for SBBNetworkManager methods' completion block.
  *
  *  @param task           The NSURLSessionDataTask.
@@ -46,15 +30,28 @@ typedef void (^SBBNetworkManagerCompletionBlock)(NSURLSessionDataTask *task, id 
 #pragma mark - Basic HTTP Methods
 
 - (NSURLSessionDataTask* )get:(NSString *)URLString
+                      headers:(NSDictionary *)headers
                    parameters:(id)parameters //NSDictionary or Array of NSDictionary
-//                      success:(SBBNetworkManagerSuccessBlock)success
-//                      failure:(SBBNetworkManagerFailureBlock)failure;
                    completion:(SBBNetworkManagerCompletionBlock)completion;
 
 - (NSURLSessionDataTask* )post:(NSString *)URLString
-                   parameters:(id)parameters
-//                      success:(SBBNetworkManagerSuccessBlock)success
-//                      failure:(SBBNetworkManagerFailureBlock)failure;
+                       headers:(NSDictionary *)headers
+                    parameters:(id)parameters
                     completion:(SBBNetworkManagerCompletionBlock)completion;
+
+- (NSURLSessionDataTask* )put:(NSString *)URLString
+                      headers:(NSDictionary *)headers
+                   parameters:(id)parameters
+                   completion:(SBBNetworkManagerCompletionBlock)completion;
+
+#ifdef __cplusplus
+// delete is a C++ keyword
+- (NSURLSessionDataTask *)delete_:(NSString *)URLString
+#else
+- (NSURLSessionDataTask *)delete:(NSString *)URLString
+#endif
+                         headers:(NSDictionary *)headers
+                      parameters:(id)parameters
+                      completion:(SBBNetworkManagerCompletionBlock)completion;
 
 @end

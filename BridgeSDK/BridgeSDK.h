@@ -32,7 +32,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #else
 #define kDefaultEnvironment SBBEnvironmentProd
 #endif
-SBBEnvironment gDefaultEnvironment = kDefaultEnvironment;
+static SBBEnvironment gDefaultEnvironment = kDefaultEnvironment;
   
 @interface BridgeSDK : NSObject
 
@@ -47,6 +47,12 @@ SBBEnvironment gDefaultEnvironment = kDefaultEnvironment;
  */
 + (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment;
 
+/*!
+ * Set up the Bridge SDK for the given app prefix and the appropriate server environment based on whether this is
+ * a debug or release build.
+ *
+ *  @param appPrefix   A string prefix for your app's Bridge server URLs, assigned to you by Sage Bionetworks.
+ */
 + (void)setupWithAppPrefix:(NSString *)appPrefix;
 
 @end

@@ -6,15 +6,17 @@
 //  Copyright (c) 2014 Y Media Labs. All rights reserved.
 //
 
+#import "BridgeSDK.h"
 #import "SBBNetworkManager.h"
 #import "SBBNetworkErrors.h"
 #import "NSError+SBBAdditions.h"
 #import "Reachability.h"
+#import "UIDevice+Hardware.h"
 
 const NSInteger kMaxRetryCount = 5;
 
 static SBBNetworkManager * sharedInstance;
-NSString * kBackgroundSessionIdentifier = @"com.ymedialabs.backgroundsession";
+NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
 /*********************************************************************************/
 #pragma mark - APC Retry Object - Keeps track of retry count
@@ -96,14 +98,30 @@ NSString * kBackgroundSessionIdentifier = @"com.ymedialabs.backgroundsession";
 /*********************************************************************************/
 #pragma mark - basic HTTP methods
 /*********************************************************************************/
--(NSURLSessionDataTask *)get:(NSString *)URLString parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionDataTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [self doDataTask:@"GET" retryObject:nil URLString:URLString parameters:parameters completion:completion];
+  return [self doDataTask:@"GET" retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
 }
 
-- (NSURLSessionDataTask *)post:(NSString *)URLString parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionDataTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [self doDataTask:@"POST" retryObject:nil URLString:URLString parameters:parameters completion:completion];
+  return [self doDataTask:@"PUT" retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
+}
+
+- (NSURLSessionDataTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+{
+  return [self doDataTask:@"POST" retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
+}
+
+- (NSURLSessionDataTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+{
+  return [self doDataTask:@"DELETE" retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
+}
+
+// in case this class is used from C++, because delete is a keyword in that language (see header)
+- (NSURLSessionDataTask *)delete_:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+{
+  return [self delete:URLString headers:headers parameters:parameters completion:completion];
 }
 
 
@@ -113,7 +131,8 @@ NSString * kBackgroundSessionIdentifier = @"com.ymedialabs.backgroundsession";
 - (NSURLSessionDataTask *) doDataTask: (NSString*) method
                           retryObject: (APCNetworkRetryObject*) retryObject
                             URLString: (NSString*)URLString
-                           parameters:(id)parameters
+                              headers: (NSDictionary *)headers
+                           parameters:(NSDictionary *)parameters
                            completion:(SBBNetworkManagerCompletionBlock)completion
 {
     APCNetworkRetryObject * localRetryObject;
@@ -124,7 +143,7 @@ NSString * kBackgroundSessionIdentifier = @"com.ymedialabs.backgroundsession";
         localRetryObject.completionBlock = completion;
         localRetryObject.retryBlock = ^ {
             __strong APCNetworkRetryObject * strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
-            [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString parameters:parameters completion:completion];
+          [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:headers parameters:parameters completion:completion];
         };
     }
     else
@@ -132,7 +151,7 @@ NSString * kBackgroundSessionIdentifier = @"com.ymedialabs.backgroundsession";
         localRetryObject = retryObject;
     }
     
-    NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString parameters:parameters error:nil];
+  NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
     NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSError * httpError = [NSError generateSBBErrorForHTTPResponse:(NSHTTPURLResponse*)response];
         NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
@@ -161,27 +180,83 @@ NSString * kBackgroundSessionIdentifier = @"com.ymedialabs.backgroundsession";
     
 }
 
+- (NSString *)queryStringFromParameters:(NSDictionary *)parameters
+{
+  if (![parameters isKindOfClass:[NSDictionary class]]) {
+    return nil;
+  }
+  
+  NSMutableArray *queryParams = [NSMutableArray arrayWithCapacity:parameters.count];
+  for (NSString *param in parameters) {
+    NSString *qParam = [NSString stringWithFormat:@"%@=%@",
+                        [param stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+                        [parameters[param] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
+    [queryParams addObject:qParam];
+  }
+  
+  return [queryParams componentsJoinedByString:@"&"];
+}
+
+- (NSString *)userAgentHeader
+{
+  NSDictionary *localizedInfoDictionary = [[NSBundle mainBundle] localizedInfoDictionary];
+  if (!localizedInfoDictionary) {
+    localizedInfoDictionary = [[NSBundle mainBundle] infoDictionary];
+  }
+  NSString *appName = [localizedInfoDictionary objectForKey:(NSString *)kCFBundleNameKey];
+  NSString *appVersion = [localizedInfoDictionary objectForKey:(NSString *)kCFBundleVersionKey];
+  NSString *deviceModel = [[UIDevice currentDevice] platformString];
+  NSString *osName = [[UIDevice currentDevice] systemName];
+  NSString *osVersion = [[UIDevice currentDevice] systemVersion];
+  
+  return [NSString stringWithFormat:@"%@/%@ (%@; %@ %@) BridgeSDK/%0.0f", appName, appVersion, deviceModel, osName, osVersion, BridgeSDKVersionNumber];
+}
+
+- (NSString *)acceptLanguageHeader
+{
+  return [NSString stringWithFormat:@"%@", [[NSLocale preferredLanguages] componentsJoinedByString:@", "]];
+}
+
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
                                  URLString:(NSString *)URLString
+                                   headers:(NSDictionary *)headers
                                 parameters:(id)parameters
                                      error:(NSError *__autoreleasing *)error
 {
+  BOOL isGET = [method isEqualToString:@"GET"];
+  if (parameters && isGET) {
+    NSString *queryString = [self queryStringFromParameters:parameters];
+    if (queryString.length) {
+      if ([URLString containsString:@"?"]) {
+        URLString = [NSString stringWithFormat:@"%@&%@", URLString, queryString];
+      } else {
+        URLString = [NSString stringWithFormat:@"%@?%@", URLString, queryString];
+      }
+    }
+  }
+  
+  NSURL *url = [self URLForRelativeorAbsoluteURLString:URLString];
+  NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+  mutableRequest.HTTPMethod = method;
+  [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
+  [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
+  
+  if (headers) {
+    for (NSString *header in headers.allKeys) {
+      [mutableRequest addValue:headers[header] forHTTPHeaderField:header];
+    }
+  }
     
-    NSURL *url = [self URLForRelativeorAbsoluteURLString:URLString];
-    NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
-    mutableRequest.HTTPMethod = method;
-    
-    //TODO: Lower Priority. Switch parameters to part of query if its GET.
-    if (parameters) {
-        if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
-            NSString *charset = (__bridge NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
-            [mutableRequest setValue:[NSString stringWithFormat:@"application/json; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
-        }
-        
-        [mutableRequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:0 error:error]];
+  if (parameters && !isGET) {
+    if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
+      NSString *charset = (__bridge NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+      [mutableRequest setValue:[NSString stringWithFormat:@"application/json; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
     }
     
-    return mutableRequest;
+    [mutableRequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:0 error:error]];
+  }
+  
+  return mutableRequest;
 }
 
 - (NSURL *) URLForRelativeorAbsoluteURLString: (NSString*) URLString

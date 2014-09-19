@@ -241,21 +241,21 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [_networkManager post:@"api/v1/auth/signUp" parameters:@{@"email":email, @"username":username, @"password":password} completion:completion];
+  return [_networkManager post:@"api/v1/auth/signUp" headers:nil parameters:@{@"email":email, @"username":username, @"password":password} completion:completion];
 }
 
 - (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [_networkManager post:@"api/v1/auth/signIn" parameters:@{@"username":username, @"password":password} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [_networkManager post:@"api/v1/auth/signIn" headers:nil parameters:@{@"username":username, @"password":password} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     // Save session token in the keychain
     // ??? Save credentials in the keychain?
     _sessionToken = responseObject[@"sessionToken"];
-    if (_sessionToken) {
+    if (_sessionToken.length) {
       dispatchSyncToKeychainQueue(^{
         UICKeyChainStore *store = [self.class sdkKeychainStore];
-        if (_sessionToken.length) {
-          [store setString:_sessionToken forKey:self.sessionTokenKey];
-        }
+        [store setString:_sessionToken forKey:self.sessionTokenKey];
+        [store setString:username forKey:self.usernameKey];
+        [store setString:password forKey:self.passwordKey];
         
         [store synchronize];
       });
@@ -269,7 +269,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signOutWithCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [_networkManager get:@"api/v1/auth/signOut" parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+  [self addAuthHeaderToHeaders:headers];
+  return [_networkManager get:@"api/v1/auth/signOut" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     // Remove the session token (and credentials?) from the keychain
     // ??? Do we want to not do this in case of error?
     dispatchSyncToKeychainQueue(^{
@@ -316,6 +318,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (BOOL)isAuthenticated
 {
   return (self.sessionToken.length > 0);
+}
+
+- (void)addAuthHeaderToHeaders:(NSMutableDictionary *)headers
+{
+  if (self.isAuthenticated) {
+    [headers setObject:self.sessionToken forKey:@"Bridge-Session"];
+  }
 }
 
 #pragma mark Internal keychain-related methods

@@ -17,6 +17,9 @@
 		8026BD2419C892E40077F3EB /* SBBComponentManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026BD2119C892E40077F3EB /* SBBComponentManager.m */; };
 		8026BD2619C8948E0077F3EB /* SBBComponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026BD2519C8948E0077F3EB /* SBBComponent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8026BD2819C8AE200077F3EB /* SBBAuthManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026BD2719C8AE200077F3EB /* SBBAuthManagerInternal.h */; };
+		802A7F4819CCEB10003774C0 /* UIDevice+Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 802A7F4619CCEB10003774C0 /* UIDevice+Hardware.h */; };
+		802A7F4919CCEB10003774C0 /* UIDevice+Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 802A7F4719CCEB10003774C0 /* UIDevice+Hardware.m */; };
+		802A7F4A19CCEB10003774C0 /* UIDevice+Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 802A7F4719CCEB10003774C0 /* UIDevice+Hardware.m */; };
 		80855F5619BE258C006601C7 /* BridgeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F5519BE258C006601C7 /* BridgeSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80855F6019BE258C006601C7 /* BridgeSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F5F19BE258C006601C7 /* BridgeSDKTests.m */; };
 		80855F7119BE27ED006601C7 /* SBBNetworkErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F6A19BE27ED006601C7 /* SBBNetworkErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -42,6 +45,8 @@
 		8026BD2119C892E40077F3EB /* SBBComponentManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBComponentManager.m; sourceTree = "<group>"; };
 		8026BD2519C8948E0077F3EB /* SBBComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBComponent.h; sourceTree = "<group>"; };
 		8026BD2719C8AE200077F3EB /* SBBAuthManagerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBAuthManagerInternal.h; sourceTree = "<group>"; };
+		802A7F4619CCEB10003774C0 /* UIDevice+Hardware.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+Hardware.h"; sourceTree = "<group>"; };
+		802A7F4719CCEB10003774C0 /* UIDevice+Hardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Hardware.m"; sourceTree = "<group>"; };
 		80855F5019BE258C006601C7 /* BridgeSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BridgeSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		80855F5419BE258C006601C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80855F5519BE258C006601C7 /* BridgeSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeSDK.h; sourceTree = "<group>"; };
@@ -152,6 +157,8 @@
 				80855F6C19BE27ED006601C7 /* SBBNetworkManager.m */,
 				80855F6F19BE27ED006601C7 /* NSError+SBBAdditions.h */,
 				80855F7019BE27ED006601C7 /* NSError+SBBAdditions.m */,
+				802A7F4619CCEB10003774C0 /* UIDevice+Hardware.h */,
+				802A7F4719CCEB10003774C0 /* UIDevice+Hardware.m */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -186,6 +193,7 @@
 				80855F7D19BE41C9006601C7 /* Reachability.h in Headers */,
 				80855F7219BE27ED006601C7 /* SBBNetworkManager.h in Headers */,
 				8026BD2219C892E40077F3EB /* SBBComponentManager.h in Headers */,
+				802A7F4819CCEB10003774C0 /* UIDevice+Hardware.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +298,7 @@
 				80855F7919BE27ED006601C7 /* NSError+SBBAdditions.m in Sources */,
 				80855F7319BE27ED006601C7 /* SBBNetworkManager.m in Sources */,
 				80855F7E19BE41C9006601C7 /* Reachability.m in Sources */,
+				802A7F4919CCEB10003774C0 /* UIDevice+Hardware.m in Sources */,
 				8026BD2319C892E40077F3EB /* SBBComponentManager.m in Sources */,
 				8026BD1219C7532D0077F3EB /* UICKeyChainStore.m in Sources */,
 			);
@@ -299,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				802A7F4A19CCEB10003774C0 /* UIDevice+Hardware.m in Sources */,
 				80855F6019BE258C006601C7 /* BridgeSDKTests.m in Sources */,
 				80855F7419BE27ED006601C7 /* SBBNetworkManager.m in Sources */,
 				80855F7A19BE27ED006601C7 /* NSError+SBBAdditions.m in Sources */,

@@ -16,7 +16,7 @@
   [self setupWithAppPrefix:appPrefix environment:gDefaultEnvironment];
 }
 
-+ (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment;
++ (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment
 {
   gSBBAppURLPrefix = appPrefix;
   gSBBDefaultEnvironment = environment;
