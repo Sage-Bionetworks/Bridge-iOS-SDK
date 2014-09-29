@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		F52619FB19D9F73400B48C90 /* FrameworkBuilder */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F52619FE19D9F73400B48C90 /* Build configuration list for PBXAggregateTarget "FrameworkBuilder" */;
+			buildPhases = (
+				F52619FF19D9F73B00B48C90 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = FrameworkBuilder;
+			productName = FrameworkBuilder;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		8026BD1119C7532D0077F3EB /* UICKeyChainStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026BD0F19C7532D0077F3EB /* UICKeyChainStore.h */; };
 		8026BD1219C7532D0077F3EB /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026BD1019C7532D0077F3EB /* UICKeyChainStore.m */; };
@@ -251,6 +265,9 @@
 					80855F5A19BE258C006601C7 = {
 						CreatedOnToolsVersion = 6.0;
 					};
+					F52619FB19D9F73400B48C90 = {
+						CreatedOnToolsVersion = 6.0.1;
+					};
 				};
 			};
 			buildConfigurationList = 80855F4A19BE258B006601C7 /* Build configuration list for PBXProject "BridgeSDK" */;
@@ -267,6 +284,7 @@
 			targets = (
 				80855F4F19BE258C006601C7 /* BridgeSDK */,
 				80855F5A19BE258C006601C7 /* BridgeSDKTests */,
+				F52619FB19D9F73400B48C90 /* FrameworkBuilder */,
 			);
 		};
 /* End PBXProject section */
@@ -287,6 +305,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		F52619FF19D9F73B00B48C90 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.0 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.0 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DIR=\"${PROJECT_DIR}/Output/\"\necho \"${SBB_OUTPUT_DIR}\"\nmkdir -p \"${SBB_OUTPUT_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DIR}\"\nlipo -create \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" -output \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		80855F4B19BE258C006601C7 /* Sources */ = {
@@ -468,6 +502,20 @@
 			};
 			name = Release;
 		};
+		F52619FC19D9F73400B48C90 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		F52619FD19D9F73400B48C90 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -497,6 +545,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		F52619FE19D9F73400B48C90 /* Build configuration list for PBXAggregateTarget "FrameworkBuilder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F52619FC19D9F73400B48C90 /* Debug */,
+				F52619FD19D9F73400B48C90 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
