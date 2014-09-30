@@ -29,25 +29,25 @@
     return retError;
 }
 
-+ (NSError*) generateSBBErrorForHTTPResponse: (NSHTTPURLResponse*) response
++ (NSError*) generateSBBErrorForStatusCode:(NSInteger)statusCode
 {
     //TODO: Get appropriate error strings
     NSError * retError;
-    if (response.statusCode == 401) {
+    if (statusCode == 401) {
         retError = [self SBBNotAuthenticatedError];
     }
-    else if (response.statusCode == 412)
+    else if (statusCode == 412)
     {
         retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerPreconditionNotMet userInfo:@{NSLocalizedDescriptionKey: @"Client not consented"}];
     }
-    else if (NSLocationInRange(response.statusCode, NSMakeRange(400, 99))) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:response.statusCode userInfo:@{NSLocalizedDescriptionKey: @"Client Error. Please contact SOMEBODY"}];
+    else if (NSLocationInRange(statusCode, NSMakeRange(400, 99))) {
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: @"Client Error. Please contact SOMEBODY"}];
     }
-    else if (response.statusCode == 503) {
+    else if (statusCode == 503) {
         retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerUnderMaintenance userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Under Maintenance."}];
     }
-    else if (NSLocationInRange(response.statusCode, NSMakeRange(500, 99))) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:response.statusCode userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Error. Please contact SOMEBODY"}];
+    else if (NSLocationInRange(statusCode, NSMakeRange(500, 99))) {
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Error. Please contact SOMEBODY"}];
     }
     
     return retError;

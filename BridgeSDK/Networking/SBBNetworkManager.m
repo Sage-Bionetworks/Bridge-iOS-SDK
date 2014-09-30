@@ -13,6 +13,8 @@
 #import "Reachability.h"
 #import "UIDevice+Hardware.h"
 
+SBBEnvironment gSBBDefaultEnvironment;
+
 const NSInteger kMaxRetryCount = 5;
 
 static SBBNetworkManager * sharedInstance;
@@ -45,9 +47,58 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 @property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
 @property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
 
++ (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
+
 @end
 
 @implementation SBBNetworkManager
+@synthesize environment = _environment;
+
++ (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
+{
+  static NSString *envFormatStrings[] = {
+    @"%@",
+    @"%@-staging",
+    @"%@-develop",
+    @"%@-custom"
+  };
+  NSString *baseURL = nil;
+  
+  if ((NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
+    NSString *firstComponent = [NSString stringWithFormat:envFormatStrings[environment], prefix];
+    baseURL = [NSString stringWithFormat:@"https://%@.%@", firstComponent, path];
+  }
+  
+  return baseURL;
+}
+
++ (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath
+{
+  NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:prefix baseURLPath:baseURLPath];
+  SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL];
+  networkManager.environment = environment;
+  return networkManager;
+}
+
++ (instancetype)defaultComponent
+{
+  if (!gSBBAppURLPrefix) {
+    return nil;
+  }
+  
+  static SBBNetworkManager *shared;
+  
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    SBBEnvironment environment = gSBBDefaultEnvironment;
+    
+    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:gSBBAppURLPrefix baseURLPath:@"sagebridge.org"];
+    shared = [[self alloc] initWithBaseURL:baseURL];
+    shared.environment = environment;
+  });
+  
+  return shared;
+}
 
 /*********************************************************************************/
 #pragma mark - Initializers & Accessors
@@ -59,11 +110,11 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
     if (self) {
         self.baseURL = baseURL;
         self.internetReachability = [Reachability reachabilityForInternetConnection];
-        NSURL * url = [NSURL URLWithString:baseURL];
+        NSURL *url = [NSURL URLWithString:baseURL];
         self.serverReachability = [Reachability reachabilityWithHostName:[url host]]; //Check if only hostname is required
         [self.serverReachability startNotifier]; //Turning on ONLY server reachability notifiers
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-        
+      self.environment = SBBEnvironmentCustom;
     }
     return self;
 }
@@ -153,7 +204,7 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
     
   NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
     NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSError * httpError = [NSError generateSBBErrorForHTTPResponse:(NSHTTPURLResponse*)response];
+        NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode];
         NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if (error)
         {

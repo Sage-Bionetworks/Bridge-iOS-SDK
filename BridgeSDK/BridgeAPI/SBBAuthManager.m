@@ -10,9 +10,9 @@
 #import "SBBAuthManagerInternal.h"
 #import "UICKeyChainStore.h"
 #import "NSError+SBBAdditions.h"
+#import "SBBComponentManager.h"
 
 NSString *gSBBAppURLPrefix = nil;
-SBBEnvironment gSBBDefaultEnvironment;
 
 NSString *kBridgeKeychainService = @"SageBridge";
 NSString *kBridgeAuthManagerFirstRunKey = @"SBBAuthManagerFirstRunCompleted";
@@ -79,38 +79,17 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 @interface SBBAuthManager()
 
-@property (nonatomic, strong) SBBNetworkManager *networkManager;
+@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
 @property (nonatomic, strong) NSString *sessionToken;
-@property (nonatomic) SBBEnvironment environment;
-
-+ (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
 
 + (void)resetAuthKeychain;
 
 - (instancetype)initWithBaseURL:(NSString *)baseURL;
-- (instancetype)initWithNetworkManager:(SBBNetworkManager *)networkManager;
+- (instancetype)initWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager;
 
 @end
 
 @implementation SBBAuthManager
-
-+ (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
-{
-  static NSString *envFormatStrings[] = {
-    @"%@",
-    @"%@-staging",
-    @"%@-develop",
-    @"%@-custom"
-  };
-  NSString *baseURL = nil;
-  
-  if ((NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
-    NSString *firstComponent = [NSString stringWithFormat:envFormatStrings[environment], prefix];
-    baseURL = [NSString stringWithFormat:@"https://%@.%@", firstComponent, path];
-  }
-  
-  return baseURL;
-}
 
 + (instancetype)defaultComponent
 {
@@ -122,11 +101,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
   
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    SBBEnvironment environment = gSBBDefaultEnvironment;
-    
-    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:gSBBAppURLPrefix baseURLPath:@"sagebridge.org"];
-    shared = [[self alloc] initWithBaseURL:baseURL];
-    shared.environment = environment;
+    id<SBBNetworkManagerProtocol> networkManager = SBBComponent(SBBNetworkManager);
+    shared = [[self alloc] initWithNetworkManager:networkManager];
+    [shared setupForEnvironment];
   });
   
   return shared;
@@ -134,23 +111,24 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 + (instancetype)authManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath
 {
-  NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:prefix baseURLPath:baseURLPath];
-  SBBAuthManager *authManager = [[self alloc] initWithBaseURL:baseURL];
-  [authManager setupForEnvironment:environment];
+  SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment appURLPrefix:gSBBAppURLPrefix baseURLPath:@"sagebridge.org"];
+  SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
+  [authManager setupForEnvironment];
   return authManager;
 }
 
-+ (instancetype)authManagerWithNetworkManager:(SBBNetworkManager *)networkManager
++ (instancetype)authManagerWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager
 {
   SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-  [authManager setupForEnvironment:SBBEnvironmentCustom];
+  [authManager setupForEnvironment];
   return authManager;
 }
 
 + (instancetype)authManagerWithBaseURL:(NSString *)baseURL
 {
-  SBBAuthManager *authManager = [[self alloc] initWithBaseURL:baseURL];
-  [authManager setupForEnvironment:SBBEnvironmentCustom];
+  id<SBBNetworkManagerProtocol> networkManager = [[SBBNetworkManager alloc] initWithBaseURL:baseURL];
+  SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
+  [authManager setupForEnvironment];
   return authManager;
 }
 
@@ -203,9 +181,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
   return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:self.sdkKeychainAccessGroup];
 }
 
-- (void)setupForEnvironment:(SBBEnvironment)environment
+- (void)setupForEnvironment
 {
-  self.environment = environment;
   dispatchSyncToAuthQueue(^{
     self.sessionToken = [self sessionTokenFromKeychain];
   });
@@ -215,7 +192,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
   if (self = [super init]) {
     _networkManager = networkManager;
-    _environment = SBBEnvironmentCustom;
     
     //Clear keychain on first run in case of reinstallation
     BOOL firstRunDone = [[NSUserDefaults standardUserDefaults] boolForKey:kBridgeAuthManagerFirstRunKey];
@@ -277,6 +253,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     dispatchSyncToKeychainQueue(^{
       UICKeyChainStore *store = [self.class sdkKeychainStore];
       [store removeItemForKey:self.sessionTokenKey];
+      [store removeItemForKey:self.usernameKey];
+      [store removeItemForKey:self.passwordKey];
       [store synchronize];
     });
     // clear the in-memory copy of the session token, too
@@ -331,7 +309,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)sessionTokenKey
 {
-  return [NSString stringWithFormat:envSessionTokenKeyFormat[self.environment], gSBBAppURLPrefix];
+  return [NSString stringWithFormat:envSessionTokenKeyFormat[_networkManager.environment], gSBBAppURLPrefix];
 }
 
 - (NSString *)sessionTokenFromKeychain
@@ -350,7 +328,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)usernameKey
 {
-  return [NSString stringWithFormat:envUsernameKeyFormat[self.environment], gSBBAppURLPrefix];
+  return [NSString stringWithFormat:envUsernameKeyFormat[_networkManager.environment], gSBBAppURLPrefix];
 }
 
 - (NSString *)usernameFromKeychain
@@ -369,7 +347,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)passwordKey
 {
-  return [NSString stringWithFormat:envPasswordKeyFormat[self.environment], gSBBAppURLPrefix];
+  return [NSString stringWithFormat:envPasswordKeyFormat[_networkManager.environment], gSBBAppURLPrefix];
 }
 
 - (NSString *)passwordFromKeychain
