@@ -44,6 +44,8 @@
 
 @implementation SBBComponentManager
 
+static NSMutableDictionary *gComponents = nil;
+
 dispatch_queue_t CMQueue() {
   static dispatch_queue_t q;
   static dispatch_once_t onceToken;
@@ -58,21 +60,25 @@ void dispatchSyncToCMQueue(void(^dispatchBlock)()) {
   dispatch_sync(CMQueue(), dispatchBlock);
 }
 
++ (NSMutableDictionary *)freshComponentsRegistry
+{
+  NSMutableDictionary *components = [NSMutableDictionary dictionary];
+  // register any iOS singleton classes used by the SDK as components.
+  // note this assumes this method is only ever called from within CMQueue.
+  
+  // e.g.:
+  // [self registerComponentThisQueue:[UIDevice currentDevice] forClass:[UIDevice class] inComponents:components];
+  return components;
+}
+
 + (NSMutableDictionary *)components
 {
-  static NSMutableDictionary *components;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    components = [NSMutableDictionary dictionary];
-    // register any iOS singleton classes used by the SDK as components.
-    // note this assumes this method is only ever called from within CMQueue.
-    
-    // e.g.:
-    // [self registerComponentThisQueue:[UIDevice currentDevice] forClass:[UIDevice class] inComponents:components];
-
-  });
+  // do not call except from within CMQueue
+  if (!gComponents) {
+    gComponents = [self freshComponentsRegistry];
+  }
   
-  return components;
+  return gComponents;
 }
 
 + (id)registerComponentThisQueue:(id)component forClass:(Class)componentClass inComponents:(NSMutableDictionary *)components
@@ -131,6 +137,13 @@ void dispatchSyncToCMQueue(void(^dispatchBlock)()) {
   }
   
   return component;
+}
+
++ (void)reset
+{
+  dispatchSyncToCMQueue(^{
+    gComponents = nil;
+  });
 }
 
 @end

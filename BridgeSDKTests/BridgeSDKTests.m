@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 @import BridgeSDK;
+#import "SBBAuthManagerInternal.h"
 #import "MockNetworkManager.h"
 #import "SBBTestBridgeObject.h"
+#import "SBBTestAuthManagerDelegate.h"
 
 @interface BridgeSDKTests : XCTestCase
 
@@ -28,18 +30,22 @@
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     _mockNetworkManager = [[MockNetworkManager alloc] init];
-    [SBBComponentManager registerComponent:_mockNetworkManager forClass:[SBBNetworkManager class]];
   });
+  
+  [SBBComponentManager registerComponent:_mockNetworkManager forClass:[SBBNetworkManager class]];
+
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
+  [SBBComponentManager reset];
 }
 
 - (void)testAuthManagerSignIn {
   [_mockNetworkManager setJson:nil andResponseCode:404 forEndpoint:@"/api/v1/auth/signIn" andMethod:@"POST"];
-  [SBBComponent(SBBAuthManager) signInWithUsername:@"notSignedUp" password:@"" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  SBBAuthManager *aMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
+  [aMan signInWithUsername:@"notSignedUp" password:@"" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
   }];
   
@@ -50,8 +56,50 @@
                                     @"consented": @NO,
                                     @"authenticated":@YES};
   [_mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:@"/api/v1/auth/signIn" andMethod:@"POST"];
-  [SBBComponent(SBBAuthManager) signInWithUsername:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [aMan signInWithUsername:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == kSBBServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
+    [aMan clearKeychainStore];
+  }];
+  
+  SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
+  aMan.authDelegate = delegate;
+  [aMan signInWithUsername:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    XCTAssert([delegate.sessionToken isEqualToString:uuid], @"Delegate received sessionToken");
+  }];
+}
+
+- (void)testAuthManagerEnsureSignedIn
+{
+  SBBAuthManager *aMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
+  NSString *sessionToken = [[NSProcessInfo processInfo] globallyUniqueString];
+  NSString *username = @"signedUpUser";
+  NSString *password = @"123456";
+  NSDictionary *sessionInfoJson = @{@"username": username,
+                                    @"sessionToken": sessionToken,
+                                    @"type": @"UserSessionInfo",
+                                    @"consented": @NO,
+                                    @"authenticated":@YES};
+  [_mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:@"/api/v1/auth/signIn" andMethod:@"POST"];
+
+  SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
+  aMan.authDelegate = delegate;
+  
+  // first try it with no saved credentials
+  [aMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    XCTAssert(error.code == kSBBNoCredentialsAvailable, @"Correct error when no credentials available");
+    XCTAssert(delegate.sessionToken == nil, @"Did not attempt to call signIn endpoint without credentials");
+  }];
+  
+  // now try it with saved username/password
+  delegate.username = username;
+  delegate.password = password;
+  [aMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
+  }];
+  
+  // now try it with already-saved sessionToken
+  [aMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    XCTAssert(!task && !responseObject && !error, @"Seen as already signed in, did not attempt to sign in again");
   }];
 }
 

@@ -12,5 +12,6 @@ extern SBBEnvironment gSBBDefaultEnvironment;
 
 @interface SBBAuthManager(internal)
 
+- (void)clearKeychainStore;
 
 @end

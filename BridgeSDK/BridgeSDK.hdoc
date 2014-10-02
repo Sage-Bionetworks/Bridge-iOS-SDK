@@ -1,0 +1,7 @@
+/*! @framework BridgeSDK Framework Reference
+    @frameworkcopyright 2014 Sage Bionetworks
+
+    @discussion This framework provides iOS apps written in Objective-C and/or Swift with access to the
+    <a href="https://sagebionetworks.jira.com/wiki/display/BRIDGE/Bridge+REST+API">Sage Bionetworks Bridge API</a>
+    for research studies.
+ */
