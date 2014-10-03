@@ -34,8 +34,11 @@
     //TODO: Get appropriate error strings
     NSError * retError;
     NSError * localError;
-    id JSONData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&localError];
-    [localError handle];
+    id JSONData;
+    if (data) {
+        JSONData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&localError];
+    }
+    JSONData = JSONData ? : @{@"message" : [NSString stringWithFormat:@"Server Error Code: %@", @(statusCode)]};
     if (statusCode == 401) {
         retError = [self SBBNotAuthenticatedError];
     }
@@ -72,7 +75,7 @@
 
 - (void) handle
 {
-    NSLog(@"ERROR GENERATED: %@", self);
+    NSLog(@"SBB ERROR GENERATED: %@", self);
 }
 
 @end
