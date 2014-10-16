@@ -10,13 +10,6 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 
-@interface SBBConsentManager ()
-
-@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
-@property (nonatomic, strong) id<SBBAuthManagerProtocol> authManager;
-
-@end
-
 @implementation SBBConsentManager
 
 + (instancetype)defaultComponent
@@ -25,27 +18,16 @@
   
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    shared = [[self alloc] init];
-    shared.networkManager = SBBComponent(SBBNetworkManager);
-    shared.authManager = SBBComponent(SBBAuthManager);
+    shared = [self instanceWithRegisteredDependencies];
   });
   
   return shared;
 }
 
-+ (instancetype)consentManagerWithAuthManager:(SBBAuthManager *)authManager networkManager:(id<SBBNetworkManagerProtocol>)networkManager
-{
-  SBBConsentManager *manager = [[self alloc] init];
-  manager.networkManager = networkManager;
-  manager.authManager = authManager;
-  
-  return manager;
-}
-
 - (NSURLSessionDataTask *)consentSignature:(NSString *)name birthdate:(NSDate *)date completion:(SBBConsentManagerCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [_authManager addAuthHeaderToHeaders:headers];
+  [self.authManager addAuthHeaderToHeaders:headers];
   static NSDateFormatter *birthdateFormatter = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -57,7 +39,7 @@
   
   NSString *birthdate = [birthdateFormatter stringFromDate:date];
   NSDictionary *ResearchConsent = @{@"name": name, @"birthdate": birthdate};
-  return [_networkManager post:@"api/v1/consent" headers:headers parameters:ResearchConsent completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager post:@"/api/v1/consent" headers:headers parameters:ResearchConsent completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
@@ -67,8 +49,8 @@
 - (NSURLSessionDataTask *)suspendConsentWithCompletion:(SBBConsentManagerCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [_authManager addAuthHeaderToHeaders:headers];
-  return [_networkManager post:@"api/v1/consent/dataSharing/suspend" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [self.authManager addAuthHeaderToHeaders:headers];
+  return [self.networkManager post:@"/api/v1/consent/dataSharing/suspend" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
@@ -78,8 +60,8 @@
 - (NSURLSessionDataTask *)resumeConsentWithCompletion:(SBBConsentManagerCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [_authManager addAuthHeaderToHeaders:headers];
-  return [_networkManager post:@"api/v1/consent/dataSharing/resume" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [self.authManager addAuthHeaderToHeaders:headers];
+  return [self.networkManager post:@"/api/v1/consent/dataSharing/resume" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }

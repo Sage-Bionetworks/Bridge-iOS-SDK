@@ -61,6 +61,11 @@
     json = _jsonForEndpoints[key];
     NSInteger statusCode = [_codesForEndpoints[key] integerValue];
     error = [NSError generateSBBErrorForStatusCode:statusCode];
+//    if (parameters) {
+//      NSData *data = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
+//      NSString *JSONString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//      NSLog(@"%@", JSONString);
+//    }
   } else {
     error = [NSError generateSBBErrorForStatusCode:401];
   }
@@ -101,6 +106,14 @@
                       completion:(SBBNetworkManagerCompletionBlock)completion
 {
   return [self dataTaskFor:URLString method:@"DELETE" headers:headers parameters:parameters completion:completion];
+}
+
+- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString completion:(SBBNetworkManagerUploadCompletionBlock)completion
+{
+  if (completion) {
+    completion(nil);
+  }
+  return nil;
 }
 
 @end

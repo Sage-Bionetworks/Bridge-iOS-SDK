@@ -95,10 +95,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 + (instancetype)defaultComponent
 {
-  if (!gSBBAppURLPrefix) {
-    return nil;
-  }
-  
   static SBBAuthManager *shared;
   
   static dispatch_once_t onceToken;
@@ -230,12 +226,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [_networkManager post:@"api/v1/auth/signUp" headers:nil parameters:@{@"email":email, @"username":username, @"password":password} completion:completion];
+  return [_networkManager post:@"/api/v1/auth/signUp" headers:nil parameters:@{@"email":email, @"username":username, @"password":password} completion:completion];
 }
 
 - (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [_networkManager post:@"api/v1/auth/signIn" headers:nil parameters:@{@"username":username, @"password":password} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [_networkManager post:@"/api/v1/auth/signIn" headers:nil parameters:@{@"username":username, @"password":password} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     // Save session token in the keychain
     // ??? Save credentials in the keychain?
     NSString *sessionToken = responseObject[@"sessionToken"];
@@ -265,7 +261,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self addAuthHeaderToHeaders:headers];
-  return [_networkManager get:@"api/v1/auth/signOut" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [_networkManager get:@"/api/v1/auth/signOut" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     // Remove the session token (and credentials?) from the keychain
     // ??? Do we want to not do this in case of error?
     if (!_authDelegate) {

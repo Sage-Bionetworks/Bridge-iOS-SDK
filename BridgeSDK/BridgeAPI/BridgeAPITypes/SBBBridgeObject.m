@@ -1,22 +1,25 @@
 //
 //  SBBBridgeObject.m
-//  BridgeSDK
-//
-//  Created by Erin Mounts on 9/25/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//	
+//  $Id$
 //
 
 #import "SBBBridgeObject.h"
 
 @implementation SBBBridgeObject
 
+#pragma mark Abstract method overrides
+
+// Custom logic goes here.
+
 - (id)init
 {
   if (self = [super init]) {
     NSString *className = NSStringFromClass([self class]);
     if ([className hasPrefix:@"SBB"]) {
-      // set default type string
-      self.type = [className substringFromIndex:3];
+      // set default type string (the property is read-only so we have to use the back door)
+      NSDictionary *dict = @{@"type": [className substringFromIndex:3]};
+      self = [super initWithDictionaryRepresentation:dict];
     }
   }
   

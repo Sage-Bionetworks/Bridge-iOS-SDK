@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>BridgeObjects.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
 		<key>BridgeSDK.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -14,6 +19,11 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
+		<key>FrameworkBuilder.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -23,6 +33,16 @@
 			<true/>
 		</dict>
 		<key>80855F5A19BE258C006601C7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>80F7C32419E5BAD600574800</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>80F7C32819E5BB1000574800</key>
 		<dict>
 			<key>primary</key>
 			<true/>

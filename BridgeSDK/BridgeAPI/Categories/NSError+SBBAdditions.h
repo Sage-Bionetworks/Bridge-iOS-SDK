@@ -13,10 +13,11 @@
 /*********************************************************************************/
 #pragma mark - Error Generators
 /*********************************************************************************/
-+ (NSError*) generateSBBErrorForNSURLError:(NSError *)urlError isInternetConnected:(BOOL)internetConnected isServerReachable:(BOOL)isServerReachable;
-+ (NSError*) generateSBBErrorForStatusCode:(NSInteger)statusCode;
-+ (NSError*) SBBNoCredentialsError;
-+ (NSError*) SBBNotAuthenticatedError;
++ (NSError *)generateSBBErrorForNSURLError:(NSError *)urlError isInternetConnected:(BOOL)internetConnected isServerReachable:(BOOL)isServerReachable;
++ (NSError *)generateSBBErrorForStatusCode:(NSInteger)statusCode;
++ (NSError *)SBBNoCredentialsError;
++ (NSError *)SBBNotAuthenticatedError;
++ (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url;
 
 /*********************************************************************************/
 #pragma mark - Error handlers
