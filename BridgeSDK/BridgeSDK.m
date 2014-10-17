@@ -20,6 +20,7 @@
 {
   gSBBAppURLPrefix = appPrefix;
   gSBBDefaultEnvironment = environment;
+  [SBBComponent(SBBNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
 }
 
 @end

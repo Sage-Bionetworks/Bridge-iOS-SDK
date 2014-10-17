@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Y Media Labs. All rights reserved.
 //
 
-#import "SBBNetworkErrors.h"
+#import "SBBErrors.h"
 
 @implementation NSError (SBBAdditions)
 
@@ -67,6 +67,12 @@
 + (NSError *)SBBNotAuthenticatedError
 {
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerNotAuthenticated userInfo:@{NSLocalizedDescriptionKey: @"Server says: not authenticated. Please authenticate."}];
+}
+
++ (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url
+{
+  NSString *desc = [NSString stringWithFormat:@"Not a valid file URL:\n%@", url];
+  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBNotAFileURL userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
 /*********************************************************************************/

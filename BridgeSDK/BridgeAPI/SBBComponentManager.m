@@ -114,12 +114,13 @@ void dispatchSyncToCMQueue(void(^dispatchBlock)()) {
 {
   __block ComponentWrapper *cWrapper = nil;
   __block id component = nil;
+  __block Class localClass = componentClass;
   
   dispatchSyncToCMQueue(^{
-    cWrapper = [[self components] valueForKey:NSStringFromClass(componentClass)];
+    cWrapper = [[self components] valueForKey:NSStringFromClass(localClass)];
     if (!cWrapper) {
-      [self registerComponentThisQueue:nil forClass:componentClass];
-      cWrapper = [[self components] valueForKey:NSStringFromClass(componentClass)];
+      [self registerComponentThisQueue:nil forClass:localClass];
+      cWrapper = [[self components] valueForKey:NSStringFromClass(localClass)];
     }
   });
   
@@ -128,9 +129,9 @@ void dispatchSyncToCMQueue(void(^dispatchBlock)()) {
       component = cWrapper.component;
       if (!component) {
         // by default, if there wasn't one already, get the shared instance for the given class and register it under its own class
-        if ([componentClass conformsToProtocol:@protocol(SBBComponent)]) {
-          component = [(id<SBBComponent>)componentClass defaultComponent];
-          [self registerComponentThisQueue:component forClass:componentClass];
+        if ([localClass conformsToProtocol:@protocol(SBBComponent)]) {
+          component = [(id<SBBComponent>)localClass defaultComponent];
+          [self registerComponentThisQueue:component forClass:localClass];
         }
       }
     }];

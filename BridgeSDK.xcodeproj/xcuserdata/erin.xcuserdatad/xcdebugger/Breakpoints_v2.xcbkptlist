@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BridgeSDK/BridgeAPI/SBBObjectManager.m"
-            timestampString = "433798113.836681"
+            timestampString = "434598697.243184"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "127"
-            endingLineNumber = "127"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "-setterForPropertyName:inClass:"
             landmarkType = "5">
          </BreakpointContent>
@@ -37,6 +37,204 @@
             continueAfterRunningActions = "No"
             scope = "0"
             stopOnStyle = "0">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BridgeSDKTests/SBBSurveyManagerTests.m"
+            timestampString = "434937952.93707"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "226"
+            endingLineNumber = "226"
+            landmarkName = "-testGetSurveyByRef"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SBBSurveyManagerTests testGetSurveyByRef]"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBSurveyManagerTests.m"
+                  timestampString = "434937859.538333"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "228"
+                  endingLineNumber = "228"
+                  offsetFromSymbolStart = "520">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__43-[SBBSurveyManagerTests testGetSurveyByRef]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBSurveyManagerTests.m"
+                  timestampString = "434937859.53853"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "228"
+                  endingLineNumber = "228"
+                  offsetFromSymbolStart = "67">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BridgeSDKTests/SBBSurveyManagerTests.m"
+            timestampString = "434938838.350458"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "214"
+            endingLineNumber = "214"
+            landmarkName = "-setUp"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BridgeSDKTests/SBBSurveyManagerTests.m"
+            timestampString = "434937940.721976"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "229"
+            endingLineNumber = "229"
+            landmarkName = "-testGetSurveyByRef"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__43-[SBBSurveyManagerTests testGetSurveyByRef]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBSurveyManagerTests.m"
+                  timestampString = "434938407.809535"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "698">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__43-[SBBSurveyManagerTests testGetSurveyByRef]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBSurveyManagerTests.m"
+                  timestampString = "434938407.809895"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "2186">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__43-[SBBSurveyManagerTests testGetSurveyByRef]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBSurveyManagerTests.m"
+                  timestampString = "434938407.810172"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "2714">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__43-[SBBSurveyManagerTests testGetSurveyByRef]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBSurveyManagerTests.m"
+                  timestampString = "434938407.810463"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "229"
+                  endingLineNumber = "229"
+                  offsetFromSymbolStart = "2848">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BridgeSDKTests/SBBSurveyManagerTests.m"
+            timestampString = "434937981.743288"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "21"
+            endingLineNumber = "21"
+            landmarkName = "-setUp"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BridgeSDK/BridgeAPI/SBBSurveyManager.m"
+            timestampString = "435006924.796023"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "-submitAnswers:toSurveyByRef:completion:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SBBSurveyManager submitAnswers:toSurveyByRef:completion:]"
+                  moduleName = "BridgeSDK"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDK/BridgeAPI/SBBSurveyManager.m"
+                  timestampString = "435009962.422123"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "331">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__59-[SBBSurveyManager submitAnswers:toSurveyByRef:completion:]_block_invoke"
+                  moduleName = "BridgeSDK"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDK/BridgeAPI/SBBSurveyManager.m"
+                  timestampString = "435009962.422337"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "92">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

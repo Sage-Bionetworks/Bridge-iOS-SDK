@@ -8,7 +8,7 @@
 
 #import "BridgeSDK.h"
 #import "SBBNetworkManager.h"
-#import "SBBNetworkErrors.h"
+#import "SBBErrors.h"
 #import "NSError+SBBAdditions.h"
 #import "Reachability.h"
 #import "UIDevice+Hardware.h"
@@ -39,13 +39,16 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 #pragma mark - APC Network Manager
 /*********************************************************************************/
 
-@interface SBBNetworkManager ()
+@interface SBBNetworkManager () <NSURLSessionTaskDelegate>
 
 @property (nonatomic, strong) Reachability * internetReachability;
 @property (nonatomic, strong) Reachability * serverReachability;
 @property (nonatomic, strong) NSString * baseURL;
 @property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
 @property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
+
+@property (nonatomic, copy) void (^backgroundCompletionHandler)(void);
+@property (nonatomic, copy) NSMutableDictionary *uploadCompletionHandlers;
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
 
@@ -115,6 +118,7 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
         [self.serverReachability startNotifier]; //Turning on ONLY server reachability notifiers
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
       self.environment = SBBEnvironmentCustom;
+      self.uploadCompletionHandlers = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -130,8 +134,8 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 - (NSURLSession *)backgroundSession
 {
     if (!_backgroundSession) {
-        NSURLSessionConfiguration * config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:kBackgroundSessionIdentifier];
-        _backgroundSession = [NSURLSession sessionWithConfiguration:config];
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:kBackgroundSessionIdentifier];
+        _backgroundSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
     }
     return _backgroundSession;
 }
@@ -173,6 +177,51 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 - (NSURLSessionDataTask *)delete_:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
   return [self delete:URLString headers:headers parameters:parameters completion:completion];
+}
+
+- (NSString *)keyForTask:(NSURLSessionTask *)task
+{
+  return [NSString stringWithFormat:@"%llu", (unsigned long long)task];
+}
+
+- (SBBNetworkManagerUploadCompletionBlock)completionBlockForTask:(NSURLSessionTask *)task
+{
+  return [_uploadCompletionHandlers objectForKey:[self keyForTask:task]];
+}
+
+- (void)setCompletionBlock:(SBBNetworkManagerUploadCompletionBlock)completion forTask:(NSURLSessionTask *)task
+{
+  if (!completion) {
+    [self removeCompletionBlockForTask:task];
+    return;
+  }
+  [_uploadCompletionHandlers setObject:completion forKey:[self keyForTask:task]];
+}
+
+- (void)removeCompletionBlockForTask:(NSURLSessionTask *)task
+{
+  [_uploadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
+}
+
+- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString completion:(SBBNetworkManagerUploadCompletionBlock)completion
+{
+  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+  [request setAllHTTPHeaderFields:headers];
+  NSURLSessionUploadTask *task = [self.backgroundSession uploadTaskWithRequest:request fromFile:fileUrl];
+  [self setCompletionBlock:completion forTask:task];
+  
+  [task resume];
+  
+  return task;
+}
+
+- (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
+{
+  // make sure we're being called with the expected identifier--if not, ignore
+  if ([identifier isEqualToString:kBackgroundSessionIdentifier]) {
+    [self backgroundSession];
+    _backgroundCompletionHandler = completionHandler;
+  }
 }
 
 
@@ -321,6 +370,25 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
         NSURL * tempURL =[NSURL URLWithString:URLString relativeToURL:[NSURL URLWithString:self.baseURL]];
         return [NSURL URLWithString:[tempURL absoluteString]];
     }
+}
+
+#pragma mark - Delegate methods
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+{
+  SBBNetworkManagerUploadCompletionBlock completion = [self completionBlockForTask:task];
+  if (completion) {
+    completion((NSURLSessionUploadTask *)task, (NSHTTPURLResponse *)task.response, error);
+    [self removeCompletionBlockForTask:task];
+  }
+}
+
+- (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
+{
+  if (_backgroundCompletionHandler) {
+    _backgroundCompletionHandler();
+    _backgroundCompletionHandler = nil;
+  }
 }
 
 /*********************************************************************************/
