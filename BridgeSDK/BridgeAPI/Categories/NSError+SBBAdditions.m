@@ -32,7 +32,7 @@
 + (NSError*) generateSBBErrorForStatusCode:(NSInteger)statusCode
 {
     //TODO: Get appropriate error strings
-    NSError * retError;
+    NSError * retError = nil;
     if (statusCode == 401) {
         retError = [self SBBNotAuthenticatedError];
     }
@@ -67,6 +67,12 @@
 {
   NSString *desc = [NSString stringWithFormat:@"Not a valid file URL:\n%@", url];
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBNotAFileURL userInfo:@{NSLocalizedDescriptionKey: desc}];
+}
+
++ (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass
+{
+  NSString *desc = [NSString stringWithFormat:@"Object '%@' is of class %@, expected class %@", object, NSStringFromClass([object class]), NSStringFromClass(expectedClass)];
+  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBObjectNotExpectedClass userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
 /*********************************************************************************/

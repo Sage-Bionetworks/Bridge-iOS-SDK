@@ -12,6 +12,7 @@
 #import "NSError+SBBAdditions.h"
 #import "Reachability.h"
 #import "UIDevice+Hardware.h"
+#import "NSDate+SBBAdditions.h"
 
 SBBEnvironment gSBBDefaultEnvironment;
 
@@ -20,9 +21,8 @@ const NSInteger kMaxRetryCount = 5;
 static SBBNetworkManager * sharedInstance;
 NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
-/*********************************************************************************/
 #pragma mark - APC Retry Object - Keeps track of retry count
-/*********************************************************************************/
+
 @interface APCNetworkRetryObject : NSObject
 
 @property (nonatomic) NSInteger retryCount;
@@ -35,11 +35,55 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
 @end
 
-/*********************************************************************************/
-#pragma mark - APC Network Manager
-/*********************************************************************************/
+#pragma mark - SBBDataTaskCompletionWrapper
 
-@interface SBBNetworkManager () <NSURLSessionTaskDelegate>
+@interface SBBDataTaskCompletionWrapper : NSObject
+
+@property (nonatomic, copy) SBBNetworkManagerTaskCompletionBlock completion;
+
+- (instancetype)initWithBlock:(SBBNetworkManagerTaskCompletionBlock)block;
+
+@end
+
+@implementation SBBDataTaskCompletionWrapper
+
+- (instancetype)initWithBlock:(SBBNetworkManagerTaskCompletionBlock)block
+{
+  if (self = [super init]) {
+    self.completion = block;
+  }
+  
+  return self;
+}
+
+@end
+
+#pragma mark - SBBDownloadCompletionWrapper
+
+@interface SBBDownloadCompletionWrapper: NSObject
+
+@property (nonatomic, copy) SBBNetworkManagerDownloadCompletionBlock completion;
+
+- (instancetype)initWithBlock:(SBBNetworkManagerDownloadCompletionBlock)block;
+
+@end
+
+@implementation SBBDownloadCompletionWrapper
+
+- (instancetype)initWithBlock:(SBBNetworkManagerDownloadCompletionBlock)block
+{
+  if (self = [super init]) {
+    self.completion = block;
+  }
+  
+  return self;
+}
+
+@end
+
+#pragma mark - SBBNetworkManager
+
+@interface SBBNetworkManager () <NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
 
 @property (nonatomic, strong) Reachability * internetReachability;
 @property (nonatomic, strong) Reachability * serverReachability;
@@ -48,7 +92,8 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 @property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
 
 @property (nonatomic, copy) void (^backgroundCompletionHandler)(void);
-@property (nonatomic, copy) NSMutableDictionary *uploadCompletionHandlers;
+@property (nonatomic, strong) NSMutableDictionary *uploadCompletionHandlers;
+@property (nonatomic, strong) NSMutableDictionary *downloadCompletionHandlers;
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
 
@@ -56,6 +101,7 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
 @implementation SBBNetworkManager
 @synthesize environment = _environment;
+@synthesize backgroundTransferDelegate = _backgroundTransferDelegate;
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
 {
@@ -119,6 +165,7 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
       self.environment = SBBEnvironmentCustom;
       self.uploadCompletionHandlers = [NSMutableDictionary dictionary];
+      self.downloadCompletionHandlers = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -134,9 +181,17 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 - (NSURLSession *)backgroundSession
 {
     if (!_backgroundSession) {
+      // dispatch_once to make sure there's only ever one instance of a background session created with this identifier
+      static NSURLSession *bgSession;
+      static dispatch_once_t onceToken;
+      dispatch_once(&onceToken, ^{
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:kBackgroundSessionIdentifier];
-        _backgroundSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+        bgSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+      });
+      
+      _backgroundSession = bgSession;
     }
+  
     return _backgroundSession;
 }
 
@@ -184,18 +239,20 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
   return [NSString stringWithFormat:@"%llu", (unsigned long long)task];
 }
 
-- (SBBNetworkManagerUploadCompletionBlock)completionBlockForTask:(NSURLSessionTask *)task
+- (SBBNetworkManagerTaskCompletionBlock)completionBlockForTask:(NSURLSessionTask *)task
 {
-  return [_uploadCompletionHandlers objectForKey:[self keyForTask:task]];
+  SBBDataTaskCompletionWrapper *wrapper = [_uploadCompletionHandlers objectForKey:[self keyForTask:task]];
+  return wrapper.completion;
 }
 
-- (void)setCompletionBlock:(SBBNetworkManagerUploadCompletionBlock)completion forTask:(NSURLSessionTask *)task
+- (void)setCompletionBlock:(SBBNetworkManagerTaskCompletionBlock)completion forTask:(NSURLSessionTask *)task
 {
   if (!completion) {
     [self removeCompletionBlockForTask:task];
     return;
   }
-  [_uploadCompletionHandlers setObject:completion forKey:[self keyForTask:task]];
+  SBBDataTaskCompletionWrapper *wrapper = [[SBBDataTaskCompletionWrapper alloc] initWithBlock:completion];
+  [_uploadCompletionHandlers setObject:wrapper forKey:[self keyForTask:task]];
 }
 
 - (void)removeCompletionBlockForTask:(NSURLSessionTask *)task
@@ -203,17 +260,56 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
   [_uploadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
 }
 
-- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString completion:(SBBNetworkManagerUploadCompletionBlock)completion
+- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion
 {
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
   [request setAllHTTPHeaderFields:headers];
+  request.HTTPMethod = @"PUT";
   NSURLSessionUploadTask *task = [self.backgroundSession uploadTaskWithRequest:request fromFile:fileUrl];
   [self setCompletionBlock:completion forTask:task];
+  task.taskDescription = description;
   
   [task resume];
   
   return task;
 }
+
+- (SBBNetworkManagerDownloadCompletionBlock)completionBlockForDownload:(NSURLSessionDownloadTask *)task
+{
+  SBBDownloadCompletionWrapper *wrapper = [_downloadCompletionHandlers objectForKey:[self keyForTask:task]];
+  return wrapper.completion;
+}
+
+- (void)setCompletionBlock:(SBBNetworkManagerDownloadCompletionBlock)completion forDownload:(NSURLSessionDownloadTask *)task
+{
+  if (!completion) {
+    [self removeCompletionBlockForDownload:task];
+    return;
+  }
+  SBBDownloadCompletionWrapper *wrapper = [[SBBDownloadCompletionWrapper alloc] initWithBlock:completion];
+  [_downloadCompletionHandlers setObject:wrapper forKey:[self keyForTask:task]];
+}
+
+- (void)removeCompletionBlockForDownload:(NSURLSessionDownloadTask *)task
+{
+  [_downloadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
+}
+
+- (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion
+{
+  NSMutableURLRequest *request = [self requestWithMethod:httpMethod URLString:urlString headers:headers parameters:parameters error:nil];
+  
+  NSURLSessionDownloadTask *task = [self.backgroundSession downloadTaskWithRequest:request];
+  [self setCompletionBlock:downloadCompletion forDownload:task];
+  [self setCompletionBlock:taskCompletion forTask:task];
+  task.taskDescription = description;
+  
+  [task resume];
+  
+  return task;
+}
+
+
 
 - (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
@@ -288,10 +384,36 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
   
   NSMutableArray *queryParams = [NSMutableArray arrayWithCapacity:parameters.count];
   for (NSString *param in parameters) {
-    NSString *qParam = [NSString stringWithFormat:@"%@=%@",
-                        [param stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
-                        [parameters[param] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
-    [queryParams addObject:qParam];
+    id value = parameters[param];
+    NSString *valueString;
+    if ([value isKindOfClass:[NSString class]]) {
+      valueString = value;
+    } else if ([value isKindOfClass:[NSNumber class]]) {
+      NSNumber *valueNum = (NSNumber *)value;
+      if (valueNum.objCType[0] == 'B') {
+        BOOL valueBool = [valueNum boolValue];
+        valueString = valueBool ? @"true" : @"false";
+      } else {
+        valueString = [valueNum stringValue];
+      }
+    } else if ([value isKindOfClass:[NSDate class]]) {
+      NSDate *valueDate = (NSDate *)value;
+      valueString = [valueDate ISO8601String];
+    } else if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]]) {
+      NSData *valueData = [NSJSONSerialization dataWithJSONObject:value options:0 error:nil];
+      if (valueData.length) {
+        valueString = [[NSString alloc] initWithData:valueData encoding:NSUTF8StringEncoding];
+      }
+    } else {
+      NSLog(@"Unable to determine how to convert parameter '%@' value to string: %@, skipping", param, value);
+    }
+    
+    if (valueString) {
+      NSString *qParam = [NSString stringWithFormat:@"%@=%@",
+                          [param stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
+                          [valueString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
+      [queryParams addObject:qParam];
+    }
   }
   
   return [queryParams componentsJoinedByString:@"&"];
@@ -372,14 +494,77 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
     }
 }
 
-#pragma mark - Delegate methods
+#pragma mark - NSURLSessionDownloadDelegate methods
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes
+{
+  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:)]) {
+    [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didResumeAtOffset:fileOffset expectedTotalBytes:expectedTotalBytes];
+  }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
+{
+  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:)]) {
+    [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didWriteData:bytesWritten totalBytesWritten:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+  }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
+{
+  SBBNetworkManagerDownloadCompletionBlock completion = [self completionBlockForDownload:downloadTask];
+  if (completion) {
+    completion(location);
+    [self removeCompletionBlockForDownload:downloadTask];
+  }
+  
+  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didFinishDownloadingToURL:)]) {
+    [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didFinishDownloadingToURL:location];
+  }
+}
+
+#pragma mark - NSURLSessionDataDelegate methods
+
+#pragma mark - NSURLSessionTaskDelegate methods
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-  SBBNetworkManagerUploadCompletionBlock completion = [self completionBlockForTask:task];
+  SBBNetworkManagerTaskCompletionBlock completion = [self completionBlockForTask:task];
   if (completion) {
     completion((NSURLSessionUploadTask *)task, (NSHTTPURLResponse *)task.response, error);
     [self removeCompletionBlockForTask:task];
+  }
+  
+  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
+    [_backgroundTransferDelegate URLSession:session task:task didCompleteWithError:error];
+  }
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
+{
+  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didReceiveChallenge:completionHandler:)]) {
+    [_backgroundTransferDelegate URLSession:session task:task didReceiveChallenge:challenge completionHandler:completionHandler];
+  } else {
+    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+  }
+}
+
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
+{
+  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:)]) {
+    [_backgroundTransferDelegate URLSession:session task:task didSendBodyData:bytesSent totalBytesSent:totalBytesSent totalBytesExpectedToSend:totalBytesExpectedToSend];
+  }
+}
+
+#pragma mark - NSURLSessionDelegate methods
+
+- (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error
+{
+  [_downloadCompletionHandlers removeAllObjects];
+  [_uploadCompletionHandlers removeAllObjects];
+  
+  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:didBecomeInvalidWithError:)]) {
+    [_backgroundTransferDelegate URLSession:session didBecomeInvalidWithError:error];
   }
 }
 
@@ -388,6 +573,10 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
   if (_backgroundCompletionHandler) {
     _backgroundCompletionHandler();
     _backgroundCompletionHandler = nil;
+  }
+  
+  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSessionDidFinishEventsForBackgroundURLSession:)]) {
+    [_backgroundTransferDelegate URLSessionDidFinishEventsForBackgroundURLSession:session];
   }
 }
 

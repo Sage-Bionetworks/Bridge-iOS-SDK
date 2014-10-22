@@ -266,8 +266,7 @@ function disclosure_triangle(elt) {
 <tr>
 <td scope="row"><b>Superclass:</b></td>
 <td><div style="margin-bottom:1px"><div class="content_text">
-<!-- a logicalPath="//apple_ref/occ/cl/NSObject" machineGenerated="true" -->NSObject<!-- /a -->
-</div></div></td>
+<a machinegenerated="true" href="../../../SBBBridgeAPIManager_h/Classes/SBBBridgeAPIManager/index.html#//apple_ref/occ/cl/SBBBridgeAPIManager" logicalPath="//apple_ref/occ/cl/SBBBridgeAPIManager" target="_top">SBBBridgeAPIManager</a></div></div></td>
 </tr>
 <tr>
 <td scope="row"><b>Declared In:</b></td>
@@ -278,53 +277,10 @@ function disclosure_triangle(elt) {
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/cl/SBBConsentManager;name=start --><p>This class handles communication with the Bridge Consent API.
 <!-- headerDoc=discussion;uid=//apple_ref/occ/cl/SBBConsentManager;name=end --><!-- end discussion -->
 </p>
-<hr class="afterClassOrHeaderInfo">
-<br><a name="HeaderDoc_methods"></a>
-<h2 class="h2tight">Methods</h2>
-<dl>
-<dt><tt><a href="index.html#//apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager:networkManager:" target="_top">+consentManagerWithAuthManager:networkManager:</a></tt></dt>
-<dd></dd>
-</dl>
-<hr class="betweenAPIEntries">
-<!-- headerDoc=clm;  uid=//apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager:networkManager:;   name=SBBConsentManager::consentManagerWithAuthManager:networkManager: --><a name="//apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager:networkManager:"></a>
-<h3><a name="consentManagerWithAuthManager:networkManager:">consentManagerWithAuthManager:networkManager:</a></h3>
-<hr class="afterName">
-<div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager:networkManager:;name=start -->+ (<!-- a logicalPath="//apple_ref/occ/cl/instancetype //apple_ref/occ/tdef/instancetype //apple_ref/occ/tag/instancetype //apple_ref/occ/struct/instancetype //apple_ref/occ/intf/instancetype //apple_ref/doc/anysymbol/instancetype" machineGenerated="true" --><span class="type">instancetype</span><!-- /a -->)<a machinegenerated="true" href="index.html#//apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager:networkManager:" logicalPath="//apple_ref/occ/instm/SBBConsentManager/consentManagerWithAuthManager //apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager" target="_top"><span class="function">consentManagerWithAuthManager</span></a>:(<a machinegenerated="true" href="../../../SBBAuthManager_h/Classes/SBBAuthManager/index.html#//apple_ref/occ/cl/SBBAuthManager" logicalPath="//apple_ref/occ/cl/SBBAuthManager" target="_top"><span class="type">SBBAuthManager</span></a> <span class="type">*</span>)<span class="param">authManager</span> 
-        <a machinegenerated="true" href="index.html#//apple_ref/doc/methodparam/SBBConsentManager/consentManagerWithAuthManager:networkManager:/networkManager" logicalPath="//apple_ref/occ/instm/SBBConsentManager/networkManager //apple_ref/occ/clm/SBBConsentManager/networkManager //apple_ref/occ/intfcm/SBBConsentManager/networkManager //apple_ref/occ/intfm/SBBConsentManager/networkManager //apple_ref/occ/func/networkManager //apple_ref/occ/ftmplt/SBBConsentManager/networkManager //apple_ref/occ/defn/networkManager //apple_ref/occ/macro/networkManager //apple_ref/doc/anysymbol/networkManager" target="_top"><span class="function">networkManager</span></a>:(<!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a -->&lt;<span class="param">SBBNetworkManagerProtocol</span>&gt;)<!-- a logicalPath="//apple_ref/occ/econst/networkManager //apple_ref/occ/data/SBBConsentManager/networkManager //apple_ref/occ/data/networkManager //apple_ref/occ/clconst/SBBConsentManager/networkManager " machineGenerated="true" --><span class="var">networkManager</span><!-- /a -->; <!-- headerDoc=declaration;uid=//apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager:networkManager:;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBConsentManager/consentManagerWithAuthManager:networkManager:/authManager;   name=consentManagerWithAuthManager:networkManager:::authManager -->
-<a name="//apple_ref/doc/methodparam/SBBConsentManager/consentManagerWithAuthManager:networkManager:/authManager"></a>
-<code>authManager</code>
-</dt>
-<dd><p>The auth manager to use for authentication. Must implement the SBBAuthManagerProtocol.</p></dd>
-<dt>
-<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBConsentManager/consentManagerWithAuthManager:networkManager:/networkManager;   name=consentManagerWithAuthManager:networkManager:::networkManager -->
-<a name="//apple_ref/doc/methodparam/SBBConsentManager/consentManagerWithAuthManager:networkManager:/networkManager"></a>
-<code>networkManager</code>
-</dt>
-<dd><p>The network manager to use for making REST API requests. Must implement the SBBNetworkManagerProtocol.</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>An SBBConsentManager injected with the specified dependencies.
-
-<!-- end return value --></p>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager:networkManager:;name=start --><p>Return an SBBConsentManager component configured to use the specified auth manager, network manager, and object manager.
-</p>
-<p>Use this method to build a custom configuration, e.g. for testing.
-</p>
-<!-- headerDoc=discussion;uid=//apple_ref/occ/clm/SBBConsentManager/consentManagerWithAuthManager:networkManager:;name=end --><!-- end discussion -->
 <p class="gapBeforeFooter">&nbsp;</p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Wednesday, October 01, 2014
+<p class="hd_timestamp">Last Updated: Wednesday, October 22, 2014
 </p>
 </div>
 </td>
