@@ -22,7 +22,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // To run this sample app in your study, change this prefix to the one assigned to your study.
   // Leave it set to @"api" to run in the generic test study.
-  [BridgeSDK setupWithAppPrefix:@"pd"];
+  [BridgeSDK setupWithAppPrefix:@"api"];
 
   // Override point for customization after application launch.
   UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
