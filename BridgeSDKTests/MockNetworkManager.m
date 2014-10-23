@@ -108,7 +108,7 @@
   return [self dataTaskFor:URLString method:@"DELETE" headers:headers parameters:parameters completion:completion];
 }
 
-- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString completion:(SBBNetworkManagerUploadCompletionBlock)completion
+- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString completion:(SBBNetworkManagerTaskCompletionBlock)completion
 {
   if (completion) {
     completion(nil);

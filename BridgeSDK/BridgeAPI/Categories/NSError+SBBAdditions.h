@@ -18,6 +18,7 @@
 + (NSError *)SBBNoCredentialsError;
 + (NSError *)SBBNotAuthenticatedError;
 + (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url;
++ (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass;
 
 /*********************************************************************************/
 #pragma mark - Error handlers

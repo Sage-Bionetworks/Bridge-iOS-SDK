@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		80E09AD019F8493100EB5F0B /* Documentation */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 80E09AD419F8493100EB5F0B /* Build configuration list for PBXAggregateTarget "Documentation" */;
+			buildPhases = (
+				80E09AD519F8495000EB5F0B /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Documentation;
+			productName = Documentation;
+		};
 		80F7C32819E5BB1000574800 /* BridgeObjects */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 80F7C32919E5BB1000574800 /* Build configuration list for PBXAggregateTarget "BridgeObjects" */;
@@ -309,6 +320,7 @@
 		80C3D07519DCA03C00DEA044 /* TemplateIcon2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TemplateIcon2x.png; path = BridgeSDK/TemplateIcon2x.png; sourceTree = "<group>"; };
 		80C3D07719DDE94A00DEA044 /* SBBTestAuthManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestAuthManagerDelegate.h; sourceTree = "<group>"; };
 		80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestAuthManagerDelegate.m; sourceTree = "<group>"; };
+		80E09AD619F8525C00EB5F0B /* hdocExcludes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hdocExcludes.txt; path = BridgeSDK/hdocExcludes.txt; sourceTree = "<group>"; };
 		80F7C2E819E5AA7900574800 /* ModelObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelObject.h; sourceTree = "<group>"; };
 		80F7C2E919E5AA7900574800 /* ModelObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelObject.m; sourceTree = "<group>"; };
 		80F7C2EA19E5AA7900574800 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -474,6 +486,7 @@
 			children = (
 				8026D69E19EC465B008942B0 /* libz.dylib */,
 				80C3D07419DCA03C00DEA044 /* BridgeSDK.hdoc */,
+				80E09AD619F8525C00EB5F0B /* hdocExcludes.txt */,
 				80C3D07519DCA03C00DEA044 /* TemplateIcon2x.png */,
 				80855F5219BE258C006601C7 /* BridgeSDK */,
 				80855F5C19BE258C006601C7 /* BridgeSDKTests */,
@@ -888,6 +901,9 @@
 					80855F5A19BE258C006601C7 = {
 						CreatedOnToolsVersion = 6.0;
 					};
+					80E09AD019F8493100EB5F0B = {
+						CreatedOnToolsVersion = 6.1;
+					};
 					80F7C32819E5BB1000574800 = {
 						CreatedOnToolsVersion = 6.0.1;
 					};
@@ -918,6 +934,7 @@
 				80855F4F19BE258C006601C7 /* BridgeSDK */,
 				80855F5A19BE258C006601C7 /* BridgeSDKTests */,
 				F52619FB19D9F73400B48C90 /* FrameworkBuilder */,
+				80E09AD019F8493100EB5F0B /* Documentation */,
 			);
 		};
 /* End PBXProject section */
@@ -950,6 +967,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		80E09AD519F8495000EB5F0B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SBB_DOC_DIR=\"${PROJECT_DIR}/Documentation/\"\nSBB_BRIDGE_DIR=\"${PROJECT_DIR}/BridgeSDK/\"\nrm -rf \"${SBB_DOC_DIR}\"\nheaderdoc2html -j -e \"${SBB_BRIDGE_DIR}/hdocExcludes.txt\" -o \"${SBB_DOC_DIR}\" \"${SBB_BRIDGE_DIR}\"\ngatherheaderdoc \"${SBB_DOC_DIR}\"";
+		};
 		80F7C32C19E5BB2600574800 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1110,7 +1140,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1234,6 +1264,20 @@
 			};
 			name = Release;
 		};
+		80E09AD119F8493100EB5F0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		80E09AD219F8493100EB5F0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		80F7C32A19E5BB1000574800 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1291,6 +1335,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		80E09AD419F8493100EB5F0B /* Build configuration list for PBXAggregateTarget "Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				80E09AD119F8493100EB5F0B /* Debug */,
+				80E09AD219F8493100EB5F0B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		80F7C32919E5BB1000574800 /* Build configuration list for PBXAggregateTarget "BridgeObjects" */ = {
 			isa = XCConfigurationList;
