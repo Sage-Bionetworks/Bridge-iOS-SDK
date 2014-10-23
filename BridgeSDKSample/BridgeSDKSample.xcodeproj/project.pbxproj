@@ -16,14 +16,13 @@
 		800E79BC19F1B37600EEE612 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 800E79A519F18DB200EEE612 /* BridgeSDK.framework */; };
 		800E79BD19F1B37600EEE612 /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 800E79A519F18DB200EEE612 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		80855F9E19BFAA36006601C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F9D19BFAA36006601C7 /* main.m */; };
-		80855FA119BFAA36006601C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855FA019BFAA36006601C7 /* AppDelegate.m */; };
 		80855FA419BFAA36006601C7 /* BridgeSDKSample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80855FA219BFAA36006601C7 /* BridgeSDKSample.xcdatamodeld */; };
-		80855FA719BFAA36006601C7 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855FA619BFAA36006601C7 /* MasterViewController.m */; };
-		80855FAA19BFAA36006601C7 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855FA919BFAA36006601C7 /* DetailViewController.m */; };
 		80855FAF19BFAA36006601C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 80855FAE19BFAA36006601C7 /* Images.xcassets */; };
 		80855FBB19BFAA36006601C7 /* BridgeSDKSampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855FBA19BFAA36006601C7 /* BridgeSDKSampleTests.m */; };
 		809BE5AF19DB49C500A8E72F /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 809BE5AE19DB49C500A8E72F /* UserProfileViewController.m */; };
 		80A7318919C9D61E007FE828 /* SignUpSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A7318819C9D61E007FE828 /* SignUpSignInViewController.m */; };
+		F5AF857C19F970700007296A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF857B19F970700007296A /* ViewController.m */; };
+		F5AF857F19F9708A0007296A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF857E19F9708A0007296A /* AppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,13 +85,7 @@
 		80855F9819BFAA36006601C7 /* BridgeSDKSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BridgeSDKSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80855F9C19BFAA36006601C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80855F9D19BFAA36006601C7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		80855F9F19BFAA36006601C7 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		80855FA019BFAA36006601C7 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		80855FA319BFAA36006601C7 /* BridgeSDKSample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BridgeSDKSample.xcdatamodel; sourceTree = "<group>"; };
-		80855FA519BFAA36006601C7 /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
-		80855FA619BFAA36006601C7 /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
-		80855FA819BFAA36006601C7 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		80855FA919BFAA36006601C7 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		80855FAC19BFAA36006601C7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		80855FAE19BFAA36006601C7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		80855FB419BFAA36006601C7 /* BridgeSDKSampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BridgeSDKSampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -105,6 +98,10 @@
 		80A7318419C9D3F9007FE828 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SignUpSignIn.storyboard; sourceTree = "<group>"; };
 		80A7318719C9D61E007FE828 /* SignUpSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpSignInViewController.h; sourceTree = "<group>"; };
 		80A7318819C9D61E007FE828 /* SignUpSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpSignInViewController.m; sourceTree = "<group>"; };
+		F5AF857A19F970700007296A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		F5AF857B19F970700007296A /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F5AF857D19F9708A0007296A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		F5AF857E19F9708A0007296A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,12 +154,10 @@
 		80855F9A19BFAA36006601C7 /* BridgeSDKSample */ = {
 			isa = PBXGroup;
 			children = (
-				80855F9F19BFAA36006601C7 /* AppDelegate.h */,
-				80855FA019BFAA36006601C7 /* AppDelegate.m */,
-				80855FA519BFAA36006601C7 /* MasterViewController.h */,
-				80855FA619BFAA36006601C7 /* MasterViewController.m */,
-				80855FA819BFAA36006601C7 /* DetailViewController.h */,
-				80855FA919BFAA36006601C7 /* DetailViewController.m */,
+				F5AF857D19F9708A0007296A /* AppDelegate.h */,
+				F5AF857E19F9708A0007296A /* AppDelegate.m */,
+				F5AF857A19F970700007296A /* ViewController.h */,
+				F5AF857B19F970700007296A /* ViewController.m */,
 				80855FAB19BFAA36006601C7 /* Main.storyboard */,
 				80A7318319C9D3F8007FE828 /* SignUpSignIn.storyboard */,
 				809BE5B319DB4A9E00A8E72F /* UserProfile.storyboard */,
@@ -337,11 +332,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80855FAA19BFAA36006601C7 /* DetailViewController.m in Sources */,
-				80855FA719BFAA36006601C7 /* MasterViewController.m in Sources */,
+				F5AF857C19F970700007296A /* ViewController.m in Sources */,
 				80855FA419BFAA36006601C7 /* BridgeSDKSample.xcdatamodeld in Sources */,
-				80855FA119BFAA36006601C7 /* AppDelegate.m in Sources */,
 				80A7318919C9D61E007FE828 /* SignUpSignInViewController.m in Sources */,
+				F5AF857F19F9708A0007296A /* AppDelegate.m in Sources */,
 				80855F9E19BFAA36006601C7 /* main.m in Sources */,
 				800E798F19EDE25600EEE612 /* SurveyViewController.m in Sources */,
 				809BE5AF19DB49C500A8E72F /* UserProfileViewController.m in Sources */,
