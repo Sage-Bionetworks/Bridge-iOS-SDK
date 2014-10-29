@@ -14,6 +14,7 @@
 #pragma mark - Error Generators
 /*********************************************************************************/
 + (NSError *)generateSBBErrorForNSURLError:(NSError *)urlError isInternetConnected:(BOOL)internetConnected isServerReachable:(BOOL)isServerReachable;
++ (NSError *)generateSBBErrorForStatusCode:(NSInteger)statusCode data: (id) data;
 + (NSError *)generateSBBErrorForStatusCode:(NSInteger)statusCode;
 + (NSError *)SBBNoCredentialsError;
 + (NSError *)SBBNotAuthenticatedError;

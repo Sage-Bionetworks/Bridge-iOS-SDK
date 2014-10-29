@@ -349,7 +349,7 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
     
   NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
     NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode];
+        NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
         NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if (error)
         {

@@ -1042,7 +1042,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.0 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.0 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DIR=\"${PROJECT_DIR}/Output/\"\necho \"${SBB_OUTPUT_DIR}\"\nmkdir -p \"${SBB_OUTPUT_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DIR}\"\nlipo -create \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" -output \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\"";
+			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.1 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.1 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DIR=\"${PROJECT_DIR}/Output/\"\necho \"${SBB_OUTPUT_DIR}\"\nmkdir -p \"${SBB_OUTPUT_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DIR}\"\nlipo -create \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" -output \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 

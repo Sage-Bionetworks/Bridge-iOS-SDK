@@ -31,25 +31,41 @@
 
 + (NSError*) generateSBBErrorForStatusCode:(NSInteger)statusCode
 {
+    return [self generateSBBErrorForStatusCode:statusCode data:nil];
+}
+
++ (NSError*) generateSBBErrorForStatusCode:(NSInteger)statusCode data: (id) data
+{
     //TODO: Get appropriate error strings
-    NSError * retError = nil;
+    NSError * retError;
+    NSError * localError;
+    id foundationObject;
+    if (data) {
+        if ([data isKindOfClass:[NSData class]]) {
+            foundationObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&localError];
+        }
+        else if ([data isKindOfClass:[NSDictionary class]] || [data isKindOfClass:[NSArray class]])
+        {
+            foundationObject = data;
+        }
+    }
+    foundationObject = foundationObject ? : @{@"message" : [NSString stringWithFormat:@"Server Error Code: %@", @(statusCode)]};
     if (statusCode == 401) {
         retError = [self SBBNotAuthenticatedError];
     }
     else if (statusCode == 412)
     {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerPreconditionNotMet userInfo:@{NSLocalizedDescriptionKey: @"Client not consented"}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerPreconditionNotMet userInfo:@{NSLocalizedDescriptionKey: @"Client not consented", SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (NSLocationInRange(statusCode, NSMakeRange(400, 99))) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: @"Client Error. Please contact SOMEBODY"}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: @"Client Error. Please contact SOMEBODY",  SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (statusCode == 503) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerUnderMaintenance userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Under Maintenance."}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerUnderMaintenance userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Under Maintenance.", SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (NSLocationInRange(statusCode, NSMakeRange(500, 99))) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Error. Please contact SOMEBODY"}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Error. Please contact SOMEBODY", SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
-    
     return retError;
 }
 
@@ -81,7 +97,7 @@
 
 - (void) handle
 {
-    NSLog(@"ERROR GENERATED: %@", self);
+    NSLog(@"SBB ERROR GENERATED: %@", self);
 }
 
 @end

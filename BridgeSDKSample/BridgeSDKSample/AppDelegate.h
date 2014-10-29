@@ -1,24 +1,17 @@
 //
 //  AppDelegate.h
-//  BridgeSDKSample
+//  singleView
 //
-//  Created by Erin Mounts on 9/9/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//  Created by Dhanush Balachandran on 10/23/14.
+//  Copyright (c) 2014 Y Media Labs. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreData/CoreData.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
-@property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
-- (void)saveContext;
-- (NSURL *)applicationDocumentsDirectory;
+@property (nonatomic, getter=isLoggedIn) BOOL loggedIn;
 
 
 @end
