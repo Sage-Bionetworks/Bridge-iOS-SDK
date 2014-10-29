@@ -19,7 +19,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="VYa-ZN-xew" kind="showDetail" identifier="ShowSchedule" id="b4s-mW-5KH"/>
+                                    <segue destination="VYa-ZN-xew" kind="show" identifier="ShowSchedule" id="b4s-mW-5KH"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
