@@ -132,14 +132,14 @@
   NSMutableArray *answers = [NSMutableArray array];
   SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
   a1.questionGuid = [self guidForQuestion:0];
-  a1.answer = @3;
+  a1.answer = @"3";
   a1.answeredOn = [NSDate date];
   a1.client = @"test";
   a1.declined = @NO;
   [answers addObject:a1];
   SBBSurveyAnswer *a2 = [a1 copy];
   a2.questionGuid = [self guidForQuestion:1];
-  a2.answer = @2;
+  a2.answer = @"2";
   [answers addObject:a2];
   
   return answers;
@@ -176,14 +176,14 @@
   NSMutableArray *answers = [NSMutableArray array];
   SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
   a1.questionGuid = [self guidForQuestion:2];
-  a1.answer = @4;
+  a1.answer = @"4";
   a1.answeredOn = [NSDate date];
   a1.client = @"test";
   a1.declined = @NO;
   [answers addObject:a1];
   SBBSurveyAnswer *a2 = [a1 copy];
   a2.questionGuid = [self guidForQuestion:3];
-  a2.answer = @1;
+  a2.answer = @"1";
   [answers addObject:a2];
   
   return answers;

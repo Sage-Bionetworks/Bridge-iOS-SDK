@@ -11,6 +11,7 @@
 #import "SignUpSignInViewController.h"
 #import "UserProfileViewController.h"
 #import "SurveyViewController.h"
+#import "SchedulesTableViewController.h"
 #import <BridgeSDK/BridgeSDK.h>
 
 @interface MasterViewController () <UIActionSheetDelegate>
@@ -227,6 +228,7 @@
                                 NSLocalizedString(@"Profile & Consent", @"Profile & Consent"),
                                 NSLocalizedString(@"Survey", @"Survey"),
                                 NSLocalizedString(@"Upload", @"Upload"),
+                                NSLocalizedString(@"Schedule", @"Schedule"),
                                 nil];
   [actionSheet showFromBarButtonItem:self.moreBarButtonItem animated:YES];
 }
@@ -237,7 +239,8 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
   asSignOut,
   asProfileConsent,
   asSurvey,
-  asUpload
+  asUpload,
+  asSchedule
 };
 
 #pragma mark - Action sheet delegate methods
@@ -292,6 +295,14 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
           NSLog(@"Uploaded file");
         }
       }];
+    }
+      break;
+      
+    case asSchedule:
+    {
+      UIStoryboard *ss = [UIStoryboard storyboardWithName:@"Schedule" bundle:nil];
+      SchedulesTableViewController *stvc = [ss instantiateInitialViewController];
+      [self.navigationController pushViewController:stvc animated:YES];
     }
       break;
       

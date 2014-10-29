@@ -28,7 +28,7 @@
 
 - (void)testSignIn {
   [self.mockNetworkManager setJson:nil andResponseCode:404 forEndpoint:@"/api/v1/auth/signIn" andMethod:@"POST"];
-  SBBAuthManager *aMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
+  SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
   [aMan signInWithUsername:@"notSignedUp" password:@"" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
   }];
@@ -54,7 +54,6 @@
 
 - (void)testEnsureSignedIn
 {
-  SBBAuthManager *aMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
   NSString *sessionToken = [[NSProcessInfo processInfo] globallyUniqueString];
   NSString *username = @"signedUpUser";
   NSString *password = @"123456";
@@ -64,7 +63,8 @@
                                     @"consented": @NO,
                                     @"authenticated":@YES};
   [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:@"/api/v1/auth/signIn" andMethod:@"POST"];
-  
+  SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
+
   SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
   aMan.authDelegate = delegate;
   

@@ -18,6 +18,7 @@
 
 @implementation MockNetworkManager
 @synthesize environment = _environment;
+@synthesize backgroundTransferDelegate = _backgroundTransferDelegate;
 
 - (id)init
 {
@@ -108,12 +109,21 @@
   return [self dataTaskFor:URLString method:@"DELETE" headers:headers parameters:parameters completion:completion];
 }
 
-- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString completion:(SBBNetworkManagerTaskCompletionBlock)completion
+- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion
 {
   if (completion) {
-    completion(nil);
+    completion(nil, nil, nil);
   }
   return nil;
+}
+
+- (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion
+{
+  return nil;
+}
+
+- (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
+{
 }
 
 @end
