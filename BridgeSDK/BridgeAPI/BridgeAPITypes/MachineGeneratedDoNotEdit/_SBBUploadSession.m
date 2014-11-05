@@ -8,6 +8,7 @@
 //
 
 #import "_SBBUploadSession.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBUploadSession()
 
@@ -36,11 +37,11 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.expires = [dictionary objectForKey:@"expires"];
+        self.expires = [NSDate dateWithISO8601String:[dictionary objectForKey:@"expires"]];
 
-    self.id = [dictionary objectForKey:@"id"];
+        self.id = [dictionary objectForKey:@"id"];
 
-    self.url = [dictionary objectForKey:@"url"];
+        self.url = [dictionary objectForKey:@"url"];
 
 	}
 
@@ -50,9 +51,12 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.expires forKey:@"expires"];
-	[dict setObjectIfNotNil:self.id forKey:@"id"];
-	[dict setObjectIfNotNil:self.url forKey:@"url"];
+
+    [dict setObjectIfNotNil:[self.expires ISO8601String] forKey:@"expires"];
+
+    [dict setObjectIfNotNil:self.id forKey:@"id"];
+
+    [dict setObjectIfNotNil:self.url forKey:@"url"];
 
 	return dict;
 }

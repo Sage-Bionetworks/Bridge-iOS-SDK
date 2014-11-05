@@ -8,6 +8,7 @@
 //
 
 #import "_<$managedObjectClassName$>.h"
+#import "NSDate+SBBAdditions.h"
 
 <$foreach Relationship noninheritedRelationships do$>#import "<$Relationship.destinationEntity.managedObjectClassName$>.h"
 <$endforeach do$>
@@ -55,9 +56,17 @@
 	{
 		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     <$if Attribute.isReadonly$>
-    _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+        <$if Attribute.hasDateAttributeType$>
+        _<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
+        <$else$>
+        _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+        <$endif$>
     <$else$>
-    self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+        <$if Attribute.hasDateAttributeType$>
+        self.<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
+        <$else$>
+        self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+        <$endif$>
     <$endif$>
 		<$endif$><$endforeach do$>
 		<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
@@ -84,7 +93,12 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>[dict setObjectIfNotNil:self.<$Attribute.name$> forKey:@"<$Attribute.name$>"];
+	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
+    <$if Attribute.hasDateAttributeType$>
+    [dict setObjectIfNotNil:[self.<$Attribute.name$> ISO8601String] forKey:@"<$Attribute.name$>"];
+    <$else$>
+    [dict setObjectIfNotNil:self.<$Attribute.name$> forKey:@"<$Attribute.name$>"];
+    <$endif$>
 	<$endif$><$endforeach do$>
 	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0)
 	{

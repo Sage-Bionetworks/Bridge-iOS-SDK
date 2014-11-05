@@ -8,6 +8,7 @@
 //
 
 #import "_SBBDecimalConstraints.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBDecimalConstraints()
 
@@ -66,11 +67,11 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.maxValue = [dictionary objectForKey:@"maxValue"];
+        self.maxValue = [dictionary objectForKey:@"maxValue"];
 
-    self.minValue = [dictionary objectForKey:@"minValue"];
+        self.minValue = [dictionary objectForKey:@"minValue"];
 
-    self.step = [dictionary objectForKey:@"step"];
+        self.step = [dictionary objectForKey:@"step"];
 
 	}
 
@@ -80,9 +81,12 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.maxValue forKey:@"maxValue"];
-	[dict setObjectIfNotNil:self.minValue forKey:@"minValue"];
-	[dict setObjectIfNotNil:self.step forKey:@"step"];
+
+    [dict setObjectIfNotNil:self.maxValue forKey:@"maxValue"];
+
+    [dict setObjectIfNotNil:self.minValue forKey:@"minValue"];
+
+    [dict setObjectIfNotNil:self.step forKey:@"step"];
 
 	return dict;
 }

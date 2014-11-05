@@ -8,6 +8,7 @@
 //
 
 #import "_SBBUserProfile.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBUserProfile()
 
@@ -36,13 +37,13 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.email = [dictionary objectForKey:@"email"];
+        self.email = [dictionary objectForKey:@"email"];
 
-    self.firstName = [dictionary objectForKey:@"firstName"];
+        self.firstName = [dictionary objectForKey:@"firstName"];
 
-    self.lastName = [dictionary objectForKey:@"lastName"];
+        self.lastName = [dictionary objectForKey:@"lastName"];
 
-    self.username = [dictionary objectForKey:@"username"];
+        self.username = [dictionary objectForKey:@"username"];
 
 	}
 
@@ -52,10 +53,14 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.email forKey:@"email"];
-	[dict setObjectIfNotNil:self.firstName forKey:@"firstName"];
-	[dict setObjectIfNotNil:self.lastName forKey:@"lastName"];
-	[dict setObjectIfNotNil:self.username forKey:@"username"];
+
+    [dict setObjectIfNotNil:self.email forKey:@"email"];
+
+    [dict setObjectIfNotNil:self.firstName forKey:@"firstName"];
+
+    [dict setObjectIfNotNil:self.lastName forKey:@"lastName"];
+
+    [dict setObjectIfNotNil:self.username forKey:@"username"];
 
 	return dict;
 }

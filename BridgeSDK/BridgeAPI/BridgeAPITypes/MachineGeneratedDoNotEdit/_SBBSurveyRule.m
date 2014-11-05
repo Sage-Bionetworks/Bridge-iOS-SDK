@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyRule.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBSurveyRule()
 
@@ -36,11 +37,11 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.operator = [dictionary objectForKey:@"operator"];
+        self.operator = [dictionary objectForKey:@"operator"];
 
-    self.skipTo = [dictionary objectForKey:@"skipTo"];
+        self.skipTo = [dictionary objectForKey:@"skipTo"];
 
-    self.value = [dictionary objectForKey:@"value"];
+        self.value = [dictionary objectForKey:@"value"];
 
 	}
 
@@ -50,9 +51,12 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.operator forKey:@"operator"];
-	[dict setObjectIfNotNil:self.skipTo forKey:@"skipTo"];
-	[dict setObjectIfNotNil:self.value forKey:@"value"];
+
+    [dict setObjectIfNotNil:self.operator forKey:@"operator"];
+
+    [dict setObjectIfNotNil:self.skipTo forKey:@"skipTo"];
+
+    [dict setObjectIfNotNil:self.value forKey:@"value"];
 
 	return dict;
 }

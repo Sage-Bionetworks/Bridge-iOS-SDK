@@ -8,6 +8,7 @@
 //
 
 #import "_SBBMultiValueConstraints.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBMultiValueConstraints()
 
@@ -56,11 +57,11 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.allowMultiple = [dictionary objectForKey:@"allowMultiple"];
+        self.allowMultiple = [dictionary objectForKey:@"allowMultiple"];
 
-    self.allowOther = [dictionary objectForKey:@"allowOther"];
+        self.allowOther = [dictionary objectForKey:@"allowOther"];
 
-    self.enumeration = [dictionary objectForKey:@"enumeration"];
+        self.enumeration = [dictionary objectForKey:@"enumeration"];
 
 	}
 
@@ -70,9 +71,12 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.allowMultiple forKey:@"allowMultiple"];
-	[dict setObjectIfNotNil:self.allowOther forKey:@"allowOther"];
-	[dict setObjectIfNotNil:self.enumeration forKey:@"enumeration"];
+
+    [dict setObjectIfNotNil:self.allowMultiple forKey:@"allowMultiple"];
+
+    [dict setObjectIfNotNil:self.allowOther forKey:@"allowOther"];
+
+    [dict setObjectIfNotNil:self.enumeration forKey:@"enumeration"];
 
 	return dict;
 }

@@ -8,6 +8,7 @@
 //
 
 #import "_SBBDateConstraints.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBDateConstraints()
 
@@ -46,7 +47,7 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.allowFuture = [dictionary objectForKey:@"allowFuture"];
+        self.allowFuture = [dictionary objectForKey:@"allowFuture"];
 
 	}
 
@@ -56,7 +57,8 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.allowFuture forKey:@"allowFuture"];
+
+    [dict setObjectIfNotNil:self.allowFuture forKey:@"allowFuture"];
 
 	return dict;
 }

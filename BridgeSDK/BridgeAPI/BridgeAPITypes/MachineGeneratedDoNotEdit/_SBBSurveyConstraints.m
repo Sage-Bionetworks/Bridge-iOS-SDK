@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyConstraints.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBSurveyConstraints()
 
@@ -36,9 +37,9 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.dataType = [dictionary objectForKey:@"dataType"];
+        self.dataType = [dictionary objectForKey:@"dataType"];
 
-    self.rules = [dictionary objectForKey:@"rules"];
+        self.rules = [dictionary objectForKey:@"rules"];
 
 	}
 
@@ -48,8 +49,10 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.dataType forKey:@"dataType"];
-	[dict setObjectIfNotNil:self.rules forKey:@"rules"];
+
+    [dict setObjectIfNotNil:self.dataType forKey:@"dataType"];
+
+    [dict setObjectIfNotNil:self.rules forKey:@"rules"];
 
 	return dict;
 }

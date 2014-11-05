@@ -8,6 +8,7 @@
 //
 
 #import "_SBBStringConstraints.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBStringConstraints()
 
@@ -56,11 +57,11 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.maxLength = [dictionary objectForKey:@"maxLength"];
+        self.maxLength = [dictionary objectForKey:@"maxLength"];
 
-    self.minLength = [dictionary objectForKey:@"minLength"];
+        self.minLength = [dictionary objectForKey:@"minLength"];
 
-    self.pattern = [dictionary objectForKey:@"pattern"];
+        self.pattern = [dictionary objectForKey:@"pattern"];
 
 	}
 
@@ -70,9 +71,12 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.maxLength forKey:@"maxLength"];
-	[dict setObjectIfNotNil:self.minLength forKey:@"minLength"];
-	[dict setObjectIfNotNil:self.pattern forKey:@"pattern"];
+
+    [dict setObjectIfNotNil:self.maxLength forKey:@"maxLength"];
+
+    [dict setObjectIfNotNil:self.minLength forKey:@"minLength"];
+
+    [dict setObjectIfNotNil:self.pattern forKey:@"pattern"];
 
 	return dict;
 }

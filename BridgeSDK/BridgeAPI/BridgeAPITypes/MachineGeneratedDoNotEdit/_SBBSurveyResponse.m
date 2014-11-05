@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyResponse.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBSurveyResponse()
 
@@ -36,17 +37,17 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.answers = [dictionary objectForKey:@"answers"];
+        self.answers = [dictionary objectForKey:@"answers"];
 
-    self.completedOn = [dictionary objectForKey:@"completedOn"];
+        self.completedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"completedOn"]];
 
-    self.guid = [dictionary objectForKey:@"guid"];
+        self.guid = [dictionary objectForKey:@"guid"];
 
-    self.startedOn = [dictionary objectForKey:@"startedOn"];
+        self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
 
-    self.status = [dictionary objectForKey:@"status"];
+        self.status = [dictionary objectForKey:@"status"];
 
-    self.survey = [dictionary objectForKey:@"survey"];
+        self.survey = [dictionary objectForKey:@"survey"];
 
 	}
 
@@ -56,12 +57,18 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.answers forKey:@"answers"];
-	[dict setObjectIfNotNil:self.completedOn forKey:@"completedOn"];
-	[dict setObjectIfNotNil:self.guid forKey:@"guid"];
-	[dict setObjectIfNotNil:self.startedOn forKey:@"startedOn"];
-	[dict setObjectIfNotNil:self.status forKey:@"status"];
-	[dict setObjectIfNotNil:self.survey forKey:@"survey"];
+
+    [dict setObjectIfNotNil:self.answers forKey:@"answers"];
+
+    [dict setObjectIfNotNil:[self.completedOn ISO8601String] forKey:@"completedOn"];
+
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+
+    [dict setObjectIfNotNil:[self.startedOn ISO8601String] forKey:@"startedOn"];
+
+    [dict setObjectIfNotNil:self.status forKey:@"status"];
+
+    [dict setObjectIfNotNil:self.survey forKey:@"survey"];
 
 	return dict;
 }

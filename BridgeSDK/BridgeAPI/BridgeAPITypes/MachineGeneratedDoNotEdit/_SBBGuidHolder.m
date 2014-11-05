@@ -8,6 +8,7 @@
 //
 
 #import "_SBBGuidHolder.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBGuidHolder()
 
@@ -36,7 +37,7 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.guid = [dictionary objectForKey:@"guid"];
+        self.guid = [dictionary objectForKey:@"guid"];
 
 	}
 
@@ -46,7 +47,8 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.guid forKey:@"guid"];
+
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
 	return dict;
 }
