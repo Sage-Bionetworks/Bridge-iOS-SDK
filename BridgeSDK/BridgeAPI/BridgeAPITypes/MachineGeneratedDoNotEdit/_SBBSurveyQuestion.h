@@ -12,13 +12,14 @@
 
 #import "SBBSurveyConstraints.h"
 
+@class SBBSurveyConstraints;
+@class SBBSurvey;
+
 @protocol _SBBSurveyQuestion
 
 @end
 
 @interface _SBBSurveyQuestion : SBBBridgeObject
-
-@property (nonatomic, strong) SBBSurveyConstraints* constraints;
 
 @property (nonatomic, strong) NSString* guid;
 
@@ -27,5 +28,13 @@
 @property (nonatomic, strong) NSString* prompt;
 
 @property (nonatomic, strong) NSString* uiHint;
+
+@property (nonatomic, strong, readwrite) SBBSurveyConstraints *constraints;
+
+@property (nonatomic, strong, readwrite) SBBSurvey *survey;
+
+- (void) setConstraints: (SBBSurveyConstraints*) constraints_ settingInverse: (BOOL) setInverse;
+
+- (void) setSurvey: (SBBSurvey*) survey_ settingInverse: (BOOL) setInverse;
 
 @end

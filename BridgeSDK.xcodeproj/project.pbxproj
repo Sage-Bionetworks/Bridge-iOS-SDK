@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		60FF57211A0AFC5500CE2373 /* TestBridgeObjects */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 60FF57231A0AFC5500CE2373 /* Build configuration list for PBXAggregateTarget "TestBridgeObjects" */;
+			buildPhases = (
+				60FF57221A0AFC5500CE2373 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = TestBridgeObjects;
+			productName = BridgeObjects;
+		};
 		80E09AD019F8493100EB5F0B /* Documentation */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 80E09AD419F8493100EB5F0B /* Build configuration list for PBXAggregateTarget "Documentation" */;
@@ -43,6 +54,13 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */; };
+		60FF57351A0AFEA500CE2373 /* _SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */; };
+		60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572B1A0AFEA500CE2373 /* _SBBTestBridgeObject.m */; };
+		60FF57371A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572D1A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m */; };
+		60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */; };
+		60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57311A0AFEA500CE2373 /* SBBTestBridgeObject.m */; };
+		60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */; };
 		800E792219ED73FD00EEE612 /* _SBBBooleanConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 800E792019ED73FD00EEE612 /* _SBBBooleanConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		800E792319ED73FD00EEE612 /* _SBBBooleanConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */; };
 		800E792D19ED740F00EEE612 /* _SBBDateConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 800E792519ED740F00EEE612 /* _SBBDateConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -98,7 +116,7 @@
 		80104A6219D4CDC4001F2573 /* SBBBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 80104A6019D4CDC4001F2573 /* SBBBridgeObject.m */; };
 		80104A6619D4CFE5001F2573 /* SBBObjectManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80104A6419D4CFE5001F2573 /* SBBObjectManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80104A6719D4CFE6001F2573 /* SBBObjectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80104A6519D4CFE5001F2573 /* SBBObjectManager.m */; };
-		8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6319D9C3AF001AF9BA /* SBBTestBridgeObject.m */; };
+		8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6319D9C3AF001AF9BA /* SBBTestBridgeObjects.m */; };
 		8017AF6819D9D909001AF9BA /* SBBObjectManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6719D9D909001AF9BA /* SBBObjectManagerTests.m */; };
 		8017AF7019DA0359001AF9BA /* NSError+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF6C19DA0359001AF9BA /* NSError+SBBAdditions.h */; };
 		8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6D19DA0359001AF9BA /* NSError+SBBAdditions.m */; };
@@ -191,6 +209,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		60FF57261A0AFDE200CE2373 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 60FF57211A0AFC5500CE2373;
+			remoteInfo = TestBridgeObjects;
+		};
 		8017AF6919D9E67C001AF9BA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
@@ -208,6 +233,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		60FF571F1A0AF87C00CE2373 /* TestModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TestModel.xcdatamodel; sourceTree = "<group>"; };
+		60FF57281A0AFEA500CE2373 /* _SBBBridgeObject_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObject_test.h; sourceTree = "<group>"; };
+		60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBridgeObject_test.m; sourceTree = "<group>"; };
+		60FF572A1A0AFEA500CE2373 /* _SBBTestBridgeObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBTestBridgeObject.h; sourceTree = "<group>"; };
+		60FF572B1A0AFEA500CE2373 /* _SBBTestBridgeObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBTestBridgeObject.m; sourceTree = "<group>"; };
+		60FF572C1A0AFEA500CE2373 /* _SBBTestBridgeSubObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBTestBridgeSubObject.h; sourceTree = "<group>"; };
+		60FF572D1A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBTestBridgeSubObject.m; sourceTree = "<group>"; };
+		60FF572E1A0AFEA500CE2373 /* SBBBridgeObject_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeObject_test.h; sourceTree = "<group>"; };
+		60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeObject_test.m; sourceTree = "<group>"; };
+		60FF57301A0AFEA500CE2373 /* SBBTestBridgeObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestBridgeObject.h; sourceTree = "<group>"; };
+		60FF57311A0AFEA500CE2373 /* SBBTestBridgeObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestBridgeObject.m; sourceTree = "<group>"; };
+		60FF57321A0AFEA500CE2373 /* SBBTestBridgeSubObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestBridgeSubObject.h; sourceTree = "<group>"; };
+		60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestBridgeSubObject.m; sourceTree = "<group>"; };
+		60FF57341A0AFEA500CE2373 /* SBBTestObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestObjects.h; sourceTree = "<group>"; };
 		800E792019ED73FD00EEE612 /* _SBBBooleanConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBooleanConstraints.h; sourceTree = "<group>"; };
 		800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBooleanConstraints.m; sourceTree = "<group>"; };
 		800E792519ED740F00EEE612 /* _SBBDateConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBDateConstraints.h; sourceTree = "<group>"; };
@@ -264,8 +303,8 @@
 		80104A6019D4CDC4001F2573 /* SBBBridgeObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeObject.m; sourceTree = "<group>"; };
 		80104A6419D4CFE5001F2573 /* SBBObjectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBObjectManager.h; sourceTree = "<group>"; };
 		80104A6519D4CFE5001F2573 /* SBBObjectManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBObjectManager.m; sourceTree = "<group>"; };
-		8017AF6219D9C3AF001AF9BA /* SBBTestBridgeObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestBridgeObject.h; sourceTree = "<group>"; };
-		8017AF6319D9C3AF001AF9BA /* SBBTestBridgeObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestBridgeObject.m; sourceTree = "<group>"; };
+		8017AF6219D9C3AF001AF9BA /* SBBTestBridgeObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestBridgeObjects.h; sourceTree = "<group>"; };
+		8017AF6319D9C3AF001AF9BA /* SBBTestBridgeObjects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestBridgeObjects.m; sourceTree = "<group>"; };
 		8017AF6719D9D909001AF9BA /* SBBObjectManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBObjectManagerTests.m; sourceTree = "<group>"; };
 		8017AF6C19DA0359001AF9BA /* NSError+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+SBBAdditions.h"; sourceTree = "<group>"; };
 		8017AF6D19DA0359001AF9BA /* NSError+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+SBBAdditions.m"; sourceTree = "<group>"; };
@@ -564,11 +603,25 @@
 				8026D6A419EC56E8008942B0 /* SBBSurveyManagerTests.m */,
 				80C3D07719DDE94A00DEA044 /* SBBTestAuthManagerDelegate.h */,
 				80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */,
-				8017AF6219D9C3AF001AF9BA /* SBBTestBridgeObject.h */,
-				8017AF6319D9C3AF001AF9BA /* SBBTestBridgeObject.m */,
+				8017AF6219D9C3AF001AF9BA /* SBBTestBridgeObjects.h */,
+				8017AF6319D9C3AF001AF9BA /* SBBTestBridgeObjects.m */,
 				80104A4819D3631E001F2573 /* MockNetworkManager.h */,
 				80104A4919D3631E001F2573 /* MockNetworkManager.m */,
 				80855F5D19BE258C006601C7 /* Supporting Files */,
+				60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */,
+				60FF57281A0AFEA500CE2373 /* _SBBBridgeObject_test.h */,
+				60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */,
+				60FF572A1A0AFEA500CE2373 /* _SBBTestBridgeObject.h */,
+				60FF572B1A0AFEA500CE2373 /* _SBBTestBridgeObject.m */,
+				60FF572C1A0AFEA500CE2373 /* _SBBTestBridgeSubObject.h */,
+				60FF572D1A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m */,
+				60FF572E1A0AFEA500CE2373 /* SBBBridgeObject_test.h */,
+				60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */,
+				60FF57301A0AFEA500CE2373 /* SBBTestBridgeObject.h */,
+				60FF57311A0AFEA500CE2373 /* SBBTestBridgeObject.m */,
+				60FF57321A0AFEA500CE2373 /* SBBTestBridgeSubObject.h */,
+				60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */,
+				60FF57341A0AFEA500CE2373 /* SBBTestObjects.h */,
 			);
 			path = BridgeSDKTests;
 			sourceTree = "<group>";
@@ -916,6 +969,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				60FF57271A0AFDE200CE2373 /* PBXTargetDependency */,
 				8017AF6A19D9E67C001AF9BA /* PBXTargetDependency */,
 			);
 			name = BridgeSDKTests;
@@ -973,6 +1027,7 @@
 				80855F5A19BE258C006601C7 /* BridgeSDKTests */,
 				F52619FB19D9F73400B48C90 /* FrameworkBuilder */,
 				80E09AD019F8493100EB5F0B /* Documentation */,
+				60FF57211A0AFC5500CE2373 /* TestBridgeObjects */,
 			);
 		};
 /* End PBXProject section */
@@ -1005,6 +1060,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		60FF57221A0AFC5500CE2373 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "TEST_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDKTests\"\necho \"${TEST_OBJECTS_DIR}\"\nTEST_MACHINE_DIR=\"${TEST_OBJECTS_DIR}\"\nTEST_DATA_MODEL=\"${TEST_OBJECTS_DIR}/TestModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${TEST_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${TEST_OBJECTS_DIR}\" --machine-dir \"${TEST_MACHINE_DIR}\" --includeh \"${TEST_OBJECTS_DIR}/SBBTestObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"";
+		};
 		80E09AD519F8495000EB5F0B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1029,7 +1097,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SBB_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDK/BridgeAPI/BridgeAPITypes\"\necho \"${SBB_OBJECTS_DIR}\"\nSBB_MACHINE_DIR=\"${SBB_OBJECTS_DIR}/MachineGeneratedDoNotEdit\"\nmkdir -p \"${SBB_MACHINE_DIR}\"\nSBB_DATA_MODEL=\"${SBB_OBJECTS_DIR}/SBBDataModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${SBB_DATA_MODEL}\" --base-class ModelObject --human-dir \"${SBB_OBJECTS_DIR}\" --machine-dir \"${SBB_MACHINE_DIR}\" --includeh \"${SBB_OBJECTS_DIR}/SBBBridgeObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"";
+			shellScript = "SBB_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDK/BridgeAPI/BridgeAPITypes\"\necho \"${SBB_OBJECTS_DIR}\"\nSBB_MACHINE_DIR=\"${SBB_OBJECTS_DIR}/MachineGeneratedDoNotEdit\"\nmkdir -p \"${SBB_MACHINE_DIR}\"\nSBB_DATA_MODEL=\"${SBB_OBJECTS_DIR}/SBBDataModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${SBB_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${SBB_OBJECTS_DIR}\" --machine-dir \"${SBB_MACHINE_DIR}\" --includeh \"${SBB_OBJECTS_DIR}/SBBBridgeObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"";
 		};
 		F52619FF19D9F73B00B48C90 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1128,17 +1196,29 @@
 				80104A4A19D3631E001F2573 /* MockNetworkManager.m in Sources */,
 				8017AF6819D9D909001AF9BA /* SBBObjectManagerTests.m in Sources */,
 				8026D69B19EC3F4A008942B0 /* SBBBridgeAPITestCase.m in Sources */,
+				60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */,
+				60FF57371A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m in Sources */,
 				8026D6A519EC56E8008942B0 /* SBBSurveyManagerTests.m in Sources */,
+				60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */,
 				80E60DAB19FB0D7E0053D166 /* SBBScheduleManagerTests.m in Sources */,
 				8026D69D19EC4025008942B0 /* SBBProfileManagerTests.m in Sources */,
-				8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObject.m in Sources */,
+				60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */,
+				60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */,
+				8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObjects.m in Sources */,
+				60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */,
 				8026D6A319EC531F008942B0 /* SBBAuthManagerTests.m in Sources */,
+				60FF57351A0AFEA500CE2373 /* _SBBBridgeObject_test.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		60FF57271A0AFDE200CE2373 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 60FF57211A0AFC5500CE2373 /* TestBridgeObjects */;
+			targetProxy = 60FF57261A0AFDE200CE2373 /* PBXContainerItemProxy */;
+		};
 		8017AF6A19D9E67C001AF9BA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 80855F4F19BE258C006601C7 /* BridgeSDK */;
@@ -1147,6 +1227,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		60FF57241A0AFC5500CE2373 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "BridgeObjects copy";
+			};
+			name = Debug;
+		};
+		60FF57251A0AFC5500CE2373 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "BridgeObjects copy";
+			};
+			name = Release;
+		};
 		80855F6119BE258C006601C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1353,6 +1447,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		60FF57231A0AFC5500CE2373 /* Build configuration list for PBXAggregateTarget "TestBridgeObjects" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				60FF57241A0AFC5500CE2373 /* Debug */,
+				60FF57251A0AFC5500CE2373 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		80855F4A19BE258B006601C7 /* Build configuration list for PBXProject "BridgeSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1410,6 +1513,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
+		60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				60FF571F1A0AF87C00CE2373 /* TestModel.xcdatamodel */,
+			);
+			currentVersion = 60FF571F1A0AF87C00CE2373 /* TestModel.xcdatamodel */;
+			path = TestModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		80F7C2ED19E5AA7900574800 /* MyModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (

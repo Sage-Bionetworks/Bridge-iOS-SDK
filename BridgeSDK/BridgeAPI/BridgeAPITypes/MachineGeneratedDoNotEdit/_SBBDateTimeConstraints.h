@@ -20,4 +20,8 @@
 
 @property (nonatomic, assign) BOOL allowFutureValue;
 
+@property (nonatomic, strong) NSDate* earliestValue;
+
+@property (nonatomic, strong) NSDate* latestValue;
+
 @end

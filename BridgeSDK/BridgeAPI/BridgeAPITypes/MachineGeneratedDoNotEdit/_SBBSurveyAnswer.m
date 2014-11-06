@@ -10,6 +10,8 @@
 #import "_SBBSurveyAnswer.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBSurveyResponse.h"
+
 @interface _SBBSurveyAnswer()
 
 @end
@@ -84,9 +86,36 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	[self.surveyResponse awakeFromDictionaryRepresentationInit];
+
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Direct access
+
+- (void) setSurveyResponse: (SBBSurveyResponse*) surveyResponse_ settingInverse: (BOOL) setInverse
+{
+    if (surveyResponse_ == nil) {
+        [_surveyResponse removeAnswersObject: (SBBSurveyAnswer*)self settingInverse: NO];
+    }
+
+    _surveyResponse = surveyResponse_;
+
+    if (setInverse == YES) {
+        [_surveyResponse addAnswersObject: (SBBSurveyAnswer*)self settingInverse: NO];
+    }
+}
+
+- (void) setSurveyResponse: (SBBSurveyResponse*) surveyResponse_
+{
+    [self setSurveyResponse: surveyResponse_ settingInverse: YES];
+}
+
+- (SBBSurveyResponse*) surveyResponse
+{
+    return _surveyResponse;
+}
+
+@synthesize surveyResponse = _surveyResponse;
 
 @end

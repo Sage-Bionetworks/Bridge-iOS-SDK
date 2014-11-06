@@ -10,6 +10,8 @@
 #import "_SBBSurveyRule.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBSurveyConstraints.h"
+
 @interface _SBBSurveyRule()
 
 @end
@@ -66,9 +68,36 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	[self.surveyConstraints awakeFromDictionaryRepresentationInit];
+
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Direct access
+
+- (void) setSurveyConstraints: (SBBSurveyConstraints*) surveyConstraints_ settingInverse: (BOOL) setInverse
+{
+    if (surveyConstraints_ == nil) {
+        [_surveyConstraints removeRulesObject: (SBBSurveyRule*)self settingInverse: NO];
+    }
+
+    _surveyConstraints = surveyConstraints_;
+
+    if (setInverse == YES) {
+        [_surveyConstraints addRulesObject: (SBBSurveyRule*)self settingInverse: NO];
+    }
+}
+
+- (void) setSurveyConstraints: (SBBSurveyConstraints*) surveyConstraints_
+{
+    [self setSurveyConstraints: surveyConstraints_ settingInverse: YES];
+}
+
+- (SBBSurveyConstraints*) surveyConstraints
+{
+    return _surveyConstraints;
+}
+
+@synthesize surveyConstraints = _surveyConstraints;
 
 @end

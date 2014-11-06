@@ -10,6 +10,8 @@
 #import <Foundation/Foundation.h>
 #import "ModelObject.h"
 
+@class SBBResourceList;
+
 @protocol _SBBBridgeObject
 
 @end
@@ -17,5 +19,9 @@
 @interface _SBBBridgeObject : ModelObject
 
 @property (nonatomic, strong, readonly) NSString* type;
+
+@property (nonatomic, strong, readwrite) SBBResourceList *resourceList;
+
+- (void) setResourceList: (SBBResourceList*) resourceList_ settingInverse: (BOOL) setInverse;
 
 @end

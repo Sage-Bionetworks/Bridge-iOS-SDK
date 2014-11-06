@@ -10,7 +10,7 @@
 #import <XCTest/XCTest.h>
 #import <limits.h>
 @import BridgeSDK;
-#import "SBBTestBridgeObject.h"
+#import "SBBTestBridgeObjects.h"
 #import "NSDate+SBBAdditions.h"
 
 #if !defined INT_MAX
@@ -46,13 +46,9 @@
     @{
       @"type": @"TestBridgeObject",
       @"stringField": @"This is a string",
-      @"charField": @'x',
-      @"intField": @-1,
       @"shortField": @-2,
       @"longField": @-3,
       @"longLongField": @-4444444444444444,
-      @"uCharField": @UCHAR_MAX,
-      @"uIntField": @UINT_MAX,
       @"uShortField": @USHRT_MAX,
       @"uLongField": @ULONG_MAX,
       @"uLongLongField": @ULLONG_MAX,
@@ -117,53 +113,43 @@
   subObject.stringField = @"thing1";
   SBBTestBridgeObject *object = [SBBTestBridgeObject new];
   object.stringField = _jsonForTests[@"stringField"];
-  object.charField = [_jsonForTests[@"charField"] charValue];
-  object.intField = [_jsonForTests[@"intField"] intValue];
-  object.shortField = [_jsonForTests[@"shortField"] shortValue];
-  object.longField = [_jsonForTests[@"longField"] longValue];
-  object.longLongField = [_jsonForTests[@"longLongField"] longLongValue];
-  object.uCharField = [_jsonForTests[@"uCharField"] unsignedCharValue];
-  object.uIntField = [_jsonForTests[@"uIntField"] unsignedIntValue];
-  object.uShortField = [_jsonForTests[@"uShortField"] unsignedShortValue];
-  object.uLongField = [_jsonForTests[@"uLongField"] unsignedLongValue];
-  object.uLongLongField = [_jsonForTests[@"uLongLongField"] unsignedLongLongValue];
-  object.floatField = [_jsonForTests[@"floatField"] floatValue];
-  object.doubleField = [_jsonForTests[@"doubleField"] doubleValue];
+  object.shortField = _jsonForTests[@"shortField"];
+  object.longField = _jsonForTests[@"longField"];
+  object.longLongField = _jsonForTests[@"longLongField"];
+  object.uShortField = _jsonForTests[@"uShortField"];
+  object.uLongField = _jsonForTests[@"uLongField"];
+  object.uLongLongField = _jsonForTests[@"uLongLongField"];
+  object.floatField = _jsonForTests[@"floatField"];
+  object.doubleField = _jsonForTests[@"doubleField"];
   object.dateField = [NSDate dateWithISO8601String:_jsonForTests[@"dateField"]];
-  object.bridgeSubObjectField = subObject;
+  [object setBridgeSubObjectField:subObject];
   
-  NSMutableArray *subObjectArray = [NSMutableArray array];
   for (int i = 0; i < 3; ++i) {
-    SBBTestBridgeSubObject *object = [SBBTestBridgeSubObject new];
-    object.stringField = [NSString stringWithFormat:@"thing%d", i];
-    [subObjectArray addObject:object];
+    SBBTestBridgeSubObject *aSubObject = [SBBTestBridgeSubObject new];
+    aSubObject.stringField = [NSString stringWithFormat:@"thing%d", i];
+    [object addBridgeObjectArrayFieldObject:aSubObject];
   }
-  object.bridgeObjectArrayField = subObjectArray;
  
   NSDictionary *json = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:object];
 
   XCTAssert([json isKindOfClass:[NSDictionary class]], @"Converted object to json dict");
   XCTAssert([json[@"type"] isEqualToString:@"TestBridgeObject"], @"Correctly set type field");
   XCTAssert([json[@"stringField"] isEqualToString:object.stringField], @"Correctly converted string field");
-  XCTAssert(json[@"charField"] == nil, @"Correctly ignored char field");
-  XCTAssert(json[@"intField"] == nil, @"Correctly ignored int field");
-  XCTAssert(json[@"shortField"] == nil, @"Correctly ignored short field");
-  XCTAssert(json[@"longField"] == nil, @"Correctly ignored long field");
-  XCTAssert(json[@"longLongField"] == nil, @"Correctly ignored long long field");
-  XCTAssert(json[@"uCharField"] == nil, @"Correctly ignored unsigned char field");
-  XCTAssert(json[@"uIntField"] == nil, @"Correctly ignored unsigned int field");
-  XCTAssert(json[@"uShortField"] == nil, @"Correctly ignored unsigned short field");
-  XCTAssert(json[@"uLongField"] == nil, @"Correctly ignored unsigned long field");
-  XCTAssert(json[@"uLongLongField"] == nil, @"Correctly ignored unsigned long long field");
-  XCTAssert(json[@"floatField"] == nil, @"Correctly ignored float field");
-  XCTAssert(json[@"doubleField"] == nil, @"Correctly ignored double field");
+  XCTAssert([json[@"shortField"] isEqual:object.shortField], @"Correctly converted short field");
+  XCTAssert([json[@"longField"] isEqual:object.longField], @"Correctly converted long field");
+  XCTAssert([json[@"longLongField"] isEqual:object.longLongField], @"Correctly converted long long field");
+  XCTAssert([json[@"uShortField"] isEqual:object.uShortField], @"Correctly converted unsigned short field");
+  XCTAssert([json[@"uLongField"] isEqual:object.uLongField], @"Correctly converted unsigned long field");
+  XCTAssert([json[@"uLongLongField"] isEqual:object.uLongLongField], @"Correctly converted unsigned long long field");
+  XCTAssert([json[@"floatField"] isEqual:object.floatField], @"Correctly converted float field");
+  XCTAssert([json[@"doubleField"] isEqual:object.doubleField], @"Correctly converted double field");
   XCTAssert([[NSDate dateWithISO8601String:json[@"dateField"]] isEqual:object.dateField], @"Correctly converted date field");
   XCTAssert([json[@"bridgeSubObjectField"][@"stringField"] isEqualToString:subObject.stringField], @"Correctly converted sub object field");
   
   for (int i = 0; i < 3; ++i) {
     NSDictionary *item = json[@"bridgeObjectArrayField"][i];
-    SBBTestBridgeSubObject *object = subObjectArray[i];
-    XCTAssert([item[@"stringField"] isEqualToString:object.stringField], @"Correctly converted sub object array element");
+    SBBTestBridgeSubObject *aSubObject = [object.bridgeObjectArrayField objectAtIndex:i];
+    XCTAssert([item[@"stringField"] isEqualToString:aSubObject.stringField], @"Correctly converted sub object array element");
     XCTAssert([item[@"type"] isEqualToString:@"TestBridgeSubObject"], @"Correctly set sub object array element type field");
   }
 }

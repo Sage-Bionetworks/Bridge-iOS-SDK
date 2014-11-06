@@ -49,6 +49,10 @@
 
         self.allowFuture = [dictionary objectForKey:@"allowFuture"];
 
+        self.earliestValue = [NSDate dateWithISO8601String:[dictionary objectForKey:@"earliestValue"]];
+
+        self.latestValue = [NSDate dateWithISO8601String:[dictionary objectForKey:@"latestValue"]];
+
 	}
 
 	return self;
@@ -59,6 +63,10 @@
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
     [dict setObjectIfNotNil:self.allowFuture forKey:@"allowFuture"];
+
+    [dict setObjectIfNotNil:[self.earliestValue ISO8601String] forKey:@"earliestValue"];
+
+    [dict setObjectIfNotNil:[self.latestValue ISO8601String] forKey:@"latestValue"];
 
 	return dict;
 }

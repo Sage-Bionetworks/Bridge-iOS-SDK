@@ -10,6 +10,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+@class SBBSurveyResponse;
+
 @protocol _SBBSurveyAnswer
 
 @end
@@ -27,5 +29,9 @@
 @property (nonatomic, assign) BOOL declinedValue;
 
 @property (nonatomic, strong) NSString* questionGuid;
+
+@property (nonatomic, strong, readwrite) SBBSurveyResponse *surveyResponse;
+
+- (void) setSurveyResponse: (SBBSurveyResponse*) surveyResponse_ settingInverse: (BOOL) setInverse;
 
 @end

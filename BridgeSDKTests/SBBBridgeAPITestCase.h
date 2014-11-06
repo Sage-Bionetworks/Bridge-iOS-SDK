@@ -9,7 +9,7 @@
 #import <XCTest/XCTest.h>
 @import BridgeSDK;
 #import "MockNetworkManager.h"
-#import "SBBTestBridgeObject.h"
+#import "SBBTestBridgeObjects.h"
 
 @interface SBBBridgeAPITestCase : XCTestCase
 

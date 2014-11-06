@@ -10,6 +10,8 @@
 #import "_SBBBridgeObject.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBResourceList.h"
+
 @interface _SBBBridgeObject()
 
 @end
@@ -58,9 +60,36 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	[self.resourceList awakeFromDictionaryRepresentationInit];
+
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Direct access
+
+- (void) setResourceList: (SBBResourceList*) resourceList_ settingInverse: (BOOL) setInverse
+{
+    if (resourceList_ == nil) {
+        [_resourceList removeItemsObject: (SBBBridgeObject*)self settingInverse: NO];
+    }
+
+    _resourceList = resourceList_;
+
+    if (setInverse == YES) {
+        [_resourceList addItemsObject: (SBBBridgeObject*)self settingInverse: NO];
+    }
+}
+
+- (void) setResourceList: (SBBResourceList*) resourceList_
+{
+    [self setResourceList: resourceList_ settingInverse: YES];
+}
+
+- (SBBResourceList*) resourceList
+{
+    return _resourceList;
+}
+
+@synthesize resourceList = _resourceList;
 
 @end

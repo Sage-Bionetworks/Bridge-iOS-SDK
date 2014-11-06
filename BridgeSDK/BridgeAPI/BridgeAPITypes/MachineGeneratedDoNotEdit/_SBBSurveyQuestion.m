@@ -10,6 +10,9 @@
 #import "_SBBSurveyQuestion.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBSurveyConstraints.h"
+#import "SBBSurvey.h"
+
 @interface _SBBSurveyQuestion()
 
 @end
@@ -37,8 +40,6 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.constraints = [dictionary objectForKey:@"constraints"];
-
         self.guid = [dictionary objectForKey:@"guid"];
 
         self.identifier = [dictionary objectForKey:@"identifier"];
@@ -47,6 +48,13 @@
 
         self.uiHint = [dictionary objectForKey:@"uiHint"];
 
+            NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
+		if(constraintsDict != nil)
+		{
+			SBBSurveyConstraints *constraintsObj = [[SBBSurveyConstraints alloc] initWithDictionaryRepresentation:constraintsDict];
+			self.constraints = constraintsObj;
+
+		}
 	}
 
 	return self;
@@ -56,8 +64,6 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-    [dict setObjectIfNotNil:self.constraints forKey:@"constraints"];
-
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
@@ -65,6 +71,8 @@
     [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
 
     [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
+
+	[dict setObjectIfNotNil:[self.constraints dictionaryRepresentation] forKey:@"constraints"];
 
 	return dict;
 }
@@ -74,9 +82,60 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	[self.survey awakeFromDictionaryRepresentationInit];
+	[self.constraints awakeFromDictionaryRepresentationInit];
+
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Direct access
+
+- (void) setConstraints: (SBBSurveyConstraints*) constraints_ settingInverse: (BOOL) setInverse
+{
+    if (constraints_ == nil) {
+        [_constraints setSurveyQuestion: nil settingInverse: NO];
+    }
+
+    _constraints = constraints_;
+
+    if (setInverse == YES) {
+        [_constraints setSurveyQuestion: (SBBSurveyQuestion*)self settingInverse: NO];
+    }
+}
+
+- (void) setConstraints: (SBBSurveyConstraints*) constraints_
+{
+    [self setConstraints: constraints_ settingInverse: YES];
+}
+
+- (SBBSurveyConstraints*) constraints
+{
+    return _constraints;
+}
+
+- (void) setSurvey: (SBBSurvey*) survey_ settingInverse: (BOOL) setInverse
+{
+    if (survey_ == nil) {
+        [_survey removeQuestionsObject: (SBBSurveyQuestion*)self settingInverse: NO];
+    }
+
+    _survey = survey_;
+
+    if (setInverse == YES) {
+        [_survey addQuestionsObject: (SBBSurveyQuestion*)self settingInverse: NO];
+    }
+}
+
+- (void) setSurvey: (SBBSurvey*) survey_
+{
+    [self setSurvey: survey_ settingInverse: YES];
+}
+
+- (SBBSurvey*) survey
+{
+    return _survey;
+}
+
+@synthesize constraints = _constraints;@synthesize survey = _survey;
 
 @end

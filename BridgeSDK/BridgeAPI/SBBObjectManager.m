@@ -656,9 +656,9 @@
       NSLog(@"Unable to determine class of object to create for type %@", type);
       return nil;
     }
-    object = [objectClass new];
     NSDictionary *mappings = _mappingsForType[type];
     if (mappings) {
+      object = [objectClass new];
       for (NSString *bridgeFieldKey in [mappings allKeys]) {
         id bridgeFieldValue = json[bridgeFieldKey];
         if (!bridgeFieldValue) {
@@ -668,12 +668,8 @@
         [self setProperty:targetClassKey inObject:object fromJson:bridgeFieldValue];
       }
     } else {
-      // assume target class has same fields as API json object; ignore misses
-      for (NSString *fieldKey in json) {
-        // TODO: If need be, set up and handle standard alternate mappings when API field name is an obj-c keyword
-        // or NSObject selector name
-        [self setProperty:fieldKey inObject:object fromJson:json[fieldKey]];
-      }
+      // our internal class for this type knows how to initialize itself from the json
+      object = [[objectClass alloc] initWithDictionaryRepresentation:json];
     }
   }
   
@@ -724,30 +720,8 @@
         bridgeJSON[@"type"] = type;
       }
     } else {
-      // use our internal class for this type to get a canonical list of properties to convert to json with the
-      // same field names
-      NSString *internalClassNameForType = [NSString stringWithFormat:@"SBB%@", type];
-      Class internalClassForType = NSClassFromString(internalClassNameForType);
-      if (internalClassForType == Nil) {
-        NSLog(@"Couldn't find internal class %@ for type %@, unable to convert to json:\n%@", internalClassNameForType, type, object);
-        return nil;
-      }
-      
-      // ignore scalar properties (those will be the "xxxValue" helper properties)
-      NSDictionary *namesAndGetters = [self propertyNamesAndGettersInClass:internalClassForType objectsOnly:YES];
-      for (NSString *fieldKey in namesAndGetters.allKeys) {
-        // TODO: If need be, set up and handle standard alternate mappings when API field name is an obj-c keyword
-        // or NSObject selector name
-        id json = [self getJsonFromProperty:fieldKey inObject:object];
-        if (json) {
-          bridgeJSON[fieldKey] = json;
-        }
-      }
-      
-      // set the Bridge "type" field, if necessary
-      if (!bridgeJSON[@"type"]) {
-        bridgeJSON[@"type"] = type;
-      }
+      // our internal class for this type knows how to convert itself to json
+      bridgeJSON = [object dictionaryRepresentation];
     }
   }
   return bridgeJSON;

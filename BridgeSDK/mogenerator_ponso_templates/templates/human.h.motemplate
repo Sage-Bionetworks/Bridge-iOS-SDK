@@ -1,11 +1,11 @@
 //
-//  <$managedObjectClassName$>.h
+//  <$generatedObjectClassName$>.h
 //	
 //  $Id$
 //
 
-#import "_<$managedObjectClassName$>.h"
+#import "_<$generatedObjectClassName$>.h"
 
-@interface <$managedObjectClassName$> : _<$managedObjectClassName$> <_<$managedObjectClassName$>>
+@interface <$generatedObjectClassName$> : _<$generatedObjectClassName$> <_<$generatedObjectClassName$>>
 // Custom logic goes here.
 @end
