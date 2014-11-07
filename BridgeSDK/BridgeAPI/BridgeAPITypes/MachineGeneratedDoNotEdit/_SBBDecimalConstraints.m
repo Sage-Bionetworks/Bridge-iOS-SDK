@@ -18,7 +18,7 @@
 
 @implementation _SBBDecimalConstraints
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -62,9 +62,9 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
+  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
         self.maxValue = [dictionary objectForKey:@"maxValue"];
@@ -78,9 +78,9 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
     [dict setObjectIfNotNil:self.maxValue forKey:@"maxValue"];
 

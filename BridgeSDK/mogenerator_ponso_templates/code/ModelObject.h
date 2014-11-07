@@ -19,6 +19,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "SBBObjectManager.h"
 
 /*!
 	Abstract superclass for all of our model classes.
@@ -42,8 +43,8 @@
 */
 - (BOOL)writeToFile:(NSString *)filePath;
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary;
-- (NSDictionary *)dictionaryRepresentation;
+- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager;
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 - (void)awakeFromDictionaryRepresentationInit;
 

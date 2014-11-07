@@ -22,7 +22,7 @@
 
 @implementation _SBBSurveyConstraints
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -36,9 +36,9 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
+  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
         self.dataType = [dictionary objectForKey:@"dataType"];
@@ -46,7 +46,7 @@
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"rules"])
 		{
 
- 			SBBSurveyRule *rulesObj = [[SBBSurveyRule alloc] initWithDictionaryRepresentation:objectRepresentationForDict];
+SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addRulesObject:rulesObj];
 		}
@@ -55,9 +55,9 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
     [dict setObjectIfNotNil:self.dataType forKey:@"dataType"];
 
@@ -67,7 +67,7 @@
 		NSMutableArray *rulesRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.rules count]];
 		for(SBBSurveyRule *obj in self.rules)
 		{
-			[rulesRepresentationsForDictionary addObject:[obj dictionaryRepresentation]];
+			[rulesRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:rulesRepresentationsForDictionary forKey:@"rules"];
 

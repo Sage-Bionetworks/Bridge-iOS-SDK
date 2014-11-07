@@ -19,6 +19,8 @@
  */
 
 #import "ModelObject.h"
+#import "SBBComponentManager.h"
+#import "SBBObjectManager.h"
 
 @implementation ModelObject
 
@@ -70,7 +72,7 @@
 		return nil;
 	}
 	
-	id modelObject = [[self alloc] initWithDictionaryRepresentation:plist];
+	id modelObject = [[self alloc] initWithDictionaryRepresentation:plist objectManager:SBBComponent(SBBObjectManager)];
 	[modelObject awakeFromDictionaryRepresentationInit];
 	
 	return modelObject;
@@ -85,7 +87,7 @@
     }
 	
 	// Save this modelObject into plist
-	NSDictionary *dict = [self dictionaryRepresentation];
+	NSDictionary *dict = [self dictionaryRepresentationFromObjectManager:SBBComponent(SBBObjectManager)];
 	NSError *error = nil;
   NSData *plistData = [NSPropertyListSerialization dataWithPropertyList:dict format:NSPropertyListBinaryFormat_v1_0 options:0 error:&error];
 	if(!plistData)
@@ -116,7 +118,7 @@
 	return YES;
 }
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
 	if((self = [super init]))
 	{
@@ -126,7 +128,7 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
 	return [NSDictionary dictionary];
 }
@@ -146,7 +148,8 @@
 - (id)copyWithZone:(NSZone *)zone
 {
 	// Note: ModelObject is not autoreleased because we are in copy method.
-	ModelObject *copy = [[[self class] alloc] initWithDictionaryRepresentation:[self dictionaryRepresentation]];
+  id<SBBObjectManagerProtocol> oMan = SBBComponent(SBBObjectManager);
+	ModelObject *copy = [[[self class] alloc] initWithDictionaryRepresentation:[self dictionaryRepresentationFromObjectManager:oMan] objectManager:oMan];
 	[copy awakeFromDictionaryRepresentationInit];
 	
 	return copy;

@@ -50,9 +50,9 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
+  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     <$if Attribute.isReadonly$>
@@ -74,15 +74,15 @@
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
 		{
       <$if TemplateVar.arc$>
- 			<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithDictionaryRepresentation:objectRepresentationForDict];
+<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
      <$else$>
-			<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithDictionaryRepresentation:objectRepresentationForDict] autorelease];
+			<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectManager objectFromBridgeJSON:objectRepresentationForDict] autorelease];
       <$endif$>
 			[self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
 		}<$else$>NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
 		if(<$Relationship.name$>Dict != nil)
 		{
-			<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithDictionaryRepresentation:<$Relationship.name$>Dict];
+			<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:<$Relationship.name$>Dict];
 			self.<$Relationship.name$> = <$Relationship.name$>Obj;
       <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
 		}<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
@@ -91,9 +91,9 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     <$if Attribute.hasDateAttributeType$>
     [dict setObjectIfNotNil:[self.<$Attribute.name$> ISO8601String] forKey:@"<$Attribute.name$>"];
@@ -109,14 +109,14 @@
 		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>)
 		{
 			<$if Relationship.userInfo.destinationEntityIDKeyPath $>[<$Relationship.name$>RepresentationsForDictionary addObject:[obj valueForKeyPath:@"<$Relationship.userInfo.destinationEntityIDKeyPath$>"]];
-			<$else$>[<$Relationship.name$>RepresentationsForDictionary addObject:[obj dictionaryRepresentation]];<$endif$>
+			<$else$>[<$Relationship.name$>RepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];<$endif$>
 		}
 		[dict setObjectIfNotNil:<$Relationship.name$>RepresentationsForDictionary forKey:@"<$Relationship.name$>"];
 		<$endif$>
 	}
 	<$else$>
 	<$if Relationship.userInfo.destinationEntityIDKeyPath $>[dict setObjectIfNotNil:[self.<$Relationship.name$> valueForKeyPath:@"<$Relationship.userInfo.destinationEntityIDKeyPath$>"] forKey:@"<$Relationship.name$>"];
-	<$else$><$if ! Relationship.isTransient $>[dict setObjectIfNotNil:[self.<$Relationship.name$> dictionaryRepresentation] forKey:@"<$Relationship.name$>"];
+	<$else$><$if ! Relationship.isTransient $>[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.<$Relationship.name$>] forKey:@"<$Relationship.name$>"];
 	<$endif$>
 	<$endif$>
 	<$endif$>

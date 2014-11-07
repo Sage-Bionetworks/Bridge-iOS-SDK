@@ -669,7 +669,7 @@
       }
     } else {
       // our internal class for this type knows how to initialize itself from the json
-      object = [[objectClass alloc] initWithDictionaryRepresentation:json];
+      object = [[objectClass alloc] initWithDictionaryRepresentation:json objectManager:self];
     }
   }
   
@@ -721,7 +721,7 @@
       }
     } else {
       // our internal class for this type knows how to convert itself to json
-      bridgeJSON = [object dictionaryRepresentation];
+      bridgeJSON = [object dictionaryRepresentationFromObjectManager:self];
     }
   }
   return bridgeJSON;

@@ -21,7 +21,7 @@
 
 @implementation _SBBSurveyQuestion
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -35,9 +35,9 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
+  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
         self.guid = [dictionary objectForKey:@"guid"];
@@ -51,7 +51,7 @@
             NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
 		if(constraintsDict != nil)
 		{
-			SBBSurveyConstraints *constraintsObj = [[SBBSurveyConstraints alloc] initWithDictionaryRepresentation:constraintsDict];
+			SBBSurveyConstraints *constraintsObj = [objectManager objectFromBridgeJSON:constraintsDict];
 			self.constraints = constraintsObj;
 
 		}
@@ -60,9 +60,9 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
@@ -72,7 +72,7 @@
 
     [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
 
-	[dict setObjectIfNotNil:[self.constraints dictionaryRepresentation] forKey:@"constraints"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.constraints] forKey:@"constraints"];
 
 	return dict;
 }

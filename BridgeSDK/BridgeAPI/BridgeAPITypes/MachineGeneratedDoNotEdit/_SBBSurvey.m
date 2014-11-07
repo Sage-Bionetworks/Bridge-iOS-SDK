@@ -23,7 +23,7 @@
 
 @implementation _SBBSurvey
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -57,9 +57,9 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
+  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
         self.guid = [dictionary objectForKey:@"guid"];
@@ -79,7 +79,7 @@
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"questions"])
 		{
 
- 			SBBSurveyQuestion *questionsObj = [[SBBSurveyQuestion alloc] initWithDictionaryRepresentation:objectRepresentationForDict];
+SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addQuestionsObject:questionsObj];
 		}
@@ -88,9 +88,9 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
@@ -112,7 +112,7 @@
 		NSMutableArray *questionsRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.questions count]];
 		for(SBBSurveyQuestion *obj in self.questions)
 		{
-			[questionsRepresentationsForDictionary addObject:[obj dictionaryRepresentation]];
+			[questionsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:questionsRepresentationsForDictionary forKey:@"questions"];
 

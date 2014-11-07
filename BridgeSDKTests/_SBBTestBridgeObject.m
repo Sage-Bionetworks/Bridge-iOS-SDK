@@ -116,9 +116,9 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
+  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
         self.dateField = [NSDate dateWithISO8601String:[dictionary objectForKey:@"dateField"]];
@@ -148,14 +148,14 @@
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"bridgeObjectArrayField"])
 		{
 
- 			SBBBridgeObject_test *bridgeObjectArrayFieldObj = [[SBBBridgeObject_test alloc] initWithDictionaryRepresentation:objectRepresentationForDict];
+SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addBridgeObjectArrayFieldObject:bridgeObjectArrayFieldObj];
 		}
             NSDictionary *bridgeSubObjectFieldDict = [dictionary objectForKey:@"bridgeSubObjectField"];
 		if(bridgeSubObjectFieldDict != nil)
 		{
-			SBBTestBridgeSubObject *bridgeSubObjectFieldObj = [[SBBTestBridgeSubObject alloc] initWithDictionaryRepresentation:bridgeSubObjectFieldDict];
+			SBBTestBridgeSubObject *bridgeSubObjectFieldObj = [objectManager objectFromBridgeJSON:bridgeSubObjectFieldDict];
 			self.bridgeSubObjectField = bridgeSubObjectFieldObj;
 
 		}
@@ -164,9 +164,9 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
     [dict setObjectIfNotNil:[self.dateField ISO8601String] forKey:@"dateField"];
 
@@ -198,13 +198,13 @@
 		NSMutableArray *bridgeObjectArrayFieldRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.bridgeObjectArrayField count]];
 		for(SBBBridgeObject_test *obj in self.bridgeObjectArrayField)
 		{
-			[bridgeObjectArrayFieldRepresentationsForDictionary addObject:[obj dictionaryRepresentation]];
+			[bridgeObjectArrayFieldRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:bridgeObjectArrayFieldRepresentationsForDictionary forKey:@"bridgeObjectArrayField"];
 
 	}
 
-	[dict setObjectIfNotNil:[self.bridgeSubObjectField dictionaryRepresentation] forKey:@"bridgeSubObjectField"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.bridgeSubObjectField] forKey:@"bridgeSubObjectField"];
 
 	return dict;
 }

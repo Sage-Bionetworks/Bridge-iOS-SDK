@@ -22,7 +22,7 @@
 
 @implementation _SBBSurveyResponse
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -36,9 +36,9 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
+  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
         self.completedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"completedOn"]];
@@ -52,14 +52,14 @@
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"answers"])
 		{
 
- 			SBBSurveyAnswer *answersObj = [[SBBSurveyAnswer alloc] initWithDictionaryRepresentation:objectRepresentationForDict];
+SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addAnswersObject:answersObj];
 		}
             NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
 		if(surveyDict != nil)
 		{
-			SBBSurvey *surveyObj = [[SBBSurvey alloc] initWithDictionaryRepresentation:surveyDict];
+			SBBSurvey *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
 			self.survey = surveyObj;
 
 		}
@@ -68,9 +68,9 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
     [dict setObjectIfNotNil:[self.completedOn ISO8601String] forKey:@"completedOn"];
 
@@ -86,13 +86,13 @@
 		NSMutableArray *answersRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.answers count]];
 		for(SBBSurveyAnswer *obj in self.answers)
 		{
-			[answersRepresentationsForDictionary addObject:[obj dictionaryRepresentation]];
+			[answersRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:answersRepresentationsForDictionary forKey:@"answers"];
 
 	}
 
-	[dict setObjectIfNotNil:[self.survey dictionaryRepresentation] forKey:@"survey"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
 	return dict;
 }

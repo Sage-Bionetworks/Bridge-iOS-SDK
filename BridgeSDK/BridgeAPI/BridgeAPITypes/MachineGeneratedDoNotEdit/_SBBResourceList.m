@@ -21,7 +21,7 @@
 
 @implementation _SBBResourceList
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -45,9 +45,9 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
+  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
         self.total = [dictionary objectForKey:@"total"];
@@ -55,7 +55,7 @@
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"items"])
 		{
 
- 			SBBBridgeObject *itemsObj = [[SBBBridgeObject alloc] initWithDictionaryRepresentation:objectRepresentationForDict];
+SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addItemsObject:itemsObj];
 		}
@@ -64,9 +64,9 @@
 	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
     [dict setObjectIfNotNil:self.total forKey:@"total"];
 
@@ -76,7 +76,7 @@
 		NSMutableArray *itemsRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.items count]];
 		for(SBBBridgeObject *obj in self.items)
 		{
-			[itemsRepresentationsForDictionary addObject:[obj dictionaryRepresentation]];
+			[itemsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:itemsRepresentationsForDictionary forKey:@"items"];
 
