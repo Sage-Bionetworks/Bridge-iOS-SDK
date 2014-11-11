@@ -15,7 +15,7 @@
 @property (nonatomic, strong) NSString *responseGuid;
 
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
-@property (weak, nonatomic) IBOutlet UITextField *versionedOnTextField;
+@property (weak, nonatomic) IBOutlet UITextField *createdOnTextField;
 @property (weak, nonatomic) IBOutlet UITextField *guidTextField;
 @property (weak, nonatomic) IBOutlet UITextField *numQuestionsTextField;
 
@@ -119,7 +119,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
           _fetchedSurvey = sbbSurvey;
           _nameTextField.text = sbbSurvey.name;
-          _versionedOnTextField.text = [sbbSurvey.versionedOn description];
+          _createdOnTextField.text = [sbbSurvey.createdOn description];
           _guidTextField.text = sbbSurvey.guid;
           _numQuestionsTextField.text = [NSString stringWithFormat:@"%lu", (unsigned long)sbbSurvey.questions.count];
         });

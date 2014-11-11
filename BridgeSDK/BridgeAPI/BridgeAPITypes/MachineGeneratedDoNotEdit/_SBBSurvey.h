@@ -19,6 +19,8 @@
 
 @interface _SBBSurvey : SBBBridgeObject
 
+@property (nonatomic, strong) NSDate* createdOn;
+
 @property (nonatomic, strong) NSString* guid;
 
 @property (nonatomic, strong) NSString* identifier;
@@ -34,8 +36,6 @@
 @property (nonatomic, strong) NSNumber* version;
 
 @property (nonatomic, assign) double versionValue;
-
-@property (nonatomic, strong) NSDate* versionedOn;
 
 @property (nonatomic, strong, readonly) NSArray *questions;
 

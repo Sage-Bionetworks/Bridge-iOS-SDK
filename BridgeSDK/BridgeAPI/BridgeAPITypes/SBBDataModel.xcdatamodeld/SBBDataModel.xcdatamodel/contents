@@ -66,19 +66,22 @@
         <attribute name="pattern" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Survey" representedClassName="" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="published" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="version" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
-        <attribute name="versionedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="questions" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyQuestion" inverseName="survey" inverseEntity="SurveyQuestion" syncable="YES"/>
         <relationship name="surveyResponses" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="SurveyResponse" inverseName="survey" inverseEntity="SurveyResponse" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="guid"/>
+        </userInfo>
     </entity>
     <entity name="SurveyAnswer" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
@@ -114,6 +117,7 @@
         </relationship>
         <userInfo>
             <entry key="additionalHeaderFileName" value="SBBSurveyConstraints.h"/>
+            <entry key="entityIDKeyPath" value="guid"/>
         </userInfo>
     </entity>
     <entity name="SurveyQuestionOption" representedClassName="" parentEntity="BridgeObject" syncable="YES">
@@ -129,6 +133,7 @@
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Survey" inverseName="surveyResponses" inverseEntity="Survey" syncable="YES"/>
         <userInfo>
             <entry key="additionalHeaderFileName" value="SBBSurvey.h"/>
+            <entry key="entityIDKeyPath" value="guid"/>
         </userInfo>
     </entity>
     <entity name="SurveyRule" representedClassName="" parentEntity="BridgeObject" syncable="YES">
@@ -175,9 +180,9 @@
         <element name="Survey" positionX="-36" positionY="27" width="128" height="178"/>
         <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="133"/>
         <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="88"/>
-        <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="133"/>
+        <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="135"/>
         <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="75"/>
-        <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="133"/>
+        <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="135"/>
         <element name="SurveyRule" positionX="18" positionY="108" width="128" height="103"/>
         <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>
         <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>

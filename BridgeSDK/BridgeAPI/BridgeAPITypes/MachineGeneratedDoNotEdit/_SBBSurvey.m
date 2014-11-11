@@ -62,6 +62,8 @@
   if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
+        self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
+
         self.guid = [dictionary objectForKey:@"guid"];
 
         self.identifier = [dictionary objectForKey:@"identifier"];
@@ -73,8 +75,6 @@
         self.published = [dictionary objectForKey:@"published"];
 
         self.version = [dictionary objectForKey:@"version"];
-
-        self.versionedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"versionedOn"]];
 
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"questions"])
 		{
@@ -92,6 +92,8 @@ SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepr
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
+    [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
+
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
@@ -103,8 +105,6 @@ SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepr
     [dict setObjectIfNotNil:self.published forKey:@"published"];
 
     [dict setObjectIfNotNil:self.version forKey:@"version"];
-
-    [dict setObjectIfNotNil:[self.versionedOn ISO8601String] forKey:@"versionedOn"];
 
     if([self.questions count] > 0)
 	{
