@@ -630,6 +630,10 @@
 {
   id object = nil;
   
+    // TODO: First check cache, if entity of type has an entityIdKeyPath property,
+    // for existing instance with same value at that keypath; if it exists, update
+    // from json...
+    // otherwise do this:
   if ([json isKindOfClass:[NSArray class]]) {
     NSMutableArray *list = [NSMutableArray array];
     for (id subJson in json) {
@@ -651,6 +655,7 @@
       // not an API object, no way to determine type; just pass it through as raw json
       return json;
     }
+      // TODO: Create instance of entity "type" from json
     Class objectClass = [self classFromType:type];
     if (objectClass == Nil) {
       NSLog(@"Unable to determine class of object to create for type %@", type);
