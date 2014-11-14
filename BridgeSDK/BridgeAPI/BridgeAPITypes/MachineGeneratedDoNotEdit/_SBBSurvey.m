@@ -56,6 +56,8 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
+    self.createdOn = [dictionary objectForKey:@"createdOn"];
+
     self.guid = [dictionary objectForKey:@"guid"];
 
     self.identifier = [dictionary objectForKey:@"identifier"];
@@ -70,8 +72,6 @@
 
     self.version = [dictionary objectForKey:@"version"];
 
-    self.versionedOn = [dictionary objectForKey:@"versionedOn"];
-
 	}
 
 	return self;
@@ -80,6 +80,7 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+	[dict setObjectIfNotNil:self.createdOn forKey:@"createdOn"];
 	[dict setObjectIfNotNil:self.guid forKey:@"guid"];
 	[dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 	[dict setObjectIfNotNil:self.modifiedOn forKey:@"modifiedOn"];
@@ -87,7 +88,6 @@
 	[dict setObjectIfNotNil:self.published forKey:@"published"];
 	[dict setObjectIfNotNil:self.questions forKey:@"questions"];
 	[dict setObjectIfNotNil:self.version forKey:@"version"];
-	[dict setObjectIfNotNil:self.versionedOn forKey:@"versionedOn"];
 
 	return dict;
 }

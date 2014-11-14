@@ -48,6 +48,10 @@
 
     self.allowFuture = [dictionary objectForKey:@"allowFuture"];
 
+    self.earliestValue = [dictionary objectForKey:@"earliestValue"];
+
+    self.latestValue = [dictionary objectForKey:@"latestValue"];
+
 	}
 
 	return self;
@@ -57,6 +61,8 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 	[dict setObjectIfNotNil:self.allowFuture forKey:@"allowFuture"];
+	[dict setObjectIfNotNil:self.earliestValue forKey:@"earliestValue"];
+	[dict setObjectIfNotNil:self.latestValue forKey:@"latestValue"];
 
 	return dict;
 }

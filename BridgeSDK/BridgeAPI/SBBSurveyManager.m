@@ -38,9 +38,9 @@
   }];
 }
 
-- (NSURLSessionDataTask *)getSurveyByGuid:(NSString *)guid versionedOn:(NSDate *)versionedOn completion:(SBBSurveyManagerGetCompletionBlock)completion
+- (NSURLSessionDataTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
-  NSString *version = [versionedOn ISO8601StringUTC];
+  NSString *version = [createdOn ISO8601StringUTC];
   NSString *ref = [NSString stringWithFormat:@"/api/v1/surveys/%@/%@", guid, version];
   return [self getSurveyByRef:ref completion:completion];
 }
@@ -58,9 +58,9 @@
   }];
 }
 
-- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)guid versionedOn:(NSDate *)versionedOn completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
-  NSString *version = [versionedOn ISO8601StringUTC];
+  NSString *version = [createdOn ISO8601StringUTC];
   NSString *ref = [NSString stringWithFormat:@"/api/v1/surveys/%@/%@", guid, version];
   return [self submitAnswers:surveyAnswers toSurveyByRef:ref completion:completion];
 }
