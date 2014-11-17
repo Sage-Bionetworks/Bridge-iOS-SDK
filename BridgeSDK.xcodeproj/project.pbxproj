@@ -382,14 +382,6 @@
 		80F7C31219E5AA7900574800 /* human.m.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = human.m.motemplate; sourceTree = "<group>"; };
 		80F7C31319E5AA7900574800 /* machine.h.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = machine.h.motemplate; sourceTree = "<group>"; };
 		80F7C31419E5AA7900574800 /* machine.m.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = machine.m.motemplate; sourceTree = "<group>"; };
-		80F7C31619E5AA7900574800 /* human.h.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = human.h.motemplate; sourceTree = "<group>"; };
-		80F7C31719E5AA7900574800 /* human.m.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = human.m.motemplate; sourceTree = "<group>"; };
-		80F7C31819E5AA7900574800 /* machine.h.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = machine.h.motemplate; sourceTree = "<group>"; };
-		80F7C31919E5AA7900574800 /* machine.m.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = machine.m.motemplate; sourceTree = "<group>"; };
-		80F7C31B19E5AA7900574800 /* human.h.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = human.h.motemplate; sourceTree = "<group>"; };
-		80F7C31C19E5AA7900574800 /* human.m.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = human.m.motemplate; sourceTree = "<group>"; };
-		80F7C31D19E5AA7900574800 /* machine.h.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = machine.h.motemplate; sourceTree = "<group>"; };
-		80F7C31E19E5AA7900574800 /* machine.m.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = machine.m.motemplate; sourceTree = "<group>"; };
 		80F7C32E19E5DC0D00574800 /* _SBBBridgeObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObject.h; sourceTree = "<group>"; };
 		80F7C32F19E5DC0D00574800 /* _SBBBridgeObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBridgeObject.m; sourceTree = "<group>"; };
 		80F7C33019E5DC0D00574800 /* _SBBSurvey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSurvey.h; sourceTree = "<group>"; };
@@ -665,32 +657,8 @@
 				80F7C31219E5AA7900574800 /* human.m.motemplate */,
 				80F7C31319E5AA7900574800 /* machine.h.motemplate */,
 				80F7C31419E5AA7900574800 /* machine.m.motemplate */,
-				80F7C31519E5AA7900574800 /* NSSet */,
 			);
 			path = templates;
-			sourceTree = "<group>";
-		};
-		80F7C31519E5AA7900574800 /* NSSet */ = {
-			isa = PBXGroup;
-			children = (
-				80F7C31619E5AA7900574800 /* human.h.motemplate */,
-				80F7C31719E5AA7900574800 /* human.m.motemplate */,
-				80F7C31819E5AA7900574800 /* machine.h.motemplate */,
-				80F7C31919E5AA7900574800 /* machine.m.motemplate */,
-				80F7C31A19E5AA7900574800 /* NSCoding */,
-			);
-			path = NSSet;
-			sourceTree = "<group>";
-		};
-		80F7C31A19E5AA7900574800 /* NSCoding */ = {
-			isa = PBXGroup;
-			children = (
-				80F7C31B19E5AA7900574800 /* human.h.motemplate */,
-				80F7C31C19E5AA7900574800 /* human.m.motemplate */,
-				80F7C31D19E5AA7900574800 /* machine.h.motemplate */,
-				80F7C31E19E5AA7900574800 /* machine.m.motemplate */,
-			);
-			path = NSCoding;
 			sourceTree = "<group>";
 		};
 		80F7C32D19E5DC0D00574800 /* MachineGeneratedDoNotEdit */ = {
