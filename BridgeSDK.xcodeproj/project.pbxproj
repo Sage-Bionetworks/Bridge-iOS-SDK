@@ -1343,6 +1343,7 @@
 				80E09AD219F8493100EB5F0B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		80F7C32919E5BB1000574800 /* Build configuration list for PBXAggregateTarget "BridgeObjects" */ = {
 			isa = XCConfigurationList;

@@ -52,19 +52,20 @@
 
 - (NSString *)surveyRef
 {
-  NSString *surveyRef = nil;
-  switch (SBBComponent(SBBNetworkManager).environment) {
-    case SBBEnvironmentDev:
-      surveyRef = @"/api/v1/surveys/4aad1810-cef9-41bc-b0d9-73bcdf32df07/2014-10-16T21:36:44.386Z";
-      break;
-      
-    case SBBEnvironmentStaging:
-      surveyRef = @"/api/v1/surveys/ecf7e761-c7e9-4bb6-b6e7-d6d15c53b209/2014-09-25T20:07:49.186Z";
-      break;
-      
-    default:
-      break;
-  }
+    NSString *surveyRef = nil;
+    switch (SBBComponent(SBBNetworkManager).environment) {
+        case SBBEnvironmentDev:
+            surveyRef = @"/api/v1/surveys/4aad1810-cef9-41bc-b0d9-73bcdf32df07/2014-10-16T21:36:44.386Z";
+            break;
+            
+        case SBBEnvironmentStaging:
+//          surveyRef = @"/api/v1/surveys/ecf7e761-c7e9-4bb6-b6e7-d6d15c53b209/2014-09-25T20:07:49.186Z";
+            surveyRef = @"/api/v1/surveys/c132f353-9c31-4046-af31-df7e9ff02dba/2014-10-31T22:54:40.415Z";
+            break;
+            
+        default:
+            break;
+    }
   
   return surveyRef;
 }
