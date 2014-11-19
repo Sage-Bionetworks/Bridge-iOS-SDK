@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14A389" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="BooleanConstraints" representedClassName="" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="BridgeObject" representedClassName="" isAbstract="YES" syncable="YES">
         <attribute name="type" optional="YES" attributeType="String" syncable="YES">
@@ -86,6 +86,11 @@
     <entity name="SurveyAnswer" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="answeredOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="ciphertext" optional="YES" attributeType="Binary" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
         <attribute name="client" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="declined" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="questionGuid" optional="YES" attributeType="String" syncable="YES"/>
@@ -94,6 +99,9 @@
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
+        <userInfo>
+            <entry key="encrypted" value="1"/>
+        </userInfo>
     </entity>
     <entity name="SurveyConstraints" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
@@ -178,11 +186,11 @@
         <element name="Schedule" positionX="-9" positionY="81" width="128" height="165"/>
         <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
         <element name="Survey" positionX="-36" positionY="27" width="128" height="178"/>
-        <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="133"/>
+        <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="148"/>
         <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="88"/>
         <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="135"/>
         <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="75"/>
-        <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="135"/>
+        <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="133"/>
         <element name="SurveyRule" positionX="18" positionY="108" width="128" height="103"/>
         <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>
         <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>
