@@ -209,6 +209,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		606FDDEE1A1D6F5200898466 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FB7564F01512D3C4007B806B;
+			remoteInfo = RNCryptor;
+		};
+		606FDDF01A1D6F5200898466 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AB13427A15E0FC2300456914;
+			remoteInfo = "RNCryptor OS X";
+		};
+		606FDDF21A1D6F5200898466 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FB7565001512D3C4007B806B;
+			remoteInfo = RNCryptorTests;
+		};
+		606FDDF41A1D6F5200898466 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FB6AC68C16F6704100CA0C0A;
+			remoteInfo = rncrypt;
+		};
 		60FF57261A0AFDE200CE2373 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
@@ -226,6 +254,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCryptor.xcodeproj; path = Submodules/RNCryptor/RNCryptor.xcodeproj; sourceTree = "<group>"; };
+		606FDE0B1A1D70ED00898466 /* generate_namespace_header.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_namespace_header.sh; sourceTree = "<group>"; };
 		60FF571F1A0AF87C00CE2373 /* TestModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TestModel.xcdatamodel; sourceTree = "<group>"; };
 		60FF57281A0AFEA500CE2373 /* _SBBBridgeObject_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObject_test.h; sourceTree = "<group>"; };
 		60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBridgeObject_test.m; sourceTree = "<group>"; };
@@ -422,6 +452,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		606FDDE81A1D6F5200898466 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				606FDDEF1A1D6F5200898466 /* libRNCryptor.a */,
+				606FDDF11A1D6F5200898466 /* RNCryptor.framework */,
+				606FDDF31A1D6F5200898466 /* RNCryptorTests.xctest */,
+				606FDDF51A1D6F5200898466 /* rncrypt */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		80104A5919D4CD9E001F2573 /* BridgeAPITypes */ = {
 			isa = PBXGroup;
 			children = (
@@ -509,6 +550,8 @@
 				80C3D07419DCA03C00DEA044 /* BridgeSDK.hdoc */,
 				80E09AD619F8525C00EB5F0B /* hdocExcludes.txt */,
 				80C3D07519DCA03C00DEA044 /* TemplateIcon2x.png */,
+				606FDE0B1A1D70ED00898466 /* generate_namespace_header.sh */,
+				606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */,
 				80855F5219BE258C006601C7 /* BridgeSDK */,
 				80855F5C19BE258C006601C7 /* BridgeSDKTests */,
 				80855F5119BE258C006601C7 /* Products */,
@@ -869,6 +912,12 @@
 			mainGroup = 80855F4619BE258B006601C7;
 			productRefGroup = 80855F5119BE258C006601C7 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 606FDDE81A1D6F5200898466 /* Products */;
+					ProjectRef = 606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				80F7C32819E5BB1000574800 /* BridgeObjects */,
@@ -880,6 +929,37 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		606FDDEF1A1D6F5200898466 /* libRNCryptor.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNCryptor.a;
+			remoteRef = 606FDDEE1A1D6F5200898466 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		606FDDF11A1D6F5200898466 /* RNCryptor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = RNCryptor.framework;
+			remoteRef = 606FDDF01A1D6F5200898466 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		606FDDF31A1D6F5200898466 /* RNCryptorTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = RNCryptorTests.xctest;
+			remoteRef = 606FDDF21A1D6F5200898466 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		606FDDF51A1D6F5200898466 /* rncrypt */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = rncrypt;
+			remoteRef = 606FDDF41A1D6F5200898466 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		80855F4E19BE258C006601C7 /* Resources */ = {
