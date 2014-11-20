@@ -147,6 +147,10 @@
 		8026D6A019EC46E3008942B0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8026D69E19EC465B008942B0 /* libz.dylib */; };
 		8026D6A319EC531F008942B0 /* SBBAuthManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A219EC531F008942B0 /* SBBAuthManagerTests.m */; };
 		8026D6A519EC56E8008942B0 /* SBBSurveyManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A419EC56E8008942B0 /* SBBSurveyManagerTests.m */; };
+		8053B62E1A00356000A2E6C4 /* _SBBResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8053B62C1A00356000A2E6C4 /* _SBBResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8053B62F1A00356000A2E6C4 /* _SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */; };
+		8053B6331A00357400A2E6C4 /* SBBResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8053B6311A00357400A2E6C4 /* SBBResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8053B6341A00357400A2E6C4 /* SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B6321A00357400A2E6C4 /* SBBResourceList.m */; };
 		80855F5619BE258C006601C7 /* BridgeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F5519BE258C006601C7 /* BridgeSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80855F6019BE258C006601C7 /* BridgeSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F5F19BE258C006601C7 /* BridgeSDKTests.m */; };
 		80855F7119BE27ED006601C7 /* SBBErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F6A19BE27ED006601C7 /* SBBErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -157,6 +161,13 @@
 		80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BB09F619C2234100E419A1 /* SBBAuthManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80BB09F919C2234100E419A1 /* SBBAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BB09F719C2234100E419A1 /* SBBAuthManager.m */; };
 		80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */; };
+		80E60D9F19FAD56C0053D166 /* _SBBSchedule.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E60D9D19FAD56C0053D166 /* _SBBSchedule.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E60DA019FAD56C0053D166 /* _SBBSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E60D9E19FAD56C0053D166 /* _SBBSchedule.m */; };
+		80E60DA419FAD5860053D166 /* SBBSchedule.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E60DA219FAD5860053D166 /* SBBSchedule.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E60DA519FAD5860053D166 /* SBBSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E60DA319FAD5860053D166 /* SBBSchedule.m */; };
+		80E60DA819FAD64C0053D166 /* SBBScheduleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E60DA619FAD64C0053D166 /* SBBScheduleManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E60DA919FAD64C0053D166 /* SBBScheduleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E60DA719FAD64C0053D166 /* SBBScheduleManager.m */; };
+		80E60DAB19FB0D7E0053D166 /* SBBScheduleManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E60DAA19FB0D7E0053D166 /* SBBScheduleManagerTests.m */; };
 		80F7C32219E5AA8400574800 /* ModelObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 80F7C2E819E5AA7900574800 /* ModelObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80F7C32319E5AA8700574800 /* ModelObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C2E919E5AA7900574800 /* ModelObject.m */; };
 		80F7C34119E5DC0D00574800 /* _SBBBridgeObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 80F7C32E19E5DC0D00574800 /* _SBBBridgeObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -303,6 +314,10 @@
 		8026D6A119EC49E1008942B0 /* SBBBridgeAPITestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAPITestCase.h; sourceTree = "<group>"; };
 		8026D6A219EC531F008942B0 /* SBBAuthManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBAuthManagerTests.m; sourceTree = "<group>"; };
 		8026D6A419EC56E8008942B0 /* SBBSurveyManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyManagerTests.m; sourceTree = "<group>"; };
+		8053B62C1A00356000A2E6C4 /* _SBBResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBResourceList.h; sourceTree = "<group>"; };
+		8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBResourceList.m; sourceTree = "<group>"; };
+		8053B6311A00357400A2E6C4 /* SBBResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBResourceList.h; sourceTree = "<group>"; };
+		8053B6321A00357400A2E6C4 /* SBBResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBResourceList.m; sourceTree = "<group>"; };
 		80855F5019BE258C006601C7 /* BridgeSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BridgeSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		80855F5419BE258C006601C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80855F5519BE258C006601C7 /* BridgeSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeSDK.h; sourceTree = "<group>"; };
@@ -321,6 +336,13 @@
 		80C3D07719DDE94A00DEA044 /* SBBTestAuthManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestAuthManagerDelegate.h; sourceTree = "<group>"; };
 		80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestAuthManagerDelegate.m; sourceTree = "<group>"; };
 		80E09AD619F8525C00EB5F0B /* hdocExcludes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hdocExcludes.txt; path = BridgeSDK/hdocExcludes.txt; sourceTree = "<group>"; };
+		80E60D9D19FAD56C0053D166 /* _SBBSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSchedule.h; sourceTree = "<group>"; };
+		80E60D9E19FAD56C0053D166 /* _SBBSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBSchedule.m; sourceTree = "<group>"; };
+		80E60DA219FAD5860053D166 /* SBBSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSchedule.h; sourceTree = "<group>"; };
+		80E60DA319FAD5860053D166 /* SBBSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSchedule.m; sourceTree = "<group>"; };
+		80E60DA619FAD64C0053D166 /* SBBScheduleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBScheduleManager.h; sourceTree = "<group>"; };
+		80E60DA719FAD64C0053D166 /* SBBScheduleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBScheduleManager.m; sourceTree = "<group>"; };
+		80E60DAA19FB0D7E0053D166 /* SBBScheduleManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBScheduleManagerTests.m; sourceTree = "<group>"; };
 		80F7C2E819E5AA7900574800 /* ModelObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelObject.h; sourceTree = "<group>"; };
 		80F7C2E919E5AA7900574800 /* ModelObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelObject.m; sourceTree = "<group>"; };
 		80F7C2EA19E5AA7900574800 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -429,6 +451,10 @@
 				800E795E19ED74B600EEE612 /* SBBIntegerConstraints.m */,
 				800E795F19ED74B600EEE612 /* SBBMultiValueConstraints.h */,
 				800E796019ED74B600EEE612 /* SBBMultiValueConstraints.m */,
+				8053B6311A00357400A2E6C4 /* SBBResourceList.h */,
+				8053B6321A00357400A2E6C4 /* SBBResourceList.m */,
+				80E60DA219FAD5860053D166 /* SBBSchedule.h */,
+				80E60DA319FAD5860053D166 /* SBBSchedule.m */,
 				800E796119ED74B600EEE612 /* SBBStringConstraints.h */,
 				800E796219ED74B600EEE612 /* SBBStringConstraints.m */,
 				80F7C33B19E5DC0D00574800 /* SBBSurvey.h */,
@@ -534,6 +560,7 @@
 				8026D6A219EC531F008942B0 /* SBBAuthManagerTests.m */,
 				8017AF6719D9D909001AF9BA /* SBBObjectManagerTests.m */,
 				8026D69C19EC4025008942B0 /* SBBProfileManagerTests.m */,
+				80E60DAA19FB0D7E0053D166 /* SBBScheduleManagerTests.m */,
 				8026D6A419EC56E8008942B0 /* SBBSurveyManagerTests.m */,
 				80C3D07719DDE94A00DEA044 /* SBBTestAuthManagerDelegate.h */,
 				80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */,
@@ -585,6 +612,8 @@
 				80104A6519D4CFE5001F2573 /* SBBObjectManager.m */,
 				80104A3B19D1F61B001F2573 /* SBBProfileManager.h */,
 				80104A3C19D1F61B001F2573 /* SBBProfileManager.m */,
+				80E60DA619FAD64C0053D166 /* SBBScheduleManager.h */,
+				80E60DA719FAD64C0053D166 /* SBBScheduleManager.m */,
 				8026D65C19E7527F008942B0 /* SBBSurveyManager.h */,
 				8026D65D19E7527F008942B0 /* SBBSurveyManager.m */,
 				8026D67819E77518008942B0 /* SBBUploadManager.h */,
@@ -745,6 +774,10 @@
 				800E793619ED744000EEE612 /* _SBBIntegerConstraints.m */,
 				800E793719ED744000EEE612 /* _SBBMultiValueConstraints.h */,
 				800E793819ED744000EEE612 /* _SBBMultiValueConstraints.m */,
+				8053B62C1A00356000A2E6C4 /* _SBBResourceList.h */,
+				8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */,
+				80E60D9D19FAD56C0053D166 /* _SBBSchedule.h */,
+				80E60D9E19FAD56C0053D166 /* _SBBSchedule.m */,
 				800E793919ED744000EEE612 /* _SBBStringConstraints.h */,
 				800E793A19ED744000EEE612 /* _SBBStringConstraints.m */,
 				80F7C33019E5DC0D00574800 /* _SBBSurvey.h */,
@@ -787,8 +820,10 @@
 				8026D69219E892B5008942B0 /* SBBUploadRequest.h in Headers */,
 				8026D67619E7658E008942B0 /* SBBSurveyResponse.h in Headers */,
 				8026D67E19E857FC008942B0 /* SBBBridgeAPIManager.h in Headers */,
+				80E60D9F19FAD56C0053D166 /* _SBBSchedule.h in Headers */,
 				800E794119ED744000EEE612 /* _SBBMultiValueConstraints.h in Headers */,
 				8026D68E19E89149008942B0 /* _SBBUploadRequest.h in Headers */,
+				8053B62E1A00356000A2E6C4 /* _SBBResourceList.h in Headers */,
 				8026D66619E75662008942B0 /* SBBGuidHolder.h in Headers */,
 				80F7C34719E5DC0D00574800 /* _SBBSurveyQuestion.h in Headers */,
 				80F7C34D19E5DC0D00574800 /* SBBSurvey.h in Headers */,
@@ -820,11 +855,13 @@
 				8026D66219E75619008942B0 /* _SBBGuidHolder.h in Headers */,
 				800E795919ED74A600EEE612 /* SBBDecimalConstraints.h in Headers */,
 				8026D67219E76579008942B0 /* SBBSurveyAnswer.h in Headers */,
+				8053B6331A00357400A2E6C4 /* SBBResourceList.h in Headers */,
 				8026D68A19E888DB008942B0 /* SBBUploadSession.h in Headers */,
 				80F7C35119E5DC0D00574800 /* SBBSurveyQuestion.h in Headers */,
 				80855F7119BE27ED006601C7 /* SBBErrors.h in Headers */,
 				800E796B19ED74C500EEE612 /* SBBSurveyQuestionOption.h in Headers */,
 				8026D68619E888C3008942B0 /* _SBBUploadSession.h in Headers */,
+				80E60DA419FAD5860053D166 /* SBBSchedule.h in Headers */,
 				80F7C34919E5DC0D00574800 /* _SBBUserProfile.h in Headers */,
 				80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */,
 				800E796719ED74B600EEE612 /* SBBStringConstraints.h in Headers */,
@@ -833,6 +870,7 @@
 				80855F7D19BE41C9006601C7 /* Reachability.h in Headers */,
 				800E793F19ED744000EEE612 /* _SBBIntegerConstraints.h in Headers */,
 				80104A3D19D1F61B001F2573 /* SBBProfileManager.h in Headers */,
+				80E60DA819FAD64C0053D166 /* SBBScheduleManager.h in Headers */,
 				80855F7219BE27ED006601C7 /* SBBNetworkManager.h in Headers */,
 				80F7C32219E5AA8400574800 /* ModelObject.h in Headers */,
 				8026BD2219C892E40077F3EB /* SBBComponentManager.h in Headers */,
@@ -1013,17 +1051,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80E60DA019FAD56C0053D166 /* _SBBSchedule.m in Sources */,
 				800E795819ED74A600EEE612 /* SBBDateTimeConstraints.m in Sources */,
+				80E60DA919FAD64C0053D166 /* SBBScheduleManager.m in Sources */,
 				80F7C34219E5DC0D00574800 /* _SBBBridgeObject.m in Sources */,
 				800E794219ED744000EEE612 /* _SBBMultiValueConstraints.m in Sources */,
 				800E797019ED74D000EEE612 /* SBBTimeConstraints.m in Sources */,
 				800E793419ED740F00EEE612 /* _SBBDurationConstraints.m in Sources */,
+				8053B62F1A00356000A2E6C4 /* _SBBResourceList.m in Sources */,
 				80F7C32319E5AA8700574800 /* ModelObject.m in Sources */,
 				80BB09F919C2234100E419A1 /* SBBAuthManager.m in Sources */,
 				8026D67319E76579008942B0 /* SBBSurveyAnswer.m in Sources */,
 				800E794619ED744000EEE612 /* _SBBSurveyQuestionOption.m in Sources */,
 				800E795A19ED74A600EEE612 /* SBBDecimalConstraints.m in Sources */,
 				8026D67B19E77518008942B0 /* SBBUploadManager.m in Sources */,
+				80E60DA519FAD5860053D166 /* SBBSchedule.m in Sources */,
 				80F7C34819E5DC0D00574800 /* _SBBSurveyQuestion.m in Sources */,
 				800E794019ED744000EEE612 /* _SBBIntegerConstraints.m in Sources */,
 				800E795619ED74A600EEE612 /* SBBDateConstraints.m in Sources */,
@@ -1047,6 +1089,7 @@
 				80F7C35219E5DC0D00574800 /* SBBSurveyQuestion.m in Sources */,
 				80855F7319BE27ED006601C7 /* SBBNetworkManager.m in Sources */,
 				8026D68719E888C3008942B0 /* _SBBUploadSession.m in Sources */,
+				8053B6341A00357400A2E6C4 /* SBBResourceList.m in Sources */,
 				800E793019ED740F00EEE612 /* _SBBDateTimeConstraints.m in Sources */,
 				800E797419ED7BB500EEE612 /* _SBBSurveyRule.m in Sources */,
 				800E795C19ED74A600EEE612 /* SBBDurationConstraints.m in Sources */,
@@ -1086,6 +1129,7 @@
 				8017AF6819D9D909001AF9BA /* SBBObjectManagerTests.m in Sources */,
 				8026D69B19EC3F4A008942B0 /* SBBBridgeAPITestCase.m in Sources */,
 				8026D6A519EC56E8008942B0 /* SBBSurveyManagerTests.m in Sources */,
+				80E60DAB19FB0D7E0053D166 /* SBBScheduleManagerTests.m in Sources */,
 				8026D69D19EC4025008942B0 /* SBBProfileManagerTests.m in Sources */,
 				8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObject.m in Sources */,
 				8026D6A319EC531F008942B0 /* SBBAuthManagerTests.m in Sources */,

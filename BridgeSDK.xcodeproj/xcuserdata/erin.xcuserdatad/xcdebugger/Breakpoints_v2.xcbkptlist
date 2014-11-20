@@ -237,5 +237,95 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BridgeSDKTests/SBBAuthManagerTests.m"
+            timestampString = "435886405.474925"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "-testSignIn"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__33-[SBBAuthManagerTests testSignIn]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBAuthManagerTests.m"
+                  timestampString = "435886852.515619"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "108">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__33-[SBBAuthManagerTests testSignIn]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBAuthManagerTests.m"
+                  timestampString = "435886852.515815"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "721">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__33-[SBBAuthManagerTests testSignIn]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBAuthManagerTests.m"
+                  timestampString = "435886852.515989"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "808">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__33-[SBBAuthManagerTests testSignIn]_block_invoke"
+                  moduleName = "BridgeSDKTests"
+                  urlString = "file:///Users/erin/Development/Sage/BridgeSDK/BridgeSDKTests/SBBAuthManagerTests.m"
+                  timestampString = "435886852.516285"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "33"
+                  endingLineNumber = "33"
+                  offsetFromSymbolStart = "936">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BridgeSDKTests/MockNetworkManager.m"
+            timestampString = "435886837.526914"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "40"
+            endingLineNumber = "40"
+            landmarkName = "-setJson:andResponseCode:forEndpoint:andMethod:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

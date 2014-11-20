@@ -24,7 +24,7 @@
     [super tearDown];
 }
 
-- (void)testGet
+- (void)testGetUserProfileWithCompletion
 {
   NSDictionary *userProfile =
   @{

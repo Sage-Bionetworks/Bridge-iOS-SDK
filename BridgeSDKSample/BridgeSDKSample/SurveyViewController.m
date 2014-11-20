@@ -15,7 +15,7 @@
 @property (nonatomic, strong) NSString *responseGuid;
 
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
-@property (weak, nonatomic) IBOutlet UITextField *versionedOnTextField;
+@property (weak, nonatomic) IBOutlet UITextField *createdOnTextField;
 @property (weak, nonatomic) IBOutlet UITextField *guidTextField;
 @property (weak, nonatomic) IBOutlet UITextField *numQuestionsTextField;
 
@@ -120,7 +120,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
           _fetchedSurvey = sbbSurvey;
           _nameTextField.text = sbbSurvey.name;
-          _versionedOnTextField.text = [sbbSurvey.versionedOn description];
+          _createdOnTextField.text = [sbbSurvey.createdOn description];
           _guidTextField.text = sbbSurvey.guid;
           _numQuestionsTextField.text = [NSString stringWithFormat:@"%lu", (unsigned long)sbbSurvey.questions.count];
         });
@@ -133,14 +133,14 @@
   NSMutableArray *answers = [NSMutableArray array];
   SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
   a1.questionGuid = [self guidForQuestion:0];
-  a1.answer = @3;
+  a1.answer = @"3";
   a1.answeredOn = [NSDate date];
   a1.client = @"test";
   a1.declined = @NO;
   [answers addObject:a1];
   SBBSurveyAnswer *a2 = [a1 copy];
   a2.questionGuid = [self guidForQuestion:1];
-  a2.answer = @2;
+  a2.answer = @"2";
   [answers addObject:a2];
   
   return answers;
@@ -177,14 +177,14 @@
   NSMutableArray *answers = [NSMutableArray array];
   SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
   a1.questionGuid = [self guidForQuestion:2];
-  a1.answer = @4;
+  a1.answer = @"4";
   a1.answeredOn = [NSDate date];
   a1.client = @"test";
   a1.declined = @NO;
   [answers addObject:a1];
   SBBSurveyAnswer *a2 = [a1 copy];
   a2.questionGuid = [self guidForQuestion:3];
-  a2.answer = @1;
+  a2.answer = @"1";
   [answers addObject:a2];
   
   return answers;

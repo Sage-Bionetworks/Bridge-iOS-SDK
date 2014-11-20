@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="VYa-ZN-xew">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="VYa-ZN-xew">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
     </dependencies>
     <scenes>
         <!--Survey View Controller-->
@@ -58,7 +58,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Versioned on:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kDo-w8-mrn">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Created on:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kDo-w8-mrn">
                                 <rect key="frame" x="16" y="174" width="122" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="122" id="HP6-aa-AOD"/>
@@ -199,10 +199,10 @@
                         </variation>
                     </view>
                     <connections>
+                        <outlet property="createdOnTextField" destination="iG9-lu-Apr" id="3t4-8J-ozO"/>
                         <outlet property="guidTextField" destination="iD3-OK-9Fw" id="acU-Eg-DOI"/>
                         <outlet property="nameTextField" destination="SGg-YG-hne" id="Kb9-Sf-hBq"/>
                         <outlet property="numQuestionsTextField" destination="pW3-cE-daL" id="jV2-2Y-8gg"/>
-                        <outlet property="versionedOnTextField" destination="iG9-lu-Apr" id="Xzn-hD-DFh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MUA-N5-zjA" userLabel="First Responder" sceneMemberID="firstResponder"/>
