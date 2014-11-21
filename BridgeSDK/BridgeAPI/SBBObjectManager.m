@@ -732,6 +732,8 @@
   return bridgeJSON;
 }
 
+#pragma mark - Object mapping
+
 - (void)setupMappingForType:(NSString *)type toClass:(Class)mapToClass fieldToPropertyMappings:(NSDictionary *)mappings
 {
   if (!type.length) {
@@ -764,6 +766,50 @@
   [_classForType removeObjectForKey:type];
   [_typeForClass removeObjectForKey:className];
   [_mappingsForType removeObjectForKey:type];
+}
+
+#pragma mark - CoreData cache
+
+dispatch_queue_t OMCoreDataQueue()
+{
+    static dispatch_queue_t queue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("org.sagebase.OMCoreDataQueue", DISPATCH_QUEUE_SERIAL);
+    });
+    
+    return queue;
+}
+
+// BE CAREFUL never to allow this to be called recursively, even indirectly.
+// The only way to ensure this is to never synchronously call out to anything
+// in dispatchBlock that you can't absolutely guarantee will never get back here.
+void dispatchSyncToOMCoreDataQueue(dispatch_block_t dispatchBlock)
+{
+    dispatch_sync(OMCoreDataQueue(), dispatchBlock);
+}
+
+- (NSURL *)appDocumentsDirectory
+{
+    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+}
+
+- (NSManagedObjectModel *)managedObjectModel
+{
+    if (__managedObjectModel != nil)
+    {
+        return __managedObjectModel;
+    }
+    
+    NSURL *modelURL = [[self lifestreamBundle] URLForResource:@"LifestreamResourceModel" withExtension:@"momd"];
+    if (!modelURL) {
+        modelURL = [[self lifestreamBundle] URLForResource:@"LifestreamResourceModel" withExtension:@"mom"];
+    }
+    __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    
+    //NSLog(@"__managedObjectModel: %@",__managedObjectModel);
+    
+    return __managedObjectModel;
 }
 
 @end
