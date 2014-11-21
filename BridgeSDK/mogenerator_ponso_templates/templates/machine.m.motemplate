@@ -9,6 +9,10 @@
 
 #import "_<$generatedObjectClassName$>.h"
 #import "NSDate+SBBAdditions.h"
+<$if userInfo.encrypted$>
+#import "RNEncryptor.h"
+#import "RNDecryptor.h"
+<$endif$>
 
 <$foreach Relationship noninheritedRelationships do$>#import "<$Relationship.destinationEntity.generatedObjectClassName$>.h"
 <$endforeach do$>
@@ -217,7 +221,7 @@
 <$if userInfo.entityIDKeyPath$>
 - (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID
 {
-    // get managed object from cache
+    // TODO: get managed object from cache
 
 
     // create PONSO object from managed object
@@ -228,7 +232,8 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
 {
 <$if userInfo.encrypted$>
-    // TODO: decrypt managedObject.ciphertext into plaintext
+    // TODO: fetch password from auth manager
+    NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:aPassword error:nil];
     NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
     return [self initWithDictionaryRepresentation:jsonDict objectManager:[SBBObjectManager objectManager]];
 <$else$>
@@ -244,30 +249,67 @@
             <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
 		for(NSManagedObject *<$Relationship.name$>ManagedObj in managedObject.<$Relationship.name$>)
 		{
-            <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithManagedObject:<$Relationship.name$>ManagedObj];
-            if(<$Relationship.name$>Obj != nil)
-            {
-                [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
-            }
+        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithManagedObject:<$Relationship.name$>ManagedObj];
+        if(<$Relationship.name$>Obj != nil)
+        {
+            [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
+        }
 		}<$else$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>ManagedObj = managedObject.<$Relationship.name$>;
         <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithManagedObject:<$Relationship.name$>ManagedObj];
-		if(<$Relationship.name$>Obj != nil)
-		{
-			self.<$Relationship.name$> = <$Relationship.name$>Obj;
-		}<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
+        if(<$Relationship.name$>Obj != nil)
+        {
+          self.<$Relationship.name$> = <$Relationship.name$>Obj;
+        }<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
     }
+
+    return self;
 <$endif$>
 }
 
-- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"<$name$>" inManagedObjectContext:cacheContext];
+    }];
+
     <$if userInfo.encrypted$>
     NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
     NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:error];
-    // TODO: encrypt jsonData to managedObject.ciphertext
+    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:error];
+    // TODO: fetch password from auth manager
+    NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:aPassword error:nil];
+    managedObject.ciphertext = ciphertext;
     <$else$>
+	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
+    managedObject.<$Attribute.name$> = self.<$Attribute.name$>;
+	<$endif$><$endforeach do$>
+    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
+    <$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0)
+	{
+		<$if (! Relationship.isTransient) $>
+		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>)
+		{
+        NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager];
+        [managedObject add<$Relationship.name.initialCapitalString$>Object:relObj];
+		}
+		<$endif$>
+	}
+	<$else$>
+  <$if ! Relationship.isTransient $>
+    NSManagedObject *relObj = [self.<$Relationship.name$> saveToContext:cacheContext withObjectManager:objectManager];
+    [managedObject set<$Relationship.name.initialCapitalString$>:relObj];
+	<$endif$>
+	<$endif$>
     <$endif$>
+	<$endforeach do$>
+    <$endif$>
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

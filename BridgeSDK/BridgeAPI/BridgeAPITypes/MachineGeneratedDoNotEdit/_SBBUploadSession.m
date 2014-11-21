@@ -14,6 +14,18 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (UploadSession)
+
+@property (nonatomic, strong) NSDate* expires;
+
+@property (nonatomic, strong) NSString* id;
+
+@property (nonatomic, strong) NSString* url;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBUploadSession
@@ -67,6 +79,45 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.expires = managedObject.expires;
+
+        self.id = managedObject.id;
+
+        self.url = managedObject.url;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UploadSession" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.expires = self.expires;
+
+    managedObject.id = self.id;
+
+    managedObject.url = self.url;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

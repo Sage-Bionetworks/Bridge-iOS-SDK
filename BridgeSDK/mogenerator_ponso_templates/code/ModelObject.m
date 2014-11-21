@@ -138,6 +138,37 @@
 	self.sourceDictionaryRepresentation = nil;
 }
 
+- (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID
+{
+  if (self = [super init]) {
+    //
+  }
+  
+  return self;
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+  if (self = [super init]) {
+    //
+  }
+  
+  return self;
+}
+
+- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+  // TODO: get or create cacheContext MOC for core data cache.
+
+  [self saveToContext:cacheContext withObjectManager:objectManager];
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+  // generated subclasses will override this
+  return nil;
+}
+
 - (void) dealloc
 {
 	self.sourceDictionaryRepresentation = nil;

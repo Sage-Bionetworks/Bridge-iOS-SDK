@@ -17,7 +17,7 @@
 		<key>BridgeSDKTests.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<key>Documentation.xcscheme</key>
 		<dict>
@@ -27,12 +27,32 @@
 		<key>FrameworkBuilder.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>3</integer>
+		</dict>
+		<key>RNCryptor.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>11</integer>
+		</dict>
+		<key>TestBridgeObjects.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>9</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>60FF57211A0AFC5500CE2373</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>804545761A1E7224001D41D4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>804545811A1E781D001D41D4</key>
 		<dict>
 			<key>primary</key>
 			<true/>

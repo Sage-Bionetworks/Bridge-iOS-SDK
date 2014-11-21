@@ -14,6 +14,22 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (MultiValueConstraints)
+
+@property (nonatomic, strong) NSNumber* allowMultiple;
+
+@property (nonatomic, assign) BOOL allowMultipleValue;
+
+@property (nonatomic, strong) NSNumber* allowOther;
+
+@property (nonatomic, assign) BOOL allowOtherValue;
+
+@property (nonatomic, strong) NSArray* enumeration;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBMultiValueConstraints
@@ -87,6 +103,45 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.allowMultiple = managedObject.allowMultiple;
+
+        self.allowOther = managedObject.allowOther;
+
+        self.enumeration = managedObject.enumeration;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"MultiValueConstraints" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.allowMultiple = self.allowMultiple;
+
+    managedObject.allowOther = self.allowOther;
+
+    managedObject.enumeration = self.enumeration;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

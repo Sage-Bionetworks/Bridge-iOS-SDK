@@ -14,6 +14,16 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (SurveyQuestionOption)
+
+@property (nonatomic, strong) NSString* label;
+
+@property (nonatomic, strong) NSString* value;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBSurveyQuestionOption
@@ -63,6 +73,41 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.label = managedObject.label;
+
+        self.value = managedObject.value;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestionOption" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.label = self.label;
+
+    managedObject.value = self.value;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

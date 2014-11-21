@@ -20,6 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SBBObjectManager.h"
+@import CoreData;
 
 /*!
 	Abstract superclass for all of our model classes.
@@ -47,6 +48,14 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 - (void)awakeFromDictionaryRepresentationInit;
+
+- (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID;
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject;
+
+- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 @end
 

@@ -14,6 +14,20 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (UserProfile)
+
+@property (nonatomic, strong) NSString* email;
+
+@property (nonatomic, strong) NSString* firstName;
+
+@property (nonatomic, strong) NSString* lastName;
+
+@property (nonatomic, strong) NSString* username;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBUserProfile
@@ -71,6 +85,49 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.email = managedObject.email;
+
+        self.firstName = managedObject.firstName;
+
+        self.lastName = managedObject.lastName;
+
+        self.username = managedObject.username;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UserProfile" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.email = self.email;
+
+    managedObject.firstName = self.firstName;
+
+    managedObject.lastName = self.lastName;
+
+    managedObject.username = self.username;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

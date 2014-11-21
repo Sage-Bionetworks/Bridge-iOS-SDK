@@ -14,6 +14,28 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (Schedule)
+
+@property (nonatomic, strong) NSString* activityRef;
+
+@property (nonatomic, strong) NSString* activityType;
+
+@property (nonatomic, strong) NSString* cronTrigger;
+
+@property (nonatomic, strong) NSDate* endsOn;
+
+@property (nonatomic, strong) NSString* expires;
+
+@property (nonatomic, strong) NSString* label;
+
+@property (nonatomic, strong) NSString* scheduleType;
+
+@property (nonatomic, strong) NSDate* startsOn;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBSchedule
@@ -87,6 +109,65 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.activityRef = managedObject.activityRef;
+
+        self.activityType = managedObject.activityType;
+
+        self.cronTrigger = managedObject.cronTrigger;
+
+        self.endsOn = managedObject.endsOn;
+
+        self.expires = managedObject.expires;
+
+        self.label = managedObject.label;
+
+        self.scheduleType = managedObject.scheduleType;
+
+        self.startsOn = managedObject.startsOn;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Schedule" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.activityRef = self.activityRef;
+
+    managedObject.activityType = self.activityType;
+
+    managedObject.cronTrigger = self.cronTrigger;
+
+    managedObject.endsOn = self.endsOn;
+
+    managedObject.expires = self.expires;
+
+    managedObject.label = self.label;
+
+    managedObject.scheduleType = self.scheduleType;
+
+    managedObject.startsOn = self.startsOn;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

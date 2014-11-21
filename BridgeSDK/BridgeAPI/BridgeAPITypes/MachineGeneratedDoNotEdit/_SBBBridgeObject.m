@@ -16,6 +16,18 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (BridgeObject)
+
+@property (nonatomic, strong, readonly) NSString* type;
+
+@property (nonatomic, strong, readwrite) SBBResourceList *resourceList;
+
+- (void) setResourceList: (SBBResourceList*) resourceList_ settingInverse: (BOOL) setInverse;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBBridgeObject
@@ -63,6 +75,37 @@
 	[self.resourceList awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        _type = managedObject.type;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"BridgeObject" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.type = self.type;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

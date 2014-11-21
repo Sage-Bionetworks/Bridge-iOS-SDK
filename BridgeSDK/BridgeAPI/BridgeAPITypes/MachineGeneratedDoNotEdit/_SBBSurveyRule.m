@@ -16,6 +16,22 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (SurveyRule)
+
+@property (nonatomic, strong) NSString* operator;
+
+@property (nonatomic, strong) NSString* skipTo;
+
+@property (nonatomic, strong) id value;
+
+@property (nonatomic, strong, readwrite) SBBSurveyConstraints *surveyConstraints;
+
+- (void) setSurveyConstraints: (SBBSurveyConstraints*) surveyConstraints_ settingInverse: (BOOL) setInverse;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBSurveyRule
@@ -71,6 +87,45 @@
 	[self.surveyConstraints awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.operator = managedObject.operator;
+
+        self.skipTo = managedObject.skipTo;
+
+        self.value = managedObject.value;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyRule" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.operator = self.operator;
+
+    managedObject.skipTo = self.skipTo;
+
+    managedObject.value = self.value;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

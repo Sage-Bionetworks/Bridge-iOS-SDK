@@ -14,6 +14,22 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (UploadRequest)
+
+@property (nonatomic, strong) NSNumber* contentLength;
+
+@property (nonatomic, assign) int64_t contentLengthValue;
+
+@property (nonatomic, strong) NSString* contentMd5;
+
+@property (nonatomic, strong) NSString* contentType;
+
+@property (nonatomic, strong) NSString* name;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBUploadRequest
@@ -81,6 +97,49 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.contentLength = managedObject.contentLength;
+
+        self.contentMd5 = managedObject.contentMd5;
+
+        self.contentType = managedObject.contentType;
+
+        self.name = managedObject.name;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UploadRequest" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.contentLength = self.contentLength;
+
+    managedObject.contentMd5 = self.contentMd5;
+
+    managedObject.contentType = self.contentType;
+
+    managedObject.name = self.name;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

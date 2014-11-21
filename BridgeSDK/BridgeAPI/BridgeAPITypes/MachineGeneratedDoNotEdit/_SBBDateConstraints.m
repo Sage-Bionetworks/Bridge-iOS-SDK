@@ -14,6 +14,20 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (DateConstraints)
+
+@property (nonatomic, strong) NSNumber* allowFuture;
+
+@property (nonatomic, assign) BOOL allowFutureValue;
+
+@property (nonatomic, strong) NSDate* earliestValue;
+
+@property (nonatomic, strong) NSDate* latestValue;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBDateConstraints
@@ -77,6 +91,45 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.allowFuture = managedObject.allowFuture;
+
+        self.earliestValue = managedObject.earliestValue;
+
+        self.latestValue = managedObject.latestValue;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"DateConstraints" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.allowFuture = self.allowFuture;
+
+    managedObject.earliestValue = self.earliestValue;
+
+    managedObject.latestValue = self.latestValue;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

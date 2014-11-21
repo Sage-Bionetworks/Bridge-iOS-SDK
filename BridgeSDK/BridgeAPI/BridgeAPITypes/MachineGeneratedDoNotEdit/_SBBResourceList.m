@@ -17,6 +17,31 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (ResourceList)
+
+@property (nonatomic, strong) NSNumber* total;
+
+@property (nonatomic, assign) int64_t totalValue;
+
+@property (nonatomic, strong, readonly) NSArray *items;
+
+- (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
+- (void)addItemsObject:(SBBBridgeObject*)value_;
+- (void)removeItemsObjects;
+- (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeItemsObject:(SBBBridgeObject*)value_;
+
+- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
+- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value;
+- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBResourceList
@@ -96,6 +121,56 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 	}
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.total = managedObject.total;
+
+		for(NSManagedObject *itemsManagedObj in managedObject.items)
+		{
+        SBBBridgeObject *itemsObj = [[SBBBridgeObject alloc] initWithManagedObject:itemsManagedObj];
+        if(itemsObj != nil)
+        {
+            [self addItemsObject:itemsObj];
+        }
+		}
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ResourceList" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.total = self.total;
+
+    if([self.items count] > 0)
+	{
+
+		for(SBBBridgeObject *obj in self.items)
+		{
+        NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager];
+        [managedObject addItemsObject:relObj];
+		}
+
+	}
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

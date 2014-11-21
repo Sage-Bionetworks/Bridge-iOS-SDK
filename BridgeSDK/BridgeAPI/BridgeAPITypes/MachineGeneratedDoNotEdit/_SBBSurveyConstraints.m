@@ -18,6 +18,33 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (SurveyConstraints)
+
+@property (nonatomic, strong) NSString* dataType;
+
+@property (nonatomic, strong, readonly) NSArray *rules;
+
+@property (nonatomic, strong, readwrite) SBBSurveyQuestion *surveyQuestion;
+
+- (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
+- (void)addRulesObject:(SBBSurveyRule*)value_;
+- (void)removeRulesObjects;
+- (void)removeRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeRulesObject:(SBBSurveyRule*)value_;
+
+- (void)insertObject:(SBBSurveyRule*)value inRulesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromRulesAtIndex:(NSUInteger)idx;
+- (void)insertRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeRulesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
+- (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
+
+- (void) setSurveyQuestion: (SBBSurveyQuestion*) surveyQuestion_ settingInverse: (BOOL) setInverse;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBSurveyConstraints
@@ -88,6 +115,56 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 	[self.surveyQuestion awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.dataType = managedObject.dataType;
+
+		for(NSManagedObject *rulesManagedObj in managedObject.rules)
+		{
+        SBBSurveyRule *rulesObj = [[SBBSurveyRule alloc] initWithManagedObject:rulesManagedObj];
+        if(rulesObj != nil)
+        {
+            [self addRulesObject:rulesObj];
+        }
+		}
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyConstraints" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.dataType = self.dataType;
+
+    if([self.rules count] > 0)
+	{
+
+		for(SBBSurveyRule *obj in self.rules)
+		{
+        NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager];
+        [managedObject addRulesObject:relObj];
+		}
+
+	}
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

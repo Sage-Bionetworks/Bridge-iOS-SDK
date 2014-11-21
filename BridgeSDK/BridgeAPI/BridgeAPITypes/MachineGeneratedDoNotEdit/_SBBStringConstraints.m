@@ -14,6 +14,22 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (StringConstraints)
+
+@property (nonatomic, strong) NSNumber* maxLength;
+
+@property (nonatomic, assign) int64_t maxLengthValue;
+
+@property (nonatomic, strong) NSNumber* minLength;
+
+@property (nonatomic, assign) int64_t minLengthValue;
+
+@property (nonatomic, strong) NSString* pattern;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBStringConstraints
@@ -87,6 +103,45 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.maxLength = managedObject.maxLength;
+
+        self.minLength = managedObject.minLength;
+
+        self.pattern = managedObject.pattern;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"StringConstraints" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.maxLength = self.maxLength;
+
+    managedObject.minLength = self.minLength;
+
+    managedObject.pattern = self.pattern;
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access

@@ -19,6 +19,60 @@
 
 @end
 
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (Survey)
+
+@property (nonatomic, strong) NSDate* createdOn;
+
+@property (nonatomic, strong) NSString* guid;
+
+@property (nonatomic, strong) NSString* identifier;
+
+@property (nonatomic, strong) NSDate* modifiedOn;
+
+@property (nonatomic, strong) NSString* name;
+
+@property (nonatomic, strong) NSNumber* published;
+
+@property (nonatomic, assign) BOOL publishedValue;
+
+@property (nonatomic, strong) NSNumber* version;
+
+@property (nonatomic, assign) double versionValue;
+
+@property (nonatomic, strong, readonly) NSArray *questions;
+
+@property (nonatomic, strong, readonly) NSArray *surveyResponses;
+
+- (void)addQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: (BOOL) setInverse;
+- (void)addQuestionsObject:(SBBSurveyQuestion*)value_;
+- (void)removeQuestionsObjects;
+- (void)removeQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeQuestionsObject:(SBBSurveyQuestion*)value_;
+
+- (void)insertObject:(SBBSurveyQuestion*)value inQuestionsAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromQuestionsAtIndex:(NSUInteger)idx;
+- (void)insertQuestions:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeQuestionsAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInQuestionsAtIndex:(NSUInteger)idx withObject:(SBBSurveyQuestion*)value;
+- (void)replaceQuestionsAtIndexes:(NSIndexSet *)indexes withQuestions:(NSArray *)values;
+
+- (void)addSurveyResponsesObject:(SBBSurveyResponse*)value_ settingInverse: (BOOL) setInverse;
+- (void)addSurveyResponsesObject:(SBBSurveyResponse*)value_;
+- (void)removeSurveyResponsesObjects;
+- (void)removeSurveyResponsesObject:(SBBSurveyResponse*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeSurveyResponsesObject:(SBBSurveyResponse*)value_;
+
+- (void)insertObject:(SBBSurveyResponse*)value inSurveyResponsesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromSurveyResponsesAtIndex:(NSUInteger)idx;
+- (void)insertSurveyResponses:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeSurveyResponsesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInSurveyResponsesAtIndex:(NSUInteger)idx withObject:(SBBSurveyResponse*)value;
+- (void)replaceSurveyResponsesAtIndexes:(NSIndexSet *)indexes withSurveyResponses:(NSArray *)values;
+
+@end
+
 /** \ingroup DataModel */
 
 @implementation _SBBSurvey
@@ -137,6 +191,88 @@ SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepr
 	}
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID
+{
+    // TODO: get managed object from cache
+
+    // create PONSO object from managed object
+    return [self initWithManagedObject:managedObject];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+{
+
+    if (self == [super init]) {
+
+        self.createdOn = managedObject.createdOn;
+
+        self.guid = managedObject.guid;
+
+        self.identifier = managedObject.identifier;
+
+        self.modifiedOn = managedObject.modifiedOn;
+
+        self.name = managedObject.name;
+
+        self.published = managedObject.published;
+
+        self.version = managedObject.version;
+
+		for(NSManagedObject *questionsManagedObj in managedObject.questions)
+		{
+        SBBSurveyQuestion *questionsObj = [[SBBSurveyQuestion alloc] initWithManagedObject:questionsManagedObj];
+        if(questionsObj != nil)
+        {
+            [self addQuestionsObject:questionsObj];
+        }
+		}
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // TODO: Get or create cacheContext MOC for core data cache.
+    __block NSManagedObject *managedObject = nil;
+
+    [cacheContext performBlockAndWait:^{
+        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Survey" inManagedObjectContext:cacheContext];
+    }];
+
+    managedObject.createdOn = self.createdOn;
+
+    managedObject.guid = self.guid;
+
+    managedObject.identifier = self.identifier;
+
+    managedObject.modifiedOn = self.modifiedOn;
+
+    managedObject.name = self.name;
+
+    managedObject.published = self.published;
+
+    managedObject.version = self.version;
+
+    if([self.questions count] > 0)
+	{
+
+		for(SBBSurveyQuestion *obj in self.questions)
+		{
+        NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager];
+        [managedObject addQuestionsObject:relObj];
+		}
+
+	}
+
+    // TODO: Save changes to cacheContext.
+
+    return managedObject;
 }
 
 #pragma mark Direct access
