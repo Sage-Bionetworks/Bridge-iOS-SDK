@@ -51,11 +51,7 @@
 
 - (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID;
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject;
-
 - (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 @end
 

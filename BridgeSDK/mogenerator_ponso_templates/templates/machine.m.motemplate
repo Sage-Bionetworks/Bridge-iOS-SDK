@@ -8,6 +8,7 @@
 //
 
 #import "_<$generatedObjectClassName$>.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 <$if userInfo.encrypted$>
 #import "RNEncryptor.h"
@@ -26,21 +27,12 @@
  */
 @interface NSManagedObject (<$name$>)
 <$foreach Attribute noninheritedAttributes do$>
-<$if Attribute.isReadonly$>
-<$if TemplateVar.arc$>
-<$if Attribute.hasDefinedAttributeType$>@property (nonatomic, strong, readonly) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
-<$else$>
-<$if Attribute.hasDefinedAttributeType$>@property (nonatomic, retain, readonly) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
-<$endif$>
-<$if Attribute.hasScalarAttributeType$>@property (nonatomic, assign, readonly) <$Attribute.scalarAttributeType$> <$Attribute.name$>Value;<$endif$>
-<$else$>
 <$if TemplateVar.arc$>
 <$if Attribute.hasDefinedAttributeType$>@property (nonatomic, strong) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
 <$else$>
 <$if Attribute.hasDefinedAttributeType$>@property (nonatomic, retain) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
 <$endif$>
 <$if Attribute.hasScalarAttributeType$>@property (nonatomic, assign) <$Attribute.scalarAttributeType$> <$Attribute.name$>Value;<$endif$>
-<$endif$>
 <$endforeach do$>
 <$foreach Relationship noninheritedRelationships do$>
 <$if Relationship.isToMany$>
@@ -271,9 +263,7 @@
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"<$name$>" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"<$name$>" inManagedObjectContext:cacheContext];
 
     <$if userInfo.encrypted$>
     NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];

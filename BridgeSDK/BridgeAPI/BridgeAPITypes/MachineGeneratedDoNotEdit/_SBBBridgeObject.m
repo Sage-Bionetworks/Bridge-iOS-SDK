@@ -20,7 +20,7 @@
  */
 @interface NSManagedObject (BridgeObject)
 
-@property (nonatomic, strong, readonly) NSString* type;
+@property (nonatomic, strong) NSString* type;
 
 @property (nonatomic, strong, readwrite) SBBResourceList *resourceList;
 

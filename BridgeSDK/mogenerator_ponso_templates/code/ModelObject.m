@@ -21,6 +21,7 @@
 #import "ModelObject.h"
 #import "SBBComponentManager.h"
 #import "SBBObjectManager.h"
+#import "ModelObjectInternal.h"
 
 @implementation ModelObject
 
@@ -141,7 +142,8 @@
 - (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID
 {
   if (self = [super init]) {
-    //
+      // TODO: get or create cacheContext MOC for core data cache.
+      NSManagedObjectContext *cacheContext = nil;
   }
   
   return self;
@@ -159,8 +161,12 @@
 - (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   // TODO: get or create cacheContext MOC for core data cache.
+  NSManagedObjectContext *cacheContext = nil;
+    
+  [cacheContext performBlockAndWait:^{
+    [self saveToContext:cacheContext withObjectManager:objectManager];
+  }];
 
-  [self saveToContext:cacheContext withObjectManager:objectManager];
 }
 
 - (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
