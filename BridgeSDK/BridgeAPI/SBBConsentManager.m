@@ -9,6 +9,7 @@
 #import "SBBConsentManager.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
+#import "SBBStringUtils.h"
 
 @implementation SBBConsentManager
 
@@ -24,7 +25,8 @@
   return shared;
 }
 
-- (NSURLSessionDataTask *)consentSignature:(NSString *)name birthdate:(NSDate *)date completion:(SBBConsentManagerCompletionBlock)completion
+- (NSURLSessionDataTask *)consentSignature:(NSString *)name birthdate:(NSDate *)date imageData:(NSString*)imageData
+    imageMimeType:(NSString*)imageMimeType completion:(SBBConsentManagerCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
@@ -39,6 +41,17 @@
   
   NSString *birthdate = [birthdateFormatter stringFromDate:date];
   NSDictionary *ResearchConsent = @{@"name": name, @"birthdate": birthdate};
+
+  // Add signature image, if it's specified
+  if (![SBBStringUtils isNullOrEmpty:imageData])
+  {
+    [ResearchConsent setValue:imageData forKey:@"imageData"];
+  }
+  if (![SBBStringUtils isNullOrEmpty:imageMimeType])
+  {
+    [ResearchConsent setValue:imageMimeType forKey:@"imageMimeType"];
+  }
+
   return [self.networkManager post:@"/api/v1/consent" headers:headers parameters:ResearchConsent completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);

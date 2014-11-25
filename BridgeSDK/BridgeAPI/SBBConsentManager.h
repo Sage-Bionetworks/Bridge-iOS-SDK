@@ -28,11 +28,14 @@ typedef void (^SBBConsentManagerCompletionBlock)(id responseObject, NSError *err
  *
  *  @param name       The user's "signature", recorded exactly as entered.
  *  @param birthdate  The user's birthday in the format "YYYY-MM-DD".
+ *  @param imageData  Image file of the user's signature, as a Base64 encoded string. Should be less than 10kb. Optional.
+ *  @param imageMimeType MIME type of the image data (ex: "image/png"). Optional.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)consentSignature:(NSString *)name birthdate:(NSDate *)birthdate completion:(SBBConsentManagerCompletionBlock)completion;
+- (NSURLSessionDataTask *)consentSignature:(NSString *)name birthdate:(NSDate *)date imageData:(NSString*)imageData
+    imageMimeType:(NSString*)imageMimeType completion:(SBBConsentManagerCompletionBlock)completion;
 
 /*!
  *  Suspend the user's previously-given consent to participate.

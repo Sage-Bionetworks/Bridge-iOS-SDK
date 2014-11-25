@@ -188,6 +188,7 @@
 		80F7C35019E5DC0D00574800 /* SBBSurveyConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33E19E5DC0D00574800 /* SBBSurveyConstraints.m */; };
 		80F7C35119E5DC0D00574800 /* SBBSurveyQuestion.h in Headers */ = {isa = PBXBuildFile; fileRef = 80F7C33F19E5DC0D00574800 /* SBBSurveyQuestion.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80F7C35219E5DC0D00574800 /* SBBSurveyQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C34019E5DC0D00574800 /* SBBSurveyQuestion.m */; };
+		D4C5C88C1A253A40006C20B9 /* SBBStringUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = D4C5C88B1A253A40006C20B9 /* SBBStringUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -405,6 +406,8 @@
 		80F7C33E19E5DC0D00574800 /* SBBSurveyConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyConstraints.m; sourceTree = "<group>"; };
 		80F7C33F19E5DC0D00574800 /* SBBSurveyQuestion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSurveyQuestion.h; sourceTree = "<group>"; };
 		80F7C34019E5DC0D00574800 /* SBBSurveyQuestion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyQuestion.m; sourceTree = "<group>"; };
+		D4C5C8871A253604006C20B9 /* SBBStringUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBStringUtils.h; sourceTree = "<group>"; };
+		D4C5C88B1A253A40006C20B9 /* SBBStringUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBStringUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -618,6 +621,8 @@
 				8026D65D19E7527F008942B0 /* SBBSurveyManager.m */,
 				8026D67819E77518008942B0 /* SBBUploadManager.h */,
 				8026D67919E77518008942B0 /* SBBUploadManager.m */,
+				D4C5C8871A253604006C20B9 /* SBBStringUtils.h */,
+				D4C5C88B1A253A40006C20B9 /* SBBStringUtils.m */,
 			);
 			path = BridgeAPI;
 			sourceTree = "<group>";
@@ -1105,6 +1110,7 @@
 				8026BD1219C7532D0077F3EB /* UICKeyChainStore.m in Sources */,
 				8026D68319E87CF6008942B0 /* NSData+SBBAdditions.m in Sources */,
 				80F7C34419E5DC0D00574800 /* _SBBSurvey.m in Sources */,
+				D4C5C88C1A253A40006C20B9 /* SBBStringUtils.m in Sources */,
 				8026D68B19E888DB008942B0 /* SBBUploadSession.m in Sources */,
 				8026D67719E7658E008942B0 /* SBBSurveyResponse.m in Sources */,
 				800E794C19ED748900EEE612 /* SBBBooleanConstraints.m in Sources */,
