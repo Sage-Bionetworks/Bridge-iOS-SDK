@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-@import CoreData;
+#import "SBBCacheManager.h"
 
 @interface SBBObjectManager ()
 
@@ -14,10 +14,8 @@
 @property (nonatomic, strong) NSMutableDictionary *typeForClass;
 @property (nonatomic, strong) NSMutableDictionary *mappingsForType;
 
-@property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-@property (nonatomic, strong) NSPersistentStore *persistentStore;
+@property (nonatomic, strong) id<SBBCacheManagerProtocol> cacheManager;
 
-+ (NSManagedObjectContext *)
++ (instancetype)objectManagerWithCacheManager:(id<SBBCacheManagerProtocol>)cacheManager;
 
 @end

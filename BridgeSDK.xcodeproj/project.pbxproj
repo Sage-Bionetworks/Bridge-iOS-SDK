@@ -231,6 +231,8 @@
 		80F7C35019E5DC0D00574800 /* SBBSurveyConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33E19E5DC0D00574800 /* SBBSurveyConstraints.m */; };
 		80F7C35119E5DC0D00574800 /* SBBSurveyQuestion.h in Headers */ = {isa = PBXBuildFile; fileRef = 80F7C33F19E5DC0D00574800 /* SBBSurveyQuestion.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80F7C35219E5DC0D00574800 /* SBBSurveyQuestion.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C34019E5DC0D00574800 /* SBBSurveyQuestion.m */; };
+		80FA54DF1A25110E00EDE46E /* SBBCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80FA54DD1A25110E00EDE46E /* SBBCacheManager.h */; };
+		80FA54E01A25110E00EDE46E /* SBBCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80FA54DE1A25110E00EDE46E /* SBBCacheManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -482,6 +484,8 @@
 		80F7C33E19E5DC0D00574800 /* SBBSurveyConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyConstraints.m; sourceTree = "<group>"; };
 		80F7C33F19E5DC0D00574800 /* SBBSurveyQuestion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSurveyQuestion.h; sourceTree = "<group>"; };
 		80F7C34019E5DC0D00574800 /* SBBSurveyQuestion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyQuestion.m; sourceTree = "<group>"; };
+		80FA54DD1A25110E00EDE46E /* SBBCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBCacheManager.h; sourceTree = "<group>"; };
+		80FA54DE1A25110E00EDE46E /* SBBCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -644,6 +648,7 @@
 				8026BD1D19C883FC0077F3EB /* BridgeSDK.m */,
 				804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */,
 				80BB09F519C222CF00E419A1 /* BridgeAPI */,
+				80FA54DC1A25110E00EDE46E /* Internal */,
 				80F7C2E619E5AA7800574800 /* mogenerator_ponso_templates */,
 				80855F6919BE27ED006601C7 /* Networking */,
 				8051DCCE1A1E6FDB0068D06E /* RNCryptor */,
@@ -831,6 +836,15 @@
 			path = MachineGeneratedDoNotEdit;
 			sourceTree = "<group>";
 		};
+		80FA54DC1A25110E00EDE46E /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				80FA54DD1A25110E00EDE46E /* SBBCacheManager.h */,
+				80FA54DE1A25110E00EDE46E /* SBBCacheManager.m */,
+			);
+			path = Internal;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -889,6 +903,7 @@
 				80F7C35119E5DC0D00574800 /* SBBSurveyQuestion.h in Headers */,
 				80855F7119BE27ED006601C7 /* SBBErrors.h in Headers */,
 				800E796B19ED74C500EEE612 /* SBBSurveyQuestionOption.h in Headers */,
+				80FA54DF1A25110E00EDE46E /* SBBCacheManager.h in Headers */,
 				8051DCD91A1E6FDB0068D06E /* RNCryptor+Private.h in Headers */,
 				8026D68619E888C3008942B0 /* _SBBUploadSession.h in Headers */,
 				80E60DA419FAD5860053D166 /* SBBSchedule.h in Headers */,
@@ -1203,6 +1218,7 @@
 				80F7C34A19E5DC0D00574800 /* _SBBUserProfile.m in Sources */,
 				8026D66719E75662008942B0 /* SBBGuidHolder.m in Sources */,
 				8026D66B19E7654A008942B0 /* _SBBSurveyAnswer.m in Sources */,
+				80FA54E01A25110E00EDE46E /* SBBCacheManager.m in Sources */,
 				80F7C35019E5DC0D00574800 /* SBBSurveyConstraints.m in Sources */,
 				800E796C19ED74C500EEE612 /* SBBSurveyQuestionOption.m in Sources */,
 				800E794819ED744000EEE612 /* _SBBTimeConstraints.m in Sources */,
