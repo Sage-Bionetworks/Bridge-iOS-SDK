@@ -57,6 +57,8 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
+        self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
+
         self.guid = [dictionary objectForKey:@"guid"];
 
         self.identifier = [dictionary objectForKey:@"identifier"];
@@ -71,8 +73,6 @@
 
         self.version = [dictionary objectForKey:@"version"];
 
-        self.versionedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"versionedOn"]];
-
 	}
 
 	return self;
@@ -81,6 +81,8 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+
+    [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
@@ -95,8 +97,6 @@
     [dict setObjectIfNotNil:self.questions forKey:@"questions"];
 
     [dict setObjectIfNotNil:self.version forKey:@"version"];
-
-    [dict setObjectIfNotNil:[self.versionedOn ISO8601String] forKey:@"versionedOn"];
 
 	return dict;
 }
