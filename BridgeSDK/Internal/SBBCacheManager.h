@@ -17,4 +17,6 @@
 
 @interface SBBCacheManager : NSObject<SBBComponent, SBBCacheManagerProtocol>
 
++ (instancetype)cacheManagerWithPersistentStoreName:(NSString *)storeName;
+
 @end

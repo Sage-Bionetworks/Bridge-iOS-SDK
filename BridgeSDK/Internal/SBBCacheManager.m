@@ -14,6 +14,7 @@
 #define STRINGIZE2(x) STRINGIZE(x)
 #define SBBBUNDLEIDSTRING @STRINGIZE2(SBBBUNDLEID)
 
+static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 @interface SBBCacheManager ()
 
@@ -22,11 +23,17 @@
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, strong) NSPersistentStore *persistentStore;
+@property (nonatomic, strong) NSString *persistentStoreName;
 
 @end
 
 
 @implementation SBBCacheManager
+
++ (void)initialize
+{
+  gCoreDataQueuesByPersistentStoreName = [[NSMutableDictionary alloc] init];
+}
 
 + (instancetype)defaultComponent
 {
@@ -34,10 +41,17 @@
   
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    shared = [[self alloc] init];
+    shared = [self cacheManagerWithPersistentStoreName:@"SBBDataModel.sqlite"];
   });
   
   return shared;
+}
+
++ (instancetype)cacheManagerWithPersistentStoreName:(NSString *)storeName
+{
+  SBBCacheManager *cm = [[self alloc] init];
+  cm.persistentStoreName = storeName;
+  return cm;
 }
 
 - (instancetype)init
@@ -55,11 +69,10 @@
 
 - (dispatch_queue_t)BridgeObjectCacheQueue
 {
-  static dispatch_queue_t q;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
+  static dispatch_queue_t q = nil;
+  if (!q) {
     q = dispatch_queue_create("org.sagebase.BridgeObjectCacheQueue", DISPATCH_QUEUE_SERIAL);
-  });
+  }
   
   return q;
 }
@@ -74,13 +87,14 @@
 
 #pragma mark - CoreData cache
 
-dispatch_queue_t CacheManagerCoreDataQueue()
+dispatch_queue_t CoreDataQueueForPersistentStoreName(NSString *name)
 {
-  static dispatch_queue_t queue;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    queue = dispatch_queue_create("org.sagebase.CacheManagerCoreDataQueue", DISPATCH_QUEUE_SERIAL);
-  });
+  dispatch_queue_t queue = [gCoreDataQueuesByPersistentStoreName objectForKey:name];
+  if (!queue) {
+    NSString *qName = [NSString stringWithFormat:@"org.sagebase.CoreDataQueueFor%@", [name capitalizedString]];
+    queue = dispatch_queue_create([qName cStringUsingEncoding:NSUTF8StringEncoding], DISPATCH_QUEUE_SERIAL);
+    [gCoreDataQueuesByPersistentStoreName setObject:queue forKey:name];
+  }
   
   return queue;
 }
@@ -88,9 +102,9 @@ dispatch_queue_t CacheManagerCoreDataQueue()
 // BE CAREFUL never to allow this to be called recursively, even indirectly.
 // The only way to ensure this is to never synchronously call out to anything
 // in dispatchBlock that you can't absolutely guarantee will never get back here.
-void dispatchSyncToCacheManagerCoreDataQueue(dispatch_block_t dispatchBlock)
+- (void)dispatchSyncToCacheManagerCoreDataQueue:(dispatch_block_t)dispatchBlock
 {
-  dispatch_sync(CacheManagerCoreDataQueue(), dispatchBlock);
+  dispatch_sync(CoreDataQueueForPersistentStoreName(self.persistentStoreName), dispatchBlock);
 }
 
 - (NSURL *)appDocumentsDirectory
@@ -179,7 +193,7 @@ void dispatchSyncToCacheManagerCoreDataQueue(dispatch_block_t dispatchBlock)
 
 - (NSURL *)storeURL
 {
-  return [[self appDocumentsDirectory] URLByAppendingPathComponent:@"SBBDataModel.sqlite"];
+  return [[self appDocumentsDirectory] URLByAppendingPathComponent:self.persistentStoreName];
 }
 
 - (BOOL)resetCache
