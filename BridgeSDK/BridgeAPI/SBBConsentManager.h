@@ -10,14 +10,6 @@
 @import UIKit;
 #import "SBBBridgeAPIManager.h"
 
-/* CONSTANTS */
-extern NSString* const API_CONSENT;
-extern NSString* const KEY_NAME;
-extern NSString* const KEY_BIRTHDATE;
-extern NSString* const KEY_IMAGE_DATA;
-extern NSString* const KEY_IMAGE_MIME_TYPE;
-extern NSString* const MIME_TYPE_PNG;
-
 /*!
  Completion block for SBBConsentManagerProtocol methods.
  
@@ -65,7 +57,7 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask*)retrieveConsentSignature:(SBBConsentManagerRetrieveCompletionBlock)completion;
+- (NSURLSessionDataTask*)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion;
 
 /*!
  *  Suspend the user's previously-given consent to participate.

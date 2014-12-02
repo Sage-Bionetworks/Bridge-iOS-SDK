@@ -407,6 +407,7 @@
 		80F7C33E19E5DC0D00574800 /* SBBSurveyConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyConstraints.m; sourceTree = "<group>"; };
 		80F7C33F19E5DC0D00574800 /* SBBSurveyQuestion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSurveyQuestion.h; sourceTree = "<group>"; };
 		80F7C34019E5DC0D00574800 /* SBBSurveyQuestion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyQuestion.m; sourceTree = "<group>"; };
+		D48FAA211A2E5C6C00D50D1C /* SBBConsentManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBConsentManagerInternal.h; sourceTree = "<group>"; };
 		D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentManagerTests.m; sourceTree = "<group>"; };
 		D4FA38021A2B144000E7CF1E /* sample-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sample-signature.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -613,6 +614,7 @@
 				8026BD2019C892E40077F3EB /* SBBComponentManager.h */,
 				8026BD2119C892E40077F3EB /* SBBComponentManager.m */,
 				80104A4019D1F817001F2573 /* SBBConsentManager.h */,
+				D48FAA211A2E5C6C00D50D1C /* SBBConsentManagerInternal.h */,
 				80104A4119D1F817001F2573 /* SBBConsentManager.m */,
 				80104A6419D4CFE5001F2573 /* SBBObjectManager.h */,
 				80104A6519D4CFE5001F2573 /* SBBObjectManager.m */,

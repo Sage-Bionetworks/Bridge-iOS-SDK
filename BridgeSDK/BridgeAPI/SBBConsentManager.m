@@ -6,16 +6,16 @@
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBConsentManager.h"
+#import "SBBConsentManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 
-NSString* const API_CONSENT = @"/api/v1/consent";
-NSString* const KEY_NAME = @"name";
-NSString* const KEY_BIRTHDATE = @"birthdate";
-NSString* const KEY_IMAGE_DATA = @"imageData";
-NSString* const KEY_IMAGE_MIME_TYPE = @"imageMimeType";
-NSString* const MIME_TYPE_PNG = @"image/png";
+NSString* const kSBBApiConsent = @"/api/v1/consent";
+NSString* const kSBBKeyName = @"name";
+NSString* const kSBBKeyBirthdate = @"birthdate";
+NSString* const kSBBKeyImageData = @"imageData";
+NSString* const kSBBKeyImageMimeType = @"imageMimeType";
+NSString* const kSBBMimeTypePng = @"image/png";
 
 @implementation SBBConsentManager
 
@@ -47,18 +47,18 @@ NSString* const MIME_TYPE_PNG = @"image/png";
   
   NSString *birthdate = [birthdateFormatter stringFromDate:date];
   NSDictionary *ResearchConsent = [NSMutableDictionary dictionary];
-  [ResearchConsent setValue:name forKey:KEY_NAME];
-  [ResearchConsent setValue:birthdate forKey:KEY_BIRTHDATE];
+  [ResearchConsent setValue:name forKey:kSBBKeyName];
+  [ResearchConsent setValue:birthdate forKey:kSBBKeyBirthdate];
 
   // Add signature image, if it's specified
   if (signatureImage != nil) {
     NSData* imageData = UIImagePNGRepresentation(signatureImage);
     NSString* imageBase64String = [imageData base64EncodedStringWithOptions:kNilOptions];
-    [ResearchConsent setValue:imageBase64String forKey:KEY_IMAGE_DATA];
-    [ResearchConsent setValue:MIME_TYPE_PNG forKey:KEY_IMAGE_MIME_TYPE];
+    [ResearchConsent setValue:imageBase64String forKey:kSBBKeyImageData];
+    [ResearchConsent setValue:kSBBMimeTypePng forKey:kSBBKeyImageMimeType];
   }
 
-  return [self.networkManager post:API_CONSENT headers:headers parameters:ResearchConsent
+  return [self.networkManager post:kSBBApiConsent headers:headers parameters:ResearchConsent
       completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
@@ -66,11 +66,11 @@ NSString* const MIME_TYPE_PNG = @"image/png";
   }];
 }
 
-- (NSURLSessionDataTask*)retrieveConsentSignature:(SBBConsentManagerRetrieveCompletionBlock)completion
+- (NSURLSessionDataTask*)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:API_CONSENT headers:headers parameters:nil
+  return [self.networkManager get:kSBBApiConsent headers:headers parameters:nil
       completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
     NSString* name = nil;
     NSString* birthdate = nil;
@@ -79,12 +79,12 @@ NSString* const MIME_TYPE_PNG = @"image/png";
     // parse consent signature dictionary, if we have one
     if ([responseObject isKindOfClass:[NSDictionary class]]) {
       NSDictionary* responseDict = responseObject;
-      name = responseDict[KEY_NAME];
-      birthdate = responseDict[KEY_BIRTHDATE];
+      name = responseDict[kSBBKeyName];
+      birthdate = responseDict[kSBBKeyBirthdate];
 
       // create signature image, if we have one
-      if (responseDict[KEY_IMAGE_DATA] != nil) {
-        NSData* imageData = [[NSData alloc] initWithBase64EncodedString:responseDict[KEY_IMAGE_DATA]
+      if (responseDict[kSBBKeyImageData] != nil) {
+        NSData* imageData = [[NSData alloc] initWithBase64EncodedString:responseDict[kSBBKeyImageData]
           options:kNilOptions];
         image = [[UIImage alloc] initWithData:imageData];
       }

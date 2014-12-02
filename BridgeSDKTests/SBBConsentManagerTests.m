@@ -7,7 +7,7 @@
 //
 
 #import "SBBBridgeAPITestCase.h"
-#import <BridgeSDK/SBBConsentManager.h>
+#import "SBBConsentManagerInternal.h"
 
 @interface SBBConsentManagerTests : SBBBridgeAPITestCase
 
@@ -27,13 +27,14 @@
 
 - (void)testRetrieve {
   // construct consent manager with mock response
-  NSDictionary* responseDict = @{KEY_NAME:@"Eggplant McTester", KEY_BIRTHDATE:@"1970-01-01"};
-  [self.mockNetworkManager setJson:responseDict andResponseCode:200 forEndpoint:API_CONSENT andMethod:@"GET"];
+  NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01"};
+  [self.mockNetworkManager setJson:responseDict andResponseCode:200 forEndpoint:kSBBApiConsent andMethod:@"GET"];
   SBBConsentManager* consentMan = [SBBConsentManager managerWithAuthManager:SBBComponent(SBBAuthManager)
     networkManager:self.mockNetworkManager objectManager:SBBComponent(SBBObjectManager)];
 
   // execute and validate
-  [consentMan retrieveConsentSignature:^(NSString* name, NSString* birthdate, UIImage* signatureImage, NSError* error) {
+  [consentMan retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate, UIImage* signatureImage,
+      NSError* error) {
     XCTAssert([@"Eggplant McTester" isEqualToString:name], @"consent signature has name");
     XCTAssert([@"1970-01-01" isEqualToString:birthdate], @"consent signature has birthdate");
     XCTAssertNil(signatureImage, @"consent signature has no image");
@@ -47,14 +48,15 @@
   NSString* imageBase64String = [imageData base64EncodedStringWithOptions:kNilOptions];
 
   // construct consent manager with mock response
-  NSDictionary* responseDict = @{KEY_NAME:@"Eggplant McTester", KEY_BIRTHDATE:@"1970-01-01",
-    KEY_IMAGE_DATA:imageBase64String, KEY_IMAGE_MIME_TYPE:@"image/png"};
-  [self.mockNetworkManager setJson:responseDict andResponseCode:200 forEndpoint:API_CONSENT andMethod:@"GET"];
+  NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01",
+    kSBBKeyImageData:imageBase64String, kSBBKeyImageMimeType:kSBBMimeTypePng};
+  [self.mockNetworkManager setJson:responseDict andResponseCode:200 forEndpoint:kSBBApiConsent andMethod:@"GET"];
   SBBConsentManager* consentMan = [SBBConsentManager managerWithAuthManager:SBBComponent(SBBAuthManager)
     networkManager:self.mockNetworkManager objectManager:SBBComponent(SBBObjectManager)];
 
   // execute and validate
-  [consentMan retrieveConsentSignature:^(NSString* name, NSString* birthdate, UIImage* signatureImage, NSError* error) {
+  [consentMan retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate, UIImage* signatureImage,
+      NSError* error) {
     XCTAssert([@"Eggplant McTester" isEqualToString:name], @"consent signature has name");
     XCTAssert([@"1970-01-01" isEqualToString:birthdate], @"consent signature has birthdate");
 

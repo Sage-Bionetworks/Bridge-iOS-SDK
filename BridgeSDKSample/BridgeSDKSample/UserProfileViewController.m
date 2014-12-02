@@ -99,7 +99,7 @@
 }
 
 - (IBAction)didTouchGetButton:(id)sender {
-  [SBBComponent(SBBConsentManager) retrieveConsentSignature:^(NSString* name, NSString* birthdate,
+  [SBBComponent(SBBConsentManager) retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate,
       UIImage* signatureImage, NSError* error) {
     if (signatureImage != nil) {
       [_signatureImageView initWithImage:signatureImage];
