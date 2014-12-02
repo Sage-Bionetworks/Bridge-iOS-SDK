@@ -112,12 +112,14 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
     @"%@-custom"
   };
   NSString *baseURL = nil;
-  
-  if ((NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
+
+  if ([prefix length] > 0 && (NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
     NSString *firstComponent = [NSString stringWithFormat:envFormatStrings[environment], prefix];
     baseURL = [NSString stringWithFormat:@"https://%@.%@", firstComponent, path];
+  } else {
+    baseURL = path;
   }
-  
+
   return baseURL;
 }
 

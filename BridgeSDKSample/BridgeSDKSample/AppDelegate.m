@@ -17,7 +17,14 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+    // Bridge developers: To run this sample app against your own local copy of the Bridge server, un-comment the
+    // following code and replace "<server>" with your Bridge server (ex: "https://localhost:9000" or
+    // "http://192.168.2.1:9000"). Also be sure to change the setupWithAppPrefix call below to match your network
+    // manager.
+    //SBBNetworkManager* networkMan = [SBBNetworkManager networkManagerForEnvironment:SBBEnvironmentCustom
+    //    appURLPrefix:@"" baseURLPath:@"http://192.168.55.1:9000"];
+    //[SBBComponentManager registerComponent:networkMan forClass:[SBBNetworkManager class]];
+
     // To run this sample app in your study, change this prefix to the one assigned to your study.
     // Leave it set to @"api" to run in the generic test study.
     [BridgeSDK setupWithAppPrefix:@"api"];
