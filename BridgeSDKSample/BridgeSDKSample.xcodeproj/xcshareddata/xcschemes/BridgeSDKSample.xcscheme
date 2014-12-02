@@ -52,6 +52,16 @@
                ReferencedContainer = "container:BridgeSDKSample.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "80855F5A19BE258C006601C7"
+               BuildableName = "BridgeSDKTests.xctest"
+               BlueprintName = "BridgeSDKTests"
+               ReferencedContainer = "container:../BridgeSDK.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

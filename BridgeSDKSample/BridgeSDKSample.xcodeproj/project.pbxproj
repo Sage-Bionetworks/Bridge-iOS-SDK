@@ -23,6 +23,7 @@
 		808822881A01993A003E78BF /* SchedulesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B62A19FEF69900A2E6C4 /* SchedulesTableViewController.m */; };
 		809BE5AF19DB49C500A8E72F /* UserProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 809BE5AE19DB49C500A8E72F /* UserProfileViewController.m */; };
 		80A7318919C9D61E007FE828 /* SignUpSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A7318819C9D61E007FE828 /* SignUpSignInViewController.m */; };
+		D4FA38061A2B14AC00E7CF1E /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38051A2B14AC00E7CF1E /* sample-signature.png */; };
 		F5AF857C19F970700007296A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF857B19F970700007296A /* ViewController.m */; };
 		F5AF857F19F9708A0007296A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF857E19F9708A0007296A /* AppDelegate.m */; };
 /* End PBXBuildFile section */
@@ -104,6 +105,7 @@
 		80A7318419C9D3F9007FE828 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SignUpSignIn.storyboard; sourceTree = "<group>"; };
 		80A7318719C9D61E007FE828 /* SignUpSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignUpSignInViewController.h; sourceTree = "<group>"; };
 		80A7318819C9D61E007FE828 /* SignUpSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignUpSignInViewController.m; sourceTree = "<group>"; };
+		D4FA38051A2B14AC00E7CF1E /* sample-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sample-signature.png"; sourceTree = SOURCE_ROOT; };
 		F5AF857A19F970700007296A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		F5AF857B19F970700007296A /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		F5AF857D19F9708A0007296A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -181,6 +183,7 @@
 				8053B62A19FEF69900A2E6C4 /* SchedulesTableViewController.m */,
 				80855FAE19BFAA36006601C7 /* Images.xcassets */,
 				800E79AA19F1987F00EEE612 /* cat.jpg */,
+				D4FA38051A2B14AC00E7CF1E /* sample-signature.png */,
 				80855F9B19BFAA36006601C7 /* Supporting Files */,
 			);
 			path = BridgeSDKSample;
@@ -319,6 +322,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4FA38061A2B14AC00E7CF1E /* sample-signature.png in Resources */,
 				8053B62119FEF2D900A2E6C4 /* Schedule.storyboard in Resources */,
 				800E79B219F1B1FE00EEE612 /* Main.storyboard in Resources */,
 				800E79B319F1B1FE00EEE612 /* SignUpSignIn.storyboard in Resources */,
