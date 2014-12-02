@@ -81,6 +81,18 @@ typedef void (^SBBSurveyManagerEditResponseCompletionBlock)(id responseObject, N
 - (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion;
 
 /*!
+ Submit a set of answers to a survey by the survey's activityRef (href), and specify a guid for the SurveyResponse object to create as a result.
+ 
+ @param surveyAnswers An NSArray of survey answer objects for the questions answered.
+ @param ref           The href identifying the survey being answered, obtained e.g. from the Schedules or Activities API.
+ @param guid          A guid to use for the SurveyResponse created as a result of submitting these answers.
+ @param completion An SBBSurveyManagerSubmitAnswersCompletionBlock to be called upon completion. The guidHolder passed in contains the guid of the survey response created by submitting these answers.
+ 
+ @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByRef:(NSString *)ref withResponseGuid:(NSString *)guid completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion;
+
+/*!
  Submit a set of answers to a survey by the survey's guid and version number.
  
  @param surveyAnswers An NSArray of survey answer objects for the questions answered.
@@ -91,6 +103,19 @@ typedef void (^SBBSurveyManagerEditResponseCompletionBlock)(id responseObject, N
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
 - (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion;
+
+/*!
+ Submit a set of answers to a survey by the survey's guid and version number, and specify a guid for the SurveyResponse object to create.
+ 
+ @param surveyAnswers An NSArray of survey answer objects for the questions answered.
+ @param surveyGuid    The survey's guid.
+ @param createdOn     The creation date and time of the version of the survey being answered.
+ @param responseGuid  A guid to use for the SurveyResponse created as a result of submitting these answers.
+ @param completion    An SBBSurveyManagerSubmitAnswersCompletionBlock to be called upon completion. The guidHolder passed in contains the guid of the survey response created by submitting these answers.
+ 
+ @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)surveyGuid createdOn:(NSDate *)createdOn withResponseGuid:(NSString *)responseGuid completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion;
 
 /*!
  Fetch a previously-started survey response from the Bridge API.

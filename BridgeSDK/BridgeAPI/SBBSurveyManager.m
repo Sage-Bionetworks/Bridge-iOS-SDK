@@ -47,22 +47,36 @@
 
 - (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  id jsonAnswers = [self.objectManager bridgeJSONFromObject:surveyAnswers];
-  return [self.networkManager post:ref headers:headers parameters:jsonAnswers completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    id guidHolder = [self.objectManager objectFromBridgeJSON:responseObject];
-    if (completion) {
-      completion(guidHolder, error);
+    return [self submitAnswers:surveyAnswers toSurveyByRef:ref withResponseGuid:nil completion:completion];
+}
+
+- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByRef:(NSString *)ref withResponseGuid:(NSString *)guid completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSString *refWithResponseGuid = ref;
+    if (guid.length) {
+        refWithResponseGuid = [NSString stringWithFormat:@"%@/%@", ref, guid];
     }
-  }];
+    id jsonAnswers = [self.objectManager bridgeJSONFromObject:surveyAnswers];
+    return [self.networkManager post:refWithResponseGuid headers:headers parameters:jsonAnswers completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        id guidHolder = [self.objectManager objectFromBridgeJSON:responseObject];
+        if (completion) {
+            completion(guidHolder, error);
+        }
+    }];
 }
 
 - (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
-  NSString *version = [createdOn ISO8601StringUTC];
-  NSString *ref = [NSString stringWithFormat:@"/api/v1/surveys/%@/%@", guid, version];
-  return [self submitAnswers:surveyAnswers toSurveyByRef:ref completion:completion];
+    return [self submitAnswers:surveyAnswers toSurveyByGuid:guid createdOn:createdOn withResponseGuid:nil completion:completion];
+}
+
+- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)surveyGuid createdOn:(NSDate *)createdOn withResponseGuid:(NSString *)responseGuid completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+{
+    NSString *version = [createdOn ISO8601StringUTC];
+    NSString *ref = [NSString stringWithFormat:@"/api/v1/surveys/%@/%@", surveyGuid, version];
+    return [self submitAnswers:surveyAnswers toSurveyByRef:ref withResponseGuid:responseGuid completion:completion];
 }
 
 - (NSURLSessionDataTask *)getSurveyResponse:(NSString *)guid completion:(SBBSurveyManagerGetResponseCompletionBlock)completion
