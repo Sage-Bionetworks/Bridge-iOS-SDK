@@ -15,6 +15,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *firstNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
+@property (weak, nonatomic) IBOutlet UIImageView *signatureImageView;
 
 - (IBAction)didTouchLoadButton:(id)sender;
 - (IBAction)didTouchUpdateButton:(id)sender;
@@ -83,8 +84,29 @@
 }
 
 - (IBAction)didTouchGiveButton:(id)sender {
-  [SBBComponent(SBBConsentManager) consentSignature:@"::signature::" birthdate:[NSDate dateWithTimeIntervalSinceNow:-946684800.0] completion:^(id responseObject, NSError *error) {
+  // Load sample signature from bundle and send it to the server.
+  NSString* imagePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"sample-signature" ofType:@"png"];
+  NSData* imageData = [NSData dataWithContentsOfFile:imagePath];
+  UIImage* image = [[UIImage alloc] initWithData:imageData];
+
+  // call server
+  [SBBComponent(SBBConsentManager) consentSignature:@"::name::"
+      birthdate:[NSDate dateWithTimeIntervalSinceNow:-946684800.0] signatureImage:image
+      completion:^(id responseObject, NSError *error) {
     NSLog(@"%@", responseObject);
+    NSLog(@"Error: %@", error);
+  }];
+}
+
+- (IBAction)didTouchGetButton:(id)sender {
+  [SBBComponent(SBBConsentManager) retrieveConsentSignature:^(NSString* name, NSString* birthdate,
+      UIImage* signatureImage, NSError* error) {
+    if (signatureImage != nil) {
+      [_signatureImageView initWithImage:signatureImage];
+    }
+    NSLog(@"Name: %@", name);
+    NSLog(@"Birtdate: %@", birthdate);
+    NSLog(@"HasSignatureImage: %@", signatureImage != nil ? @"true" : @"false");
     NSLog(@"Error: %@", error);
   }];
 }

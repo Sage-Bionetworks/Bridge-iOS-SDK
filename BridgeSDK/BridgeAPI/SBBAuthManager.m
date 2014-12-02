@@ -109,7 +109,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 + (instancetype)authManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath
 {
-  SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment appURLPrefix:gSBBAppURLPrefix baseURLPath:@"sagebridge.org"];
+  SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment appURLPrefix:prefix
+    baseURLPath:baseURLPath];
   SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
   [authManager setupForEnvironment];
   return authManager;
