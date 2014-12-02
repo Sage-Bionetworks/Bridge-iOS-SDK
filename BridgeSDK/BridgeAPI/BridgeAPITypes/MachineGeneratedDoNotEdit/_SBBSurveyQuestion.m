@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyQuestion.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBSurveyQuestion()
 
@@ -36,15 +37,15 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.constraints = [dictionary objectForKey:@"constraints"];
+        self.constraints = [dictionary objectForKey:@"constraints"];
 
-    self.guid = [dictionary objectForKey:@"guid"];
+        self.guid = [dictionary objectForKey:@"guid"];
 
-    self.identifier = [dictionary objectForKey:@"identifier"];
+        self.identifier = [dictionary objectForKey:@"identifier"];
 
-    self.prompt = [dictionary objectForKey:@"prompt"];
+        self.prompt = [dictionary objectForKey:@"prompt"];
 
-    self.uiHint = [dictionary objectForKey:@"uiHint"];
+        self.uiHint = [dictionary objectForKey:@"uiHint"];
 
 	}
 
@@ -54,11 +55,16 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.constraints forKey:@"constraints"];
-	[dict setObjectIfNotNil:self.guid forKey:@"guid"];
-	[dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
-	[dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
-	[dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
+
+    [dict setObjectIfNotNil:self.constraints forKey:@"constraints"];
+
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+
+    [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
+
+    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
+
+    [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
 
 	return dict;
 }

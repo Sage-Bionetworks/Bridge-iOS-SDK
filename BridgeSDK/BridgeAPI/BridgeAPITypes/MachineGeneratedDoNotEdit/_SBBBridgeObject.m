@@ -8,6 +8,7 @@
 //
 
 #import "_SBBBridgeObject.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBBridgeObject()
 
@@ -36,7 +37,7 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    _type = [dictionary objectForKey:@"type"];
+        _type = [dictionary objectForKey:@"type"];
 
 	}
 
@@ -46,7 +47,8 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.type forKey:@"type"];
+
+    [dict setObjectIfNotNil:self.type forKey:@"type"];
 
 	return dict;
 }

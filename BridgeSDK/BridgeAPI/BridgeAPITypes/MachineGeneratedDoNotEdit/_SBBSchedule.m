@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSchedule.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBSchedule()
 
@@ -36,21 +37,21 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.activityRef = [dictionary objectForKey:@"activityRef"];
+        self.activityRef = [dictionary objectForKey:@"activityRef"];
 
-    self.activityType = [dictionary objectForKey:@"activityType"];
+        self.activityType = [dictionary objectForKey:@"activityType"];
 
-    self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
+        self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
 
-    self.endsOn = [dictionary objectForKey:@"endsOn"];
+        self.endsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endsOn"]];
 
-    self.expires = [dictionary objectForKey:@"expires"];
+        self.expires = [dictionary objectForKey:@"expires"];
 
-    self.label = [dictionary objectForKey:@"label"];
+        self.label = [dictionary objectForKey:@"label"];
 
-    self.scheduleType = [dictionary objectForKey:@"scheduleType"];
+        self.scheduleType = [dictionary objectForKey:@"scheduleType"];
 
-    self.startsOn = [dictionary objectForKey:@"startsOn"];
+        self.startsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startsOn"]];
 
 	}
 
@@ -60,14 +61,22 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.activityRef forKey:@"activityRef"];
-	[dict setObjectIfNotNil:self.activityType forKey:@"activityType"];
-	[dict setObjectIfNotNil:self.cronTrigger forKey:@"cronTrigger"];
-	[dict setObjectIfNotNil:self.endsOn forKey:@"endsOn"];
-	[dict setObjectIfNotNil:self.expires forKey:@"expires"];
-	[dict setObjectIfNotNil:self.label forKey:@"label"];
-	[dict setObjectIfNotNil:self.scheduleType forKey:@"scheduleType"];
-	[dict setObjectIfNotNil:self.startsOn forKey:@"startsOn"];
+
+    [dict setObjectIfNotNil:self.activityRef forKey:@"activityRef"];
+
+    [dict setObjectIfNotNil:self.activityType forKey:@"activityType"];
+
+    [dict setObjectIfNotNil:self.cronTrigger forKey:@"cronTrigger"];
+
+    [dict setObjectIfNotNil:[self.endsOn ISO8601String] forKey:@"endsOn"];
+
+    [dict setObjectIfNotNil:self.expires forKey:@"expires"];
+
+    [dict setObjectIfNotNil:self.label forKey:@"label"];
+
+    [dict setObjectIfNotNil:self.scheduleType forKey:@"scheduleType"];
+
+    [dict setObjectIfNotNil:[self.startsOn ISO8601String] forKey:@"startsOn"];
 
 	return dict;
 }

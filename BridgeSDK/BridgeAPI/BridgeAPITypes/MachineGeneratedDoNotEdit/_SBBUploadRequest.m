@@ -8,6 +8,7 @@
 //
 
 #import "_SBBUploadRequest.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBUploadRequest()
 
@@ -46,13 +47,13 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.contentLength = [dictionary objectForKey:@"contentLength"];
+        self.contentLength = [dictionary objectForKey:@"contentLength"];
 
-    self.contentMd5 = [dictionary objectForKey:@"contentMd5"];
+        self.contentMd5 = [dictionary objectForKey:@"contentMd5"];
 
-    self.contentType = [dictionary objectForKey:@"contentType"];
+        self.contentType = [dictionary objectForKey:@"contentType"];
 
-    self.name = [dictionary objectForKey:@"name"];
+        self.name = [dictionary objectForKey:@"name"];
 
 	}
 
@@ -62,10 +63,14 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.contentLength forKey:@"contentLength"];
-	[dict setObjectIfNotNil:self.contentMd5 forKey:@"contentMd5"];
-	[dict setObjectIfNotNil:self.contentType forKey:@"contentType"];
-	[dict setObjectIfNotNil:self.name forKey:@"name"];
+
+    [dict setObjectIfNotNil:self.contentLength forKey:@"contentLength"];
+
+    [dict setObjectIfNotNil:self.contentMd5 forKey:@"contentMd5"];
+
+    [dict setObjectIfNotNil:self.contentType forKey:@"contentType"];
+
+    [dict setObjectIfNotNil:self.name forKey:@"name"];
 
 	return dict;
 }

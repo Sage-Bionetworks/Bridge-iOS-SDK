@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurvey.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBSurvey()
 
@@ -56,21 +57,21 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.createdOn = [dictionary objectForKey:@"createdOn"];
+        self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
 
-    self.guid = [dictionary objectForKey:@"guid"];
+        self.guid = [dictionary objectForKey:@"guid"];
 
-    self.identifier = [dictionary objectForKey:@"identifier"];
+        self.identifier = [dictionary objectForKey:@"identifier"];
 
-    self.modifiedOn = [dictionary objectForKey:@"modifiedOn"];
+        self.modifiedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"modifiedOn"]];
 
-    self.name = [dictionary objectForKey:@"name"];
+        self.name = [dictionary objectForKey:@"name"];
 
-    self.published = [dictionary objectForKey:@"published"];
+        self.published = [dictionary objectForKey:@"published"];
 
-    self.questions = [dictionary objectForKey:@"questions"];
+        self.questions = [dictionary objectForKey:@"questions"];
 
-    self.version = [dictionary objectForKey:@"version"];
+        self.version = [dictionary objectForKey:@"version"];
 
 	}
 
@@ -80,14 +81,22 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.createdOn forKey:@"createdOn"];
-	[dict setObjectIfNotNil:self.guid forKey:@"guid"];
-	[dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
-	[dict setObjectIfNotNil:self.modifiedOn forKey:@"modifiedOn"];
-	[dict setObjectIfNotNil:self.name forKey:@"name"];
-	[dict setObjectIfNotNil:self.published forKey:@"published"];
-	[dict setObjectIfNotNil:self.questions forKey:@"questions"];
-	[dict setObjectIfNotNil:self.version forKey:@"version"];
+
+    [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
+
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+
+    [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
+
+    [dict setObjectIfNotNil:[self.modifiedOn ISO8601String] forKey:@"modifiedOn"];
+
+    [dict setObjectIfNotNil:self.name forKey:@"name"];
+
+    [dict setObjectIfNotNil:self.published forKey:@"published"];
+
+    [dict setObjectIfNotNil:self.questions forKey:@"questions"];
+
+    [dict setObjectIfNotNil:self.version forKey:@"version"];
 
 	return dict;
 }

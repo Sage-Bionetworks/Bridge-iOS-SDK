@@ -8,6 +8,7 @@
 //
 
 #import "_SBBDurationConstraints.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBDurationConstraints()
 

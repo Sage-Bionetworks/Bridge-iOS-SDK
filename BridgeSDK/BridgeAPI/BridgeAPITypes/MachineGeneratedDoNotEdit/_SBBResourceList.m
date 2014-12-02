@@ -8,6 +8,7 @@
 //
 
 #import "_SBBResourceList.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBResourceList()
 
@@ -46,9 +47,9 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.items = [dictionary objectForKey:@"items"];
+        self.items = [dictionary objectForKey:@"items"];
 
-    self.total = [dictionary objectForKey:@"total"];
+        self.total = [dictionary objectForKey:@"total"];
 
 	}
 
@@ -58,8 +59,10 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.items forKey:@"items"];
-	[dict setObjectIfNotNil:self.total forKey:@"total"];
+
+    [dict setObjectIfNotNil:self.items forKey:@"items"];
+
+    [dict setObjectIfNotNil:self.total forKey:@"total"];
 
 	return dict;
 }

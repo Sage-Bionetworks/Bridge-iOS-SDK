@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyQuestionOption.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBSurveyQuestionOption()
 
@@ -36,9 +37,9 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.label = [dictionary objectForKey:@"label"];
+        self.label = [dictionary objectForKey:@"label"];
 
-    self.value = [dictionary objectForKey:@"value"];
+        self.value = [dictionary objectForKey:@"value"];
 
 	}
 
@@ -48,8 +49,10 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.label forKey:@"label"];
-	[dict setObjectIfNotNil:self.value forKey:@"value"];
+
+    [dict setObjectIfNotNil:self.label forKey:@"label"];
+
+    [dict setObjectIfNotNil:self.value forKey:@"value"];
 
 	return dict;
 }

@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyAnswer.h"
+#import "NSDate+SBBAdditions.h"
 
 @interface _SBBSurveyAnswer()
 
@@ -46,15 +47,15 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-    self.answer = [dictionary objectForKey:@"answer"];
+        self.answer = [dictionary objectForKey:@"answer"];
 
-    self.answeredOn = [dictionary objectForKey:@"answeredOn"];
+        self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
 
-    self.client = [dictionary objectForKey:@"client"];
+        self.client = [dictionary objectForKey:@"client"];
 
-    self.declined = [dictionary objectForKey:@"declined"];
+        self.declined = [dictionary objectForKey:@"declined"];
 
-    self.questionGuid = [dictionary objectForKey:@"questionGuid"];
+        self.questionGuid = [dictionary objectForKey:@"questionGuid"];
 
 	}
 
@@ -64,11 +65,16 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	[dict setObjectIfNotNil:self.answer forKey:@"answer"];
-	[dict setObjectIfNotNil:self.answeredOn forKey:@"answeredOn"];
-	[dict setObjectIfNotNil:self.client forKey:@"client"];
-	[dict setObjectIfNotNil:self.declined forKey:@"declined"];
-	[dict setObjectIfNotNil:self.questionGuid forKey:@"questionGuid"];
+
+    [dict setObjectIfNotNil:self.answer forKey:@"answer"];
+
+    [dict setObjectIfNotNil:[self.answeredOn ISO8601String] forKey:@"answeredOn"];
+
+    [dict setObjectIfNotNil:self.client forKey:@"client"];
+
+    [dict setObjectIfNotNil:self.declined forKey:@"declined"];
+
+    [dict setObjectIfNotNil:self.questionGuid forKey:@"questionGuid"];
 
 	return dict;
 }
