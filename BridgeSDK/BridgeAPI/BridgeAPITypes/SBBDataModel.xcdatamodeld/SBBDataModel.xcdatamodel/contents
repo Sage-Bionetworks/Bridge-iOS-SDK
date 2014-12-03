@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14A389" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="BooleanConstraints" representedClassName="SBBBooleanConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="BridgeObject" representedClassName="SBBBridgeObject" isAbstract="YES" syncable="YES">
         <attribute name="type" optional="YES" attributeType="String" syncable="YES">
@@ -24,8 +24,8 @@
         <attribute name="step" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
     <entity name="DurationConstraints" representedClassName="SBBDurationConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
-    <entity name="GuidHolder" representedClassName="SBBGuidHolder" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+    <entity name="IdentifierHolder" representedClassName="SBBIdentifierHolder" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="IntegerConstraints" representedClassName="SBBIntegerConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxValue" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -81,6 +81,11 @@
     <entity name="SurveyAnswer" representedClassName="SBBSurveyAnswer" parentEntity="BridgeObject" syncable="YES">
         <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="answeredOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="answers" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray"/>
+            </userInfo>
+        </attribute>
         <attribute name="client" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="declined" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="questionGuid" optional="YES" attributeType="String" syncable="YES"/>
@@ -160,14 +165,14 @@
         <element name="DateTimeConstraints" positionX="36" positionY="135" width="128" height="90"/>
         <element name="DecimalConstraints" positionX="-9" positionY="99" width="128" height="90"/>
         <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="45"/>
-        <element name="GuidHolder" positionX="-27" positionY="72" width="128" height="60"/>
+        <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="60"/>
         <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="90"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="88"/>
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
         <element name="Schedule" positionX="-9" positionY="81" width="128" height="163"/>
         <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
         <element name="Survey" positionX="-36" positionY="27" width="128" height="165"/>
-        <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="120"/>
+        <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="133"/>
         <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="73"/>
         <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="118"/>
         <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="73"/>

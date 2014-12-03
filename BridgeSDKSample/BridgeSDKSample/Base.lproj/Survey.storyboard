@@ -23,17 +23,17 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="SGg-YG-hne">
-                                <rect key="frame" x="146" y="113" width="438" height="17"/>
+                                <rect key="frame" x="146" y="112" width="438" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="iG9-lu-Apr">
-                                <rect key="frame" x="146" y="157" width="438" height="17"/>
+                                <rect key="frame" x="146" y="156" width="438" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="iD3-OK-9Fw">
-                                <rect key="frame" x="146" y="202" width="438" height="17"/>
+                                <rect key="frame" x="146" y="201" width="438" height="17"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -158,8 +158,8 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Use response guid:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kzK-Vr-GJb">
-                                <rect key="frame" x="305" y="277" width="134" height="19"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Use response identifier:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kzK-Vr-GJb">
+                                <rect key="frame" x="305" y="277" width="183" height="19"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
@@ -237,7 +237,7 @@
                         <outlet property="guidTextField" destination="iD3-OK-9Fw" id="acU-Eg-DOI"/>
                         <outlet property="nameTextField" destination="SGg-YG-hne" id="Kb9-Sf-hBq"/>
                         <outlet property="numQuestionsTextField" destination="pW3-cE-daL" id="jV2-2Y-8gg"/>
-                        <outlet property="responseGuidTextField" destination="sK0-DW-FHn" id="142-em-pdE"/>
+                        <outlet property="responseIdentifierTextField" destination="sK0-DW-FHn" id="4Pp-uF-E4G"/>
                         <outlet property="sampleRefTextField" destination="LUy-gn-aLb" id="I2a-RW-XRZ"/>
                     </connections>
                 </viewController>
