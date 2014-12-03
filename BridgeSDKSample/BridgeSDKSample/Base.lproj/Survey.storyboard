@@ -237,6 +237,8 @@
                         <outlet property="guidTextField" destination="iD3-OK-9Fw" id="acU-Eg-DOI"/>
                         <outlet property="nameTextField" destination="SGg-YG-hne" id="Kb9-Sf-hBq"/>
                         <outlet property="numQuestionsTextField" destination="pW3-cE-daL" id="jV2-2Y-8gg"/>
+                        <outlet property="responseGuidTextField" destination="sK0-DW-FHn" id="142-em-pdE"/>
+                        <outlet property="sampleRefTextField" destination="LUy-gn-aLb" id="I2a-RW-XRZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MUA-N5-zjA" userLabel="First Responder" sceneMemberID="firstResponder"/>

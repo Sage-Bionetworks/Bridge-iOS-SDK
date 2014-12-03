@@ -18,6 +18,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *createdOnTextField;
 @property (weak, nonatomic) IBOutlet UITextField *guidTextField;
 @property (weak, nonatomic) IBOutlet UITextField *numQuestionsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *sampleRefTextField;
+@property (weak, nonatomic) IBOutlet UITextField *responseGuidTextField;
 
 - (IBAction)didTouchLoadSampleButton:(id)sender;
 - (IBAction)didTouchSendSampleAnswersButton:(id)sender;
@@ -52,19 +54,20 @@
 
 - (NSString *)surveyRef
 {
-  NSString *surveyRef = nil;
-  switch (SBBComponent(SBBNetworkManager).environment) {
-    case SBBEnvironmentDev:
-      surveyRef = @"/api/v1/surveys/4aad1810-cef9-41bc-b0d9-73bcdf32df07/2014-10-16T21:36:44.386Z";
-      break;
-      
-    case SBBEnvironmentStaging:
-      surveyRef = @"/api/v1/surveys/ecf7e761-c7e9-4bb6-b6e7-d6d15c53b209/2014-09-25T20:07:49.186Z";
-      break;
-      
-    default:
-      break;
-  }
+  NSString *surveyRef = self.sampleRefTextField.text;
+  
+//  switch (SBBComponent(SBBNetworkManager).environment) {
+//    case SBBEnvironmentDev:
+//      surveyRef = @"/api/v1/surveys/4aad1810-cef9-41bc-b0d9-73bcdf32df07/2014-10-16T21:36:44.386Z";
+//      break;
+//      
+//    case SBBEnvironmentStaging:
+//      surveyRef = @"/api/v1/surveys/ecf7e761-c7e9-4bb6-b6e7-d6d15c53b209/2014-09-25T20:07:49.186Z";
+//      break;
+//      
+//    default:
+//      break;
+//  }
   
   return surveyRef;
 }
@@ -105,14 +108,36 @@
   return ((SBBSurveyQuestion *)_fetchedSurvey.questions[index]).guid;
 }
 
+- (NSString *)answerForQuestion:(NSUInteger)index
+{
+  NSString *answer = nil;
+  SBBSurveyQuestion *question = _fetchedSurvey.questions[index];
+  SBBSurveyConstraints *constraints = question.constraints;
+  if ([constraints isKindOfClass:[SBBMultiValueConstraints class]]) {
+    NSArray *enumeration = ((SBBMultiValueConstraints *)constraints).enumeration;
+    NSUInteger enumIndex = arc4random_uniform((int)enumeration.count);
+//    SBBSurveyQuestionOption *option = enumeration[enumIndex];
+//    answer = option.value;
+    answer = [NSString stringWithFormat:@"%lu", (unsigned long)enumIndex];
+  }
+  // TODO: Make this work for other constraint types
+  
+  return answer;
+}
+
 - (IBAction)didTouchLoadSampleButton:(id)sender {
-  [SBBComponent(SBBSurveyManager) getSurveyByRef:[self surveyRef] completion:^(id survey, NSError *error) {
+  NSString *surveyRef = [self surveyRef];
+  if (!surveyRef.length) {
+    return;
+  }
+  
+  [SBBComponent(SBBSurveyManager) getSurveyByRef:surveyRef completion:^(id survey, NSError *error) {
     if (survey) {
       id jsonSurvey = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:survey];
       NSLog(@"Survey (converted back to JSON for dump):\n%@", jsonSurvey);
     }
     if (error) {
-      NSLog(@"Error getting sample survey:\n%@", error);
+      NSLog(@"Error getting survey %@:\n%@", surveyRef, error);
     } else {
       SBBSurvey *sbbSurvey = (SBBSurvey *)survey;
       if ([sbbSurvey isKindOfClass:[SBBSurvey class]]) {
@@ -132,21 +157,24 @@
   NSMutableArray *answers = [NSMutableArray array];
   SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
   a1.questionGuid = [self guidForQuestion:0];
-  a1.answer = @"3";
+  a1.answer = [self answerForQuestion:0];
   a1.answeredOn = [NSDate date];
   a1.client = @"test";
   a1.declined = @NO;
   [answers addObject:a1];
   SBBSurveyAnswer *a2 = [a1 copy];
   a2.questionGuid = [self guidForQuestion:1];
-  a2.answer = @"2";
+  a2.answer = [self answerForQuestion:1];
+  a2.answeredOn = [NSDate date];
+  a2.client = @"test";
+  a2.declined = @NO;
   [answers addObject:a2];
   
   return answers;
 }
 
 - (IBAction)didTouchSendSampleAnswersButton:(id)sender {
-  [SBBComponent(SBBSurveyManager) submitAnswers:[self someAnswers] toSurveyByRef:[self surveyRef] completion:^(id guidHolder, NSError *error) {
+  [SBBComponent(SBBSurveyManager) submitAnswers:[self someAnswers] toSurveyByRef:[self surveyRef] withResponseGuid:self.responseGuidTextField.text completion:^(id guidHolder, NSError *error) {
     if (guidHolder) {
       id guidHolderJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:guidHolder];
       NSLog(@"Guid holder for new survey response (converted back to JSON for dump):\n%@", guidHolderJSON);
@@ -176,14 +204,17 @@
   NSMutableArray *answers = [NSMutableArray array];
   SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
   a1.questionGuid = [self guidForQuestion:2];
-  a1.answer = @"4";
+  a1.answer = [self answerForQuestion:2];
   a1.answeredOn = [NSDate date];
   a1.client = @"test";
   a1.declined = @NO;
   [answers addObject:a1];
   SBBSurveyAnswer *a2 = [a1 copy];
   a2.questionGuid = [self guidForQuestion:3];
-  a2.answer = @"1";
+  a2.answer = [self answerForQuestion:3];
+  a2.answeredOn = [NSDate date];
+  a2.client = @"test";
+  a2.declined = @NO;
   [answers addObject:a2];
   
   return answers;
