@@ -108,17 +108,20 @@
   return ((SBBSurveyQuestion *)_fetchedSurvey.questions[index]).guid;
 }
 
-- (NSString *)answerForQuestion:(NSUInteger)index
+- (id)answerForQuestion:(NSUInteger)index
 {
-  NSString *answer = nil;
+  id answer = nil;
   SBBSurveyQuestion *question = _fetchedSurvey.questions[index];
   SBBSurveyConstraints *constraints = question.constraints;
   if ([constraints isKindOfClass:[SBBMultiValueConstraints class]]) {
-    NSArray *enumeration = ((SBBMultiValueConstraints *)constraints).enumeration;
+    SBBMultiValueConstraints *mvc = (SBBMultiValueConstraints *)constraints;
+    NSArray *enumeration = mvc.enumeration;
     NSUInteger enumIndex = arc4random_uniform((int)enumeration.count);
-//    SBBSurveyQuestionOption *option = enumeration[enumIndex];
-//    answer = option.value;
-    answer = [NSString stringWithFormat:@"%lu", (unsigned long)enumIndex];
+    SBBSurveyQuestionOption *option = enumeration[enumIndex];
+    answer = option.value;
+    if (mvc.allowMultipleValue) {
+      answer = @[answer];
+    }
   }
   // TODO: Make this work for other constraint types
   
