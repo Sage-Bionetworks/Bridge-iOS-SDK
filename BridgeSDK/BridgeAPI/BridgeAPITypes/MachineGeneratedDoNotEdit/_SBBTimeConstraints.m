@@ -8,6 +8,7 @@
 //
 
 #import "_SBBTimeConstraints.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 @interface _SBBTimeConstraints()
@@ -81,9 +82,7 @@
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"TimeConstraints" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"TimeConstraints" inManagedObjectContext:cacheContext];
 
     // TODO: Save changes to cacheContext.
 

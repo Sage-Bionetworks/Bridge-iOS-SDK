@@ -8,6 +8,7 @@
 //
 
 #import "_SBBStringConstraints.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 @interface _SBBStringConstraints()
@@ -129,9 +130,7 @@
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"StringConstraints" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"StringConstraints" inManagedObjectContext:cacheContext];
 
     managedObject.maxLength = self.maxLength;
 

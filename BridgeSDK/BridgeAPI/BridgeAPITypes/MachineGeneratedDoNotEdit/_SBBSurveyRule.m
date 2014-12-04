@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyRule.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBSurveyConstraints.h"
@@ -113,9 +114,7 @@
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyRule" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyRule" inManagedObjectContext:cacheContext];
 
     managedObject.operator = self.operator;
 

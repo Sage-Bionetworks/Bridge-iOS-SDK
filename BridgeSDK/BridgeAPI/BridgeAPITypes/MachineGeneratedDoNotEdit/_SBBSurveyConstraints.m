@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyConstraints.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBSurveyRule.h"
@@ -145,9 +146,7 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyConstraints" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyConstraints" inManagedObjectContext:cacheContext];
 
     managedObject.dataType = self.dataType;
 

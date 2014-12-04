@@ -22,6 +22,8 @@
 
 @property (nonatomic, strong) NSDate* answeredOn;
 
+@property (nonatomic, strong) NSArray* answers;
+
 @property (nonatomic, strong) NSData* ciphertext;
 
 @property (nonatomic, strong) NSString* client;

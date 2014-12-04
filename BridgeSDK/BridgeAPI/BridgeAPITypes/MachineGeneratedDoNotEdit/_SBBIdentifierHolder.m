@@ -1,30 +1,31 @@
 //
-//  SBBGuidHolder.m
+//  SBBIdentifierHolder.m
 //
 //  $Id$
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBGuidHolder.h instead.
+// Make changes to SBBIdentifierHolder.h instead.
 //
 
-#import "_SBBGuidHolder.h"
+#import "_SBBIdentifierHolder.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBGuidHolder()
+@interface _SBBIdentifierHolder()
 
 @end
 
 /*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
  */
-@interface NSManagedObject (GuidHolder)
+@interface NSManagedObject (IdentifierHolder)
 
-@property (nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSString* identifier;
 
 @end
 
 /** \ingroup DataModel */
 
-@implementation _SBBGuidHolder
+@implementation _SBBIdentifierHolder
 
 - (instancetype)init
 {
@@ -45,7 +46,7 @@
   if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
-        self.guid = [dictionary objectForKey:@"guid"];
+        self.identifier = [dictionary objectForKey:@"identifier"];
 
 	}
 
@@ -56,7 +57,7 @@
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
-    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+    [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
 	return dict;
 }
@@ -76,7 +77,7 @@
 
     if (self == [super init]) {
 
-        self.guid = managedObject.guid;
+        self.identifier = managedObject.identifier;
 
     }
 
@@ -89,11 +90,9 @@
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"GuidHolder" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"IdentifierHolder" inManagedObjectContext:cacheContext];
 
-    managedObject.guid = self.guid;
+    managedObject.identifier = self.identifier;
 
     // TODO: Save changes to cacheContext.
 

@@ -1,12 +1,12 @@
 //
-//  SBBGuidHolder.m
+//  SBBIdentifierHolder.m
 //	
 //  $Id$
 //
 
-#import "SBBGuidHolder.h"
+#import "SBBIdentifierHolder.h"
 
-@implementation SBBGuidHolder
+@implementation SBBIdentifierHolder
 
 #pragma mark Abstract method overrides
 

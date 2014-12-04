@@ -8,7 +8,7 @@
 
 #import "ScheduleViewController.h"
 
-@interface ScheduleViewController ()
+@interface ScheduleViewController () <UITextViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *labelTextField;
 @property (weak, nonatomic) IBOutlet UITextField *activityRefTextField;
@@ -48,5 +48,12 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark - UITextViewDelegate
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+  return NO;
+}
 
 @end

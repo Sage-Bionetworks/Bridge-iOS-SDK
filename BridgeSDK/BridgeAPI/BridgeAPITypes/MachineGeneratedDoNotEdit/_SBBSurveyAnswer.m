@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyAnswer.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "RNEncryptor.h"
@@ -26,6 +27,8 @@
 @property (nonatomic, strong) NSString* answer;
 
 @property (nonatomic, strong) NSDate* answeredOn;
+
+@property (nonatomic, strong) NSArray* answers;
 
 @property (nonatomic, strong) NSData* ciphertext;
 
@@ -80,6 +83,8 @@
 
         self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
 
+        self.answers = [dictionary objectForKey:@"answers"];
+
         self.ciphertext = [dictionary objectForKey:@"ciphertext"];
 
         self.client = [dictionary objectForKey:@"client"];
@@ -100,6 +105,8 @@
     [dict setObjectIfNotNil:self.answer forKey:@"answer"];
 
     [dict setObjectIfNotNil:[self.answeredOn ISO8601String] forKey:@"answeredOn"];
+
+    [dict setObjectIfNotNil:self.answers forKey:@"answers"];
 
     [dict setObjectIfNotNil:self.ciphertext forKey:@"ciphertext"];
 
@@ -139,9 +146,7 @@
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyAnswer" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyAnswer" inManagedObjectContext:cacheContext];
 
     NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
     NSError *error;

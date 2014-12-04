@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurvey.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBSurveyQuestion.h"
@@ -241,9 +242,7 @@ SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepr
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Survey" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Survey" inManagedObjectContext:cacheContext];
 
     managedObject.createdOn = self.createdOn;
 

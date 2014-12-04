@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyResponse.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBSurveyAnswer.h"
@@ -192,9 +193,7 @@ SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresen
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponse" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponse" inManagedObjectContext:cacheContext];
 
     managedObject.completedOn = self.completedOn;
 

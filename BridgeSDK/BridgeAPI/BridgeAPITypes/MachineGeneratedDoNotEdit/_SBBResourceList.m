@@ -8,6 +8,7 @@
 //
 
 #import "_SBBResourceList.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBBridgeObject.h"
@@ -151,9 +152,7 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ResourceList" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ResourceList" inManagedObjectContext:cacheContext];
 
     managedObject.total = self.total;
 

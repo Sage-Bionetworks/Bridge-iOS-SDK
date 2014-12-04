@@ -8,6 +8,7 @@
 //
 
 #import "_SBBBridgeObject.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBResourceList.h"
@@ -97,9 +98,7 @@
     // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
-    [cacheContext performBlockAndWait:^{
-        managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"BridgeObject" inManagedObjectContext:cacheContext];
-    }];
+    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"BridgeObject" inManagedObjectContext:cacheContext];
 
     managedObject.type = self.type;
 

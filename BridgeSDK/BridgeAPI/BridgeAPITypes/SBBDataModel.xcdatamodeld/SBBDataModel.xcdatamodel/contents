@@ -29,8 +29,8 @@
         <attribute name="step" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
     <entity name="DurationConstraints" representedClassName="" parentEntity="SurveyConstraints" syncable="YES"/>
-    <entity name="GuidHolder" representedClassName="" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+    <entity name="IdentifierHolder" representedClassName="" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="IntegerConstraints" representedClassName="" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxValue" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -89,6 +89,11 @@
         <attribute name="ciphertext" optional="YES" attributeType="Binary" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="answers" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray"/>
             </userInfo>
         </attribute>
         <attribute name="client" optional="YES" attributeType="String" syncable="YES"/>
@@ -178,8 +183,8 @@
         <element name="DateConstraints" positionX="18" positionY="126" width="128" height="88"/>
         <element name="DateTimeConstraints" positionX="36" positionY="135" width="128" height="88"/>
         <element name="DecimalConstraints" positionX="-9" positionY="99" width="128" height="90"/>
-        <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="45"/>
-        <element name="GuidHolder" positionX="-27" positionY="72" width="128" height="60"/>
+        <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="43"/>
+        <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="58"/>
         <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="90"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="90"/>
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
