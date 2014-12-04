@@ -1,22 +1,22 @@
 //
-//  SBBGuidHolder.m
+//  SBBIdentifierHolder.m
 //
 //  $Id$
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBGuidHolder.h instead.
+// Make changes to SBBIdentifierHolder.h instead.
 //
 
-#import "_SBBGuidHolder.h"
+#import "_SBBIdentifierHolder.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBGuidHolder()
+@interface _SBBIdentifierHolder()
 
 @end
 
 /** \ingroup DataModel */
 
-@implementation _SBBGuidHolder
+@implementation _SBBIdentifierHolder
 
 - (id)init
 {
@@ -37,7 +37,7 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.guid = [dictionary objectForKey:@"guid"];
+        self.identifier = [dictionary objectForKey:@"identifier"];
 
 	}
 
@@ -48,7 +48,7 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+    [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
 	return dict;
 }

@@ -51,6 +51,8 @@
 
         self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
 
+        self.answers = [dictionary objectForKey:@"answers"];
+
         self.client = [dictionary objectForKey:@"client"];
 
         self.declined = [dictionary objectForKey:@"declined"];
@@ -69,6 +71,8 @@
     [dict setObjectIfNotNil:self.answer forKey:@"answer"];
 
     [dict setObjectIfNotNil:[self.answeredOn ISO8601String] forKey:@"answeredOn"];
+
+    [dict setObjectIfNotNil:self.answers forKey:@"answers"];
 
     [dict setObjectIfNotNil:self.client forKey:@"client"];
 
