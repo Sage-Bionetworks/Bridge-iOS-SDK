@@ -12,12 +12,14 @@
 @interface SurveyViewController ()
 
 @property (nonatomic, strong) SBBSurvey *fetchedSurvey;
-@property (nonatomic, strong) NSString *responseGuid;
+@property (nonatomic, strong) NSString *responseIdentifier;
 
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *createdOnTextField;
 @property (weak, nonatomic) IBOutlet UITextField *guidTextField;
 @property (weak, nonatomic) IBOutlet UITextField *numQuestionsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *sampleRefTextField;
+@property (weak, nonatomic) IBOutlet UITextField *responseIdentifierTextField;
 
 - (IBAction)didTouchLoadSampleButton:(id)sender;
 - (IBAction)didTouchSendSampleAnswersButton:(id)sender;
@@ -52,67 +54,56 @@
 
 - (NSString *)surveyRef
 {
-  NSString *surveyRef = nil;
-  switch (SBBComponent(SBBNetworkManager).environment) {
-    case SBBEnvironmentDev:
-      surveyRef = @"/api/v1/surveys/4aad1810-cef9-41bc-b0d9-73bcdf32df07/2014-10-16T21:36:44.386Z";
-      break;
-      
-    case SBBEnvironmentStaging:
-      surveyRef = @"/api/v1/surveys/ecf7e761-c7e9-4bb6-b6e7-d6d15c53b209/2014-09-25T20:07:49.186Z";
-      break;
-      
-    default:
-      break;
-  }
+  NSString *surveyRef = self.sampleRefTextField.text;
   
-  return surveyRef;
-}
-
-- (NSString *)guidForQuestion:(NSUInteger)index
-{
-//  NSArray *stagingGuids =
-//  @[
-//    @"ebcb8ea2-011e-4c12-b97d-08eca1aa3fb8",
-//    @"0698db53-efe5-4530-b703-1e6cd589039b",
-//    @"c3702ee5-945c-48c4-b826-b8182edf7fa0",
-//    @"3a26741d-5880-4030-bf58-74f58ca57b65"
-//    ];
-//  
-//  NSArray *devGuids =
-//  @[
-//    @"1460946a-7c80-4c7f-a590-89aba92a657c",
-//    @"b73be244-49d9-4418-a13c-93a3801cbb65",
-//    @"36726387-8320-49af-a8b2-479c14b17919",
-//    @"a29f5a03-70bc-4891-817e-ecc8451b9b80"
-//    ];
-//  
-//  NSString *questionGuid = nil;
 //  switch (SBBComponent(SBBNetworkManager).environment) {
 //    case SBBEnvironmentDev:
-//      questionGuid = devGuids[index];
+//      surveyRef = @"/api/v1/surveys/4aad1810-cef9-41bc-b0d9-73bcdf32df07/2014-10-16T21:36:44.386Z";
 //      break;
 //      
 //    case SBBEnvironmentStaging:
-//      questionGuid = stagingGuids[index];
+//      surveyRef = @"/api/v1/surveys/ecf7e761-c7e9-4bb6-b6e7-d6d15c53b209/2014-09-25T20:07:49.186Z";
 //      break;
 //      
 //    default:
 //      break;
 //  }
-//  
-//  return questionGuid;
-  return ((SBBSurveyQuestion *)_fetchedSurvey.questions[index]).guid;
+  
+  return surveyRef;
+}
+
+- (id)answer_s_ForQuestion:(SBBSurveyQuestion *)question
+{
+  id answer_s_ = nil;
+  SBBSurveyConstraints *constraints = question.constraints;
+  if ([constraints isKindOfClass:[SBBMultiValueConstraints class]]) {
+    SBBMultiValueConstraints *mvc = (SBBMultiValueConstraints *)constraints;
+    NSArray *enumeration = mvc.enumeration;
+    NSUInteger enumIndex = arc4random_uniform((int)enumeration.count);
+    SBBSurveyQuestionOption *option = enumeration[enumIndex];
+    answer_s_ = option.value;
+    if (mvc.allowMultipleValue) {
+      answer_s_ = @[answer_s_];
+    }
+  }
+  // TODO: Make this work for other constraint types
+  
+  return answer_s_;
 }
 
 - (IBAction)didTouchLoadSampleButton:(id)sender {
-  [SBBComponent(SBBSurveyManager) getSurveyByRef:[self surveyRef] completion:^(id survey, NSError *error) {
+  NSString *surveyRef = [self surveyRef];
+  if (!surveyRef.length) {
+    return;
+  }
+  
+  [SBBComponent(SBBSurveyManager) getSurveyByRef:surveyRef completion:^(id survey, NSError *error) {
     if (survey) {
       id jsonSurvey = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:survey];
       NSLog(@"Survey (converted back to JSON for dump):\n%@", jsonSurvey);
     }
     if (error) {
-      NSLog(@"Error getting sample survey:\n%@", error);
+      NSLog(@"Error getting survey %@:\n%@", surveyRef, error);
     } else {
       SBBSurvey *sbbSurvey = (SBBSurvey *)survey;
       if ([sbbSurvey isKindOfClass:[SBBSurvey class]]) {
@@ -128,30 +119,39 @@
   }];
 }
 
+- (NSArray *)surveyAnswersForQuestionsFromIndex:(NSUInteger)start toIndex:(NSUInteger)end
+{
+    NSMutableArray *answers = [NSMutableArray array];
+    for (NSUInteger i = start; i <= end; ++i) {
+        SBBSurveyQuestion *question = _fetchedSurvey.questions[i];
+        SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
+        a1.questionGuid = question.guid;
+        id answer_s_ = [self answer_s_ForQuestion:question];
+        if ([answer_s_ isKindOfClass:[NSString class]]) {
+            a1.answer = answer_s_;
+        } else if ([answer_s_ isKindOfClass:[NSArray class]]) {
+            a1.answers = answer_s_;
+        }
+        a1.answeredOn = [NSDate date];
+        a1.client = @"test";
+        a1.declined = @NO;
+        [answers addObject:a1];
+    }
+    
+    return answers;
+}
+
 - (NSArray *)someAnswers {
-  NSMutableArray *answers = [NSMutableArray array];
-  SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
-  a1.questionGuid = [self guidForQuestion:0];
-  a1.answer = @"3";
-  a1.answeredOn = [NSDate date];
-  a1.client = @"test";
-  a1.declined = @NO;
-  [answers addObject:a1];
-  SBBSurveyAnswer *a2 = [a1 copy];
-  a2.questionGuid = [self guidForQuestion:1];
-  a2.answer = @"2";
-  [answers addObject:a2];
-  
-  return answers;
+    return [self surveyAnswersForQuestionsFromIndex:0 toIndex:1];
 }
 
 - (IBAction)didTouchSendSampleAnswersButton:(id)sender {
-  [SBBComponent(SBBSurveyManager) submitAnswers:[self someAnswers] toSurveyByRef:[self surveyRef] completion:^(id guidHolder, NSError *error) {
-    if (guidHolder) {
-      id guidHolderJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:guidHolder];
-      NSLog(@"Guid holder for new survey response (converted back to JSON for dump):\n%@", guidHolderJSON);
-      if ([guidHolder isKindOfClass:[SBBGuidHolder class]]) {
-        self.responseGuid = ((SBBGuidHolder *)guidHolder).guid;
+  [SBBComponent(SBBSurveyManager) submitAnswers:[self someAnswers] toSurveyByRef:[self surveyRef] withResponseIdentifier:self.responseIdentifierTextField.text completion:^(id identifierHolder, NSError *error) {
+    if (identifierHolder) {
+      id identifierHolderJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:identifierHolder];
+      NSLog(@"Identifier holder for new survey response (converted back to JSON for dump):\n%@", identifierHolderJSON);
+      if ([identifierHolder isKindOfClass:[SBBIdentifierHolder class]]) {
+        self.responseIdentifier = ((SBBIdentifierHolder *)identifierHolder).identifier;
       }
     }
     if (error) {
@@ -161,56 +161,62 @@
 }
 
 - (IBAction)didTouchFetchResultsButton:(id)sender {
-  [SBBComponent(SBBSurveyManager) getSurveyResponse:_responseGuid completion:^(id surveyResponse, NSError *error) {
-    if (surveyResponse) {
-      id surveyResponseJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:surveyResponse];
-      NSLog(@"Survey response (converted back to JSON for dump):\n%@", surveyResponseJSON);
+    NSString *responseId = self.responseIdentifierTextField.text;
+    if (!responseId.length) {
+        // if not filled in, use the one we got back from the most recently sent sample answers
+        responseId = _responseIdentifier;
     }
-    if (error) {
-      NSLog(@"Error:\n%@", error);
-    }
-  }];
+    
+    [SBBComponent(SBBSurveyManager) getSurveyResponse:responseId completion:^(id surveyResponse, NSError *error) {
+        if (surveyResponse) {
+            id surveyResponseJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:surveyResponse];
+            NSLog(@"Survey response (converted back to JSON for dump):\n%@", surveyResponseJSON);
+        }
+        if (error) {
+            NSLog(@"Error:\n%@", error);
+        }
+    }];
 }
 
 - (NSArray *)moreAnswers {
-  NSMutableArray *answers = [NSMutableArray array];
-  SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
-  a1.questionGuid = [self guidForQuestion:2];
-  a1.answer = @"4";
-  a1.answeredOn = [NSDate date];
-  a1.client = @"test";
-  a1.declined = @NO;
-  [answers addObject:a1];
-  SBBSurveyAnswer *a2 = [a1 copy];
-  a2.questionGuid = [self guidForQuestion:3];
-  a2.answer = @"1";
-  [answers addObject:a2];
-  
-  return answers;
+    return [self surveyAnswersForQuestionsFromIndex:2 toIndex:3];
 }
 
 - (IBAction)didTouchAddSampleAnswersButton:(id)sender {
-  [SBBComponent(SBBSurveyManager) addAnswers:[self moreAnswers] toSurveyResponse:_responseGuid completion:^(id responseObject, NSError *error) {
-    if (responseObject) {
-      NSLog(@"Add answers to survey results %@\nAPI response:\n%@", _responseGuid, responseObject);
+    NSString *responseId = self.responseIdentifierTextField.text;
+    if (!responseId.length) {
+        // if not filled in, use the one we got back from the most recently sent sample answers
+        responseId = _responseIdentifier;
     }
-    if (error) {
-      NSLog(@"Error:\n%@", error);
-    }
-  }];
+    [SBBComponent(SBBSurveyManager) addAnswers:[self moreAnswers] toSurveyResponse:responseId completion:^(id responseObject, NSError *error) {
+        if (responseObject) {
+            NSLog(@"Add answers to survey results %@\nAPI response:\n%@", responseId, responseObject);
+        }
+        if (error) {
+            NSLog(@"Error:\n%@", error);
+        }
+    }];
 }
 
 - (IBAction)didTouchDeleteResultsButton:(id)sender {
-  [SBBComponent(SBBSurveyManager) deleteSurveyResponse:_responseGuid completion:^(id responseObject, NSError *error) {
-    if (responseObject) {
-      NSLog(@"Delete survey response %@\nAPI response:\n%@", _responseGuid, responseObject);
+    NSString *responseId = self.responseIdentifierTextField.text;
+    if (!responseId.length) {
+        // if not filled in, use the one we got back from the most recently sent sample answers
+        responseId = _responseIdentifier;
     }
-    if (error) {
-      NSLog(@"Error:\n%@", error);
-    } else {
-      self.responseGuid = nil;
-    }
-  }];
+    [SBBComponent(SBBSurveyManager) deleteSurveyResponse:responseId completion:^(id responseObject, NSError *error) {
+        if (responseObject) {
+            NSLog(@"Delete survey response %@\nAPI response:\n%@", responseId, responseObject);
+        }
+        if (error) {
+            NSLog(@"Error:\n%@", error);
+        } else {
+            self.responseIdentifier = nil;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.responseIdentifierTextField.text = nil;
+            });
+        }
+    }];
 }
 
 @end

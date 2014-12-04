@@ -22,6 +22,8 @@
 
 @property (nonatomic, strong) NSDate* answeredOn;
 
+@property (nonatomic, strong) NSArray* answers;
+
 @property (nonatomic, strong) NSString* client;
 
 @property (nonatomic, strong) NSNumber* declined;
