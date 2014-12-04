@@ -633,7 +633,7 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.serverReachability stopNotifier];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:self];
 }
 @end
