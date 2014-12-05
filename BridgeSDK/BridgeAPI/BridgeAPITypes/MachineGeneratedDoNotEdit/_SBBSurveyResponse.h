@@ -22,7 +22,7 @@
 
 @property (nonatomic, strong) NSDate* completedOn;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSString* identifier;
 
 @property (nonatomic, strong) NSDate* startedOn;
 

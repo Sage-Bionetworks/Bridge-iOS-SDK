@@ -41,7 +41,7 @@
 
         self.completedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"completedOn"]];
 
-        self.guid = [dictionary objectForKey:@"guid"];
+        self.identifier = [dictionary objectForKey:@"identifier"];
 
         self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
 
@@ -62,7 +62,7 @@
 
     [dict setObjectIfNotNil:[self.completedOn ISO8601String] forKey:@"completedOn"];
 
-    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+    [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
     [dict setObjectIfNotNil:[self.startedOn ISO8601String] forKey:@"startedOn"];
 

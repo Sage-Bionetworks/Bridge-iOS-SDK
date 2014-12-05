@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="BooleanConstraints" representedClassName="SBBBooleanConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="BridgeObject" representedClassName="SBBBridgeObject" isAbstract="YES" syncable="YES">
         <attribute name="type" optional="YES" attributeType="String" syncable="YES">
@@ -123,7 +123,7 @@
             </userInfo>
         </attribute>
         <attribute name="completedOn" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="survey" optional="YES" attributeType="Transformable" syncable="YES">
@@ -176,7 +176,7 @@
         <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="73"/>
         <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="118"/>
         <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="73"/>
-        <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="133"/>
+        <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="135"/>
         <element name="SurveyRule" positionX="18" positionY="108" width="128" height="90"/>
         <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>
         <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>
