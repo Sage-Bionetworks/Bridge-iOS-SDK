@@ -597,11 +597,9 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
         }
         retryObject.retryBlock = nil;
     }
-    
-    if ([self checkForTemporaryErrors:errorCode])
+    else if ([self checkForTemporaryErrors:errorCode])
     {
-        
-        if (retryObject && retryObject.retryCount < kMaxRetryCount)
+        if (retryObject && retryObject.retryBlock && retryObject.retryCount < kMaxRetryCount)
         {
             double delayInSeconds = pow(2.0, retryObject.retryCount + 1); //Exponential backoff
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -637,7 +635,7 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
 - (void)dealloc
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.serverReachability stopNotifier];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:self];
 }
 @end

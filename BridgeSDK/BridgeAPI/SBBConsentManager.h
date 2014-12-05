@@ -40,7 +40,7 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
  *  Submit the user's "signature" and birthdate to indicate consent to participate in this research project.
  *
  *  @param name       The user's name.
- *  @param birthdate  The user's birthday in the format "YYYY-MM-DD".
+ *  @param date       The user's birthday in the format "YYYY-MM-DD".
  *  @param signatureImage  Image file of the user's signature. Should be less than 10kb. Optional, can be nil.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  *

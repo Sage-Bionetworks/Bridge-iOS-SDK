@@ -95,7 +95,7 @@
 #pragma mark - Error handlers
 /*********************************************************************************/
 
-- (void) handle
+- (void) handleSBBError
 {
     NSLog(@"SBB ERROR GENERATED: %@", self);
 }
