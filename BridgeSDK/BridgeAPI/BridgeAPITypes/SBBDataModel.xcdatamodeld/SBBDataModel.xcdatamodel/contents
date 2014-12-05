@@ -131,7 +131,7 @@
     </entity>
     <entity name="SurveyResponse" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="completedOn" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="answers" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyAnswer" inverseName="surveyResponse" inverseEntity="SurveyAnswer" syncable="YES"/>
