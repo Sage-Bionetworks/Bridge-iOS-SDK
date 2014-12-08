@@ -8,6 +8,7 @@
 
 #import "SBBCacheManager.h"
 @import CoreData;
+@import UIKit;
 
 // SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
 #define STRINGIZE(x) #x
@@ -19,11 +20,15 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 @interface SBBCacheManager ()
 
 @property (nonatomic, strong) NSCache *objectsCachedByTypeAndID;
+@property (nonatomic, strong) dispatch_queue_t bridgeObjectCacheQueue;
 
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, strong) NSPersistentStore *persistentStore;
 @property (nonatomic, strong) NSString *persistentStoreName;
+@property (nonatomic, strong) NSManagedObjectContext *cacheIOContext;
+
+@property (nonatomic, weak) id appWillTerminateObserver;
 
 @end
 
@@ -56,25 +61,34 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 - (instancetype)init
 {
-  if (self = [super init]) {
-    [self dispatchSyncToBridgeObjectCacheQueue:^{
-      self.objectsCachedByTypeAndID = [[NSCache alloc] init];
-    }];
-  }
-  
-  return self;
+    if (self = [super init]) {
+        [self dispatchSyncToBridgeObjectCacheQueue:^{
+            self.objectsCachedByTypeAndID = [[NSCache alloc] init];
+            self.appWillTerminateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+                // TODO: Make sure the Core Data MOC is saved
+            }];
+        }];
+    }
+    
+    return self;
+}
+
+- (void)dealloc
+{
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center removeObserver:self.appWillTerminateObserver];
+    [self discardCacheManagerCoreDataQueue];
 }
 
 #pragma mark - In-memory cache
 
-- (dispatch_queue_t)BridgeObjectCacheQueue
+- (dispatch_queue_t)bridgeObjectCacheQueue
 {
-  static dispatch_queue_t q = nil;
-  if (!q) {
-    q = dispatch_queue_create("org.sagebase.BridgeObjectCacheQueue", DISPATCH_QUEUE_SERIAL);
+  if (!_bridgeObjectCacheQueue) {
+    _bridgeObjectCacheQueue = dispatch_queue_create("org.sagebase.BridgeObjectCacheQueue", DISPATCH_QUEUE_SERIAL);
   }
   
-  return q;
+  return _bridgeObjectCacheQueue;
 }
 
 // BE CAREFUL never to allow this to be called recursively, even indirectly.
@@ -82,7 +96,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 // in dispatchBlock that you can't absolutely guarantee will never get back here.
 - (void)dispatchSyncToBridgeObjectCacheQueue:(dispatch_block_t)dispatchBlock
 {
-  dispatch_sync([self BridgeObjectCacheQueue], dispatchBlock);
+  dispatch_sync(self.bridgeObjectCacheQueue, dispatchBlock);
 }
 
 #pragma mark - CoreData cache
@@ -99,12 +113,22 @@ dispatch_queue_t CoreDataQueueForPersistentStoreName(NSString *name)
   return queue;
 }
 
+void removeCoreDataQueueForPersistentStoreName(NSString *name)
+{
+    [gCoreDataQueuesByPersistentStoreName setObject:nil forKey:name];
+}
+
 // BE CAREFUL never to allow this to be called recursively, even indirectly.
 // The only way to ensure this is to never synchronously call out to anything
 // in dispatchBlock that you can't absolutely guarantee will never get back here.
 - (void)dispatchSyncToCacheManagerCoreDataQueue:(dispatch_block_t)dispatchBlock
 {
   dispatch_sync(CoreDataQueueForPersistentStoreName(self.persistentStoreName), dispatchBlock);
+}
+
+- (void)discardCacheManagerCoreDataQueue
+{
+    removeCoreDataQueueForPersistentStoreName(self.persistentStoreName);
 }
 
 - (NSURL *)appDocumentsDirectory
@@ -196,6 +220,17 @@ dispatch_queue_t CoreDataQueueForPersistentStoreName(NSString *name)
   return [[self appDocumentsDirectory] URLByAppendingPathComponent:self.persistentStoreName];
 }
 
+- (NSManagedObjectContext *)cacheIOContext
+{
+    if (!_cacheIOContext) {
+        _cacheIOContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+        _cacheIOContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
+        _cacheIOContext.undoManager = [[NSUndoManager alloc] init];
+    }
+    
+    return _cacheIOContext;
+}
+
 - (BOOL)resetCache
 {
   __block BOOL reset = NO;
@@ -212,39 +247,32 @@ dispatch_queue_t CoreDataQueueForPersistentStoreName(NSString *name)
   __block NSError *error;
   __block BOOL reset = NO;
   
-  dispatchSyncToCoreDataQueue(^{
+  [self dispatchSyncToCacheManagerCoreDataQueue:^{
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center removeObserver:self.appWillTerminateObserver];
-    [center removeObserver:self.privateContextSavedObserver];
-    [center removeObserver:self.mainContextSavedObserver];
     
-    __privateQueueContext = nil;
-    __mainQueueContext = nil;
-    
-    [__backingQueueContext performBlockAndWait:^{
-      [__backingQueueContext lock];
-      [__backingQueueContext reset];
+    [_cacheIOContext performBlockAndWait:^{
+      [_cacheIOContext reset];
       
-      if (__persistentStoreCoordinator) {
-        if (![__persistentStoreCoordinator removePersistentStore:self.persistentStore error:&error]) {
-          YMLogError(@"Unable to remove persistent store: error %@, %@", error, [error userInfo]);
+      if (_persistentStoreCoordinator) {
+        if (![_persistentStoreCoordinator removePersistentStore:self.persistentStore error:&error]) {
+          NSLog(@"Unable to remove persistent store: error %@, %@", error, [error userInfo]);
           return;
         }
       }
-      [__backingQueueContext unlock];
-      __persistentStoreCoordinator = nil;
-      __backingQueueContext = nil;
-      __managedObjectModel = nil;
+      _persistentStoreCoordinator = nil;
+      _cacheIOContext= nil;
+      _managedObjectModel = nil;
       
       NSURL *storeURL = [self storeURL];
       if (![[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error]) {
-        YMLogError(@"Unable to delete SQLite db file at %@ : error %@, %@", storeURL, error, [error userInfo]);
+        NSLog(@"Unable to delete SQLite db file at %@ : error %@, %@", storeURL, error, [error userInfo]);
         return;
       }
       
       reset = YES;
     }];
-  });
+  }];
   
   return reset;
 }
