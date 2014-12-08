@@ -6,12 +6,15 @@
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import CoreData;
+@import Foundation;
 #import "SBBComponent.h"
 
 @protocol SBBCacheManagerProtocol <NSObject>
 
-//
+- (id)cachedObjectOfType:(NSString *)type withId:(id)objectId;
+
+- (id)cachedObjectFromBridgeJSON:(id)json;
 
 @end
 

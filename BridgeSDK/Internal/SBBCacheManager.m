@@ -7,7 +7,6 @@
 //
 
 #import "SBBCacheManager.h"
-@import CoreData;
 @import UIKit;
 
 // SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal

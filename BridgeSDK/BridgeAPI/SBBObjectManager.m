@@ -51,19 +51,45 @@
   return self;
 }
 
+- (NSString *)bridgeClassNameFromType:(NSString *)type
+{
+    NSString *className = [NSString stringWithFormat:@"SBB%@", type];
+    
+    return className;
+}
+
+- (NSString *)classNameFromType:(NSString *)type
+{
+    NSString *className = _classForType[type];
+    if (!className.length) {
+        className = [self bridgeClassNameFromType:type];
+    }
+    
+    return className;
+}
+
+- (Class)classFromClassName:(NSString *)className
+{
+    Class classFromType = Nil;
+    if (className.length) {
+        classFromType = NSClassFromString(className);
+    }
+    
+    return classFromType;
+}
+
+- (Class)bridgeClassFromType:(NSString *)type
+{
+    NSString *className = [self bridgeClassNameFromType:type];
+    
+    return [self classFromClassName:className];
+}
+
 - (Class)classFromType:(NSString *)type
 {
-  NSString *className = _classForType[type];
-  if (!className.length) {
-    className = [NSString stringWithFormat:@"SBB%@", type];
-  }
-  
-  Class classFromType = Nil;
-  if (className.length) {
-    classFromType = NSClassFromString(className);
-  }
-  
-  return classFromType;
+    NSString *className = [self classNameFromType:type];
+    
+    return [self classFromClassName:className];
 }
 
 - (NSString *)typeFromClass:(Class)objectClass
@@ -627,60 +653,71 @@
   return json;
 }
 
+
 - (id)objectFromBridgeJSON:(id)json
 {
-  id object = nil;
-  
-    // TODO: First check cache, if entity of type has an entityIdKeyPath property,
-    // for existing instance with same value at that keypath; if it exists, update
-    // from json...
-    // otherwise do this:
-  if ([json isKindOfClass:[NSArray class]]) {
-    NSMutableArray *list = [NSMutableArray array];
-    for (id subJson in json) {
-      if ([subJson isKindOfClass:[NSDictionary class]] || [subJson isKindOfClass:[NSArray class]]) {
-        id subObject = [self objectFromBridgeJSON:subJson];
-        if (subObject == nil) {
-          NSLog(@"Unable to create object from json, leaving as json object:\n%@", subJson);
-          return subJson;
+    id object = nil;
+    
+    if ([json isKindOfClass:[NSArray class]]) {
+        NSMutableArray *list = [NSMutableArray array];
+        for (id subJson in json) {
+            if ([subJson isKindOfClass:[NSDictionary class]] || [subJson isKindOfClass:[NSArray class]]) {
+                id subObject = [self objectFromBridgeJSON:subJson];
+                if (subObject == nil) {
+                    NSLog(@"Unable to create object from json, leaving as json object:\n%@", subJson);
+                    return subJson;
+                }
+                [list addObject:subObject];
+            } else {
+                [list addObject:subJson];
+            }
         }
-        [list addObject:subObject];
-      } else {
-        [list addObject:subJson];
-      }
-    }
-    object = list;
-  } else if ([json isKindOfClass:[NSDictionary class]]) {
-    NSString *type = json[@"type"];
-    if (!type.length) {
-      // not an API object, no way to determine type; just pass it through as raw json
-      return json;
-    }
-      // TODO: Create instance of entity "type" from json
-    Class objectClass = [self classFromType:type];
-    if (objectClass == Nil) {
-      NSLog(@"Unable to determine class of object to create for type %@", type);
-      return nil;
-    }
-    NSDictionary *mappings = _mappingsForType[type];
-    if (mappings) {
-      object = [objectClass new];
-      for (NSString *bridgeFieldKey in [mappings allKeys]) {
-        id bridgeFieldValue = json[bridgeFieldKey];
-        if (!bridgeFieldValue) {
-          continue;
+        object = list;
+    } else if ([json isKindOfClass:[NSDictionary class]]) {
+        NSString *type = json[@"type"];
+        if (!type.length) {
+            // not an API object, no way to determine type; just pass it through as raw json
+            return json;
         }
-        NSString *targetClassKey = mappings[bridgeFieldKey];
-        [self setProperty:targetClassKey inObject:object fromJson:bridgeFieldValue];
-      }
-    } else {
-      // our internal class for this type knows how to initialize itself from the json
-      object = [[objectClass alloc] initWithDictionaryRepresentation:json objectManager:self];
+        
+        id bridgeJson = json;
+        
+        // Try the cache first (if it's not a cacheable entity, this will be nil)
+        id<SBBCacheManagerProtocol> cacheMan = SBBComponent(SBBCacheManager);
+        id bridgeObject = [cacheMan cachedObjectFromBridgeJSON:json];
+        // otherwise, our internal class for this type knows how to initialize itself from the json
+        if (bridgeObject) {
+            // in case we got partial json passed in and combined it with what was cached
+            bridgeJson = [bridgeObject dictionaryRepresentationFromObjectManager:self];
+        } else {
+            Class bridgeClass = [self bridgeClassFromType:type];
+            bridgeObject = [[bridgeClass alloc] initWithDictionaryRepresentation:json objectManager:self];
+        }
+        
+        NSDictionary *mappings = _mappingsForType[type];
+        if (mappings) {
+            Class objectClass = [self classFromType:type];
+            if (objectClass == Nil) {
+                NSLog(@"Unable to determine class of object to create for type %@", type);
+                return nil;
+            }
+            object = [objectClass new];
+            
+            for (NSString *bridgeFieldKey in [mappings allKeys]) {
+                id bridgeFieldValue = bridgeJson[bridgeFieldKey];
+                if (!bridgeFieldValue) {
+                    continue;
+                }
+                NSString *targetClassKey = mappings[bridgeFieldKey];
+                [self setProperty:targetClassKey inObject:object fromJson:bridgeFieldValue];
+            }
+        } else {
+            object = bridgeObject;
+        }
     }
-  }
-  
-//  NSLog(@"Created object %@ from Bridge JSON:\n%@", object, json);
-  return object;
+    
+    //  NSLog(@"Created object %@ from Bridge JSON:\n%@", object, json);
+    return object;
 }
 
 - (id)bridgeJSONFromObject:(id)object
