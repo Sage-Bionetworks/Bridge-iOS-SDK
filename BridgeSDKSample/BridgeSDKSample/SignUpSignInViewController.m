@@ -14,8 +14,12 @@
 @property (weak, nonatomic) IBOutlet UITextField *emailAddressTextField;
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
+@property (weak, nonatomic) IBOutlet UITextField *resetTokenTextField;
+@property (weak, nonatomic) IBOutlet UITextField *resetPasswordTextField;
 
 - (IBAction)didTouchSignUpSignInButton:(id)sender;
+- (IBAction)didTouchRequestPasswordResetButton:(id)sender;
+- (IBAction)didTouchResetPasswordButton:(id)sender;
 @end
 
 @implementation SignUpSignInViewController
@@ -66,6 +70,27 @@
             }];
         }
     }
+}
+
+- (IBAction)didTouchRequestPasswordResetButton:(id)sender {
+  NSString *emailAddress = _emailAddressTextField.text;
+  
+  if (emailAddress.length) {
+    [SBBComponent(SBBAuthManager) requestPasswordResetForEmail:emailAddress completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+      NSLog(@"request password reset response:\n%@\nerror:\n%@", responseObject, error);
+    }];
+  }
+}
+
+- (IBAction)didTouchResetPasswordButton:(id)sender {
+  NSString *token = _resetTokenTextField.text;
+  NSString *newPassword = _resetPasswordTextField.text;
+  
+  if (token.length && newPassword.length) {
+    [SBBComponent(SBBAuthManager) resetPasswordToNewPassword:newPassword resetToken:token completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+      NSLog(@"reset password response:\n%@\nerror:\n%@", responseObject, error);
+    }];
+  }
 }
 
 - (void) finishUp
