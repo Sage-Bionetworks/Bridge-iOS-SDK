@@ -319,6 +319,16 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
   }
 }
 
+- (NSURLSessionDataTask *)requestPasswordResetForEmail:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
+{
+  return [_networkManager post:@"/api/v1/auth/requestResetPassword" headers:nil parameters:@{@"email":email} completion:completion];
+}
+
+- (NSURLSessionDataTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
+{
+  return [_networkManager post:@"/api/v1/auth/resetPassword" headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
+}
+
 #pragma mark Internal helper methods
 
 - (BOOL)isAuthenticated
