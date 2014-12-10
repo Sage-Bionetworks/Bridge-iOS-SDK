@@ -25,7 +25,7 @@
 
 @property (nonatomic, strong) NSDate* completedOn;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSString* identifier;
 
 @property (nonatomic, strong) NSDate* startedOn;
 
@@ -162,7 +162,7 @@ SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresen
 
         self.completedOn = managedObject.completedOn;
 
-        self.guid = managedObject.guid;
+        self.identifier = managedObject.identifier;
 
         self.startedOn = managedObject.startedOn;
 
@@ -197,7 +197,7 @@ SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresen
 
     managedObject.completedOn = self.completedOn;
 
-    managedObject.guid = self.guid;
+    managedObject.identifier = self.identifier;
 
     managedObject.startedOn = self.startedOn;
 
