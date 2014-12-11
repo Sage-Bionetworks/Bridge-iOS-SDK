@@ -1,5 +1,5 @@
 //
-//  SBBDurationConstraints.h
+//  _SBBDurationConstraints.h
 //
 //  $Id$
 //

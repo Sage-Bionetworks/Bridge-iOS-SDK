@@ -1,5 +1,5 @@
 //
-//  SBBIdentifierHolder.h
+//  _SBBIdentifierHolder.h
 //
 //  $Id$
 //

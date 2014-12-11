@@ -7,7 +7,8 @@
 // Make changes to <$generatedObjectClassName$>.h instead.
 //
 
-#import "_<$generatedObjectClassName$>.h"
+#import "_<$generatedObjectClassName$>.h"<$if needsInternalHeader$>
+#import "_<$generatedObjectClassName$>Internal.h"<$endif$>
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 <$if userInfo.encrypted$>
@@ -107,7 +108,7 @@
 {
   if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
-		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
+		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>
     <$if Attribute.isReadonly$>
         <$if Attribute.hasDateAttributeType$>
         _<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
@@ -121,7 +122,7 @@
         self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
         <$endif$>
     <$endif$>
-		<$endif$><$endforeach do$>
+		<$endif$><$endif$><$endforeach do$>
 		<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
             <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
@@ -147,13 +148,13 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
-	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
+	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>
     <$if Attribute.hasDateAttributeType$>
     [dict setObjectIfNotNil:[self.<$Attribute.name$> ISO8601String] forKey:@"<$Attribute.name$>"];
     <$else$>
     [dict setObjectIfNotNil:self.<$Attribute.name$> forKey:@"<$Attribute.name$>"];
     <$endif$>
-	<$endif$><$endforeach do$>
+	<$endif$><$endif$><$endforeach do$>
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
     <$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0)
 	{
@@ -230,13 +231,13 @@
     return [self initWithDictionaryRepresentation:jsonDict objectManager:[SBBObjectManager objectManager]];
 <$else$>
     if (self == [super init]) {
-		<$foreach Attribute noninheritedAttributes do$><$if ! Attribute.userInfo.notInPONSODictionary $><$if Attribute.hasDefinedAttributeType$>
+		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     <$if Attribute.isReadonly$>
         _<$Attribute.name$> = managedObject.<$Attribute.name$>;
     <$else$>
         self.<$Attribute.name$> = managedObject.<$Attribute.name$>;
     <$endif$>
-		<$endif$><$endif$><$endforeach do$>
+		<$endif$><$endforeach do$>
 		<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
             <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
 		for(NSManagedObject *<$Relationship.name$>ManagedObj in managedObject.<$Relationship.name$>)

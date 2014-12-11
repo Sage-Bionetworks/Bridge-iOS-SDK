@@ -1,5 +1,5 @@
 //
-//  SBBDecimalConstraints.h
+//  _SBBDecimalConstraints.h
 //
 //  $Id$
 //

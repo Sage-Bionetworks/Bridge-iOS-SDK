@@ -1,5 +1,5 @@
 //
-//  SBBSurveyAnswer.h
+//  _SBBSurveyAnswer.h
 //
 //  $Id$
 //
@@ -24,8 +24,6 @@
 
 @property (nonatomic, strong) NSArray* answers;
 
-@property (nonatomic, strong) NSData* ciphertext;
-
 @property (nonatomic, strong) NSString* client;
 
 @property (nonatomic, strong) NSNumber* declined;
@@ -33,9 +31,5 @@
 @property (nonatomic, assign) BOOL declinedValue;
 
 @property (nonatomic, strong) NSString* questionGuid;
-
-@property (nonatomic, strong, readwrite) SBBSurveyResponse *surveyResponse;
-
-- (void) setSurveyResponse: (SBBSurveyResponse*) surveyResponse_ settingInverse: (BOOL) setInverse;
 
 @end

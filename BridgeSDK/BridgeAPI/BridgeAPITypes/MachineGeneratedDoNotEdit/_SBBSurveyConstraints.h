@@ -1,5 +1,5 @@
 //
-//  SBBSurveyConstraints.h
+//  _SBBSurveyConstraints.h
 //
 //  $Id$
 //
@@ -23,8 +23,6 @@
 
 @property (nonatomic, strong, readonly) NSArray *rules;
 
-@property (nonatomic, strong, readwrite) SBBSurveyQuestion *surveyQuestion;
-
 - (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
 - (void)addRulesObject:(SBBSurveyRule*)value_;
 - (void)removeRulesObjects;
@@ -37,7 +35,5 @@
 - (void)removeRulesAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
 - (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
-
-- (void) setSurveyQuestion: (SBBSurveyQuestion*) surveyQuestion_ settingInverse: (BOOL) setInverse;
 
 @end

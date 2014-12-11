@@ -1,5 +1,5 @@
 //
-//  SBBSurveyQuestion.h
+//  _SBBSurveyQuestion.h
 //
 //  $Id$
 //
@@ -31,10 +31,6 @@
 
 @property (nonatomic, strong, readwrite) SBBSurveyConstraints *constraints;
 
-@property (nonatomic, strong, readwrite) SBBSurvey *survey;
-
 - (void) setConstraints: (SBBSurveyConstraints*) constraints_ settingInverse: (BOOL) setInverse;
-
-- (void) setSurvey: (SBBSurvey*) survey_ settingInverse: (BOOL) setInverse;
 
 @end

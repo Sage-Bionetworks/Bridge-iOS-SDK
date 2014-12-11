@@ -10,11 +10,13 @@
 @import Foundation;
 #import "SBBComponent.h"
 
+@class SBBBridgeObject;
+
 @protocol SBBCacheManagerProtocol <NSObject>
 
-- (id)cachedObjectOfType:(NSString *)type withId:(id)objectId;
+- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(id)objectId;
 
-- (id)cachedObjectFromBridgeJSON:(id)json;
+- (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json;
 
 @end
 

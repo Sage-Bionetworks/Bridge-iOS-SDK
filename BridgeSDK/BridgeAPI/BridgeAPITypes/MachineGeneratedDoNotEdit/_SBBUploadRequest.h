@@ -1,5 +1,5 @@
 //
-//  SBBUploadRequest.h
+//  _SBBUploadRequest.h
 //
 //  $Id$
 //

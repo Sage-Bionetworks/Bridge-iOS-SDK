@@ -8,6 +8,7 @@
 //
 
 #import "_SBBBridgeObject.h"
+#import "_SBBBridgeObjectInternal.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
@@ -20,6 +21,8 @@
 /*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
  */
 @interface NSManagedObject (BridgeObject)
+
+@property (nonatomic, strong) NSDate* lastRetrieved;
 
 @property (nonatomic, strong) NSString* type;
 
@@ -85,6 +88,8 @@
 
     if (self == [super init]) {
 
+        self.lastRetrieved = managedObject.lastRetrieved;
+
         _type = managedObject.type;
 
     }
@@ -99,6 +104,8 @@
     __block NSManagedObject *managedObject = nil;
 
     managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"BridgeObject" inManagedObjectContext:cacheContext];
+
+    managedObject.lastRetrieved = self.lastRetrieved;
 
     managedObject.type = self.type;
 

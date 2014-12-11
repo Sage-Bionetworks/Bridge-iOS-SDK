@@ -1,5 +1,5 @@
 //
-//  SBBSchedule.h
+//  _SBBSchedule.h
 //
 //  $Id$
 //

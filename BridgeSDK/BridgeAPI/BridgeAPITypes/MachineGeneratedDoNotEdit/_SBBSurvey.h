@@ -1,5 +1,5 @@
 //
-//  SBBSurvey.h
+//  _SBBSurvey.h
 //
 //  $Id$
 //
@@ -39,8 +39,6 @@
 
 @property (nonatomic, strong, readonly) NSArray *questions;
 
-@property (nonatomic, strong, readonly) NSArray *surveyResponses;
-
 - (void)addQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: (BOOL) setInverse;
 - (void)addQuestionsObject:(SBBSurveyQuestion*)value_;
 - (void)removeQuestionsObjects;
@@ -53,18 +51,5 @@
 - (void)removeQuestionsAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInQuestionsAtIndex:(NSUInteger)idx withObject:(SBBSurveyQuestion*)value;
 - (void)replaceQuestionsAtIndexes:(NSIndexSet *)indexes withQuestions:(NSArray *)values;
-
-- (void)addSurveyResponsesObject:(SBBSurveyResponse*)value_ settingInverse: (BOOL) setInverse;
-- (void)addSurveyResponsesObject:(SBBSurveyResponse*)value_;
-- (void)removeSurveyResponsesObjects;
-- (void)removeSurveyResponsesObject:(SBBSurveyResponse*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeSurveyResponsesObject:(SBBSurveyResponse*)value_;
-
-- (void)insertObject:(SBBSurveyResponse*)value inSurveyResponsesAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromSurveyResponsesAtIndex:(NSUInteger)idx;
-- (void)insertSurveyResponses:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeSurveyResponsesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInSurveyResponsesAtIndex:(NSUInteger)idx withObject:(SBBSurveyResponse*)value;
-- (void)replaceSurveyResponsesAtIndexes:(NSIndexSet *)indexes withSurveyResponses:(NSArray *)values;
 
 @end

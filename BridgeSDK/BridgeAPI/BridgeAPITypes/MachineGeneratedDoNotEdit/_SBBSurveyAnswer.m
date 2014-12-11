@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurveyAnswer.h"
+#import "_SBBSurveyAnswerInternal.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
@@ -85,8 +86,6 @@
 
         self.answers = [dictionary objectForKey:@"answers"];
 
-        self.ciphertext = [dictionary objectForKey:@"ciphertext"];
-
         self.client = [dictionary objectForKey:@"client"];
 
         self.declined = [dictionary objectForKey:@"declined"];
@@ -107,8 +106,6 @@
     [dict setObjectIfNotNil:[self.answeredOn ISO8601String] forKey:@"answeredOn"];
 
     [dict setObjectIfNotNil:self.answers forKey:@"answers"];
-
-    [dict setObjectIfNotNil:self.ciphertext forKey:@"ciphertext"];
 
     [dict setObjectIfNotNil:self.client forKey:@"client"];
 

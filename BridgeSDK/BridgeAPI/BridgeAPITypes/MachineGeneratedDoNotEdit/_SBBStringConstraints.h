@@ -1,5 +1,5 @@
 //
-//  SBBStringConstraints.h
+//  _SBBStringConstraints.h
 //
 //  $Id$
 //

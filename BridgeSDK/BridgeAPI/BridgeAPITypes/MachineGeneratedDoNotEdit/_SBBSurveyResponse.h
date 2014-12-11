@@ -1,5 +1,5 @@
 //
-//  SBBSurveyResponse.h
+//  _SBBSurveyResponse.h
 //
 //  $Id$
 //

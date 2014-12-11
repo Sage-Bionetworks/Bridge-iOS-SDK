@@ -1,5 +1,5 @@
 //
-//  SBBUserProfile.h
+//  _SBBUserProfile.h
 //
 //  $Id$
 //

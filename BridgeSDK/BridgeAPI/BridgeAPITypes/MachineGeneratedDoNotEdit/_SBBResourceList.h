@@ -1,5 +1,5 @@
 //
-//  SBBResourceList.h
+//  _SBBResourceList.h
 //
 //  $Id$
 //

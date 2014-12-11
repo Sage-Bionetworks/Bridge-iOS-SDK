@@ -1,5 +1,5 @@
 //
-//  SBBMultiValueConstraints.h
+//  _SBBMultiValueConstraints.h
 //
 //  $Id$
 //

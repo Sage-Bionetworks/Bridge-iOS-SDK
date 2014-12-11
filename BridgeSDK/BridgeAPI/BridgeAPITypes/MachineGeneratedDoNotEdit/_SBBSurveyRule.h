@@ -1,5 +1,5 @@
 //
-//  SBBSurveyRule.h
+//  _SBBSurveyRule.h
 //
 //  $Id$
 //
@@ -23,9 +23,5 @@
 @property (nonatomic, strong) NSString* skipTo;
 
 @property (nonatomic, strong) id value;
-
-@property (nonatomic, strong, readwrite) SBBSurveyConstraints *surveyConstraints;
-
-- (void) setSurveyConstraints: (SBBSurveyConstraints*) surveyConstraints_ settingInverse: (BOOL) setInverse;
 
 @end

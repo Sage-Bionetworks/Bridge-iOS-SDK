@@ -1,5 +1,5 @@
 //
-//  SBBIntegerConstraints.h
+//  _SBBIntegerConstraints.h
 //
 //  $Id$
 //

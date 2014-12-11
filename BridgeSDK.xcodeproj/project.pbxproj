@@ -68,6 +68,16 @@
 /* Begin PBXBuildFile section */
 		606FDE141A23E84800898466 /* ModelObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE131A23E84800898466 /* ModelObjectInternal.h */; };
 		606FDE161A23EB4E00898466 /* SBBObjectManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE151A23EB4E00898466 /* SBBObjectManagerInternal.h */; };
+		606FDE211A2F9DC800898466 /* _SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		606FDE221A2F9DC800898466 /* _SBBIdentifierHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */; };
+		606FDE251A2F9E4300898466 /* SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */; };
+		60F1E3FD1A38E871009B380E /* machine.ih.motemplate in Resources */ = {isa = PBXBuildFile; fileRef = 60F1E3FC1A38E871009B380E /* machine.ih.motemplate */; };
+		60F1E3FF1A392F7D009B380E /* _SBBBridgeObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E3FE1A392F7D009B380E /* _SBBBridgeObjectInternal.h */; };
+		60F1E4011A3932B5009B380E /* human.ih.motemplate in Resources */ = {isa = PBXBuildFile; fileRef = 60F1E4001A3932B5009B380E /* human.ih.motemplate */; };
+		60F1E4031A39330B009B380E /* SBBBridgeObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4021A39330B009B380E /* SBBBridgeObjectInternal.h */; };
+		60F1E4051A393706009B380E /* _SBBSurveyAnswerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4041A393706009B380E /* _SBBSurveyAnswerInternal.h */; };
+		60F1E4071A393746009B380E /* SBBSurveyAnswerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4061A393746009B380E /* SBBSurveyAnswerInternal.h */; };
 		60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */; };
 		60FF57351A0AFEA500CE2373 /* _SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */; };
 		60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572B1A0AFEA500CE2373 /* _SBBTestBridgeObject.m */; };
@@ -75,10 +85,6 @@
 		60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */; };
 		60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57311A0AFEA500CE2373 /* SBBTestBridgeObject.m */; };
 		60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */; };
-		606FDE211A2F9DC800898466 /* _SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		606FDE221A2F9DC800898466 /* _SBBIdentifierHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */; };
-		606FDE251A2F9E4300898466 /* SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */; };
 		800E792219ED73FD00EEE612 /* _SBBBooleanConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 800E792019ED73FD00EEE612 /* _SBBBooleanConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		800E792319ED73FD00EEE612 /* _SBBBooleanConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */; };
 		800E792D19ED740F00EEE612 /* _SBBDateConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 800E792519ED740F00EEE612 /* _SBBDateConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -301,6 +307,16 @@
 		606FDE0B1A1D70ED00898466 /* generate_namespace_header.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_namespace_header.sh; sourceTree = "<group>"; };
 		606FDE131A23E84800898466 /* ModelObjectInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelObjectInternal.h; sourceTree = "<group>"; };
 		606FDE151A23EB4E00898466 /* SBBObjectManagerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBObjectManagerInternal.h; sourceTree = "<group>"; };
+		606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBIdentifierHolder.h; sourceTree = "<group>"; };
+		606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBIdentifierHolder.m; sourceTree = "<group>"; };
+		606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBIdentifierHolder.h; sourceTree = "<group>"; };
+		606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBIdentifierHolder.m; sourceTree = "<group>"; };
+		60F1E3FC1A38E871009B380E /* machine.ih.motemplate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = machine.ih.motemplate; sourceTree = "<group>"; };
+		60F1E3FE1A392F7D009B380E /* _SBBBridgeObjectInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObjectInternal.h; sourceTree = "<group>"; };
+		60F1E4001A3932B5009B380E /* human.ih.motemplate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = human.ih.motemplate; sourceTree = "<group>"; };
+		60F1E4021A39330B009B380E /* SBBBridgeObjectInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeObjectInternal.h; sourceTree = "<group>"; };
+		60F1E4041A393706009B380E /* _SBBSurveyAnswerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSurveyAnswerInternal.h; sourceTree = "<group>"; };
+		60F1E4061A393746009B380E /* SBBSurveyAnswerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSurveyAnswerInternal.h; sourceTree = "<group>"; };
 		60FF571F1A0AF87C00CE2373 /* TestModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TestModel.xcdatamodel; sourceTree = "<group>"; };
 		60FF57281A0AFEA500CE2373 /* _SBBBridgeObject_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObject_test.h; sourceTree = "<group>"; };
 		60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBridgeObject_test.m; sourceTree = "<group>"; };
@@ -315,10 +331,6 @@
 		60FF57321A0AFEA500CE2373 /* SBBTestBridgeSubObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestBridgeSubObject.h; sourceTree = "<group>"; };
 		60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestBridgeSubObject.m; sourceTree = "<group>"; };
 		60FF57341A0AFEA500CE2373 /* SBBTestObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestObjects.h; sourceTree = "<group>"; };
-		606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBIdentifierHolder.h; sourceTree = "<group>"; };
-		606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBIdentifierHolder.m; sourceTree = "<group>"; };
-		606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBIdentifierHolder.h; sourceTree = "<group>"; };
-		606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBIdentifierHolder.m; sourceTree = "<group>"; };
 		800E792019ED73FD00EEE612 /* _SBBBooleanConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBooleanConstraints.h; sourceTree = "<group>"; };
 		800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBooleanConstraints.m; sourceTree = "<group>"; };
 		800E792519ED740F00EEE612 /* _SBBDateConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBDateConstraints.h; sourceTree = "<group>"; };
@@ -534,6 +546,7 @@
 				800E794A19ED748900EEE612 /* SBBBooleanConstraints.m */,
 				80104A5F19D4CDC4001F2573 /* SBBBridgeObject.h */,
 				80104A6019D4CDC4001F2573 /* SBBBridgeObject.m */,
+				60F1E4021A39330B009B380E /* SBBBridgeObjectInternal.h */,
 				800E794D19ED74A600EEE612 /* SBBDateConstraints.h */,
 				800E794E19ED74A600EEE612 /* SBBDateConstraints.m */,
 				800E794F19ED74A600EEE612 /* SBBDateTimeConstraints.h */,
@@ -558,6 +571,7 @@
 				80F7C33C19E5DC0D00574800 /* SBBSurvey.m */,
 				8026D67019E76579008942B0 /* SBBSurveyAnswer.h */,
 				8026D67119E76579008942B0 /* SBBSurveyAnswer.m */,
+				60F1E4061A393746009B380E /* SBBSurveyAnswerInternal.h */,
 				80F7C33D19E5DC0D00574800 /* SBBSurveyConstraints.h */,
 				80F7C33E19E5DC0D00574800 /* SBBSurveyConstraints.m */,
 				80F7C33F19E5DC0D00574800 /* SBBSurveyQuestion.h */,
@@ -784,8 +798,10 @@
 			isa = PBXGroup;
 			children = (
 				80F7C31119E5AA7900574800 /* human.h.motemplate */,
+				60F1E4001A3932B5009B380E /* human.ih.motemplate */,
 				80F7C31219E5AA7900574800 /* human.m.motemplate */,
 				80F7C31319E5AA7900574800 /* machine.h.motemplate */,
+				60F1E3FC1A38E871009B380E /* machine.ih.motemplate */,
 				80F7C31419E5AA7900574800 /* machine.m.motemplate */,
 			);
 			path = templates;
@@ -798,6 +814,7 @@
 				800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */,
 				80F7C32E19E5DC0D00574800 /* _SBBBridgeObject.h */,
 				80F7C32F19E5DC0D00574800 /* _SBBBridgeObject.m */,
+				60F1E3FE1A392F7D009B380E /* _SBBBridgeObjectInternal.h */,
 				800E792519ED740F00EEE612 /* _SBBDateConstraints.h */,
 				800E792619ED740F00EEE612 /* _SBBDateConstraints.m */,
 				800E792719ED740F00EEE612 /* _SBBDateTimeConstraints.h */,
@@ -822,6 +839,7 @@
 				80F7C33119E5DC0D00574800 /* _SBBSurvey.m */,
 				8026D66819E7654A008942B0 /* _SBBSurveyAnswer.h */,
 				8026D66919E7654A008942B0 /* _SBBSurveyAnswer.m */,
+				60F1E4041A393706009B380E /* _SBBSurveyAnswerInternal.h */,
 				80F7C33219E5DC0D00574800 /* _SBBSurveyConstraints.h */,
 				80F7C33319E5DC0D00574800 /* _SBBSurveyConstraints.m */,
 				80F7C33419E5DC0D00574800 /* _SBBSurveyQuestion.h */,
@@ -918,8 +936,10 @@
 				80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */,
 				800E796719ED74B600EEE612 /* SBBStringConstraints.h in Headers */,
 				8026BD2819C8AE200077F3EB /* SBBAuthManagerInternal.h in Headers */,
+				60F1E4051A393706009B380E /* _SBBSurveyAnswerInternal.h in Headers */,
 				800E796F19ED74D000EEE612 /* SBBTimeConstraints.h in Headers */,
 				80855F7D19BE41C9006601C7 /* Reachability.h in Headers */,
+				60F1E3FF1A392F7D009B380E /* _SBBBridgeObjectInternal.h in Headers */,
 				804545891A1E78EA001D41D4 /* RNCryptor+Namespace.h in Headers */,
 				800E793F19ED744000EEE612 /* _SBBIntegerConstraints.h in Headers */,
 				80104A3D19D1F61B001F2573 /* SBBProfileManager.h in Headers */,
@@ -927,9 +947,11 @@
 				80855F7219BE27ED006601C7 /* SBBNetworkManager.h in Headers */,
 				80F7C32219E5AA8400574800 /* ModelObject.h in Headers */,
 				8026BD2219C892E40077F3EB /* SBBComponentManager.h in Headers */,
+				60F1E4071A393746009B380E /* SBBSurveyAnswerInternal.h in Headers */,
 				800E792219ED73FD00EEE612 /* _SBBBooleanConstraints.h in Headers */,
 				8026D68219E87CF6008942B0 /* NSData+SBBAdditions.h in Headers */,
 				80F7C34319E5DC0D00574800 /* _SBBSurvey.h in Headers */,
+				60F1E4031A39330B009B380E /* SBBBridgeObjectInternal.h in Headers */,
 				8026D66E19E7655C008942B0 /* _SBBSurveyResponse.h in Headers */,
 				80104A6119D4CDC4001F2573 /* SBBBridgeObject.h in Headers */,
 				800E792F19ED740F00EEE612 /* _SBBDateTimeConstraints.h in Headers */,
@@ -1077,6 +1099,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60F1E3FD1A38E871009B380E /* machine.ih.motemplate in Resources */,
+				60F1E4011A3932B5009B380E /* human.ih.motemplate in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

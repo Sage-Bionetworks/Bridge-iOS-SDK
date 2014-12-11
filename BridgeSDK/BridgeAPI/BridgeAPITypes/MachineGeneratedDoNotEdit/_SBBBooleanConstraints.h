@@ -1,5 +1,5 @@
 //
-//  SBBBooleanConstraints.h
+//  _SBBBooleanConstraints.h
 //
 //  $Id$
 //

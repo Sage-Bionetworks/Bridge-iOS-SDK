@@ -7,6 +7,8 @@
 //
 
 #import "SBBCacheManager.h"
+#import "SBBBridgeObject.h"
+#import "SBBBridgeObjectInternal.h"
 @import UIKit;
 
 // SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
@@ -77,6 +79,18 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center removeObserver:self.appWillTerminateObserver];
     [self discardCacheManagerCoreDataQueue];
+}
+
+#pragma mark - External interfaces
+
+- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(id)objectId
+{
+    
+}
+
+- (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json
+{
+    
 }
 
 #pragma mark - In-memory cache

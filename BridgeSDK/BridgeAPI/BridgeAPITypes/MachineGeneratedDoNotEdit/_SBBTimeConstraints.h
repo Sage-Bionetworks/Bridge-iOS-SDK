@@ -1,5 +1,5 @@
 //
-//  SBBTimeConstraints.h
+//  _SBBTimeConstraints.h
 //
 //  $Id$
 //
