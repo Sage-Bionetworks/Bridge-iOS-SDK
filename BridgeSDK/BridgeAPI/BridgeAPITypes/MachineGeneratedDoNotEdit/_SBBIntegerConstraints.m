@@ -120,41 +120,6 @@
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.maxValue = managedObject.maxValue;
-
-        self.minValue = managedObject.minValue;
-
-        self.step = managedObject.step;
-
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"IntegerConstraints" inManagedObjectContext:cacheContext];
-
-    managedObject.maxValue = self.maxValue;
-
-    managedObject.minValue = self.minValue;
-
-    managedObject.step = self.step;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
 
 @end

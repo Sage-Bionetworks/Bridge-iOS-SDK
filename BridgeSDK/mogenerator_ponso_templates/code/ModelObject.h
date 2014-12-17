@@ -20,6 +20,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SBBObjectManager.h"
+#import "SBBObjectManagerInternal.h"
 @import CoreData;
 
 /*!
@@ -49,7 +50,7 @@
 
 - (void)awakeFromDictionaryRepresentationInit;
 
-- (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID;
+- (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID objectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 - (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 

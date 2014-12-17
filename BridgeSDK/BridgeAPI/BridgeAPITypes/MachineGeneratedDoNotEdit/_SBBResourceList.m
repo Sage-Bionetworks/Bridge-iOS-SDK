@@ -126,52 +126,6 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.total = managedObject.total;
-
-		for(NSManagedObject *itemsManagedObj in managedObject.items)
-		{
-        SBBBridgeObject *itemsObj = [[SBBBridgeObject alloc] initWithManagedObject:itemsManagedObj];
-        if(itemsObj != nil)
-        {
-            [self addItemsObject:itemsObj];
-        }
-		}
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ResourceList" inManagedObjectContext:cacheContext];
-
-    managedObject.total = self.total;
-
-    if([self.items count] > 0)
-	{
-
-		for(SBBBridgeObject *obj in self.items)
-		{
-        NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager];
-        [managedObject addItemsObject:relObj];
-		}
-
-	}
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
 
 - (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse
@@ -184,9 +138,7 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 	}
 
 	[(NSMutableArray *)self.items addObject:value_];
-	if (setInverse == YES) {
-	    [value_ setResourceList: (SBBResourceList*)self settingInverse: NO];
-	}
+
 }
 - (void)addItemsObject:(SBBBridgeObject*)value_
 {
@@ -202,9 +154,7 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 
 - (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse
 {
-    if (setInverse == YES) {
-        [value_ setResourceList: nil settingInverse: NO];
-    }
+
     [(NSMutableArray *)self.items removeObject:value_];
 }
 
@@ -220,9 +170,7 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 - (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
 
     [(NSMutableArray *)self.items insertObject:value atIndex:idx];
-    if (setInverse == YES) {
-    [value setResourceList:(SBBResourceList*)self settingInverse: NO];
-    }
+
 }
 
 - (void)removeObjectFromItemsAtIndex:(NSUInteger)idx {
@@ -240,11 +188,7 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 
 - (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
     [(NSMutableArray *)self.items insertObjects:value atIndexes:indexes];
-    if (setInverse == YES) {
-        for (SBBBridgeObject* object in value) {
-            [object setResourceList:(SBBResourceList*)self settingInverse: NO];
-        }
-    }
+
 }
 
 - (void)removeItemsAtIndexes:(NSIndexSet *)indexes {
@@ -252,12 +196,7 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 }
 
 - (void)removeItemsAtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    NSArray *objectsRemoved = [(NSMutableArray *)self.items objectsAtIndexes:indexes];
-        for (SBBBridgeObject* object in objectsRemoved) {
-            [object setResourceList:nil settingInverse: NO];
-        }
-    }
+
     [(NSMutableArray *)self.items removeObjectsAtIndexes:indexes];
 }
 
@@ -266,11 +205,7 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 }
 
 - (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    SBBBridgeObject* objectReplaced = [(NSMutableArray *)self.items objectAtIndex:idx];
-    [objectReplaced setResourceList:nil settingInverse: NO];
-    [value setResourceList:(SBBResourceList*)self settingInverse: NO];
-    }
+
     [(NSMutableArray *)self.items replaceObjectAtIndex:idx withObject:value];
 }
 
@@ -279,15 +214,7 @@ SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresenta
 }
 
 - (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)value settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    NSArray *objectsReplaced = [(NSMutableArray *)self.items objectsAtIndexes:indexes];
-        for (SBBBridgeObject* object in objectsReplaced) {
-            [object setResourceList:nil settingInverse: NO];
-        }
-        for (SBBBridgeObject* object in value) {
-            [object setResourceList:(SBBResourceList*)self settingInverse: NO];
-        }
-    }
+
     [(NSMutableArray *)self.items replaceObjectsAtIndexes:indexes withObjects:value];
 }
 

@@ -10,8 +10,10 @@
 
 extern SBBEnvironment gSBBDefaultEnvironment;
 
-@interface SBBAuthManager(internal)
+@interface SBBAuthManager()
 
 - (void)clearKeychainStore;
+
+- (NSString *)savedPassword;
 
 @end

@@ -12,8 +12,6 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-#import "SBBResourceList.h"
-
 @interface _SBBBridgeObject()
 
 @end
@@ -25,10 +23,6 @@
 @property (nonatomic, strong) NSDate* lastRetrieved;
 
 @property (nonatomic, strong) NSString* type;
-
-@property (nonatomic, strong, readwrite) SBBResourceList *resourceList;
-
-- (void) setResourceList: (SBBResourceList*) resourceList_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -76,69 +70,11 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	[self.resourceList awakeFromDictionaryRepresentationInit];
-
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.lastRetrieved = managedObject.lastRetrieved;
-
-        _type = managedObject.type;
-
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"BridgeObject" inManagedObjectContext:cacheContext];
-
-    managedObject.lastRetrieved = self.lastRetrieved;
-
-    managedObject.type = self.type;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
-
-- (void) setResourceList: (SBBResourceList*) resourceList_ settingInverse: (BOOL) setInverse
-{
-    if (resourceList_ == nil) {
-        [_resourceList removeItemsObject: (SBBBridgeObject*)self settingInverse: NO];
-    }
-
-    _resourceList = resourceList_;
-
-    if (setInverse == YES) {
-        [_resourceList addItemsObject: (SBBBridgeObject*)self settingInverse: NO];
-    }
-}
-
-- (void) setResourceList: (SBBResourceList*) resourceList_
-{
-    [self setResourceList: resourceList_ settingInverse: YES];
-}
-
-- (SBBResourceList*) resourceList
-{
-    return _resourceList;
-}
-
-@synthesize resourceList = _resourceList;
 
 @end

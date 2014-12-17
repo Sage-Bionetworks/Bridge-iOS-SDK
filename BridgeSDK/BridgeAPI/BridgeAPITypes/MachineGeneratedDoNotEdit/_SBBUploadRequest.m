@@ -102,45 +102,6 @@
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.contentLength = managedObject.contentLength;
-
-        self.contentMd5 = managedObject.contentMd5;
-
-        self.contentType = managedObject.contentType;
-
-        self.name = managedObject.name;
-
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UploadRequest" inManagedObjectContext:cacheContext];
-
-    managedObject.contentLength = self.contentLength;
-
-    managedObject.contentMd5 = self.contentMd5;
-
-    managedObject.contentType = self.contentType;
-
-    managedObject.name = self.name;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
 
 @end

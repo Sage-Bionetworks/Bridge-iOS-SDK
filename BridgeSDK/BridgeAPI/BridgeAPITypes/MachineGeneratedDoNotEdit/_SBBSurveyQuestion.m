@@ -12,7 +12,6 @@
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBSurveyConstraints.h"
-#import "SBBSurvey.h"
 
 @interface _SBBSurveyQuestion()
 
@@ -32,11 +31,7 @@
 
 @property (nonatomic, strong, readwrite) SBBSurveyConstraints *constraints;
 
-@property (nonatomic, strong, readwrite) SBBSurvey *survey;
-
 - (void) setConstraints: (SBBSurveyConstraints*) constraints_ settingInverse: (BOOL) setInverse;
-
-- (void) setSurvey: (SBBSurvey*) survey_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -105,7 +100,6 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	[self.survey awakeFromDictionaryRepresentationInit];
 	[self.constraints awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
@@ -113,15 +107,12 @@
 
 #pragma mark Core Data cache
 
-- (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
 {
-    // TODO: get managed object from cache
-
-    // create PONSO object from managed object
-    return [self initWithManagedObject:managedObject];
+    return [NSEntityDescription entityForName:@"SurveyQuestion" inManagedObjectContext:context];
 }
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
     if (self == [super init]) {
@@ -134,8 +125,8 @@
 
         self.uiHint = managedObject.uiHint;
 
-            SBBSurveyConstraints *constraintsManagedObj = managedObject.constraints;
-        SBBSurveyConstraints *constraintsObj = [[SBBSurveyConstraints alloc] initWithManagedObject:constraintsManagedObj];
+            NSManagedObject *constraintsManagedObj = managedObject.constraints;
+        SBBSurveyConstraints *constraintsObj = [[SBBSurveyConstraints alloc] initWithManagedObject:constraintsManagedObj objectManager:objectManager cacheManager:cacheManager];
         if(constraintsObj != nil)
         {
           self.constraints = constraintsObj;
@@ -148,7 +139,6 @@
 
 - (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-    // TODO: Get or create cacheContext MOC for core data cache.
     __block NSManagedObject *managedObject = nil;
 
     managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestion" inManagedObjectContext:cacheContext];
@@ -164,7 +154,7 @@
     NSManagedObject *relObj = [self.constraints saveToContext:cacheContext withObjectManager:objectManager];
     [managedObject setConstraints:relObj];
 
-    // TODO: Save changes to cacheContext.
+    // Calling code will handle saving these changes to cacheContext.
 
     return managedObject;
 }
@@ -173,15 +163,9 @@
 
 - (void) setConstraints: (SBBSurveyConstraints*) constraints_ settingInverse: (BOOL) setInverse
 {
-    if (constraints_ == nil) {
-        [_constraints setSurveyQuestion: nil settingInverse: NO];
-    }
 
     _constraints = constraints_;
 
-    if (setInverse == YES) {
-        [_constraints setSurveyQuestion: (SBBSurveyQuestion*)self settingInverse: NO];
-    }
 }
 
 - (void) setConstraints: (SBBSurveyConstraints*) constraints_
@@ -194,29 +178,6 @@
     return _constraints;
 }
 
-- (void) setSurvey: (SBBSurvey*) survey_ settingInverse: (BOOL) setInverse
-{
-    if (survey_ == nil) {
-        [_survey removeQuestionsObject: (SBBSurveyQuestion*)self settingInverse: NO];
-    }
-
-    _survey = survey_;
-
-    if (setInverse == YES) {
-        [_survey addQuestionsObject: (SBBSurveyQuestion*)self settingInverse: NO];
-    }
-}
-
-- (void) setSurvey: (SBBSurvey*) survey_
-{
-    [self setSurvey: survey_ settingInverse: YES];
-}
-
-- (SBBSurvey*) survey
-{
-    return _survey;
-}
-
-@synthesize constraints = _constraints;@synthesize survey = _survey;
+@synthesize constraints = _constraints;
 
 @end

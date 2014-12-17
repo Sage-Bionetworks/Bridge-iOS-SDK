@@ -108,41 +108,6 @@
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.allowMultiple = managedObject.allowMultiple;
-
-        self.allowOther = managedObject.allowOther;
-
-        self.enumeration = managedObject.enumeration;
-
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"MultiValueConstraints" inManagedObjectContext:cacheContext];
-
-    managedObject.allowMultiple = self.allowMultiple;
-
-    managedObject.allowOther = self.allowOther;
-
-    managedObject.enumeration = self.enumeration;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
 
 @end

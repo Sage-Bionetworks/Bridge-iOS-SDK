@@ -15,13 +15,13 @@
 <$endif$>
 
 <$checkNonTransientRelationshipCycles $>
-<$foreach Relationship noninheritedRelationships do$>@class <$Relationship.destinationEntity.generatedObjectClassName$>;
-<$endforeach do$>
+<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>@class <$Relationship.destinationEntity.generatedObjectClassName$>;
+<$endif$><$endforeach do$>
 
 @protocol _<$generatedObjectClassName$>
-<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.isTransient$><$if Relationship.userInfo.destinationEntityIDKeyPath $>
+<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isTransient$><$if Relationship.userInfo.destinationEntityIDKeyPath $>
 - (<$Relationship.destinationEntity.generatedObjectClassName$> *)fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:(id)objectID;
-<$endif$><$endif$><$endforeach do$>
+<$endif$><$endif$><$endif$><$endforeach do$>
 @end
 
 
@@ -33,9 +33,9 @@
     <$Attribute.objectAttributeType$> _<$Attribute.name$>;
     <$endif$><$endif$>
 	<$endforeach do$>
-	<$foreach Relationship noninheritedRelationships do$>
+	<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
 	<$if Relationship.isToMany$>NSArray *_<$Relationship.name$>;m<$else$><$Relationship.destinationEntity.generatedObjectClassName$> *_<$Relationship.name$>;<$endif$>
-	<$endforeach do$>
+	<$endif$><$endforeach do$>
 }
 <$endif$>
 

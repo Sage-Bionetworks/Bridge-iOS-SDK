@@ -96,41 +96,6 @@
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.allowFuture = managedObject.allowFuture;
-
-        self.earliestValue = managedObject.earliestValue;
-
-        self.latestValue = managedObject.latestValue;
-
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"DateConstraints" inManagedObjectContext:cacheContext];
-
-    managedObject.allowFuture = self.allowFuture;
-
-    managedObject.earliestValue = self.earliestValue;
-
-    managedObject.latestValue = self.latestValue;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
 
 @end

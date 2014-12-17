@@ -12,7 +12,6 @@
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBSurveyRule.h"
-#import "SBBSurveyQuestion.h"
 
 @interface _SBBSurveyConstraints()
 @property (nonatomic, strong, readwrite) NSArray *rules;
@@ -27,8 +26,6 @@
 
 @property (nonatomic, strong, readonly) NSArray *rules;
 
-@property (nonatomic, strong, readwrite) SBBSurveyQuestion *surveyQuestion;
-
 - (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
 - (void)addRulesObject:(SBBSurveyRule*)value_;
 - (void)removeRulesObjects;
@@ -41,8 +38,6 @@
 - (void)removeRulesAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
 - (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
-
-- (void) setSurveyQuestion: (SBBSurveyQuestion*) surveyQuestion_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -113,58 +108,11 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 	{
 		[rulesObj awakeFromDictionaryRepresentationInit];
 	}
-	[self.surveyQuestion awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Core Data cache
-
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.dataType = managedObject.dataType;
-
-		for(NSManagedObject *rulesManagedObj in managedObject.rules)
-		{
-        SBBSurveyRule *rulesObj = [[SBBSurveyRule alloc] initWithManagedObject:rulesManagedObj];
-        if(rulesObj != nil)
-        {
-            [self addRulesObject:rulesObj];
-        }
-		}
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyConstraints" inManagedObjectContext:cacheContext];
-
-    managedObject.dataType = self.dataType;
-
-    if([self.rules count] > 0)
-	{
-
-		for(SBBSurveyRule *obj in self.rules)
-		{
-        NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager];
-        [managedObject addRulesObject:relObj];
-		}
-
-	}
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
 
 #pragma mark Direct access
 
@@ -178,9 +126,7 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 	}
 
 	[(NSMutableArray *)self.rules addObject:value_];
-	if (setInverse == YES) {
-	    [value_ setSurveyConstraints: (SBBSurveyConstraints*)self settingInverse: NO];
-	}
+
 }
 - (void)addRulesObject:(SBBSurveyRule*)value_
 {
@@ -196,9 +142,7 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 
 - (void)removeRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse
 {
-    if (setInverse == YES) {
-        [value_ setSurveyConstraints: nil settingInverse: NO];
-    }
+
     [(NSMutableArray *)self.rules removeObject:value_];
 }
 
@@ -214,9 +158,7 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 - (void)insertObject:(SBBSurveyRule*)value inRulesAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
 
     [(NSMutableArray *)self.rules insertObject:value atIndex:idx];
-    if (setInverse == YES) {
-    [value setSurveyConstraints:(SBBSurveyConstraints*)self settingInverse: NO];
-    }
+
 }
 
 - (void)removeObjectFromRulesAtIndex:(NSUInteger)idx {
@@ -234,11 +176,7 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 
 - (void)insertRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
     [(NSMutableArray *)self.rules insertObjects:value atIndexes:indexes];
-    if (setInverse == YES) {
-        for (SBBSurveyRule* object in value) {
-            [object setSurveyConstraints:(SBBSurveyConstraints*)self settingInverse: NO];
-        }
-    }
+
 }
 
 - (void)removeRulesAtIndexes:(NSIndexSet *)indexes {
@@ -246,12 +184,7 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 }
 
 - (void)removeRulesAtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    NSArray *objectsRemoved = [(NSMutableArray *)self.rules objectsAtIndexes:indexes];
-        for (SBBSurveyRule* object in objectsRemoved) {
-            [object setSurveyConstraints:nil settingInverse: NO];
-        }
-    }
+
     [(NSMutableArray *)self.rules removeObjectsAtIndexes:indexes];
 }
 
@@ -260,11 +193,7 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 }
 
 - (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    SBBSurveyRule* objectReplaced = [(NSMutableArray *)self.rules objectAtIndex:idx];
-    [objectReplaced setSurveyConstraints:nil settingInverse: NO];
-    [value setSurveyConstraints:(SBBSurveyConstraints*)self settingInverse: NO];
-    }
+
     [(NSMutableArray *)self.rules replaceObjectAtIndex:idx withObject:value];
 }
 
@@ -273,41 +202,8 @@ SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentati
 }
 
 - (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)value settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    NSArray *objectsReplaced = [(NSMutableArray *)self.rules objectsAtIndexes:indexes];
-        for (SBBSurveyRule* object in objectsReplaced) {
-            [object setSurveyConstraints:nil settingInverse: NO];
-        }
-        for (SBBSurveyRule* object in value) {
-            [object setSurveyConstraints:(SBBSurveyConstraints*)self settingInverse: NO];
-        }
-    }
+
     [(NSMutableArray *)self.rules replaceObjectsAtIndexes:indexes withObjects:value];
 }
-
-- (void) setSurveyQuestion: (SBBSurveyQuestion*) surveyQuestion_ settingInverse: (BOOL) setInverse
-{
-    if (surveyQuestion_ == nil) {
-        [_surveyQuestion setConstraints: nil settingInverse: NO];
-    }
-
-    _surveyQuestion = surveyQuestion_;
-
-    if (setInverse == YES) {
-        [_surveyQuestion setConstraints: (SBBSurveyConstraints*)self settingInverse: NO];
-    }
-}
-
-- (void) setSurveyQuestion: (SBBSurveyQuestion*) surveyQuestion_
-{
-    [self setSurveyQuestion: surveyQuestion_ settingInverse: YES];
-}
-
-- (SBBSurveyQuestion*) surveyQuestion
-{
-    return _surveyQuestion;
-}
-
-@synthesize surveyQuestion = _surveyQuestion;
 
 @end

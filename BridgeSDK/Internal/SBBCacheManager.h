@@ -9,19 +9,24 @@
 @import CoreData;
 @import Foundation;
 #import "SBBComponent.h"
+#import "SBBAuthManagerInternal.h"
 
 @class SBBBridgeObject;
 
 @protocol SBBCacheManagerProtocol <NSObject>
 
-- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(id)objectId;
+- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create;
 
 - (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json;
+
+- (NSManagedObjectContext *)cacheIOContext;
+
+- (NSString *)encryptionKey;
 
 @end
 
 @interface SBBCacheManager : NSObject<SBBComponent, SBBCacheManagerProtocol>
 
-+ (instancetype)cacheManagerWithPersistentStoreName:(NSString *)storeName;
++ (instancetype)cacheManagerWithPersistentStoreName:(NSString *)storeName authManager:(id<SBBAuthManagerProtocol>)authManager;
 
 @end

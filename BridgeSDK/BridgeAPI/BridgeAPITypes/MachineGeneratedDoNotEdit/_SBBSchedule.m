@@ -114,61 +114,6 @@
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.activityRef = managedObject.activityRef;
-
-        self.activityType = managedObject.activityType;
-
-        self.cronTrigger = managedObject.cronTrigger;
-
-        self.endsOn = managedObject.endsOn;
-
-        self.expires = managedObject.expires;
-
-        self.label = managedObject.label;
-
-        self.scheduleType = managedObject.scheduleType;
-
-        self.startsOn = managedObject.startsOn;
-
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Schedule" inManagedObjectContext:cacheContext];
-
-    managedObject.activityRef = self.activityRef;
-
-    managedObject.activityType = self.activityType;
-
-    managedObject.cronTrigger = self.cronTrigger;
-
-    managedObject.endsOn = self.endsOn;
-
-    managedObject.expires = self.expires;
-
-    managedObject.label = self.label;
-
-    managedObject.scheduleType = self.scheduleType;
-
-    managedObject.startsOn = self.startsOn;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
 
 @end

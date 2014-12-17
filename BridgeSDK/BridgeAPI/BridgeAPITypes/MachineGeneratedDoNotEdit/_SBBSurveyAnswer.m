@@ -15,8 +15,6 @@
 #import "RNEncryptor.h"
 #import "RNDecryptor.h"
 
-#import "SBBSurveyResponse.h"
-
 @interface _SBBSurveyAnswer()
 
 @end
@@ -40,10 +38,6 @@
 @property (nonatomic, assign) BOOL declinedValue;
 
 @property (nonatomic, strong) NSString* questionGuid;
-
-@property (nonatomic, strong, readwrite) SBBSurveyResponse *surveyResponse;
-
-- (void) setSurveyResponse: (SBBSurveyResponse*) surveyResponse_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -121,67 +115,11 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	[self.surveyResponse awakeFromDictionaryRepresentationInit];
-
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    // TODO: fetch password from auth manager
-    NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:aPassword error:nil];
-    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
-    return [self initWithDictionaryRepresentation:jsonDict objectManager:[SBBObjectManager objectManager]];
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyAnswer" inManagedObjectContext:cacheContext];
-
-    NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
-    NSError *error;
-    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:error];
-    // TODO: fetch password from auth manager
-    NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:aPassword error:nil];
-    managedObject.ciphertext = ciphertext;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
-
-- (void) setSurveyResponse: (SBBSurveyResponse*) surveyResponse_ settingInverse: (BOOL) setInverse
-{
-    if (surveyResponse_ == nil) {
-        [_surveyResponse removeAnswersObject: (SBBSurveyAnswer*)self settingInverse: NO];
-    }
-
-    _surveyResponse = surveyResponse_;
-
-    if (setInverse == YES) {
-        [_surveyResponse addAnswersObject: (SBBSurveyAnswer*)self settingInverse: NO];
-    }
-}
-
-- (void) setSurveyResponse: (SBBSurveyResponse*) surveyResponse_
-{
-    [self setSurveyResponse: surveyResponse_ settingInverse: YES];
-}
-
-- (SBBSurveyResponse*) surveyResponse
-{
-    return _surveyResponse;
-}
-
-@synthesize surveyResponse = _surveyResponse;
 
 @end

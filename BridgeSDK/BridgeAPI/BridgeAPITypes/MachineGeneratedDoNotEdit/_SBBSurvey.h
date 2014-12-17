@@ -11,7 +11,6 @@
 #import "SBBBridgeObject.h"
 
 @class SBBSurveyQuestion;
-@class SBBSurveyResponse;
 
 @protocol _SBBSurvey
 

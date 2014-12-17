@@ -90,45 +90,6 @@
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.email = managedObject.email;
-
-        self.firstName = managedObject.firstName;
-
-        self.lastName = managedObject.lastName;
-
-        self.username = managedObject.username;
-
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UserProfile" inManagedObjectContext:cacheContext];
-
-    managedObject.email = self.email;
-
-    managedObject.firstName = self.firstName;
-
-    managedObject.lastName = self.lastName;
-
-    managedObject.username = self.username;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
 
 @end

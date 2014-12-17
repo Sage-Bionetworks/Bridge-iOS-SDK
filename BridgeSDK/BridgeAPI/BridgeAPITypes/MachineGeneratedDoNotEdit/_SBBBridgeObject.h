@@ -10,8 +10,6 @@
 #import <Foundation/Foundation.h>
 #import "ModelObject.h"
 
-@class SBBResourceList;
-
 @protocol _SBBBridgeObject
 
 @end

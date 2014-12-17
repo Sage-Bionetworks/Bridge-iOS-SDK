@@ -11,7 +11,6 @@
 #import "SBBBridgeObject.h"
 
 @class SBBSurveyRule;
-@class SBBSurveyQuestion;
 
 @protocol _SBBSurveyConstraints
 

@@ -10,13 +10,13 @@
 
 #pragma mark Abstract method overrides
 
-<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.isTransient$><$if Relationship.userInfo.destinationEntityIDKeyPath $>
+<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isTransient$><$if Relationship.userInfo.destinationEntityIDKeyPath $>
 - (<$Relationship.destinationEntity.generatedObjectClassName$> *)fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:(id)objectID
 {
 	//! TODO: Return an object of type <$Relationship.destinationEntity.generatedObjectClassName$>
 	return nil;
 }
-<$endif$><$endif$><$endforeach do$>
+<$endif$><$endif$><$endif$><$endforeach do$>
 
 
 // Custom logic goes here.

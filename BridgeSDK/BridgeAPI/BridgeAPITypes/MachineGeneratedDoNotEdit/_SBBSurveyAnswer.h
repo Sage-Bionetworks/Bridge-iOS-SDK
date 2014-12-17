@@ -10,8 +10,6 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-@class SBBSurveyResponse;
-
 @protocol _SBBSurveyAnswer
 
 @end

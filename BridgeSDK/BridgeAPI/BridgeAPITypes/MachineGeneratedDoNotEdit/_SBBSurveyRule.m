@@ -11,8 +11,6 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-#import "SBBSurveyConstraints.h"
-
 @interface _SBBSurveyRule()
 
 @end
@@ -26,10 +24,6 @@
 @property (nonatomic, strong) NSString* skipTo;
 
 @property (nonatomic, strong) id value;
-
-@property (nonatomic, strong, readwrite) SBBSurveyConstraints *surveyConstraints;
-
-- (void) setSurveyConstraints: (SBBSurveyConstraints*) surveyConstraints_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -85,73 +79,11 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	[self.surveyConstraints awakeFromDictionaryRepresentationInit];
-
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Core Data cache
 
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject
-{
-
-    if (self == [super init]) {
-
-        self.operator = managedObject.operator;
-
-        self.skipTo = managedObject.skipTo;
-
-        self.value = managedObject.value;
-
-    }
-
-    return self;
-
-}
-
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // TODO: Get or create cacheContext MOC for core data cache.
-    __block NSManagedObject *managedObject = nil;
-
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyRule" inManagedObjectContext:cacheContext];
-
-    managedObject.operator = self.operator;
-
-    managedObject.skipTo = self.skipTo;
-
-    managedObject.value = self.value;
-
-    // TODO: Save changes to cacheContext.
-
-    return managedObject;
-}
-
 #pragma mark Direct access
-
-- (void) setSurveyConstraints: (SBBSurveyConstraints*) surveyConstraints_ settingInverse: (BOOL) setInverse
-{
-    if (surveyConstraints_ == nil) {
-        [_surveyConstraints removeRulesObject: (SBBSurveyRule*)self settingInverse: NO];
-    }
-
-    _surveyConstraints = surveyConstraints_;
-
-    if (setInverse == YES) {
-        [_surveyConstraints addRulesObject: (SBBSurveyRule*)self settingInverse: NO];
-    }
-}
-
-- (void) setSurveyConstraints: (SBBSurveyConstraints*) surveyConstraints_
-{
-    [self setSurveyConstraints: surveyConstraints_ settingInverse: YES];
-}
-
-- (SBBSurveyConstraints*) surveyConstraints
-{
-    return _surveyConstraints;
-}
-
-@synthesize surveyConstraints = _surveyConstraints;
 
 @end

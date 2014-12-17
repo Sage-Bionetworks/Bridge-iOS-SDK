@@ -11,9 +11,11 @@
 @interface ModelObject ()
 
 // This method MUST be called on the queue of the MOC in which managedObject exists.
-- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject;
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager;
 
 // This method MUST be called on cacheContext's queue.
 - (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
+
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context;
 
 @end

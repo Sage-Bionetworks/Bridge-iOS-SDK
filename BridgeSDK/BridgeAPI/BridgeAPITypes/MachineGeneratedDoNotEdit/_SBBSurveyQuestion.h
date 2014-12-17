@@ -13,7 +13,6 @@
 #import "SBBSurveyConstraints.h"
 
 @class SBBSurveyConstraints;
-@class SBBSurvey;
 
 @protocol _SBBSurveyQuestion
 
