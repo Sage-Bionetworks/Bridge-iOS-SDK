@@ -1,35 +1,16 @@
 //
-//  SchedulesTableViewController.m
+//  ActivitiesTableViewController.m
 //  BridgeSDKSample
 //
-//  Created by Erin Mounts on 10/27/14.
+//  Created by Erin Mounts on 12/17/14.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SchedulesTableViewController.h"
-#import "ScheduleViewController.h"
-#import <BridgeSDK/BridgeSDK.h>
+#import "ActivitiesTableViewController.h"
+#import "ActivityViewController.h"
+@import BridgeSDK;
 
-@interface SchedulesTableViewController ()
-
-@property (nonatomic, strong) NSArray *schedules;
-
-- (IBAction)didTouchReloadButton:(id)sender;
-
-@end
-
-@implementation SchedulesTableViewController
-
-- (void)reloadSchedules
-{
-    NSURLSessionDataTask *task = [SBBComponent(SBBScheduleManager) getSchedulesWithCompletion:^(id schedulesList, NSError *error) {
-        SBBResourceList *list = (SBBResourceList *)schedulesList;
-        self.schedules = list.items;
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
-    }];
-}
+@implementation ActivitiesTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -40,12 +21,7 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
-    [self reloadSchedules];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
@@ -57,16 +33,16 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return self.schedules.count;
+    return self.activities.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"scheduleCell" forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"activityCell" forIndexPath:indexPath];
     
     // Configure the cell...
-    SBBSchedule *schedule = [self.schedules objectAtIndex:indexPath.row];
-    cell.textLabel.text = schedule.scheduleType;
-    cell.detailTextLabel.text = schedule.cronTrigger ? schedule.cronTrigger : @"";
+    SBBActivity *activity = [self.activities objectAtIndex:indexPath.row];
+    cell.textLabel.text = activity.label;
+    cell.detailTextLabel.text = activity.activityType;
     
     return cell;
 }
@@ -111,13 +87,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    ScheduleViewController *svc = (ScheduleViewController *)[segue destinationViewController];
+    ActivityViewController *avc = (ActivityViewController *)[segue destinationViewController];
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-    svc.schedule = self.schedules[indexPath.row];
-}
-
-- (IBAction)didTouchReloadButton:(id)sender {
-    [self reloadSchedules];
+    avc.activity = self.activities[indexPath.row];
 }
 
 @end

@@ -1,22 +1,22 @@
 //
-//  SBBSchedule.m
+//  SBBActivity.m
 //
 //  $Id$
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSchedule.h instead.
+// Make changes to SBBActivity.h instead.
 //
 
-#import "_SBBSchedule.h"
+#import "_SBBActivity.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBSchedule()
+@interface _SBBActivity()
 
 @end
 
 /** \ingroup DataModel */
 
-@implementation _SBBSchedule
+@implementation _SBBActivity
 
 - (id)init
 {
@@ -37,23 +37,13 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.activities = [dictionary objectForKey:@"activities"];
-
-        self.activityRef = [dictionary objectForKey:@"activityRef"];
-
         self.activityType = [dictionary objectForKey:@"activityType"];
-
-        self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
-
-        self.endsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endsOn"]];
-
-        self.expires = [dictionary objectForKey:@"expires"];
 
         self.label = [dictionary objectForKey:@"label"];
 
-        self.scheduleType = [dictionary objectForKey:@"scheduleType"];
+        self.ref = [dictionary objectForKey:@"ref"];
 
-        self.startsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startsOn"]];
+        self.survey = [dictionary objectForKey:@"survey"];
 
 	}
 
@@ -64,23 +54,13 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-    [dict setObjectIfNotNil:self.activities forKey:@"activities"];
-
-    [dict setObjectIfNotNil:self.activityRef forKey:@"activityRef"];
-
     [dict setObjectIfNotNil:self.activityType forKey:@"activityType"];
-
-    [dict setObjectIfNotNil:self.cronTrigger forKey:@"cronTrigger"];
-
-    [dict setObjectIfNotNil:[self.endsOn ISO8601String] forKey:@"endsOn"];
-
-    [dict setObjectIfNotNil:self.expires forKey:@"expires"];
 
     [dict setObjectIfNotNil:self.label forKey:@"label"];
 
-    [dict setObjectIfNotNil:self.scheduleType forKey:@"scheduleType"];
+    [dict setObjectIfNotNil:self.ref forKey:@"ref"];
 
-    [dict setObjectIfNotNil:[self.startsOn ISO8601String] forKey:@"startsOn"];
+    [dict setObjectIfNotNil:self.survey forKey:@"survey"];
 
 	return dict;
 }

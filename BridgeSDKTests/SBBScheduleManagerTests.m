@@ -27,26 +27,43 @@
 }
 
 - (void)testGetSchedules {
-  NSArray *schedules =
-  @[
-    @{
-      @"type": @"Schedule",
-      @"label": @"Schedule 1 Label",
-      @"activityType": @"survey",
-      @"activityRef": @"url-to-retrieve-survey",
-      @"scheduleType": @"once"
-      }
-    ];
-  [self.mockNetworkManager setJson:schedules andResponseCode:200 forEndpoint:@"/api/v1/schedules" andMethod:@"GET"];
-  SBBScheduleManager *sMan = [SBBScheduleManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:SBBComponent(SBBObjectManager)];
-  
-  [sMan getSchedulesWithCompletion:^(NSArray *schedules, NSError *error) {
-    XCTAssert([schedules isKindOfClass:[NSArray class]], @"Converted incoming json to NSArray");
-    XCTAssert(schedules.count, @"Converted incoming json to non-empty NSArray");
-    if (schedules.count) {
-      XCTAssert([schedules[0] isKindOfClass:[SBBSchedule class]], @"Converted incoming json to NSArray of SBBSchedule objects");
-    }
-  }];
+    NSArray *schedules =
+    @[
+      @{
+          @"type": @"Schedule",
+          @"label": @"Schedule 1 Label",
+          @"activityType": @"survey",
+          @"activityRef": @"url-to-retrieve-survey/guid-goes-here/2014-12-12T18:26:01.855Z",
+          @"activities": @[
+                  @{
+                      @"activityType": @"survey",
+                      @"label": @"This is a survey",
+                      @"ref": @"url-to-retrieve-survey/guid-goes-here/2014-12-12T18:26:01.855Z",
+                      @"survey": @{
+                              @"guid": @"guid-goes-here",
+                              @"createdOn": @"2014-12-12T18:26:01.855Z",
+                              @"type": @"GuidCreatedOnVersionHolder"
+                              },
+                      @"type": @"Activity"
+                      }
+                  ],
+          @"scheduleType": @"once"
+          }
+      ];
+    [self.mockNetworkManager setJson:schedules andResponseCode:200 forEndpoint:@"/api/v1/schedules" andMethod:@"GET"];
+    SBBScheduleManager *sMan = [SBBScheduleManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:SBBComponent(SBBObjectManager)];
+    
+    [sMan getSchedulesWithCompletion:^(NSArray *schedules, NSError *error) {
+        XCTAssert([schedules isKindOfClass:[NSArray class]], @"Converted incoming json to NSArray");
+        XCTAssert(schedules.count, @"Converted incoming json to non-empty NSArray");
+        if (schedules.count) {
+            SBBSchedule *schedule0 = schedules[0];
+            XCTAssert([schedule0 isKindOfClass:[SBBSchedule class]], @"Converted incoming json to NSArray of SBBSchedule objects");
+            SBBActivity *activity0 = schedule0.activities[0];
+            XCTAssert([activity0 isKindOfClass:[SBBActivity class]], @"Converted 'activities' json to NSArray of SBBActivity objects");
+            XCTAssert([activity0.survey isKindOfClass:[SBBGuidCreatedOnVersionHolder class]], @"Converted 'survey' json to SBBGuidCreatedOnVersionHolder object");
+        }
+    }];
 }
 
 @end
