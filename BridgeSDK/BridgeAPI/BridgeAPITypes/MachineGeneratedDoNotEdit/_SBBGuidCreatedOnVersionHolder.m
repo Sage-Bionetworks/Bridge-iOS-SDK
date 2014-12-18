@@ -30,6 +30,16 @@
 
 #pragma mark Scalar values
 
+- (int64_t)versionValue
+{
+	return [self.version longLongValue];
+}
+
+- (void)setVersionValue:(int64_t)value_
+{
+	self.version = [NSNumber numberWithLongLong:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
@@ -40,6 +50,8 @@
         self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
 
         self.guid = [dictionary objectForKey:@"guid"];
+
+        self.version = [dictionary objectForKey:@"version"];
 
 	}
 
@@ -53,6 +65,8 @@
     [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+
+    [dict setObjectIfNotNil:self.version forKey:@"version"];
 
 	return dict;
 }

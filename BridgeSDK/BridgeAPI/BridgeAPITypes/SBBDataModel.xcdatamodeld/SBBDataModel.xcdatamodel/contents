@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Activity" representedClassName="SBBActivity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
@@ -40,6 +40,7 @@
     <entity name="GuidCreatedOnVersionHolder" representedClassName="SBBGuidCreatedOnVersionHolder" parentEntity="BridgeObject" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="version" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="IdentifierHolder" representedClassName="SBBIdentifierHolder" parentEntity="BridgeObject" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
@@ -181,12 +182,14 @@
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Activity" positionX="-9" positionY="90" width="128" height="103"/>
         <element name="BooleanConstraints" positionX="0" positionY="108" width="128" height="45"/>
         <element name="BridgeObject" positionX="-54" positionY="-9" width="128" height="58"/>
         <element name="DateConstraints" positionX="18" positionY="126" width="128" height="90"/>
         <element name="DateTimeConstraints" positionX="36" positionY="135" width="128" height="90"/>
         <element name="DecimalConstraints" positionX="-9" positionY="99" width="128" height="90"/>
         <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="45"/>
+        <element name="GuidCreatedOnVersionHolder" positionX="0" positionY="99" width="128" height="90"/>
         <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="60"/>
         <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="90"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="88"/>
@@ -204,7 +207,5 @@
         <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="108" width="128" height="90"/>
         <element name="UserProfile" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="Activity" positionX="-9" positionY="90" width="128" height="103"/>
-        <element name="GuidCreatedOnVersionHolder" positionX="0" positionY="99" width="128" height="75"/>
     </elements>
 </model>

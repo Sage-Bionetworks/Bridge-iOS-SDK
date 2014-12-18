@@ -66,7 +66,11 @@
     // Configure the cell...
     SBBSchedule *schedule = [self.schedules objectAtIndex:indexPath.row];
     cell.textLabel.text = schedule.scheduleType;
-    cell.detailTextLabel.text = schedule.cronTrigger ? schedule.cronTrigger : @"";
+    NSString *detailText = schedule.cronTrigger;
+    if ([schedule.scheduleType isEqualToString:@"once"]) {
+        detailText = [schedule.startsOn description];
+    }
+    cell.detailTextLabel.text = detailText ? detailText : @"";
     
     return cell;
 }
