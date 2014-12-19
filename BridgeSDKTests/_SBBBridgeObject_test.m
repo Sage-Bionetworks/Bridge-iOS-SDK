@@ -8,11 +8,18 @@
 //
 
 #import "_SBBBridgeObject_test.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-#import "SBBTestBridgeObject.h"
-
 @interface _SBBBridgeObject_test()
+
+@end
+
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (BridgeObject_test)
+
+@property (nonatomic, strong) NSString* type;
 
 @end
 
@@ -60,36 +67,11 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	[self.parentTestBridgeObject awakeFromDictionaryRepresentationInit];
-
 	[super awakeFromDictionaryRepresentationInit];
 }
 
+#pragma mark Core Data cache
+
 #pragma mark Direct access
-
-- (void) setParentTestBridgeObject: (SBBTestBridgeObject*) parentTestBridgeObject_ settingInverse: (BOOL) setInverse
-{
-    if (parentTestBridgeObject_ == nil) {
-        [_parentTestBridgeObject removeBridgeObjectArrayFieldObject: (SBBBridgeObject_test*)self settingInverse: NO];
-    }
-
-    _parentTestBridgeObject = parentTestBridgeObject_;
-
-    if (setInverse == YES) {
-        [_parentTestBridgeObject addBridgeObjectArrayFieldObject: (SBBBridgeObject_test*)self settingInverse: NO];
-    }
-}
-
-- (void) setParentTestBridgeObject: (SBBTestBridgeObject*) parentTestBridgeObject_
-{
-    [self setParentTestBridgeObject: parentTestBridgeObject_ settingInverse: YES];
-}
-
-- (SBBTestBridgeObject*) parentTestBridgeObject
-{
-    return _parentTestBridgeObject;
-}
-
-@synthesize parentTestBridgeObject = _parentTestBridgeObject;
 
 @end

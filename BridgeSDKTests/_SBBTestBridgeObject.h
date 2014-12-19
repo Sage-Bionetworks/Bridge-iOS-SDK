@@ -1,5 +1,5 @@
 //
-//  SBBTestBridgeObject.h
+//  _SBBTestBridgeObject.h
 //
 //  $Id$
 //

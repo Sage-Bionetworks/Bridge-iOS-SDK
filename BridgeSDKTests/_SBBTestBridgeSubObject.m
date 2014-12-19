@@ -8,11 +8,18 @@
 //
 
 #import "_SBBTestBridgeSubObject.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-#import "SBBTestBridgeObject.h"
-
 @interface _SBBTestBridgeSubObject()
+
+@end
+
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (TestBridgeSubObject)
+
+@property (nonatomic, strong) NSString* stringField;
 
 @end
 
@@ -60,36 +67,11 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	[self.testBridgeObject awakeFromDictionaryRepresentationInit];
-
 	[super awakeFromDictionaryRepresentationInit];
 }
 
+#pragma mark Core Data cache
+
 #pragma mark Direct access
-
-- (void) setTestBridgeObject: (SBBTestBridgeObject*) testBridgeObject_ settingInverse: (BOOL) setInverse
-{
-    if (testBridgeObject_ == nil) {
-        [_testBridgeObject setBridgeSubObjectField: nil settingInverse: NO];
-    }
-
-    _testBridgeObject = testBridgeObject_;
-
-    if (setInverse == YES) {
-        [_testBridgeObject setBridgeSubObjectField: (SBBTestBridgeSubObject*)self settingInverse: NO];
-    }
-}
-
-- (void) setTestBridgeObject: (SBBTestBridgeObject*) testBridgeObject_
-{
-    [self setTestBridgeObject: testBridgeObject_ settingInverse: YES];
-}
-
-- (SBBTestBridgeObject*) testBridgeObject
-{
-    return _testBridgeObject;
-}
-
-@synthesize testBridgeObject = _testBridgeObject;
 
 @end

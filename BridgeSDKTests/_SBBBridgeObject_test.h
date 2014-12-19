@@ -1,5 +1,5 @@
 //
-//  SBBBridgeObject_test.h
+//  _SBBBridgeObject_test.h
 //
 //  $Id$
 //
@@ -10,8 +10,6 @@
 #import <Foundation/Foundation.h>
 #import "ModelObject.h"
 
-@class SBBTestBridgeObject;
-
 @protocol _SBBBridgeObject_test
 
 @end
@@ -19,9 +17,5 @@
 @interface _SBBBridgeObject_test : ModelObject
 
 @property (nonatomic, strong, readonly) NSString* type;
-
-@property (nonatomic, strong, readwrite) SBBTestBridgeObject *parentTestBridgeObject;
-
-- (void) setParentTestBridgeObject: (SBBTestBridgeObject*) parentTestBridgeObject_ settingInverse: (BOOL) setInverse;
 
 @end

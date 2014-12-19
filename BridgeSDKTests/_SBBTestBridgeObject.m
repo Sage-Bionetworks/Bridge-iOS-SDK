@@ -8,6 +8,7 @@
 //
 
 #import "_SBBTestBridgeObject.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBBridgeObject_test.h"
@@ -15,6 +16,71 @@
 
 @interface _SBBTestBridgeObject()
 @property (nonatomic, strong, readwrite) NSArray *bridgeObjectArrayField;
+
+@end
+
+/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+ */
+@interface NSManagedObject (TestBridgeObject)
+
+@property (nonatomic, strong) NSDate* dateField;
+
+@property (nonatomic, strong) NSNumber* doubleField;
+
+@property (nonatomic, assign) double doubleFieldValue;
+
+@property (nonatomic, strong) NSNumber* floatField;
+
+@property (nonatomic, assign) float floatFieldValue;
+
+@property (nonatomic, strong) NSArray* jsonArrayField;
+
+@property (nonatomic, strong) NSDictionary* jsonDictField;
+
+@property (nonatomic, strong) NSNumber* longField;
+
+@property (nonatomic, assign) int32_t longFieldValue;
+
+@property (nonatomic, strong) NSNumber* longLongField;
+
+@property (nonatomic, assign) int64_t longLongFieldValue;
+
+@property (nonatomic, strong) NSNumber* shortField;
+
+@property (nonatomic, assign) int16_t shortFieldValue;
+
+@property (nonatomic, strong) NSString* stringField;
+
+@property (nonatomic, strong) NSNumber* uLongField;
+
+@property (nonatomic, assign) uint32_t uLongFieldValue;
+
+@property (nonatomic, strong) NSNumber* uLongLongField;
+
+@property (nonatomic, assign) uint64_t uLongLongFieldValue;
+
+@property (nonatomic, strong) NSNumber* uShortField;
+
+@property (nonatomic, assign) uint16_t uShortFieldValue;
+
+@property (nonatomic, strong, readonly) NSArray *bridgeObjectArrayField;
+
+@property (nonatomic, strong, readwrite) SBBTestBridgeSubObject *bridgeSubObjectField;
+
+- (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse;
+- (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_;
+- (void)removeBridgeObjectArrayFieldObjects;
+- (void)removeBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_;
+
+- (void)insertObject:(SBBBridgeObject_test*)value inBridgeObjectArrayFieldAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromBridgeObjectArrayFieldAtIndex:(NSUInteger)idx;
+- (void)insertBridgeObjectArrayField:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInBridgeObjectArrayFieldAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject_test*)value;
+- (void)replaceBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes withBridgeObjectArrayField:(NSArray *)values;
+
+- (void) setBridgeSubObjectField: (SBBTestBridgeSubObject*) bridgeSubObjectField_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -224,6 +290,8 @@ SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridg
 	[super awakeFromDictionaryRepresentationInit];
 }
 
+#pragma mark Core Data cache
+
 #pragma mark Direct access
 
 - (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse
@@ -236,9 +304,7 @@ SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridg
 	}
 
 	[(NSMutableArray *)self.bridgeObjectArrayField addObject:value_];
-	if (setInverse == YES) {
-	    [value_ setParentTestBridgeObject: (SBBTestBridgeObject*)self settingInverse: NO];
-	}
+
 }
 - (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_
 {
@@ -254,9 +320,7 @@ SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridg
 
 - (void)removeBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse
 {
-    if (setInverse == YES) {
-        [value_ setParentTestBridgeObject: nil settingInverse: NO];
-    }
+
     [(NSMutableArray *)self.bridgeObjectArrayField removeObject:value_];
 }
 
@@ -272,9 +336,7 @@ SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridg
 - (void)insertObject:(SBBBridgeObject_test*)value inBridgeObjectArrayFieldAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
 
     [(NSMutableArray *)self.bridgeObjectArrayField insertObject:value atIndex:idx];
-    if (setInverse == YES) {
-    [value setParentTestBridgeObject:(SBBTestBridgeObject*)self settingInverse: NO];
-    }
+
 }
 
 - (void)removeObjectFromBridgeObjectArrayFieldAtIndex:(NSUInteger)idx {
@@ -292,11 +354,7 @@ SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridg
 
 - (void)insertBridgeObjectArrayField:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
     [(NSMutableArray *)self.bridgeObjectArrayField insertObjects:value atIndexes:indexes];
-    if (setInverse == YES) {
-        for (SBBBridgeObject_test* object in value) {
-            [object setParentTestBridgeObject:(SBBTestBridgeObject*)self settingInverse: NO];
-        }
-    }
+
 }
 
 - (void)removeBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes {
@@ -304,12 +362,7 @@ SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridg
 }
 
 - (void)removeBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    NSArray *objectsRemoved = [(NSMutableArray *)self.bridgeObjectArrayField objectsAtIndexes:indexes];
-        for (SBBBridgeObject_test* object in objectsRemoved) {
-            [object setParentTestBridgeObject:nil settingInverse: NO];
-        }
-    }
+
     [(NSMutableArray *)self.bridgeObjectArrayField removeObjectsAtIndexes:indexes];
 }
 
@@ -318,11 +371,7 @@ SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridg
 }
 
 - (void)replaceObjectInBridgeObjectArrayFieldAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject_test*)value settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    SBBBridgeObject_test* objectReplaced = [(NSMutableArray *)self.bridgeObjectArrayField objectAtIndex:idx];
-    [objectReplaced setParentTestBridgeObject:nil settingInverse: NO];
-    [value setParentTestBridgeObject:(SBBTestBridgeObject*)self settingInverse: NO];
-    }
+
     [(NSMutableArray *)self.bridgeObjectArrayField replaceObjectAtIndex:idx withObject:value];
 }
 
@@ -331,29 +380,15 @@ SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridg
 }
 
 - (void)replaceBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes withBridgeObjectArrayField:(NSArray *)value settingInverse:(BOOL)setInverse {
-    if (setInverse == YES) {
-    NSArray *objectsReplaced = [(NSMutableArray *)self.bridgeObjectArrayField objectsAtIndexes:indexes];
-        for (SBBBridgeObject_test* object in objectsReplaced) {
-            [object setParentTestBridgeObject:nil settingInverse: NO];
-        }
-        for (SBBBridgeObject_test* object in value) {
-            [object setParentTestBridgeObject:(SBBTestBridgeObject*)self settingInverse: NO];
-        }
-    }
+
     [(NSMutableArray *)self.bridgeObjectArrayField replaceObjectsAtIndexes:indexes withObjects:value];
 }
 
 - (void) setBridgeSubObjectField: (SBBTestBridgeSubObject*) bridgeSubObjectField_ settingInverse: (BOOL) setInverse
 {
-    if (bridgeSubObjectField_ == nil) {
-        [_bridgeSubObjectField setTestBridgeObject: nil settingInverse: NO];
-    }
 
     _bridgeSubObjectField = bridgeSubObjectField_;
 
-    if (setInverse == YES) {
-        [_bridgeSubObjectField setTestBridgeObject: (SBBTestBridgeObject*)self settingInverse: NO];
-    }
 }
 
 - (void) setBridgeSubObjectField: (SBBTestBridgeSubObject*) bridgeSubObjectField_

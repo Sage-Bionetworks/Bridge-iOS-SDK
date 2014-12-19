@@ -149,25 +149,7 @@
 - (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     if (self = [super init]) {
-        // If objectManager doesn't define a cacheManager, or the generated code for this object doesn't
-        // define an entity (because there's no entityIDKeyPath in the userInfo), this method returns nil
-        if (![objectManager respondsToSelector:@selector(cacheManager)]) {
-            return nil;
-        }
-        
-        id<SBBCacheManagerProtocol> cacheManager = [(id)objectManager cacheManager];
-        NSManagedObjectContext *cacheContext = cacheManager.cacheIOContext;
-        
-        NSEntityDescription *entity = [self entityForContext:cacheContext];
-        if (!entity) {
-            return nil;
-        }
-        
-        self = [cacheManager cachedObjectOfType:entity.name withId:bridgeObjectID createIfMissing:YES];
-        if (!self) {
-            NSLog(@"Failed to create a managed object of type '%@' with id '%@'", entity.name, bridgeObjectID);
-            return nil;
-        }
+        //
     }
     
     return self;
