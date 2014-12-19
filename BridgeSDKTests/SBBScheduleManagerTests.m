@@ -45,6 +45,12 @@
                               @"type": @"GuidCreatedOnVersionHolder"
                               },
                       @"type": @"Activity"
+                      },
+                  @{
+                      @"activityType": @"task",
+                      @"label": @"This is a task",
+                      @"ref": @"task1",
+                      @"type": @"Activity"
                       }
                   ],
           @"scheduleType": @"once"
@@ -60,8 +66,11 @@
             SBBSchedule *schedule0 = schedules[0];
             XCTAssert([schedule0 isKindOfClass:[SBBSchedule class]], @"Converted incoming json to NSArray of SBBSchedule objects");
             SBBActivity *activity0 = schedule0.activities[0];
-            XCTAssert([activity0 isKindOfClass:[SBBActivity class]], @"Converted 'activities' json to NSArray of SBBActivity objects");
+            XCTAssert([activity0 isKindOfClass:[SBBActivity class]], @"Converted 'activities' json to NSArray and first item is an SBBActivity object");
             XCTAssert([activity0.survey isKindOfClass:[SBBGuidCreatedOnVersionHolder class]], @"Converted 'survey' json to SBBGuidCreatedOnVersionHolder object");
+            SBBActivity *activity1 = schedule0.activities[1];
+            XCTAssert([activity1 isKindOfClass:[SBBActivity class]], @"Second item of 'activities' is also an SBBActivity object");
+            XCTAssert([activity1.activityType isEqualToString:@"task"], @"Put activities into array in correct order");
         }
     }];
 }
