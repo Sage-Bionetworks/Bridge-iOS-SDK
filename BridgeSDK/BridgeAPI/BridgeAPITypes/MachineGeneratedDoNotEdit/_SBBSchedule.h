@@ -10,6 +10,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+@class SBBActivity;
+
 @protocol _SBBSchedule
 
 @end
@@ -31,5 +33,20 @@
 @property (nonatomic, strong) NSString* scheduleType;
 
 @property (nonatomic, strong) NSDate* startsOn;
+
+@property (nonatomic, strong, readonly) NSArray *activities;
+
+- (void)addActivitiesObject:(SBBActivity*)value_ settingInverse: (BOOL) setInverse;
+- (void)addActivitiesObject:(SBBActivity*)value_;
+- (void)removeActivitiesObjects;
+- (void)removeActivitiesObject:(SBBActivity*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeActivitiesObject:(SBBActivity*)value_;
+
+- (void)insertObject:(SBBActivity*)value inActivitiesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromActivitiesAtIndex:(NSUInteger)idx;
+- (void)insertActivities:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeActivitiesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInActivitiesAtIndex:(NSUInteger)idx withObject:(SBBActivity*)value;
+- (void)replaceActivitiesAtIndexes:(NSIndexSet *)indexes withActivities:(NSArray *)values;
 
 @end

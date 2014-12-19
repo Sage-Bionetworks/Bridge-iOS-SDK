@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		60F1E4291A424E6E009B380E /* ActivitiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E4281A424E6E009B380E /* ActivitiesTableViewController.m */; };
+		60F1E4301A425D8F009B380E /* ActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E42F1A425D8F009B380E /* ActivityViewController.m */; };
 		800E798F19EDE25600EEE612 /* SurveyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 800E798E19EDE25600EEE612 /* SurveyViewController.m */; };
 		800E79AB19F1987F00EEE612 /* cat.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 800E79AA19F1987F00EEE612 /* cat.jpg */; };
 		800E79B219F1B1FE00EEE612 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80855FAB19BFAA36006601C7 /* Main.storyboard */; };
@@ -81,6 +83,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		60F1E4271A424E6E009B380E /* ActivitiesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivitiesTableViewController.h; sourceTree = "<group>"; };
+		60F1E4281A424E6E009B380E /* ActivitiesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivitiesTableViewController.m; sourceTree = "<group>"; };
+		60F1E42E1A425D8F009B380E /* ActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityViewController.h; sourceTree = "<group>"; };
+		60F1E42F1A425D8F009B380E /* ActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityViewController.m; sourceTree = "<group>"; };
 		800E798B19EDE22300EEE612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Survey.storyboard; sourceTree = "<group>"; };
 		800E798D19EDE25600EEE612 /* SurveyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurveyViewController.h; sourceTree = "<group>"; };
 		800E798E19EDE25600EEE612 /* SurveyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SurveyViewController.m; sourceTree = "<group>"; };
@@ -181,6 +187,10 @@
 				8053B62719FEF30D00A2E6C4 /* ScheduleViewController.m */,
 				8053B62919FEF69900A2E6C4 /* SchedulesTableViewController.h */,
 				8053B62A19FEF69900A2E6C4 /* SchedulesTableViewController.m */,
+				60F1E4271A424E6E009B380E /* ActivitiesTableViewController.h */,
+				60F1E4281A424E6E009B380E /* ActivitiesTableViewController.m */,
+				60F1E42E1A425D8F009B380E /* ActivityViewController.h */,
+				60F1E42F1A425D8F009B380E /* ActivityViewController.m */,
 				80855FAE19BFAA36006601C7 /* Images.xcassets */,
 				800E79AA19F1987F00EEE612 /* cat.jpg */,
 				D4FA38051A2B14AC00E7CF1E /* sample-signature.png */,
@@ -351,10 +361,12 @@
 				F5AF857C19F970700007296A /* ViewController.m in Sources */,
 				80A7318919C9D61E007FE828 /* SignUpSignInViewController.m in Sources */,
 				F5AF857F19F9708A0007296A /* AppDelegate.m in Sources */,
+				60F1E4291A424E6E009B380E /* ActivitiesTableViewController.m in Sources */,
 				80855F9E19BFAA36006601C7 /* main.m in Sources */,
 				800E798F19EDE25600EEE612 /* SurveyViewController.m in Sources */,
 				8053B62819FEF30D00A2E6C4 /* ScheduleViewController.m in Sources */,
 				809BE5AF19DB49C500A8E72F /* UserProfileViewController.m in Sources */,
+				60F1E4301A425D8F009B380E /* ActivityViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -513,9 +525,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = BridgeSDKSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -524,9 +539,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = BridgeSDKSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
