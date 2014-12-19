@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Activity" representedClassName="" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ref" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Schedule" inverseName="activities" inverseEntity="Schedule" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GuidCreatedOnVersionHolder" inverseName="activity" inverseEntity="GuidCreatedOnVersionHolder" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBGuidCreatedOnVersionHolder.h"/>
+        </userInfo>
+    </entity>
     <entity name="BooleanConstraints" representedClassName="" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="BridgeObject" representedClassName="" isAbstract="YES" syncable="YES">
         <attribute name="lastRetrieved" optional="YES" attributeType="Date" syncable="YES">
@@ -34,6 +48,16 @@
         <attribute name="step" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
     </entity>
     <entity name="DurationConstraints" representedClassName="" parentEntity="SurveyConstraints" syncable="YES"/>
+    <entity name="GuidCreatedOnVersionHolder" representedClassName="" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="version" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="survey" inverseEntity="Activity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
     <entity name="IdentifierHolder" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -64,6 +88,7 @@
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="scheduleType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startsOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="activities" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Activity" inverseName="schedule" inverseEntity="Activity" syncable="YES"/>
     </entity>
     <entity name="StringConstraints" representedClassName="" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxLength" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -183,17 +208,19 @@
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Activity" positionX="-9" positionY="90" width="128" height="118"/>
         <element name="BooleanConstraints" positionX="0" positionY="108" width="128" height="45"/>
-        <element name="BridgeObject" positionX="-54" positionY="-9" width="128" height="90"/>
+        <element name="BridgeObject" positionX="-54" positionY="-9" width="128" height="75"/>
         <element name="DateConstraints" positionX="18" positionY="126" width="128" height="88"/>
         <element name="DateTimeConstraints" positionX="36" positionY="135" width="128" height="88"/>
         <element name="DecimalConstraints" positionX="-9" positionY="99" width="128" height="90"/>
-        <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="43"/>
-        <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="58"/>
+        <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="45"/>
+        <element name="GuidCreatedOnVersionHolder" positionX="0" positionY="99" width="128" height="103"/>
+        <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="60"/>
         <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="90"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="90"/>
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
-        <element name="Schedule" positionX="-9" positionY="81" width="128" height="165"/>
+        <element name="Schedule" positionX="-9" positionY="81" width="128" height="178"/>
         <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
         <element name="Survey" positionX="-36" positionY="27" width="128" height="178"/>
         <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="148"/>
