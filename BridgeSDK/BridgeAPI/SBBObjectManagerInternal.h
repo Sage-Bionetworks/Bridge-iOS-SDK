@@ -17,5 +17,6 @@
 @property (nonatomic, strong) id<SBBCacheManagerProtocol> cacheManager;
 
 + (instancetype)objectManagerWithCacheManager:(id<SBBCacheManagerProtocol>)cacheManager;
++ (Class)bridgeClassFromType:(NSString *)type;
 
 @end

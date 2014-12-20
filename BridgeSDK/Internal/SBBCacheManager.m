@@ -11,6 +11,8 @@
 #import "SBBBridgeObjectInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManagerInternal.h"
+#import "SBBObjectManagerInternal.h"
+#import "ModelObjectInternal.h"
 @import UIKit;
 
 // SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
@@ -114,7 +116,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     
     if (!fetched) {
         // then look for it in CoreData
-        __block NSManagedObject *object = nil;
+        __block NSManagedObject *fetchedMO = nil;
         [context performBlockAndWait:^{
             NSFetchRequest *request = [[NSFetchRequest alloc] init];
             [request setEntity:entity];
@@ -125,15 +127,22 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
             NSError *error;
             NSArray *objects = [context executeFetchRequest:request error:&error];
             if (objects.count) {
-                NSManagedObject *fetchedMO = [objects firstObject];
-                fetched = 
-                dispatchSyncToResourceCacheQueue(^{
-                    if (fetched) {
-                        [self.resourcesCachedById setObject:fetched forKey:resourceId];
-                    } else {
-                        [self.resourcesCachedById removeObjectForKey:resourceId];
-                    }
-                });
+                fetchedMO = [objects firstObject];
+            }
+        }];
+        
+        SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
+        Class fetchedClass = [SBBObjectManager bridgeClassFromType:type];
+        if ([fetchedClass instancesRespondToSelector:@selector(initWithManagedObject:objectManager:cacheManager:)]) {
+            fetched = [fetchedClass initWithManagedObject:fetchedMO objectManager:om cacheManager:self];
+        }
+        
+        NSString *key = [self inMemoryKeyForType:type andId:objectId];
+        [self dispatchSyncToBridgeObjectCacheQueue:^{
+            if (fetched) {
+                [self.objectsCachedByTypeAndID setObject:fetched forKey:key];
+            } else {
+                [self.objectsCachedByTypeAndID removeObjectForKey:key];
             }
         }];
     }
@@ -209,7 +218,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 - (SBBBridgeObject *)inMemoryBridgeObjectOfType:(NSString *)type andId:(NSString *)objectId
 {
     NSString *key = [self inMemoryKeyForType:type andId:objectId];
-    SBBBridgeObject *object = nil;
+    __block SBBBridgeObject *object = nil;
     [self dispatchSyncToBridgeObjectCacheQueue:^{
         object = [self.objectsCachedByTypeAndID objectForKey:key];
     }];

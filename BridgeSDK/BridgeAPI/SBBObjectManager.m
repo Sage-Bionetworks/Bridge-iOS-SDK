@@ -51,7 +51,7 @@
   return self;
 }
 
-- (NSString *)bridgeClassNameFromType:(NSString *)type
++ (NSString *)bridgeClassNameFromType:(NSString *)type
 {
     NSString *className = [NSString stringWithFormat:@"SBB%@", type];
     
@@ -62,13 +62,13 @@
 {
     NSString *className = _classForType[type];
     if (!className.length) {
-        className = [self bridgeClassNameFromType:type];
+        className = [[self class] bridgeClassNameFromType:type];
     }
     
     return className;
 }
 
-- (Class)classFromClassName:(NSString *)className
++ (Class)classFromClassName:(NSString *)className
 {
     Class classFromType = Nil;
     if (className.length) {
@@ -78,7 +78,7 @@
     return classFromType;
 }
 
-- (Class)bridgeClassFromType:(NSString *)type
++ (Class)bridgeClassFromType:(NSString *)type
 {
     NSString *className = [self bridgeClassNameFromType:type];
     
@@ -89,7 +89,7 @@
 {
     NSString *className = [self classNameFromType:type];
     
-    return [self classFromClassName:className];
+    return [[self class] classFromClassName:className];
 }
 
 - (NSString *)typeFromClass:(Class)objectClass
@@ -690,7 +690,7 @@
             // in case we got partial json passed in and combined it with what was cached
             bridgeJson = [bridgeObject dictionaryRepresentationFromObjectManager:self];
         } else {
-            Class bridgeClass = [self bridgeClassFromType:type];
+            Class bridgeClass = [[self class] bridgeClassFromType:type];
             bridgeObject = [[bridgeClass alloc] initWithDictionaryRepresentation:json objectManager:self];
         }
         
