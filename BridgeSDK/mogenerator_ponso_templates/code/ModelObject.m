@@ -21,6 +21,7 @@
 #import "ModelObject.h"
 #import "SBBComponentManager.h"
 #import "SBBObjectManager.h"
+#import "SBBObjectManagerInternal.h"
 #import "SBBCacheManager.h"
 #import "ModelObjectInternal.h"
 
@@ -173,13 +174,13 @@
         NSManagedObjectContext *cacheContext = cacheManager.cacheIOContext;
         if ([self entityForContext:cacheContext]) {
             [cacheContext performBlockAndWait:^{
-                [self saveToContext:cacheContext withObjectManager:objectManager];
+                [self saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }];
         }
     }
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     // generated subclasses will override this
     return nil;

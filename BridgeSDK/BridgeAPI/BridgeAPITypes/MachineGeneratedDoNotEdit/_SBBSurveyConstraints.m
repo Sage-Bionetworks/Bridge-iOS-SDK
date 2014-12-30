@@ -26,17 +26,17 @@
 
 @property (nonatomic, strong, readonly) NSArray *rules;
 
-- (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
-- (void)addRulesObject:(SBBSurveyRule*)value_;
+- (void)addRulesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)addRulesObject:(NSManagedObject *)value_;
 - (void)removeRulesObjects;
-- (void)removeRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeRulesObject:(SBBSurveyRule*)value_;
+- (void)removeRulesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)removeRulesObject:(NSManagedObject *)value_;
 
-- (void)insertObject:(SBBSurveyRule*)value inRulesAtIndex:(NSUInteger)idx;
+- (void)insertObject:(NSManagedObject *)value inRulesAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromRulesAtIndex:(NSUInteger)idx;
 - (void)insertRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeRulesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
+- (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
 - (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
 
 @end
@@ -68,8 +68,7 @@
 
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"rules"])
 		{
-
-SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+            SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addRulesObject:rulesObj];
 		}

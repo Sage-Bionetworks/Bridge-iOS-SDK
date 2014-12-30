@@ -40,17 +40,17 @@
 
 @property (nonatomic, strong, readonly) NSArray *activities;
 
-- (void)addActivitiesObject:(SBBActivity*)value_ settingInverse: (BOOL) setInverse;
-- (void)addActivitiesObject:(SBBActivity*)value_;
+- (void)addActivitiesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)addActivitiesObject:(NSManagedObject *)value_;
 - (void)removeActivitiesObjects;
-- (void)removeActivitiesObject:(SBBActivity*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeActivitiesObject:(SBBActivity*)value_;
+- (void)removeActivitiesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)removeActivitiesObject:(NSManagedObject *)value_;
 
-- (void)insertObject:(SBBActivity*)value inActivitiesAtIndex:(NSUInteger)idx;
+- (void)insertObject:(NSManagedObject *)value inActivitiesAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromActivitiesAtIndex:(NSUInteger)idx;
 - (void)insertActivities:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeActivitiesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInActivitiesAtIndex:(NSUInteger)idx withObject:(SBBActivity*)value;
+- (void)replaceObjectInActivitiesAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
 - (void)replaceActivitiesAtIndexes:(NSIndexSet *)indexes withActivities:(NSArray *)values;
 
 @end
@@ -96,8 +96,7 @@
 
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"activities"])
 		{
-
-SBBActivity *activitiesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+            SBBActivity *activitiesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addActivitiesObject:activitiesObj];
 		}

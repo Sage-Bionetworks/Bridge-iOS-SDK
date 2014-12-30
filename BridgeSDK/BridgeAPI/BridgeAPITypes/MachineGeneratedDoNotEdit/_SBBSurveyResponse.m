@@ -33,22 +33,22 @@
 
 @property (nonatomic, strong, readonly) NSArray *answers;
 
-@property (nonatomic, strong, readwrite) SBBSurvey *survey;
+@property (nonatomic, strong, readwrite) NSManagedObject *survey;
 
-- (void)addAnswersObject:(SBBSurveyAnswer*)value_ settingInverse: (BOOL) setInverse;
-- (void)addAnswersObject:(SBBSurveyAnswer*)value_;
+- (void)addAnswersObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)addAnswersObject:(NSManagedObject *)value_;
 - (void)removeAnswersObjects;
-- (void)removeAnswersObject:(SBBSurveyAnswer*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeAnswersObject:(SBBSurveyAnswer*)value_;
+- (void)removeAnswersObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)removeAnswersObject:(NSManagedObject *)value_;
 
-- (void)insertObject:(SBBSurveyAnswer*)value inAnswersAtIndex:(NSUInteger)idx;
+- (void)insertObject:(NSManagedObject *)value inAnswersAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromAnswersAtIndex:(NSUInteger)idx;
 - (void)insertAnswers:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeAnswersAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInAnswersAtIndex:(NSUInteger)idx withObject:(SBBSurveyAnswer*)value;
+- (void)replaceObjectInAnswersAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
 - (void)replaceAnswersAtIndexes:(NSIndexSet *)indexes withAnswers:(NSArray *)values;
 
-- (void) setSurvey: (SBBSurvey*) survey_ settingInverse: (BOOL) setInverse;
+- (void) setSurvey: (NSManagedObject *) survey_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -85,8 +85,7 @@
 
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"answers"])
 		{
-
-SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+            SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addAnswersObject:answersObj];
 		}
@@ -185,7 +184,7 @@ SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresen
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     __block NSManagedObject *managedObject = nil;
 
@@ -199,18 +198,15 @@ SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresen
 
     managedObject.status = self.status;
 
-    if([self.answers count] > 0)
-	{
-
+    if([self.answers count] > 0) {
 		for(SBBSurveyAnswer *obj in self.answers)
 		{
-        NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager];
-        [managedObject addAnswersObject:relObj];
+            NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            [managedObject addAnswersObject:relObj];
 		}
-
 	}
 
-    NSManagedObject *relObj = [self.survey saveToContext:cacheContext withObjectManager:objectManager];
+    NSManagedObject *relObj = [self.survey saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
     [managedObject setSurvey:relObj];
 
     // Calling code will handle saving these changes to cacheContext.

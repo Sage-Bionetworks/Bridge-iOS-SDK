@@ -29,6 +29,8 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 @property (nonatomic, strong) NSCache *objectsCachedByTypeAndID;
 @property (nonatomic, strong) dispatch_queue_t bridgeObjectCacheQueue;
 
+@property (nonatomic, strong) NSString *managedObjectModelName;
+@property (nonatomic, strong) NSString *bundleId;
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, strong) NSPersistentStore *persistentStore;
@@ -53,15 +55,18 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = [self cacheManagerWithPersistentStoreName:@"SBBDataModel.sqlite" authManager:SBBComponent(SBBAuthManager)];
+        shared = [self cacheManagerWithDataModelName:@"SBBDataModel" bundleId:SBBBUNDLEIDSTRING authManager:SBBComponent(SBBAuthManager)];
     });
     
     return shared;
 }
 
-+ (instancetype)cacheManagerWithPersistentStoreName:(NSString *)storeName authManager:(id<SBBAuthManagerProtocol>)authManager
++ (instancetype)cacheManagerWithDataModelName:(NSString *)modelName bundleId:(NSString *)bundleId authManager:(id<SBBAuthManagerProtocol>)authManager
 {
     SBBCacheManager *cm = [[self alloc] init];
+    cm.managedObjectModelName = modelName;
+    cm.bundleId = bundleId;
+    NSString *storeName = [NSString stringWithFormat:@"%@.sqlite", modelName];
     cm.persistentStoreName = storeName;
     cm.authManager = authManager;
     return cm;
@@ -109,10 +114,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     }
     
     // first look for it in the mem cache
-    __block SBBBridgeObject *fetched = nil;
-    [self dispatchSyncToBridgeObjectCacheQueue:^{
-        fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
-    }];
+    SBBBridgeObject *fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
     
     if (!fetched) {
         // then look for it in CoreData
@@ -133,8 +135,15 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
         
         SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
         Class fetchedClass = [SBBObjectManager bridgeClassFromType:type];
-        if ([fetchedClass instancesRespondToSelector:@selector(initWithManagedObject:objectManager:cacheManager:)]) {
-            fetched = [fetchedClass initWithManagedObject:fetchedMO objectManager:om cacheManager:self];
+        
+        if (fetchedMO) {
+            if ([fetchedClass instancesRespondToSelector:@selector(initWithManagedObject:objectManager:cacheManager:)]) {
+                fetched = [[fetchedClass alloc] initWithManagedObject:fetchedMO objectManager:om cacheManager:self];
+            }
+        }
+        
+        if (!fetched && create) {
+            fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
         }
         
         NSString *key = [self inMemoryKeyForType:type andId:objectId];
@@ -188,7 +197,12 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 - (NSString *)encryptionKey
 {
-    return self.authManager.savedPassword;
+    NSString *encryptionKey = nil;
+    if ([self.authManager respondsToSelector:@selector(savedPassword)]) {
+        encryptionKey = [(id)self.authManager savedPassword];
+    }
+    
+    return encryptionKey;
 }
 
 #pragma mark - In-memory cache
@@ -242,7 +256,7 @@ dispatch_queue_t CoreDataQueueForPersistentStoreName(NSString *name)
 
 void removeCoreDataQueueForPersistentStoreName(NSString *name)
 {
-    [gCoreDataQueuesByPersistentStoreName setObject:nil forKey:name];
+    [gCoreDataQueuesByPersistentStoreName removeObjectForKey:name];
 }
 
 // BE CAREFUL never to allow this to be called recursively, even indirectly.
@@ -270,10 +284,11 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
         return _managedObjectModel;
     }
     
-    NSURL *modelURL = [[NSBundle bundleWithIdentifier:SBBBUNDLEIDSTRING] URLForResource:@"SBBDataModel" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle bundleWithIdentifier:_bundleId] URLForResource:self.managedObjectModelName withExtension:@"momd"];
     if (!modelURL) {
-        modelURL = [[NSBundle bundleWithIdentifier:SBBBUNDLEIDSTRING] URLForResource:@"SBBDataModel" withExtension:@"mom"];
+        modelURL = [[NSBundle bundleWithIdentifier:_bundleId] URLForResource:self.managedObjectModelName withExtension:@"mom"];
     }
+    
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     
     //NSLog(@"_managedObjectModel: %@",_managedObjectModel);

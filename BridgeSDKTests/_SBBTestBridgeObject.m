@@ -65,22 +65,22 @@
 
 @property (nonatomic, strong, readonly) NSArray *bridgeObjectArrayField;
 
-@property (nonatomic, strong, readwrite) SBBTestBridgeSubObject *bridgeSubObjectField;
+@property (nonatomic, strong, readwrite) NSManagedObject *bridgeSubObjectField;
 
-- (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse;
-- (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_;
+- (void)addBridgeObjectArrayFieldObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)addBridgeObjectArrayFieldObject:(NSManagedObject *)value_;
 - (void)removeBridgeObjectArrayFieldObjects;
-- (void)removeBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_;
+- (void)removeBridgeObjectArrayFieldObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)removeBridgeObjectArrayFieldObject:(NSManagedObject *)value_;
 
-- (void)insertObject:(SBBBridgeObject_test*)value inBridgeObjectArrayFieldAtIndex:(NSUInteger)idx;
+- (void)insertObject:(NSManagedObject *)value inBridgeObjectArrayFieldAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromBridgeObjectArrayFieldAtIndex:(NSUInteger)idx;
 - (void)insertBridgeObjectArrayField:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInBridgeObjectArrayFieldAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject_test*)value;
+- (void)replaceObjectInBridgeObjectArrayFieldAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
 - (void)replaceBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes withBridgeObjectArrayField:(NSArray *)values;
 
-- (void) setBridgeSubObjectField: (SBBTestBridgeSubObject*) bridgeSubObjectField_ settingInverse: (BOOL) setInverse;
+- (void) setBridgeSubObjectField: (NSManagedObject *) bridgeSubObjectField_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -213,8 +213,7 @@
 
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"bridgeObjectArrayField"])
 		{
-
-SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+            SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addBridgeObjectArrayFieldObject:bridgeObjectArrayFieldObj];
 		}

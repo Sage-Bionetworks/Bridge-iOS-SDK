@@ -66,6 +66,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */; };
 		606FDE141A23E84800898466 /* ModelObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE131A23E84800898466 /* ModelObjectInternal.h */; };
 		606FDE161A23EB4E00898466 /* SBBObjectManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE151A23EB4E00898466 /* SBBObjectManagerInternal.h */; };
 		606FDE211A2F9DC800898466 /* _SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -78,17 +79,6 @@
 		60F1E4031A39330B009B380E /* SBBBridgeObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4021A39330B009B380E /* SBBBridgeObjectInternal.h */; };
 		60F1E4051A393706009B380E /* _SBBSurveyAnswerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4041A393706009B380E /* _SBBSurveyAnswerInternal.h */; };
 		60F1E4071A393746009B380E /* SBBSurveyAnswerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4061A393746009B380E /* SBBSurveyAnswerInternal.h */; };
-		60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */; };
-		60FF57351A0AFEA500CE2373 /* _SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */; };
-		60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572B1A0AFEA500CE2373 /* _SBBTestBridgeObject.m */; };
-		60FF57371A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572D1A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m */; };
-		60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */; };
-		60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57311A0AFEA500CE2373 /* SBBTestBridgeObject.m */; };
-		60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */; };
-		606FDE211A2F9DC800898466 /* _SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		606FDE221A2F9DC800898466 /* _SBBIdentifierHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */; };
-		606FDE251A2F9E4300898466 /* SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */; };
 		60F1E4161A420E96009B380E /* _SBBActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4141A420E96009B380E /* _SBBActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60F1E4171A420E96009B380E /* _SBBActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E4151A420E96009B380E /* _SBBActivity.m */; };
 		60F1E41B1A420EAA009B380E /* _SBBGuidCreatedOnVersionHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4191A420EAA009B380E /* _SBBGuidCreatedOnVersionHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -97,6 +87,13 @@
 		60F1E4201A420EE4009B380E /* SBBActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E41E1A420EE4009B380E /* SBBActivity.m */; };
 		60F1E4231A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E4211A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60F1E4241A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E4221A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.m */; };
+		60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */; };
+		60FF57351A0AFEA500CE2373 /* _SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */; };
+		60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572B1A0AFEA500CE2373 /* _SBBTestBridgeObject.m */; };
+		60FF57371A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572D1A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m */; };
+		60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */; };
+		60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57311A0AFEA500CE2373 /* SBBTestBridgeObject.m */; };
+		60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */; };
 		800E792219ED73FD00EEE612 /* _SBBBooleanConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 800E792019ED73FD00EEE612 /* _SBBBooleanConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		800E792319ED73FD00EEE612 /* _SBBBooleanConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */; };
 		800E792D19ED740F00EEE612 /* _SBBDateConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 800E792519ED740F00EEE612 /* _SBBDateConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -329,6 +326,14 @@
 		60F1E4021A39330B009B380E /* SBBBridgeObjectInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeObjectInternal.h; sourceTree = "<group>"; };
 		60F1E4041A393706009B380E /* _SBBSurveyAnswerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSurveyAnswerInternal.h; sourceTree = "<group>"; };
 		60F1E4061A393746009B380E /* SBBSurveyAnswerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSurveyAnswerInternal.h; sourceTree = "<group>"; };
+		60F1E4141A420E96009B380E /* _SBBActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBActivity.h; sourceTree = "<group>"; };
+		60F1E4151A420E96009B380E /* _SBBActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBActivity.m; sourceTree = "<group>"; };
+		60F1E4191A420EAA009B380E /* _SBBGuidCreatedOnVersionHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBGuidCreatedOnVersionHolder.h; sourceTree = "<group>"; };
+		60F1E41A1A420EAA009B380E /* _SBBGuidCreatedOnVersionHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBGuidCreatedOnVersionHolder.m; sourceTree = "<group>"; };
+		60F1E41D1A420EE4009B380E /* SBBActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBActivity.h; sourceTree = "<group>"; };
+		60F1E41E1A420EE4009B380E /* SBBActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBActivity.m; sourceTree = "<group>"; };
+		60F1E4211A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBGuidCreatedOnVersionHolder.h; sourceTree = "<group>"; };
+		60F1E4221A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBGuidCreatedOnVersionHolder.m; sourceTree = "<group>"; };
 		60FF571F1A0AF87C00CE2373 /* TestModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TestModel.xcdatamodel; sourceTree = "<group>"; };
 		60FF57281A0AFEA500CE2373 /* _SBBBridgeObject_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObject_test.h; sourceTree = "<group>"; };
 		60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBridgeObject_test.m; sourceTree = "<group>"; };
@@ -343,18 +348,6 @@
 		60FF57321A0AFEA500CE2373 /* SBBTestBridgeSubObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestBridgeSubObject.h; sourceTree = "<group>"; };
 		60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestBridgeSubObject.m; sourceTree = "<group>"; };
 		60FF57341A0AFEA500CE2373 /* SBBTestObjects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestObjects.h; sourceTree = "<group>"; };
-		606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBIdentifierHolder.h; sourceTree = "<group>"; };
-		606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBIdentifierHolder.m; sourceTree = "<group>"; };
-		606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBIdentifierHolder.h; sourceTree = "<group>"; };
-		606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBIdentifierHolder.m; sourceTree = "<group>"; };
-		60F1E4141A420E96009B380E /* _SBBActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBActivity.h; sourceTree = "<group>"; };
-		60F1E4151A420E96009B380E /* _SBBActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBActivity.m; sourceTree = "<group>"; };
-		60F1E4191A420EAA009B380E /* _SBBGuidCreatedOnVersionHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBGuidCreatedOnVersionHolder.h; sourceTree = "<group>"; };
-		60F1E41A1A420EAA009B380E /* _SBBGuidCreatedOnVersionHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBGuidCreatedOnVersionHolder.m; sourceTree = "<group>"; };
-		60F1E41D1A420EE4009B380E /* SBBActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBActivity.h; sourceTree = "<group>"; };
-		60F1E41E1A420EE4009B380E /* SBBActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBActivity.m; sourceTree = "<group>"; };
-		60F1E4211A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBGuidCreatedOnVersionHolder.h; sourceTree = "<group>"; };
-		60F1E4221A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBGuidCreatedOnVersionHolder.m; sourceTree = "<group>"; };
 		800E792019ED73FD00EEE612 /* _SBBBooleanConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBooleanConstraints.h; sourceTree = "<group>"; };
 		800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBooleanConstraints.m; sourceTree = "<group>"; };
 		800E792519ED740F00EEE612 /* _SBBDateConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBDateConstraints.h; sourceTree = "<group>"; };
@@ -1311,6 +1304,7 @@
 				D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerTests.m in Sources */,
 				8017AF6819D9D909001AF9BA /* SBBObjectManagerTests.m in Sources */,
 				8026D69B19EC3F4A008942B0 /* SBBBridgeAPITestCase.m in Sources */,
+				602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */,
 				60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */,
 				60FF57371A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m in Sources */,
 				8026D6A519EC56E8008942B0 /* SBBSurveyManagerTests.m in Sources */,
@@ -1522,6 +1516,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"SBBBUNDLEID=\"org.sagebase.${PRODUCT_NAME:rfc1034identifier}\"",
 				);
 				INFOPLIST_FILE = BridgeSDKTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -1543,6 +1538,7 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = "SBBBUNDLEID=\"org.sagebase.${PRODUCT_NAME:rfc1034identifier}\"";
 				INFOPLIST_FILE = BridgeSDKTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = (

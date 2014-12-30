@@ -28,17 +28,17 @@
 
 @property (nonatomic, strong, readonly) NSArray *items;
 
-- (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)addItemsObject:(SBBBridgeObject*)value_;
+- (void)addItemsObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)addItemsObject:(NSManagedObject *)value_;
 - (void)removeItemsObjects;
-- (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeItemsObject:(SBBBridgeObject*)value_;
+- (void)removeItemsObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)removeItemsObject:(NSManagedObject *)value_;
 
-- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx;
+- (void)insertObject:(NSManagedObject *)value inItemsAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
 - (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value;
+- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
 - (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
 
 @end
@@ -80,8 +80,7 @@
 
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"items"])
 		{
-
-SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+            SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
 			[self addItemsObject:itemsObj];
 		}

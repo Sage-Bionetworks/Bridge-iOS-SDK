@@ -20,7 +20,6 @@
 
 #import <Foundation/Foundation.h>
 #import "SBBObjectManager.h"
-#import "SBBObjectManagerInternal.h"
 @import CoreData;
 
 /*!

@@ -22,7 +22,7 @@
   
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    shared = [[self alloc] init];
+    shared = [self objectManager];
   });
   
   return shared;

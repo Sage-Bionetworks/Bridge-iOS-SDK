@@ -9,7 +9,7 @@
 @import CoreData;
 @import Foundation;
 #import "SBBComponent.h"
-#import "SBBAuthManagerInternal.h"
+#import "SBBAuthManager.h"
 
 @class SBBBridgeObject;
 
@@ -27,6 +27,6 @@
 
 @interface SBBCacheManager : NSObject<SBBComponent, SBBCacheManagerProtocol>
 
-+ (instancetype)cacheManagerWithPersistentStoreName:(NSString *)storeName authManager:(id<SBBAuthManagerProtocol>)authManager;
++ (instancetype)cacheManagerWithDataModelName:(NSString *)modelName bundleId:(NSString *)bundleId authManager:(id<SBBAuthManagerProtocol>)authManager;
 
 @end

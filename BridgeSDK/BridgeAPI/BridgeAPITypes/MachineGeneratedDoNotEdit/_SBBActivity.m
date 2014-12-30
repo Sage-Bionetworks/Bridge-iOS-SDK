@@ -27,9 +27,9 @@
 
 @property (nonatomic, strong) NSString* ref;
 
-@property (nonatomic, strong, readwrite) SBBGuidCreatedOnVersionHolder *survey;
+@property (nonatomic, strong, readwrite) NSManagedObject *survey;
 
-- (void) setSurvey: (SBBGuidCreatedOnVersionHolder*) survey_ settingInverse: (BOOL) setInverse;
+- (void) setSurvey: (NSManagedObject *) survey_ settingInverse: (BOOL) setInverse;
 
 @end
 

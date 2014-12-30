@@ -43,32 +43,32 @@
 @property (nonatomic, retain, readonly) NSArray *<$Relationship.name$>;
 <$endif$>
 <$else$>
-<$if Relationship.isTransient $>@property (nonatomic, assign, readwrite) <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>;
+<$if Relationship.isTransient $>@property (nonatomic, assign, readwrite) NSManagedObject *<$Relationship.name$>;
 <$else$>
 <$if TemplateVar.arc$>
-@property (nonatomic, strong, readwrite) <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>;
+@property (nonatomic, strong, readwrite) NSManagedObject *<$Relationship.name$>;
 <$else$>
-@property (nonatomic, retain, readwrite) <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>;
+@property (nonatomic, retain, readwrite) <NSManagedObject *<$Relationship.name$>;
 <$endif$>
 <$endif$>
 <$endif$><$endif$><$endforeach do$>
 <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
-<$if Relationship.isToMany$>- (void)add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_ settingInverse: (BOOL) setInverse;
-- (void)add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_;
+<$if Relationship.isToMany$>- (void)add<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)add<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value_;
 - (void)remove<$Relationship.name.initialCapitalString$>Objects;
-- (void)remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_ settingInverse: (BOOL) setInverse;
-- (void)remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_;
+- (void)remove<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)remove<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value_;
 <$if Relationship.isOrdered$>
-- (void)insertObject:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx;
+- (void)insertObject:(NSManagedObject *)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx;
 - (void)removeObjectFrom<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx;
 - (void)insert<$Relationship.name.initialCapitalString$>:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
 - (void)remove<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx withObject:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value;
+- (void)replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
 - (void)replace<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes with<$Relationship.name.initialCapitalString$>:(NSArray *)values;
 <$endif$>
 <$endif$><$endif$><$endforeach do$>
 <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isToMany$>
-- (void) set<$Relationship.name.initialCapitalString$>: (<$Relationship.destinationEntity.generatedObjectClassName$>*) <$Relationship.name$>_ settingInverse: (BOOL) setInverse;
+- (void) set<$Relationship.name.initialCapitalString$>: (NSManagedObject *) <$Relationship.name$>_ settingInverse: (BOOL) setInverse;
 <$endif$><$endif$><$endforeach do$>
 @end
 
@@ -127,18 +127,16 @@
             <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
 		for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
 		{
-      <$if TemplateVar.arc$>
-<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
-     <$else$>
-			<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectManager objectFromBridgeJSON:objectRepresentationForDict] autorelease];
-      <$endif$>
+            <$if TemplateVar.arc$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+            <$else$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectManager objectFromBridgeJSON:objectRepresentationForDict] autorelease];
+            <$endif$>
 			[self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
 		}<$else$>NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
 		if(<$Relationship.name$>Dict != nil)
 		{
 			<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:<$Relationship.name$>Dict];
 			self.<$Relationship.name$> = <$Relationship.name$>Obj;
-      <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
+            <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
 		}<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
 	}
 	
@@ -221,9 +219,15 @@
 {
 <$if userInfo.encrypted$>
     NSString *password = cacheManager.encryptionKey;
-    NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
-    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
-    return [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+    if (password) {
+        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
+        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
+        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+    } else {
+        self = nil;
+    }
+
+    return self;
 <$else$>
     if (self == [super init]) {
 		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
@@ -254,7 +258,7 @@
 <$endif$>
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     __block NSManagedObject *managedObject = nil;
 
@@ -264,27 +268,26 @@
     NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
     NSError *error;
     NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:error];
-    // TODO: fetch password from auth manager
-    NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:aPassword error:nil];
-    managedObject.ciphertext = ciphertext;
+    NSString *password = cacheManager.encryptionKey;
+    if (password) {
+        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:nil];
+        managedObject.ciphertext = ciphertext;
+    }
     <$else$>
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     managedObject.<$Attribute.name$> = self.<$Attribute.name$>;
 	<$endif$><$endforeach do$>
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
-    <$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0)
-	{
-		<$if (! Relationship.isTransient) $>
-		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>)
+    <$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0) {
+		<$if (! Relationship.isTransient) $>for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>)
 		{
-        NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager];
-        [managedObject add<$Relationship.name.initialCapitalString$>Object:relObj];
-		}
-		<$endif$>
+            NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            [managedObject add<$Relationship.name.initialCapitalString$>Object:relObj];
+		}<$endif$>
 	}
 	<$else$>
   <$if ! Relationship.isTransient $>
-    NSManagedObject *relObj = [self.<$Relationship.name$> saveToContext:cacheContext withObjectManager:objectManager];
+    NSManagedObject *relObj = [self.<$Relationship.name$> saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
     [managedObject set<$Relationship.name.initialCapitalString$>:relObj];
 	<$endif$>
 	<$endif$>

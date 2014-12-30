@@ -29,9 +29,9 @@
 
 @property (nonatomic, strong) NSString* uiHint;
 
-@property (nonatomic, strong, readwrite) SBBSurveyConstraints *constraints;
+@property (nonatomic, strong, readwrite) NSManagedObject *constraints;
 
-- (void) setConstraints: (SBBSurveyConstraints*) constraints_ settingInverse: (BOOL) setInverse;
+- (void) setConstraints: (NSManagedObject *) constraints_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -137,7 +137,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     __block NSManagedObject *managedObject = nil;
 
@@ -151,7 +151,7 @@
 
     managedObject.uiHint = self.uiHint;
 
-    NSManagedObject *relObj = [self.constraints saveToContext:cacheContext withObjectManager:objectManager];
+    NSManagedObject *relObj = [self.constraints saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
     [managedObject setConstraints:relObj];
 
     // Calling code will handle saving these changes to cacheContext.
