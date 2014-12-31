@@ -45,20 +45,16 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.operator = [dictionary objectForKey:@"operator"];
+    self.operator = [dictionary objectForKey:@"operator"];
 
-        self.skipTo = [dictionary objectForKey:@"skipTo"];
+    self.skipTo = [dictionary objectForKey:@"skipTo"];
 
-        self.value = [dictionary objectForKey:@"value"];
+    self.value = [dictionary objectForKey:@"value"];
 
-	}
-
-	return self;
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

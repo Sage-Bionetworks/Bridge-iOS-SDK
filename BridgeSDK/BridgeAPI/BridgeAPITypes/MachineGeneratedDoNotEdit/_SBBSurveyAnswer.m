@@ -69,26 +69,22 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.answer = [dictionary objectForKey:@"answer"];
+    self.answer = [dictionary objectForKey:@"answer"];
 
-        self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
+    self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
 
-        self.answers = [dictionary objectForKey:@"answers"];
+    self.answers = [dictionary objectForKey:@"answers"];
 
-        self.client = [dictionary objectForKey:@"client"];
+    self.client = [dictionary objectForKey:@"client"];
 
-        self.declined = [dictionary objectForKey:@"declined"];
+    self.declined = [dictionary objectForKey:@"declined"];
 
-        self.questionGuid = [dictionary objectForKey:@"questionGuid"];
+    self.questionGuid = [dictionary objectForKey:@"questionGuid"];
 
-	}
-
-	return self;
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

@@ -81,20 +81,16 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.maxValue = [dictionary objectForKey:@"maxValue"];
+    self.maxValue = [dictionary objectForKey:@"maxValue"];
 
-        self.minValue = [dictionary objectForKey:@"minValue"];
+    self.minValue = [dictionary objectForKey:@"minValue"];
 
-        self.step = [dictionary objectForKey:@"step"];
+    self.step = [dictionary objectForKey:@"step"];
 
-	}
-
-	return self;
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

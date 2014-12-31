@@ -188,8 +188,9 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:NO];
     
     if (object) {
-        // TODO: Move initWithDictionary code into updateFromDictionary method in templates,
-        // and call that here to update the cached object from the JSON
+        SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
+        [object updateWithDictionaryRepresentation:json objectManager:om];
+        // TODO: Update CoreData cached object too
     }
     
     return object;

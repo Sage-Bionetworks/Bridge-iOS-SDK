@@ -71,22 +71,18 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.total = [dictionary objectForKey:@"total"];
+    self.total = [dictionary objectForKey:@"total"];
 
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"items"])
-		{
-            SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"items"])
+    {
+        SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
-			[self addItemsObject:itemsObj];
-		}
-	}
-
-	return self;
+        [self addItemsObject:itemsObj];
+    }
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

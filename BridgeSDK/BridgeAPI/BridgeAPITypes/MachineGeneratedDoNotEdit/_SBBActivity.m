@@ -51,27 +51,23 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.activityType = [dictionary objectForKey:@"activityType"];
+    self.activityType = [dictionary objectForKey:@"activityType"];
 
-        self.label = [dictionary objectForKey:@"label"];
+    self.label = [dictionary objectForKey:@"label"];
 
-        self.ref = [dictionary objectForKey:@"ref"];
+    self.ref = [dictionary objectForKey:@"ref"];
 
-            NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
-		if(surveyDict != nil)
-		{
-			SBBGuidCreatedOnVersionHolder *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
-			self.survey = surveyObj;
+        NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
+    if(surveyDict != nil)
+    {
+        SBBGuidCreatedOnVersionHolder *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
+        self.survey = surveyObj;
 
-		}
-	}
-
-	return self;
+    }
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

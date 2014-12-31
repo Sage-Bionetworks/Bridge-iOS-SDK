@@ -70,35 +70,31 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.completedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"completedOn"]];
+    self.completedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"completedOn"]];
 
-        self.identifier = [dictionary objectForKey:@"identifier"];
+    self.identifier = [dictionary objectForKey:@"identifier"];
 
-        self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
+    self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
 
-        self.status = [dictionary objectForKey:@"status"];
+    self.status = [dictionary objectForKey:@"status"];
 
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"answers"])
-		{
-            SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"answers"])
+    {
+        SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
-			[self addAnswersObject:answersObj];
-		}
-            NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
-		if(surveyDict != nil)
-		{
-			SBBSurvey *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
-			self.survey = surveyObj;
+        [self addAnswersObject:answersObj];
+    }
+        NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
+    if(surveyDict != nil)
+    {
+        SBBSurvey *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
+        self.survey = surveyObj;
 
-		}
-	}
-
-	return self;
+    }
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

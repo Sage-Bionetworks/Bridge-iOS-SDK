@@ -59,22 +59,18 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.contentLength = [dictionary objectForKey:@"contentLength"];
+    self.contentLength = [dictionary objectForKey:@"contentLength"];
 
-        self.contentMd5 = [dictionary objectForKey:@"contentMd5"];
+    self.contentMd5 = [dictionary objectForKey:@"contentMd5"];
 
-        self.contentType = [dictionary objectForKey:@"contentType"];
+    self.contentType = [dictionary objectForKey:@"contentType"];
 
-        self.name = [dictionary objectForKey:@"name"];
+    self.name = [dictionary objectForKey:@"name"];
 
-	}
-
-	return self;
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

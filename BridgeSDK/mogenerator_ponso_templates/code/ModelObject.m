@@ -121,14 +121,19 @@
     return YES;
 }
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     if((self = [super init]))
     {
-        self.sourceDictionaryRepresentation = dictionary;
+        [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
     }
     
     return self;
+}
+
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    self.sourceDictionaryRepresentation = dictionary;
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

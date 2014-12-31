@@ -95,34 +95,30 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
+    self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
 
-        self.guid = [dictionary objectForKey:@"guid"];
+    self.guid = [dictionary objectForKey:@"guid"];
 
-        self.identifier = [dictionary objectForKey:@"identifier"];
+    self.identifier = [dictionary objectForKey:@"identifier"];
 
-        self.modifiedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"modifiedOn"]];
+    self.modifiedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"modifiedOn"]];
 
-        self.name = [dictionary objectForKey:@"name"];
+    self.name = [dictionary objectForKey:@"name"];
 
-        self.published = [dictionary objectForKey:@"published"];
+    self.published = [dictionary objectForKey:@"published"];
 
-        self.version = [dictionary objectForKey:@"version"];
+    self.version = [dictionary objectForKey:@"version"];
 
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"questions"])
-		{
-            SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"questions"])
+    {
+        SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
-			[self addQuestionsObject:questionsObj];
-		}
-	}
-
-	return self;
+        [self addQuestionsObject:questionsObj];
+    }
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

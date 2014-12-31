@@ -69,20 +69,16 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.allowMultiple = [dictionary objectForKey:@"allowMultiple"];
+    self.allowMultiple = [dictionary objectForKey:@"allowMultiple"];
 
-        self.allowOther = [dictionary objectForKey:@"allowOther"];
+    self.allowOther = [dictionary objectForKey:@"allowOther"];
 
-        self.enumeration = [dictionary objectForKey:@"enumeration"];
+    self.enumeration = [dictionary objectForKey:@"enumeration"];
 
-	}
-
-	return self;
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

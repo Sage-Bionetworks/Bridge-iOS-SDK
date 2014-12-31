@@ -104,43 +104,39 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
-		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>
-    <$if Attribute.isReadonly$>
-        <$if Attribute.hasDateAttributeType$>
-        _<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
-        <$else$>
-        _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
-        <$endif$>
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
+    <$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>
+<$if Attribute.isReadonly$>
+    <$if Attribute.hasDateAttributeType$>
+    _<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
     <$else$>
-        <$if Attribute.hasDateAttributeType$>
-        self.<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
-        <$else$>
-        self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
-        <$endif$>
+    _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
     <$endif$>
-		<$endif$><$endif$><$endforeach do$>
-		<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
-            <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
-		{
-            <$if TemplateVar.arc$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
-            <$else$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectManager objectFromBridgeJSON:objectRepresentationForDict] autorelease];
-            <$endif$>
-			[self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
-		}<$else$>NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
-		if(<$Relationship.name$>Dict != nil)
-		{
-			<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:<$Relationship.name$>Dict];
-			self.<$Relationship.name$> = <$Relationship.name$>Obj;
-            <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
-		}<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
-	}
-	
-	return self;
+<$else$>
+    <$if Attribute.hasDateAttributeType$>
+    self.<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$else$>
+    self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+    <$endif$>
+<$endif$>
+    <$endif$><$endif$><$endforeach do$>
+    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
+        <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
+    {
+        <$if TemplateVar.arc$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        <$else$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectManager objectFromBridgeJSON:objectRepresentationForDict] autorelease];
+        <$endif$>
+        [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
+    }<$else$>NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
+    if(<$Relationship.name$>Dict != nil)
+    {
+        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:<$Relationship.name$>Dict];
+        self.<$Relationship.name$> = <$Relationship.name$>Obj;
+        <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
+    }<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

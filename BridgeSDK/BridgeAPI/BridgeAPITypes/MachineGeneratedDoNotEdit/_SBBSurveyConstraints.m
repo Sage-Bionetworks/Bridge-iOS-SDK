@@ -59,22 +59,18 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.dataType = [dictionary objectForKey:@"dataType"];
+    self.dataType = [dictionary objectForKey:@"dataType"];
 
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"rules"])
-		{
-            SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"rules"])
+    {
+        SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
-			[self addRulesObject:rulesObj];
-		}
-	}
-
-	return self;
+        [self addRulesObject:rulesObj];
+    }
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

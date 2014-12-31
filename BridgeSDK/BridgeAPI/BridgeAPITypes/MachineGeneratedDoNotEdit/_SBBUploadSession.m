@@ -45,20 +45,16 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.expires = [NSDate dateWithISO8601String:[dictionary objectForKey:@"expires"]];
+    self.expires = [NSDate dateWithISO8601String:[dictionary objectForKey:@"expires"]];
 
-        self.id = [dictionary objectForKey:@"id"];
+    self.id = [dictionary objectForKey:@"id"];
 
-        self.url = [dictionary objectForKey:@"url"];
+    self.url = [dictionary objectForKey:@"url"];
 
-	}
-
-	return self;
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

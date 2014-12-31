@@ -53,29 +53,25 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.guid = [dictionary objectForKey:@"guid"];
+    self.guid = [dictionary objectForKey:@"guid"];
 
-        self.identifier = [dictionary objectForKey:@"identifier"];
+    self.identifier = [dictionary objectForKey:@"identifier"];
 
-        self.prompt = [dictionary objectForKey:@"prompt"];
+    self.prompt = [dictionary objectForKey:@"prompt"];
 
-        self.uiHint = [dictionary objectForKey:@"uiHint"];
+    self.uiHint = [dictionary objectForKey:@"uiHint"];
 
-            NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
-		if(constraintsDict != nil)
-		{
-			SBBSurveyConstraints *constraintsObj = [objectManager objectFromBridgeJSON:constraintsDict];
-			self.constraints = constraintsObj;
+        NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
+    if(constraintsDict != nil)
+    {
+        SBBSurveyConstraints *constraintsObj = [objectManager objectFromBridgeJSON:constraintsDict];
+        self.constraints = constraintsObj;
 
-		}
-	}
-
-	return self;
+    }
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

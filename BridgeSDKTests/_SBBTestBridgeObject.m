@@ -182,51 +182,47 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.dateField = [NSDate dateWithISO8601String:[dictionary objectForKey:@"dateField"]];
+    self.dateField = [NSDate dateWithISO8601String:[dictionary objectForKey:@"dateField"]];
 
-        self.doubleField = [dictionary objectForKey:@"doubleField"];
+    self.doubleField = [dictionary objectForKey:@"doubleField"];
 
-        self.floatField = [dictionary objectForKey:@"floatField"];
+    self.floatField = [dictionary objectForKey:@"floatField"];
 
-        self.jsonArrayField = [dictionary objectForKey:@"jsonArrayField"];
+    self.jsonArrayField = [dictionary objectForKey:@"jsonArrayField"];
 
-        self.jsonDictField = [dictionary objectForKey:@"jsonDictField"];
+    self.jsonDictField = [dictionary objectForKey:@"jsonDictField"];
 
-        self.longField = [dictionary objectForKey:@"longField"];
+    self.longField = [dictionary objectForKey:@"longField"];
 
-        self.longLongField = [dictionary objectForKey:@"longLongField"];
+    self.longLongField = [dictionary objectForKey:@"longLongField"];
 
-        self.shortField = [dictionary objectForKey:@"shortField"];
+    self.shortField = [dictionary objectForKey:@"shortField"];
 
-        self.stringField = [dictionary objectForKey:@"stringField"];
+    self.stringField = [dictionary objectForKey:@"stringField"];
 
-        self.uLongField = [dictionary objectForKey:@"uLongField"];
+    self.uLongField = [dictionary objectForKey:@"uLongField"];
 
-        self.uLongLongField = [dictionary objectForKey:@"uLongLongField"];
+    self.uLongLongField = [dictionary objectForKey:@"uLongLongField"];
 
-        self.uShortField = [dictionary objectForKey:@"uShortField"];
+    self.uShortField = [dictionary objectForKey:@"uShortField"];
 
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"bridgeObjectArrayField"])
-		{
-            SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"bridgeObjectArrayField"])
+    {
+        SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
-			[self addBridgeObjectArrayFieldObject:bridgeObjectArrayFieldObj];
-		}
-            NSDictionary *bridgeSubObjectFieldDict = [dictionary objectForKey:@"bridgeSubObjectField"];
-		if(bridgeSubObjectFieldDict != nil)
-		{
-			SBBTestBridgeSubObject *bridgeSubObjectFieldObj = [objectManager objectFromBridgeJSON:bridgeSubObjectFieldDict];
-			self.bridgeSubObjectField = bridgeSubObjectFieldObj;
+        [self addBridgeObjectArrayFieldObject:bridgeObjectArrayFieldObj];
+    }
+        NSDictionary *bridgeSubObjectFieldDict = [dictionary objectForKey:@"bridgeSubObjectField"];
+    if(bridgeSubObjectFieldDict != nil)
+    {
+        SBBTestBridgeSubObject *bridgeSubObjectFieldObj = [objectManager objectFromBridgeJSON:bridgeSubObjectFieldDict];
+        self.bridgeSubObjectField = bridgeSubObjectFieldObj;
 
-		}
-	}
-
-	return self;
+    }
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

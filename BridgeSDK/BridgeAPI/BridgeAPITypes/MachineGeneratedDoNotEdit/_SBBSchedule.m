@@ -73,36 +73,32 @@
 
 #pragma mark Dictionary representation
 
-- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.activityRef = [dictionary objectForKey:@"activityRef"];
+    self.activityRef = [dictionary objectForKey:@"activityRef"];
 
-        self.activityType = [dictionary objectForKey:@"activityType"];
+    self.activityType = [dictionary objectForKey:@"activityType"];
 
-        self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
+    self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
 
-        self.endsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endsOn"]];
+    self.endsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endsOn"]];
 
-        self.expires = [dictionary objectForKey:@"expires"];
+    self.expires = [dictionary objectForKey:@"expires"];
 
-        self.label = [dictionary objectForKey:@"label"];
+    self.label = [dictionary objectForKey:@"label"];
 
-        self.scheduleType = [dictionary objectForKey:@"scheduleType"];
+    self.scheduleType = [dictionary objectForKey:@"scheduleType"];
 
-        self.startsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startsOn"]];
+    self.startsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startsOn"]];
 
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"activities"])
-		{
-            SBBActivity *activitiesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"activities"])
+    {
+        SBBActivity *activitiesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
-			[self addActivitiesObject:activitiesObj];
-		}
-	}
-
-	return self;
+        [self addActivitiesObject:activitiesObj];
+    }
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
