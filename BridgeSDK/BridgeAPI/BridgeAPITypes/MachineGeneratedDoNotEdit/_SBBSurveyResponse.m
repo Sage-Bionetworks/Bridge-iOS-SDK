@@ -163,10 +163,10 @@
 		for(NSManagedObject *answersManagedObj in managedObject.answers)
 		{
             SBBSurveyAnswer *answersObj = [[SBBSurveyAnswer alloc] initWithManagedObject:answersManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(answersObj != nil)
-        {
-            [self addAnswersObject:answersObj];
-        }
+            if(answersObj != nil)
+            {
+                [self addAnswersObject:answersObj];
+            }
 		}
             NSManagedObject *surveyManagedObj = managedObject.survey;
         SBBSurvey *surveyObj = [[SBBSurvey alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
@@ -182,9 +182,18 @@
 
 - (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    __block NSManagedObject *managedObject = nil;
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponse" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponse" inManagedObjectContext:cacheContext];
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.completedOn = self.completedOn;
 
@@ -195,19 +204,14 @@
     managedObject.status = self.status;
 
     if([self.answers count] > 0) {
-		for(SBBSurveyAnswer *obj in self.answers)
-		{
-            NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject addAnswersObject:relObj];
+        [managedObject removeAnswersObjects];
+		for(SBBSurveyAnswer *obj in self.answers) {
+            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            [managedObject addAnswersObject:relMo];
 		}
 	}
 
-    NSManagedObject *relObj = [self.survey saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject setSurvey:relObj];
-
     // Calling code will handle saving these changes to cacheContext.
-
-    return managedObject;
 }
 
 #pragma mark Direct access

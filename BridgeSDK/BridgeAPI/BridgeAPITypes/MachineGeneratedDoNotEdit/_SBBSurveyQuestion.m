@@ -135,9 +135,18 @@
 
 - (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    __block NSManagedObject *managedObject = nil;
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestion" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestion" inManagedObjectContext:cacheContext];
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.guid = self.guid;
 
@@ -147,12 +156,11 @@
 
     managedObject.uiHint = self.uiHint;
 
-    NSManagedObject *relObj = [self.constraints saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject setConstraints:relObj];
+    [cacheContext deleteObject:managedObject.constraints];
+    NSManagedObject *relMo = [self.constraints saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setConstraints:relMo];
 
     // Calling code will handle saving these changes to cacheContext.
-
-    return managedObject;
 }
 
 #pragma mark Direct access

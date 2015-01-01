@@ -238,10 +238,10 @@
 		for(NSManagedObject *<$Relationship.name$>ManagedObj in managedObject.<$Relationship.name$>)
 		{
             <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(<$Relationship.name$>Obj != nil)
-        {
-            [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
-        }
+            if(<$Relationship.name$>Obj != nil)
+            {
+                [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
+            }
 		}<$else$>NSManagedObject *<$Relationship.name$>ManagedObj = managedObject.<$Relationship.name$>;
         <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
         if(<$Relationship.name$>Obj != nil)
@@ -256,10 +256,16 @@
 
 - (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    __block NSManagedObject *managedObject = nil;
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"<$name$>" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"<$name$>" inManagedObjectContext:cacheContext];
+    // Calling code will handle saving these changes to cacheContext.
 
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
     <$if userInfo.encrypted$>
     NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
     NSError *error;
@@ -270,30 +276,73 @@
         managedObject.ciphertext = ciphertext;
     }
     <$else$>
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     managedObject.<$Attribute.name$> = self.<$Attribute.name$>;
 	<$endif$><$endforeach do$>
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
-    <$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0) {
-		<$if (! Relationship.isTransient) $>for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>)
-		{
-            NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject add<$Relationship.name.initialCapitalString$>Object:relObj];
+    <$if Relationship.isToMany$><$if (! Relationship.isTransient) $>if([self.<$Relationship.name$> count] > 0) {
+        <$if Relationship.destinationEntity.userInfo.entityIDKeyPath$>for (<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>) {
+            // see if a managed object for obj is already in the relationship
+            BOOL alreadyInRelationship = NO;
+            __block NSManagedObject *relMo = nil;
+            NSString *keyPath = @"<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>";
+            NSString *objectId = obj.<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>;
+
+            for (NSManagedObject *mo in managedObject.<$Relationship.name$>) {
+                if ([[mo valueForKeyPath:keyPath] isEqualToString:objectId]) {
+                    relMo = mo;
+                    alreadyInRelationship = YES;
+                    break;
+                }
+            }
+
+            // if not, check if one exists but just isn't in the relationship yet
+            if (!relMo) {
+                NSEntityDescription *relEntity = [NSEntityDescription entityForName:@"<$Relationship.destinationEntity.name$>" inManagedObjectContext:cacheContext];
+                NSFetchRequest *request = [[NSFetchRequest alloc] init];
+                [request setEntity:relEntity];
+                
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
+                [request setPredicate:predicate];
+                
+                NSError *error;
+                NSArray *objects = [cacheContext executeFetchRequest:request error:&error];
+                if (objects.count) {
+                    relMo = [objects firstObject];
+                }
+            }
+
+            // if still not, create one
+            if (!relMo) {
+                relMo = [NSEntityDescription insertNewObjectForEntityForName:@"<$Relationship.destinationEntity.name$>" inManagedObjectContext:cacheContext];
+            }
+
+            // update it from obj
+            [obj updateManagedObject:relMo withObjectManager:objectManager cacheManager:cacheManager];
+
+            // add to relationship if not already in it
+            if (!alreadyInRelationship) {
+                [managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
+            }
+        }<$else$>[managedObject remove<$Relationship.name.initialCapitalString$>Objects];
+		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>) {
+            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            [managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
 		}<$endif$>
-	}
+	}<$endif$>
 	<$else$>
-  <$if ! Relationship.isTransient $>
-    NSManagedObject *relObj = [self.<$Relationship.name$> saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject set<$Relationship.name.initialCapitalString$>:relObj];
-	<$endif$>
+    <$if ! Relationship.isTransient $><$if Relationship.destinationEntity.userInfo.entityIDKeyPath$>
+    <$else$>[cacheContext deleteObject:managedObject.<$Relationship.name$>];
+    NSManagedObject *relMo = [self.<$Relationship.name$> saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject set<$Relationship.name.initialCapitalString$>:relMo];
+	<$endif$><$endif$>
 	<$endif$>
     <$endif$>
 	<$endforeach do$>
     <$endif$>
 
     // Calling code will handle saving these changes to cacheContext.
-
-    return managedObject;
 }
 <$endif$>
 

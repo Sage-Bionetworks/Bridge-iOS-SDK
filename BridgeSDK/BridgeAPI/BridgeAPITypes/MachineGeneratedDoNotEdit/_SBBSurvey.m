@@ -196,10 +196,10 @@
 		for(NSManagedObject *questionsManagedObj in managedObject.questions)
 		{
             SBBSurveyQuestion *questionsObj = [[SBBSurveyQuestion alloc] initWithManagedObject:questionsManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(questionsObj != nil)
-        {
-            [self addQuestionsObject:questionsObj];
-        }
+            if(questionsObj != nil)
+            {
+                [self addQuestionsObject:questionsObj];
+            }
 		}
     }
 
@@ -209,9 +209,18 @@
 
 - (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    __block NSManagedObject *managedObject = nil;
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Survey" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Survey" inManagedObjectContext:cacheContext];
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.createdOn = self.createdOn;
 
@@ -228,16 +237,53 @@
     managedObject.version = self.version;
 
     if([self.questions count] > 0) {
-		for(SBBSurveyQuestion *obj in self.questions)
-		{
-            NSManagedObject *relObj = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject addQuestionsObject:relObj];
-		}
+        for (SBBSurveyQuestion *obj in self.questions) {
+            // see if a managed object for obj is already in the relationship
+            BOOL alreadyInRelationship = NO;
+            __block NSManagedObject *relMo = nil;
+            NSString *keyPath = @"guid";
+            NSString *objectId = obj.guid;
+
+            for (NSManagedObject *mo in managedObject.questions) {
+                if ([[mo valueForKeyPath:keyPath] isEqualToString:objectId]) {
+                    relMo = mo;
+                    alreadyInRelationship = YES;
+                    break;
+                }
+            }
+
+            // if not, check if one exists but just isn't in the relationship yet
+            if (!relMo) {
+                NSEntityDescription *relEntity = [NSEntityDescription entityForName:@"SurveyQuestion" inManagedObjectContext:cacheContext];
+                NSFetchRequest *request = [[NSFetchRequest alloc] init];
+                [request setEntity:relEntity];
+
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
+                [request setPredicate:predicate];
+
+                NSError *error;
+                NSArray *objects = [cacheContext executeFetchRequest:request error:&error];
+                if (objects.count) {
+                    relMo = [objects firstObject];
+                }
+            }
+
+            // if still not, create one
+            if (!relMo) {
+                relMo = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestion" inManagedObjectContext:cacheContext];
+            }
+
+            // update it from obj
+            [obj updateManagedObject:relMo withObjectManager:objectManager cacheManager:cacheManager];
+
+            // add to relationship if not already in it
+            if (!alreadyInRelationship) {
+                [managedObject addQuestionsObject:relMo];
+            }
+        }
 	}
 
     // Calling code will handle saving these changes to cacheContext.
-
-    return managedObject;
 }
 
 #pragma mark Direct access

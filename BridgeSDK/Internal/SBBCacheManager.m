@@ -114,37 +114,28 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     }
     
     // first look for it in the mem cache
-    SBBBridgeObject *fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
+    __block SBBBridgeObject *fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
     
+    
+    // if not there, look for it in CoreData
     if (!fetched) {
-        // then look for it in CoreData
-        __block NSManagedObject *fetchedMO = nil;
         [context performBlockAndWait:^{
-            NSFetchRequest *request = [[NSFetchRequest alloc] init];
-            [request setEntity:entity];
+            NSManagedObject *fetchedMO = [self managedObjectOfEntity:entity withId:objectId atKeyPath:keyPath];
             
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
-            [request setPredicate:predicate];
+            SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
+            Class fetchedClass = [SBBObjectManager bridgeClassFromType:type];
             
-            NSError *error;
-            NSArray *objects = [context executeFetchRequest:request error:&error];
-            if (objects.count) {
-                fetchedMO = [objects firstObject];
+            if (fetchedMO) {
+                if ([fetchedClass instancesRespondToSelector:@selector(initWithManagedObject:objectManager:cacheManager:)]) {
+                    fetched = [[fetchedClass alloc] initWithManagedObject:fetchedMO objectManager:om cacheManager:self];
+                }
+            }
+            
+            if (!fetched && create) {
+                fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
+                [fetched saveToContext:context withObjectManager:om cacheManager:self];
             }
         }];
-        
-        SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
-        Class fetchedClass = [SBBObjectManager bridgeClassFromType:type];
-        
-        if (fetchedMO) {
-            if ([fetchedClass instancesRespondToSelector:@selector(initWithManagedObject:objectManager:cacheManager:)]) {
-                fetched = [[fetchedClass alloc] initWithManagedObject:fetchedMO objectManager:om cacheManager:self];
-            }
-        }
-        
-        if (!fetched && create) {
-            fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
-        }
         
         NSString *key = [self inMemoryKeyForType:type andId:objectId];
         [self dispatchSyncToBridgeObjectCacheQueue:^{
@@ -190,7 +181,16 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     if (object) {
         SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
         [object updateWithDictionaryRepresentation:json objectManager:om];
-        // TODO: Update CoreData cached object too
+        // Update CoreData cached object too
+        [self.cacheIOContext performBlockAndWait:^{
+            NSManagedObject *fetchedMO = [self managedObjectOfEntity:entity withId:key atKeyPath:keyPath];
+            if (fetchedMO) {
+                [object updateManagedObject:fetchedMO withObjectManager:om cacheManager:self];
+            } else {
+                [object saveToContext:self.cacheIOContext withObjectManager:om cacheManager:self];
+            }
+            // TODO: Save changes to self.cacheIOContext
+        }];
     }
     
     return object;
@@ -242,6 +242,25 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 }
 
 #pragma mark - CoreData cache
+
+// must be called in the cacheIOContext private queue
+- (NSManagedObject *)managedObjectOfEntity:(NSEntityDescription *)entity withId:(NSString *)objectId atKeyPath:(NSString *)keyPath
+{
+    NSManagedObject *fetchedMO = nil;
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entity];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
+    [request setPredicate:predicate];
+    
+    NSError *error;
+    NSArray *objects = [self.cacheIOContext executeFetchRequest:request error:&error];
+    if (objects.count) {
+        fetchedMO = [objects firstObject];
+    }
+    
+    return fetchedMO;
+}
 
 dispatch_queue_t CoreDataQueueForPersistentStoreName(NSString *name)
 {
