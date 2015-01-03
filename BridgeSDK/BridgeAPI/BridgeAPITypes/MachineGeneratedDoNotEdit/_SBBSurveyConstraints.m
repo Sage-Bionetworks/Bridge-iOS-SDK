@@ -109,6 +109,60 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"SurveyConstraints" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super init]) {
+
+        self.dataType = managedObject.dataType;
+
+		for(NSManagedObject *rulesManagedObj in managedObject.rules)
+		{
+            SBBSurveyRule *rulesObj = [[SBBSurveyRule alloc] initWithManagedObject:rulesManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if(rulesObj != nil)
+            {
+                [self addRulesObject:rulesObj];
+            }
+		}
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyConstraints" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.dataType = self.dataType;
+
+    if([self.rules count] > 0) {
+        [managedObject removeRulesObjects];
+		for(SBBSurveyRule *obj in self.rules) {
+            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            [managedObject addRulesObject:relMo];
+		}
+	}
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 - (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse

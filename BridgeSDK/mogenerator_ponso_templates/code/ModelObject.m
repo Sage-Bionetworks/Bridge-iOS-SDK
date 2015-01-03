@@ -152,15 +152,6 @@
     return nil;
 }
 
-- (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID objectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    if (self = [super init]) {
-        //
-    }
-    
-    return self;
-}
-
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     if (self = [super init]) {
@@ -181,6 +172,8 @@
             [cacheContext performBlockAndWait:^{
                 [self saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }];
+            
+            [cacheManager saveCacheIOContext];
         }
     }
 }
@@ -189,6 +182,11 @@
 {
     // generated subclasses will override this
     return nil;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    // generated subclasses will override this
 }
 
 - (void) dealloc

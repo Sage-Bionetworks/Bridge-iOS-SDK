@@ -116,6 +116,54 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"SurveyAnswer" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSString *password = cacheManager.encryptionKey;
+    if (password) {
+        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
+        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
+        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+    } else {
+        self = nil;
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyAnswer" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
+    NSError *error;
+    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
+    NSString *password = cacheManager.encryptionKey;
+    if (password && !error) {
+        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:&error];
+        if (!error) {
+            managedObject.ciphertext = ciphertext;
+        }
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 @end

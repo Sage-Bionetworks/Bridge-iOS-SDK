@@ -682,7 +682,7 @@
         
         id bridgeJson = json;
         
-        // Try the cache first (if it's not a cacheable entity, this will be nil)
+        // Try the cache first (if it's not a directly cacheable entity, this will be nil)
         id<SBBCacheManagerProtocol> cacheMan = SBBComponent(SBBCacheManager);
         id bridgeObject = [cacheMan cachedObjectFromBridgeJSON:json];
         // otherwise, our internal class for this type knows how to initialize itself from the json

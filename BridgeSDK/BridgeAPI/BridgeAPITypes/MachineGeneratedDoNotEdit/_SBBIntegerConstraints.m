@@ -116,6 +116,50 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"IntegerConstraints" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super init]) {
+
+        self.maxValue = managedObject.maxValue;
+
+        self.minValue = managedObject.minValue;
+
+        self.step = managedObject.step;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"IntegerConstraints" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    managedObject.maxValue = self.maxValue;
+
+    managedObject.minValue = self.minValue;
+
+    managedObject.step = self.step;
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 @end

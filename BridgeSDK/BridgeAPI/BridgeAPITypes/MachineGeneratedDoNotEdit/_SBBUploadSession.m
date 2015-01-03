@@ -80,6 +80,50 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"UploadSession" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super init]) {
+
+        self.expires = managedObject.expires;
+
+        self.id = managedObject.id;
+
+        self.url = managedObject.url;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UploadSession" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    managedObject.expires = self.expires;
+
+    managedObject.id = self.id;
+
+    managedObject.url = self.url;
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 @end

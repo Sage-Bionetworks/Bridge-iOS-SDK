@@ -50,8 +50,6 @@
 
 - (void)awakeFromDictionaryRepresentationInit;
 
-- (instancetype)initFromCoreDataCacheWithID:(NSString *)bridgeObjectID objectManager:(id<SBBObjectManagerProtocol>)objectManager;
-
 - (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 @end

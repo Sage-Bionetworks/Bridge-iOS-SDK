@@ -80,6 +80,50 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"SurveyRule" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super init]) {
+
+        self.operator = managedObject.operator;
+
+        self.skipTo = managedObject.skipTo;
+
+        self.value = managedObject.value;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyRule" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    managedObject.operator = self.operator;
+
+    managedObject.skipTo = self.skipTo;
+
+    managedObject.value = self.value;
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 @end

@@ -287,6 +287,114 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"TestBridgeObject" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super init]) {
+
+        self.dateField = managedObject.dateField;
+
+        self.doubleField = managedObject.doubleField;
+
+        self.floatField = managedObject.floatField;
+
+        self.jsonArrayField = managedObject.jsonArrayField;
+
+        self.jsonDictField = managedObject.jsonDictField;
+
+        self.longField = managedObject.longField;
+
+        self.longLongField = managedObject.longLongField;
+
+        self.shortField = managedObject.shortField;
+
+        self.stringField = managedObject.stringField;
+
+        self.uLongField = managedObject.uLongField;
+
+        self.uLongLongField = managedObject.uLongLongField;
+
+        self.uShortField = managedObject.uShortField;
+
+		for(NSManagedObject *bridgeObjectArrayFieldManagedObj in managedObject.bridgeObjectArrayField)
+		{
+            SBBBridgeObject_test *bridgeObjectArrayFieldObj = [[SBBBridgeObject_test alloc] initWithManagedObject:bridgeObjectArrayFieldManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if(bridgeObjectArrayFieldObj != nil)
+            {
+                [self addBridgeObjectArrayFieldObject:bridgeObjectArrayFieldObj];
+            }
+		}
+            NSManagedObject *bridgeSubObjectFieldManagedObj = managedObject.bridgeSubObjectField;
+        SBBTestBridgeSubObject *bridgeSubObjectFieldObj = [[SBBTestBridgeSubObject alloc] initWithManagedObject:bridgeSubObjectFieldManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(bridgeSubObjectFieldObj != nil)
+        {
+          self.bridgeSubObjectField = bridgeSubObjectFieldObj;
+        }
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"TestBridgeObject" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.dateField = self.dateField;
+
+    managedObject.doubleField = self.doubleField;
+
+    managedObject.floatField = self.floatField;
+
+    managedObject.jsonArrayField = self.jsonArrayField;
+
+    managedObject.jsonDictField = self.jsonDictField;
+
+    managedObject.longField = self.longField;
+
+    managedObject.longLongField = self.longLongField;
+
+    managedObject.shortField = self.shortField;
+
+    managedObject.stringField = self.stringField;
+
+    managedObject.uLongField = self.uLongField;
+
+    managedObject.uLongLongField = self.uLongLongField;
+
+    managedObject.uShortField = self.uShortField;
+
+    if([self.bridgeObjectArrayField count] > 0) {
+        [managedObject removeBridgeObjectArrayFieldObjects];
+		for(SBBBridgeObject_test *obj in self.bridgeObjectArrayField) {
+            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            [managedObject addBridgeObjectArrayFieldObject:relMo];
+		}
+	}
+
+    [cacheContext deleteObject:managedObject.bridgeSubObjectField];
+    NSManagedObject *relMo = [self.bridgeSubObjectField saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setBridgeSubObjectField:relMo];
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 - (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse

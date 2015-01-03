@@ -134,6 +134,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
             if (!fetched && create) {
                 fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
                 [fetched saveToContext:context withObjectManager:om cacheManager:self];
+                [self saveCacheIOContext];
             }
         }];
         
@@ -165,7 +166,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     
     NSString *keyPath = entity.userInfo[@"entityIDKeyPath"];
     if (!keyPath.length) {
-        // not cacheable
+        // not directly cacheable
         return nil;
     }
     
@@ -189,7 +190,8 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
             } else {
                 [object saveToContext:self.cacheIOContext withObjectManager:om cacheManager:self];
             }
-            // TODO: Save changes to self.cacheIOContext
+            
+            [self saveCacheIOContext];
         }];
     }
     
@@ -392,6 +394,36 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     
     return _cacheIOContext;
 }
+
+- (void)saveCacheIOContext
+{
+    __block NSError *error;
+    __block NSInteger SQLiteErrorCode = 0;
+    NSManagedObjectContext *context = self.cacheIOContext;
+    [context performBlock:^{
+        if (![context save:&error]) {
+            NSDictionary *errorInfo = [error userInfo];
+            
+            SQLiteErrorCode = [[errorInfo valueForKey:NSSQLiteErrorDomain] integerValue];
+            
+            if (SQLiteErrorCode == 11) {
+                // if the error code is 11 'database disk image is malformed', delete and
+                // rebuild the SQLite db
+                if ([self resetCache]) {
+                    NSLog(@"Corrupt SQLite db deleted and rebuilt");
+                    //          [LifestreamComponent(ObservationManager) logAnnotation:@"Corrupt SQLite db deleted and rebuilt"];
+                }
+            } else {
+                // If we get an error, the change wasn't saved anyway. This way, at least
+                // we don't leave the context in a bad state for future saves because of
+                // *this* error--which could block all future changes from being saved.
+                NSLog(@"Error saving cache manager's managed object context, rolling back context:\n%@",  error);
+                [context rollback];
+            }
+        }
+    }];
+}
+
 
 - (BOOL)resetCache
 {

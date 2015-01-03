@@ -205,7 +205,6 @@
 
 #pragma mark Core Data cache
 
-<$if userInfo.entityIDKeyPath$>
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
 {
     return [NSEntityDescription entityForName:@"<$name$>" inManagedObjectContext:context];
@@ -269,14 +268,16 @@
     <$if userInfo.encrypted$>
     NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
     NSError *error;
-    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:error];
+    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
     NSString *password = cacheManager.encryptionKey;
-    if (password) {
-        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:nil];
-        managedObject.ciphertext = ciphertext;
+    if (password && !error) {
+        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:&error];
+        if (!error) {
+            managedObject.ciphertext = ciphertext;
+        }
     }
     <$else$>
-    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;<$break$><$endif$><$endforeach do$>
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     managedObject.<$Attribute.name$> = self.<$Attribute.name$>;
 	<$endif$><$endforeach do$>
@@ -344,7 +345,6 @@
 
     // Calling code will handle saving these changes to cacheContext.
 }
-<$endif$>
 
 #pragma mark Direct access
 

@@ -21,6 +21,8 @@
 
 - (NSManagedObjectContext *)cacheIOContext;
 
+- (void)saveCacheIOContext;
+
 - (NSString *)encryptionKey;
 
 @end

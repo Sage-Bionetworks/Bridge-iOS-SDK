@@ -121,6 +121,60 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"ResourceList" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super init]) {
+
+        self.total = managedObject.total;
+
+		for(NSManagedObject *itemsManagedObj in managedObject.items)
+		{
+            SBBBridgeObject *itemsObj = [[SBBBridgeObject alloc] initWithManagedObject:itemsManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if(itemsObj != nil)
+            {
+                [self addItemsObject:itemsObj];
+            }
+		}
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ResourceList" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.total = self.total;
+
+    if([self.items count] > 0) {
+        [managedObject removeItemsObjects];
+		for(SBBBridgeObject *obj in self.items) {
+            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            [managedObject addItemsObject:relMo];
+		}
+	}
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 - (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse

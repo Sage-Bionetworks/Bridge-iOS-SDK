@@ -151,6 +151,88 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"Schedule" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super init]) {
+
+        self.activityRef = managedObject.activityRef;
+
+        self.activityType = managedObject.activityType;
+
+        self.cronTrigger = managedObject.cronTrigger;
+
+        self.endsOn = managedObject.endsOn;
+
+        self.expires = managedObject.expires;
+
+        self.label = managedObject.label;
+
+        self.scheduleType = managedObject.scheduleType;
+
+        self.startsOn = managedObject.startsOn;
+
+		for(NSManagedObject *activitiesManagedObj in managedObject.activities)
+		{
+            SBBActivity *activitiesObj = [[SBBActivity alloc] initWithManagedObject:activitiesManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if(activitiesObj != nil)
+            {
+                [self addActivitiesObject:activitiesObj];
+            }
+		}
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Schedule" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.activityRef = self.activityRef;
+
+    managedObject.activityType = self.activityType;
+
+    managedObject.cronTrigger = self.cronTrigger;
+
+    managedObject.endsOn = self.endsOn;
+
+    managedObject.expires = self.expires;
+
+    managedObject.label = self.label;
+
+    managedObject.scheduleType = self.scheduleType;
+
+    managedObject.startsOn = self.startsOn;
+
+    if([self.activities count] > 0) {
+        [managedObject removeActivitiesObjects];
+		for(SBBActivity *obj in self.activities) {
+            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            [managedObject addActivitiesObject:relMo];
+		}
+	}
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 - (void)addActivitiesObject:(SBBActivity*)value_ settingInverse: (BOOL) setInverse

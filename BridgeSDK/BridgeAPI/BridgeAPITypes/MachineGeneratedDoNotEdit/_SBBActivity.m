@@ -97,6 +97,62 @@
 
 #pragma mark Core Data cache
 
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"Activity" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super init]) {
+
+        self.activityType = managedObject.activityType;
+
+        self.label = managedObject.label;
+
+        self.ref = managedObject.ref;
+
+            NSManagedObject *surveyManagedObj = managedObject.survey;
+        SBBGuidCreatedOnVersionHolder *surveyObj = [[SBBGuidCreatedOnVersionHolder alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(surveyObj != nil)
+        {
+          self.survey = surveyObj;
+        }
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Activity" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.activityType = self.activityType;
+
+    managedObject.label = self.label;
+
+    managedObject.ref = self.ref;
+
+    [cacheContext deleteObject:managedObject.survey];
+    NSManagedObject *relMo = [self.survey saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setSurvey:relMo];
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
 - (void) setSurvey: (SBBGuidCreatedOnVersionHolder*) survey_ settingInverse: (BOOL) setInverse
