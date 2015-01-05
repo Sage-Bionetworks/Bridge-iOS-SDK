@@ -11,6 +11,11 @@
 #import "SBBComponent.h"
 #import "SBBAuthManager.h"
 
+// SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define SBBBUNDLEIDSTRING @STRINGIZE2(SBBBUNDLEID)
+
 @class SBBBridgeObject;
 
 @protocol SBBCacheManagerProtocol <NSObject>

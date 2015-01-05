@@ -16,10 +16,6 @@
 #import "SBBTestAuthManagerDelegate.h"
 #import "SBBObjectManagerInternal.h"
 
-#define STRINGIZE(x) #x
-#define STRINGIZE2(x) STRINGIZE(x)
-#define SBBBUNDLEIDSTRING @STRINGIZE2(SBBBUNDLEID)
-
 @interface SBBObjectManagerTests : XCTestCase
 
 @property (nonatomic, strong) NSDictionary *jsonForTests;
@@ -47,6 +43,7 @@
         
         json =
         @{
+          @"guid": @"NotReallyAGuidButShouldWorkIfThere'sOnlyOne",
           @"type": @"TestBridgeObject",
           @"stringField": @"This is a string",
           @"shortField": @-2,
@@ -126,6 +123,7 @@
     SBBTestBridgeSubObject *subObject = [SBBTestBridgeSubObject new];
     subObject.stringField = @"thing1";
     SBBTestBridgeObject *object = [SBBTestBridgeObject new];
+    object.guid = [_jsonForTests @"guid"];
     object.stringField = _jsonForTests[@"stringField"];
     object.shortField = _jsonForTests[@"shortField"];
     object.longField = _jsonForTests[@"longField"];
@@ -147,6 +145,7 @@
     NSDictionary *json = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:object];
     
     XCTAssert([json isKindOfClass:[NSDictionary class]], @"Converted object to json dict");
+    XCTAssert([json[@"guid"] isEqualToString:object.guid], @"Correctly set guid");
     XCTAssert([json[@"type"] isEqualToString:@"TestBridgeObject"], @"Correctly set type field");
     XCTAssert([json[@"stringField"] isEqualToString:object.stringField], @"Correctly converted string field");
     XCTAssert([json[@"shortField"] isEqual:object.shortField], @"Correctly converted short field");

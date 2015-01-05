@@ -67,6 +67,7 @@
 
 /* Begin PBXBuildFile section */
 		602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */; };
+		602EEE631A5B0E9E00C776FC /* SBBCacheManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 602EEE621A5B0E9E00C776FC /* SBBCacheManagerTests.m */; };
 		606FDE141A23E84800898466 /* ModelObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE131A23E84800898466 /* ModelObjectInternal.h */; };
 		606FDE161A23EB4E00898466 /* SBBObjectManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE151A23EB4E00898466 /* SBBObjectManagerInternal.h */; };
 		606FDE211A2F9DC800898466 /* _SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -312,6 +313,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		602EEE621A5B0E9E00C776FC /* SBBCacheManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManagerTests.m; sourceTree = "<group>"; };
 		606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCryptor.xcodeproj; path = Submodules/RNCryptor/RNCryptor.xcodeproj; sourceTree = "<group>"; };
 		606FDE0B1A1D70ED00898466 /* generate_namespace_header.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_namespace_header.sh; sourceTree = "<group>"; };
 		606FDE131A23E84800898466 /* ModelObjectInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelObjectInternal.h; sourceTree = "<group>"; };
@@ -715,6 +717,7 @@
 				8026D6A219EC531F008942B0 /* SBBAuthManagerTests.m */,
 				D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerTests.m */,
 				8017AF6719D9D909001AF9BA /* SBBObjectManagerTests.m */,
+				602EEE621A5B0E9E00C776FC /* SBBCacheManagerTests.m */,
 				8026D69C19EC4025008942B0 /* SBBProfileManagerTests.m */,
 				80E60DAA19FB0D7E0053D166 /* SBBScheduleManagerTests.m */,
 				8026D6A419EC56E8008942B0 /* SBBSurveyManagerTests.m */,
@@ -1300,6 +1303,7 @@
 			files = (
 				80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */,
 				80855F6019BE258C006601C7 /* BridgeSDKTests.m in Sources */,
+				602EEE631A5B0E9E00C776FC /* SBBCacheManagerTests.m in Sources */,
 				80104A4A19D3631E001F2573 /* MockNetworkManager.m in Sources */,
 				D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerTests.m in Sources */,
 				8017AF6819D9D909001AF9BA /* SBBObjectManagerTests.m in Sources */,
