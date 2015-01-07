@@ -56,18 +56,18 @@
 {
   NSString *surveyRef = self.sampleRefTextField.text;
   
-  switch (SBBComponent(SBBNetworkManager).environment) {
-    case SBBEnvironmentDev:
-      surveyRef = @"/api/v1/surveys/9e948494-491d-48c5-b465-7398c727da5e/2014-11-26T21:40:52.183Z";
-      break;
-      
-    case SBBEnvironmentStaging:
-      surveyRef = @"/api/v1/surveys/9e948494-491d-48c5-b465-7398c727da5e/2014-11-26T21:40:52.183Z";
-      break;
-      
-    default:
-      break;
-  }
+//  switch (SBBComponent(SBBNetworkManager).environment) {
+//    case SBBEnvironmentDev:
+//      surveyRef = @"/api/v1/surveys/9e948494-491d-48c5-b465-7398c727da5e/2014-11-26T21:40:52.183Z";
+//      break;
+//      
+//    case SBBEnvironmentStaging:
+//      surveyRef = @"/api/v1/surveys/9e948494-491d-48c5-b465-7398c727da5e/2014-11-26T21:40:52.183Z";
+//      break;
+//      
+//    default:
+//      break;
+//  }
   
   return surveyRef;
 }
