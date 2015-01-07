@@ -322,6 +322,7 @@
 		606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBIdentifierHolder.m; sourceTree = "<group>"; };
 		606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBIdentifierHolder.h; sourceTree = "<group>"; };
 		606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBIdentifierHolder.m; sourceTree = "<group>"; };
+		60D35CA11A5DFEA00019459B /* BridgeSDKInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeSDKInternal.h; sourceTree = "<group>"; };
 		60F1E3FC1A38E871009B380E /* machine.ih.motemplate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = machine.ih.motemplate; sourceTree = "<group>"; };
 		60F1E3FE1A392F7D009B380E /* _SBBBridgeObjectInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObjectInternal.h; sourceTree = "<group>"; };
 		60F1E4001A3932B5009B380E /* human.ih.motemplate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = human.ih.motemplate; sourceTree = "<group>"; };
@@ -687,6 +688,7 @@
 			children = (
 				8045458C1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch */,
 				80855F5519BE258C006601C7 /* BridgeSDK.h */,
+				60D35CA11A5DFEA00019459B /* BridgeSDKInternal.h */,
 				8026BD1D19C883FC0077F3EB /* BridgeSDK.m */,
 				804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */,
 				80BB09F519C222CF00E419A1 /* BridgeAPI */,
