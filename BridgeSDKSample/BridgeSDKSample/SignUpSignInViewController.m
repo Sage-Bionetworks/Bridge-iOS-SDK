@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *resetPasswordTextField;
 
 - (IBAction)didTouchSignUpSignInButton:(id)sender;
+- (IBAction)didTouchResendVerificationButton:(id)sender;
 - (IBAction)didTouchRequestPasswordResetButton:(id)sender;
 - (IBAction)didTouchResetPasswordButton:(id)sender;
 @end
@@ -56,7 +57,7 @@
                     [self finishUp];
                     NSLog(@"Signed up successfully!");
                 } else {
-                    NSLog(@"Sign up failed: %@", error.description);
+                    NSLog(@"Sign up failed:\n%@", error);
                 }
             }];
         } else {
@@ -65,10 +66,25 @@
                     [self finishUp];
                     NSLog(@"Signed in successfully to existing account!");
                 } else {
-                    NSLog(@"Sign in failed: %@", error.description);
+                    NSLog(@"Sign in failed:\n%@", error);
                 }
             }];
         }
+    }
+}
+
+- (IBAction)didTouchResendVerificationButton:(id)sender {
+    NSString *emailAddress = _emailAddressTextField.text;
+    
+    if (emailAddress.length) {
+        [SBBComponent(SBBAuthManager) resendEmailVerification:emailAddress completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            if (!error) {
+                [self finishUp];
+                NSLog(@"%@", [responseObject objectForKey:@"message"]);
+            } else {
+                NSLog(@"Error attempting to re-send email verification:\n%@", error);
+            }
+        }];
     }
 }
 
