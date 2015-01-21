@@ -15,7 +15,7 @@
     </entity>
     <entity name="BooleanConstraints" representedClassName="SBBBooleanConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="BridgeObject" representedClassName="SBBBridgeObject" isAbstract="YES" syncable="YES">
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES">
+        <attribute name="type" attributeType="String" syncable="YES">
             <userInfo>
                 <entry key="mogenerator.readonly" value="YES"/>
             </userInfo>
@@ -35,8 +35,11 @@
         <attribute name="maxValue" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="minValue" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="step" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years|inches|feet|yards|miles|ounces|pounds|pints|quarts|gallons|centimeters|meters|kilometers|grams|kilograms|milliliters|cubic_centimeters|liters|cubic_meters)$" syncable="YES"/>
     </entity>
-    <entity name="DurationConstraints" representedClassName="SBBDurationConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
+    <entity name="DurationConstraints" representedClassName="SBBDurationConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="unit" attributeType="String" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years)$" syncable="YES"/>
+    </entity>
     <entity name="GuidCreatedOnVersionHolder" representedClassName="SBBGuidCreatedOnVersionHolder" parentEntity="BridgeObject" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -49,6 +52,7 @@
         <attribute name="maxValue" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="minValue" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="step" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years|inches|feet|yards|miles|ounces|pounds|pints|quarts|gallons|centimeters|meters|kilometers|grams|kilograms|milliliters|cubic_centimeters|liters|cubic_meters)$" syncable="YES"/>
     </entity>
     <entity name="MultiValueConstraints" representedClassName="SBBMultiValueConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="allowMultiple" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -185,14 +189,14 @@
     <elements>
         <element name="Activity" positionX="-9" positionY="90" width="128" height="103"/>
         <element name="BooleanConstraints" positionX="0" positionY="108" width="128" height="45"/>
-        <element name="BridgeObject" positionX="-54" positionY="-9" width="128" height="58"/>
+        <element name="BridgeObject" positionX="-54" positionY="-9" width="128" height="60"/>
         <element name="DateConstraints" positionX="18" positionY="126" width="128" height="90"/>
         <element name="DateTimeConstraints" positionX="36" positionY="135" width="128" height="90"/>
-        <element name="DecimalConstraints" positionX="-9" positionY="99" width="128" height="90"/>
-        <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="45"/>
+        <element name="DecimalConstraints" positionX="-9" positionY="99" width="128" height="105"/>
+        <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="58"/>
         <element name="GuidCreatedOnVersionHolder" positionX="0" positionY="99" width="128" height="90"/>
         <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="60"/>
-        <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="90"/>
+        <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="103"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="88"/>
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
         <element name="Schedule" positionX="-9" positionY="81" width="128" height="178"/>

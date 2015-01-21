@@ -37,6 +37,8 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
+        self.unit = [dictionary objectForKey:@"unit"];
+
 	}
 
 	return self;
@@ -45,6 +47,8 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+
+    [dict setObjectIfNotNil:self.unit forKey:@"unit"];
 
 	return dict;
 }
