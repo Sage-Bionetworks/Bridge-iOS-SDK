@@ -31,6 +31,8 @@
 
 @property (nonatomic, assign) double stepValue;
 
+@property (nonatomic, strong) NSString* unit;
+
 @end
 
 /** \ingroup DataModel */
@@ -91,6 +93,8 @@
 
     self.step = [dictionary objectForKey:@"step"];
 
+    self.unit = [dictionary objectForKey:@"unit"];
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -102,6 +106,8 @@
     [dict setObjectIfNotNil:self.minValue forKey:@"minValue"];
 
     [dict setObjectIfNotNil:self.step forKey:@"step"];
+
+    [dict setObjectIfNotNil:self.unit forKey:@"unit"];
 
 	return dict;
 }
@@ -132,6 +138,8 @@
 
         self.step = managedObject.step;
 
+        self.unit = managedObject.unit;
+
     }
 
     return self;
@@ -156,6 +164,8 @@
     managedObject.minValue = self.minValue;
 
     managedObject.step = self.step;
+
+    managedObject.unit = self.unit;
 
     // Calling code will handle saving these changes to cacheContext.
 }

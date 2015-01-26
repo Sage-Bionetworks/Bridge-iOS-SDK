@@ -19,6 +19,8 @@
  */
 @interface NSManagedObject (DurationConstraints)
 
+@property (nonatomic, strong) NSString* unit;
+
 @end
 
 /** \ingroup DataModel */
@@ -43,11 +45,15 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.unit = [dictionary objectForKey:@"unit"];
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+
+    [dict setObjectIfNotNil:self.unit forKey:@"unit"];
 
 	return dict;
 }
@@ -72,6 +78,8 @@
 
     if (self == [super init]) {
 
+        self.unit = managedObject.unit;
+
     }
 
     return self;
@@ -90,6 +98,8 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
+
+    managedObject.unit = self.unit;
 
     // Calling code will handle saving these changes to cacheContext.
 }

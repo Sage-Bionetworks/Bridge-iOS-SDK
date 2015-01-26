@@ -230,6 +230,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [_networkManager post:@"/api/v1/auth/signUp" headers:nil parameters:@{@"email":email, @"username":username, @"password":password} completion:completion];
 }
 
+- (NSURLSessionDataTask *)resendEmailVerification:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [_networkManager post:@"/api/v1/auth/resendEmailVerification" headers:nil parameters:@{@"email":email} completion:completion];
+}
+
 - (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [_networkManager post:@"/api/v1/auth/signIn" headers:nil parameters:@{@"username":username, @"password":password} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
