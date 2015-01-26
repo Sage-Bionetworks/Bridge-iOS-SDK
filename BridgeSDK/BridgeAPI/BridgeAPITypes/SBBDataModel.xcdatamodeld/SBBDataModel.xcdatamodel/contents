@@ -46,7 +46,7 @@
     <entity name="DurationConstraints" representedClassName="" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="unit" attributeType="String" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years)$" syncable="YES"/>
     </entity>
-    <entity name="GuidCreatedOnVersionHolder" representedClassName="SBBGuidCreatedOnVersionHolder" parentEntity="BridgeObject" syncable="YES">
+    <entity name="GuidCreatedOnVersionHolder" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="version" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -207,7 +207,7 @@
         <element name="DateTimeConstraints" positionX="36" positionY="135" width="128" height="90"/>
         <element name="DecimalConstraints" positionX="-9" positionY="99" width="128" height="105"/>
         <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="58"/>
-        <element name="GuidCreatedOnVersionHolder" positionX="0" positionY="99" width="128" height="90"/>
+        <element name="GuidCreatedOnVersionHolder" positionX="0" positionY="99" width="128" height="105"/>
         <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="60"/>
         <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="103"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="88"/>
