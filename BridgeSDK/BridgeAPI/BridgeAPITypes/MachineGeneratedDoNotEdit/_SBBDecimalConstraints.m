@@ -73,6 +73,8 @@
 
         self.step = [dictionary objectForKey:@"step"];
 
+        self.unit = [dictionary objectForKey:@"unit"];
+
 	}
 
 	return self;
@@ -87,6 +89,8 @@
     [dict setObjectIfNotNil:self.minValue forKey:@"minValue"];
 
     [dict setObjectIfNotNil:self.step forKey:@"step"];
+
+    [dict setObjectIfNotNil:self.unit forKey:@"unit"];
 
 	return dict;
 }

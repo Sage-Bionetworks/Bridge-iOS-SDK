@@ -37,6 +37,8 @@
   if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
+        self.unit = [dictionary objectForKey:@"unit"];
+
 	}
 
 	return self;
@@ -45,6 +47,8 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+
+    [dict setObjectIfNotNil:self.unit forKey:@"unit"];
 
 	return dict;
 }

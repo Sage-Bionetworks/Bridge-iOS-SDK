@@ -617,6 +617,14 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
             retryObject.retryBlock = nil;
         }
     }
+    else
+    {
+        if (retryObject.completionBlock)
+        {
+            retryObject.completionBlock(task, nil, apcError);
+        }
+        retryObject.retryBlock = nil;
+    }
 }
 
 - (BOOL) checkForTemporaryErrors:(NSInteger) errorCode
