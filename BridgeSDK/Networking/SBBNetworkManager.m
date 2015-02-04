@@ -19,7 +19,8 @@ SBBEnvironment gSBBDefaultEnvironment;
 const NSInteger kMaxRetryCount = 5;
 
 static SBBNetworkManager * sharedInstance;
-NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
+NSString *kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
+NSString *kAPIPrefix = @"webservices";
 
 #pragma mark - APC Retry Object - Keeps track of retry count
 
@@ -88,6 +89,7 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 @property (nonatomic, strong) Reachability * internetReachability;
 @property (nonatomic, strong) Reachability * serverReachability;
 @property (nonatomic, strong) NSString * baseURL;
+@property (nonatomic, strong) NSString * bridgeHost;
 @property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
 @property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
 
@@ -97,6 +99,8 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
 
+- (instancetype)initWithBaseURL:(NSString *)baseURL bridgeHost:(NSString *)bridgeHost;
+
 @end
 
 @implementation SBBNetworkManager
@@ -105,17 +109,15 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
 {
-  static NSString *envFormatStrings[] = {
-    @"%@",
-    @"%@-staging",
-    @"%@-develop",
-    @"%@-custom"
-  };
   NSString *baseURL = nil;
+  NSString *host = nil;
 
-  if ([prefix length] > 0 && (NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
-    NSString *firstComponent = [NSString stringWithFormat:envFormatStrings[environment], prefix];
-    baseURL = [NSString stringWithFormat:@"https://%@.%@", firstComponent, path];
+  if ([prefix length] > 0) {
+    host = [self hostForEnvironment:environment appURLPrefix:prefix baseURLPath:path];
+  }
+  
+  if (host.length) {
+    baseURL = [NSString stringWithFormat:@"https://%@", host];
   } else {
     baseURL = path;
   }
@@ -123,11 +125,33 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
   return baseURL;
 }
 
++ (NSString *)hostForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
+{
+    static NSString *envFormatStrings[] = {
+        @"%@",
+        @"%@-staging",
+        @"%@-develop",
+        @"%@-custom"
+    };
+    NSString *host = nil;
+
+    if ([prefix length] > 0 && (NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
+        NSString *firstComponent = [NSString stringWithFormat:envFormatStrings[environment], prefix];
+        host = [NSString stringWithFormat:@"%@.%@", firstComponent, path];
+    } else {
+        host = nil;
+    }
+    
+    return host;
+}
+
 + (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath
 {
-  NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:prefix baseURLPath:baseURLPath];
+  NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:baseURLPath];
+  NSString *bridgeHost = [self hostForEnvironment:environment appURLPrefix:prefix baseURLPath:baseURLPath];
   SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL];
   networkManager.environment = environment;
+  networkManager.bridgeHost = bridgeHost;
   return networkManager;
 }
 
@@ -143,8 +167,9 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
   dispatch_once(&onceToken, ^{
     SBBEnvironment environment = gSBBDefaultEnvironment;
     
-    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:gSBBAppURLPrefix baseURLPath:@"sagebridge.org"];
-    shared = [[self alloc] initWithBaseURL:baseURL];
+    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
+    NSString *bridgeHost = [self hostForEnvironment:environment appURLPrefix:gSBBAppURLPrefix baseURLPath:@"sagebridge.org"];
+    shared = [[self alloc] initWithBaseURL:baseURL bridgeHost:bridgeHost];
     shared.environment = environment;
   });
   
@@ -157,17 +182,23 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 
 - (instancetype) initWithBaseURL: (NSString*) baseURL
 {
+    return [self initWithBaseURL:baseURL bridgeHost:nil];
+}
+
+- (instancetype) initWithBaseURL: (NSString*) baseURL bridgeHost: (NSString*)bridgeHost
+{
     self = [super init]; //Using [self class] instead of APCNetworkManager to enable subclassing
     if (self) {
         self.baseURL = baseURL;
+        self.bridgeHost = bridgeHost;
         self.internetReachability = [Reachability reachabilityForInternetConnection];
         NSURL *url = [NSURL URLWithString:baseURL];
         self.serverReachability = [Reachability reachabilityWithHostName:[url host]]; //Check if only hostname is required
         [self.serverReachability startNotifier]; //Turning on ONLY server reachability notifiers
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reachabilityChanged:) name:kReachabilityChangedNotification object:nil];
-      self.environment = SBBEnvironmentCustom;
-      self.uploadCompletionHandlers = [NSMutableDictionary dictionary];
-      self.downloadCompletionHandlers = [NSMutableDictionary dictionary];
+        self.environment = SBBEnvironmentCustom;
+        self.uploadCompletionHandlers = [NSMutableDictionary dictionary];
+        self.downloadCompletionHandlers = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -464,6 +495,9 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
   mutableRequest.HTTPMethod = method;
   [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
   [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
+  if (_bridgeHost) {
+    [mutableRequest setValue:_bridgeHost forHTTPHeaderField:@"Bridge-Host"];
+  }
   
   if (headers) {
     for (NSString *header in headers.allKeys) {
@@ -479,6 +513,9 @@ NSString * kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
     
     [mutableRequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:0 error:error]];
   }
+#if DEBUG
+    NSLog(@"Prepared request--URL:\n%@\nHeaders:\n%@", mutableRequest.URL.absoluteString, mutableRequest.allHTTPHeaderFields);
+#endif
   
   return mutableRequest;
 }
