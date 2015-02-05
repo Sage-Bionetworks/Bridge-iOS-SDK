@@ -88,8 +88,19 @@ NSString *kAPIPrefix = @"webservices";
 
 @property (nonatomic, strong) Reachability * internetReachability;
 @property (nonatomic, strong) Reachability * serverReachability;
+
+// baseURL is the scheme & host part of the URL for hitting REST API endpoints. For Bridge it will be built
+// up from the prefix ("webservices"), the environment (prod, dev, staging), and the domain "sagebridge.org".
+// For non-Bridge APIs it will just be given as a string representing the common prefix for that API's
+// endpoint URLs.
 @property (nonatomic, strong) NSString * baseURL;
+
+// bridgeHost is the host part of the web URL for a study, built up from the prefix (e.g. "parkinsons"), the
+// environment (prod, dev, staging), and the domain "sagebridge.org". It is used in the Bridge-Host header
+// to identify the study for which a request to the Bridge baseURL is intended (see above). For non-Bridge
+// APIs it will be nil, and will not be sent as a header.
 @property (nonatomic, strong) NSString * bridgeHost;
+
 @property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
 @property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
 
