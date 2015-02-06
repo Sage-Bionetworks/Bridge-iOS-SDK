@@ -23,8 +23,6 @@
  */
 @interface NSManagedObject (SurveyAnswer)
 
-@property (nonatomic, strong) NSString* answer;
-
 @property (nonatomic, strong) NSDate* answeredOn;
 
 @property (nonatomic, strong) NSArray* answers;
@@ -73,8 +71,6 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.answer = [dictionary objectForKey:@"answer"];
-
     self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
 
     self.answers = [dictionary objectForKey:@"answers"];
@@ -90,8 +86,6 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
-
-    [dict setObjectIfNotNil:self.answer forKey:@"answer"];
 
     [dict setObjectIfNotNil:[self.answeredOn ISO8601String] forKey:@"answeredOn"];
 

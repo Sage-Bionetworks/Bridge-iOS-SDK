@@ -21,10 +21,6 @@
  */
 @interface NSManagedObject (SurveyQuestion)
 
-@property (nonatomic, strong) NSString* guid;
-
-@property (nonatomic, strong) NSString* identifier;
-
 @property (nonatomic, strong) NSString* prompt;
 
 @property (nonatomic, strong) NSString* uiHint;
@@ -57,10 +53,6 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.guid = [dictionary objectForKey:@"guid"];
-
-    self.identifier = [dictionary objectForKey:@"identifier"];
-
     self.prompt = [dictionary objectForKey:@"prompt"];
 
     self.uiHint = [dictionary objectForKey:@"uiHint"];
@@ -77,10 +69,6 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
-
-    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
-
-    [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
     [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
 
@@ -113,10 +101,6 @@
 
     if (self == [super init]) {
 
-        self.guid = managedObject.guid;
-
-        self.identifier = managedObject.identifier;
-
         self.prompt = managedObject.prompt;
 
         self.uiHint = managedObject.uiHint;
@@ -147,10 +131,6 @@
 {
 
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
-
-    managedObject.guid = self.guid;
-
-    managedObject.identifier = self.identifier;
 
     managedObject.prompt = self.prompt;
 

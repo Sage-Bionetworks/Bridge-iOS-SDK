@@ -1,29 +1,31 @@
 //
-//  SBBSurveyQuestionOption.m
+//  SBBSurveyInfoScreen.m
 //
 //  $Id$
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyQuestionOption.h instead.
+// Make changes to SBBSurveyInfoScreen.h instead.
 //
 
-#import "_SBBSurveyQuestionOption.h"
+#import "_SBBSurveyInfoScreen.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBImage.h"
 
-@interface _SBBSurveyQuestionOption()
+@interface _SBBSurveyInfoScreen()
 
 @end
 
 /*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
  */
-@interface NSManagedObject (SurveyQuestionOption)
+@interface NSManagedObject (SurveyInfoScreen)
 
-@property (nonatomic, strong) NSString* label;
+@property (nonatomic, strong) NSString* prompt;
 
-@property (nonatomic, strong) NSString* value;
+@property (nonatomic, strong) NSString* promptDetail;
+
+@property (nonatomic, strong) NSString* title;
 
 @property (nonatomic, strong, readwrite) NSManagedObject *image;
 
@@ -33,7 +35,7 @@
 
 /** \ingroup DataModel */
 
-@implementation _SBBSurveyQuestionOption
+@implementation _SBBSurveyInfoScreen
 
 - (instancetype)init
 {
@@ -53,9 +55,11 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.label = [dictionary objectForKey:@"label"];
+    self.prompt = [dictionary objectForKey:@"prompt"];
 
-    self.value = [dictionary objectForKey:@"value"];
+    self.promptDetail = [dictionary objectForKey:@"promptDetail"];
+
+    self.title = [dictionary objectForKey:@"title"];
 
         NSDictionary *imageDict = [dictionary objectForKey:@"image"];
     if(imageDict != nil)
@@ -70,9 +74,11 @@
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
-    [dict setObjectIfNotNil:self.label forKey:@"label"];
+    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
 
-    [dict setObjectIfNotNil:self.value forKey:@"value"];
+    [dict setObjectIfNotNil:self.promptDetail forKey:@"promptDetail"];
+
+    [dict setObjectIfNotNil:self.title forKey:@"title"];
 
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.image] forKey:@"image"];
 
@@ -93,7 +99,7 @@
 
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
 {
-    return [NSEntityDescription entityForName:@"SurveyQuestionOption" inManagedObjectContext:context];
+    return [NSEntityDescription entityForName:@"SurveyInfoScreen" inManagedObjectContext:context];
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
@@ -101,9 +107,11 @@
 
     if (self == [super init]) {
 
-        self.label = managedObject.label;
+        self.prompt = managedObject.prompt;
 
-        self.value = managedObject.value;
+        self.promptDetail = managedObject.promptDetail;
+
+        self.title = managedObject.title;
 
             NSManagedObject *imageManagedObj = managedObject.image;
         SBBImage *imageObj = [[SBBImage alloc] initWithManagedObject:imageManagedObj objectManager:objectManager cacheManager:cacheManager];
@@ -119,7 +127,7 @@
 
 - (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestionOption" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyInfoScreen" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -132,9 +140,11 @@
 
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.label = self.label;
+    managedObject.prompt = self.prompt;
 
-    managedObject.value = self.value;
+    managedObject.promptDetail = self.promptDetail;
+
+    managedObject.title = self.title;
 
     [cacheContext deleteObject:managedObject.image];
     NSManagedObject *relMo = [self.image saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];

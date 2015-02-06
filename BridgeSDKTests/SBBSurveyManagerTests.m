@@ -29,7 +29,21 @@
     "\"name\":\"General Blood Pressure Survey\",\n"
     "\"identifier\":\"bloodpressure\",\n"
     "\"published\":false,\n"
-    "\"questions\":[\n"
+    "\"elements\":[\n"
+                 "{\n"
+                   "\"guid\":\"not-really-a-guid\",\n"
+                   "\"identifier\":\"bp_survey_intro\",\n"
+                   "\"image\":{\n"
+                     "\"source\":\"http://doctormurray.com/wp-content/uploads/2014/03/highbloodpressure.jpg\",\n"
+                     "\"width\":640.5,\n"
+                     "\"height\":480.5,\n"
+                     "\"type\":\"Image\"\n"
+                   "},\n"
+                   "\"prompt\":\"Here are some questions about your blood pressure.\",\n"
+                   "\"promptDetail\":\"We want to know about your blood pressure.\",\n"
+                   "\"title\":\"Blood Pressure Survey\",\n"
+                   "\"type\":\"SurveyInfoScreen\"\n"
+                 "},\n"
                  "{\n"
                    "\"guid\":\"e872f85a-c157-457b-890f-9e28eeed6efa\",\n"
                    "\"identifier\":\"high_bp\",\n"
@@ -225,7 +239,10 @@
   SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
   [sMan getSurveyByRef:@"/api/v1/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/2014-10-09T23:30:44.747Z" completion:^(id survey, NSError *error) {
     XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
-    SBBSurveyQuestion *question0 = ((SBBSurvey *)survey).questions[0];
+    SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
+    XCTAssert([info0 isKindOfClass:[SBBSurveyInfoScreen class]], @"Survey Info Screen converted to SBBSurveyInfoScreen");
+    XCTAssert([info0.image isKindOfClass:[SBBImage class]], @"Image converted to SBBImage");
+    SBBSurveyQuestion *question0 = ((SBBSurvey *)survey).elements[1];
     XCTAssert([question0 isKindOfClass:[SBBSurveyQuestion class]], @"Questions converted to SBBSurveyQuestion");
     XCTAssert([question0.constraints isKindOfClass:[SBBSurveyConstraints class]], @"Constraints converted to SBBSurveyConstraints");
   }];
@@ -241,7 +258,10 @@
   SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
   [sMan getSurveyByGuid:guid createdOn:createdOn completion:^(id survey, NSError *error) {
     XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
-    SBBSurveyQuestion *question0 = ((SBBSurvey *)survey).questions[0];
+    SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
+    XCTAssert([info0 isKindOfClass:[SBBSurveyInfoScreen class]], @"Survey Info Screen converted to SBBSurveyInfoScreen");
+    XCTAssert([info0.image isKindOfClass:[SBBImage class]], @"Image converted to SBBImage");
+    SBBSurveyQuestion *question0 = ((SBBSurvey *)survey).elements[1];
     XCTAssert([question0 isKindOfClass:[SBBSurveyQuestion class]], @"Questions converted to SBBSurveyQuestion");
     XCTAssert([question0.constraints isKindOfClass:[SBBSurveyConstraints class]], @"Constraints converted to SBBSurveyConstraints");
   }];
@@ -251,17 +271,55 @@
   NSMutableArray *answers = [NSMutableArray array];
   SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
   a1.questionGuid = @"e872f85a-c157-457b-890f-9e28eeed6efa";
-  a1.answer = @"true";
+  a1.answers = @[@"true"];
   a1.answeredOn = [NSDate date];
   a1.client = @"test";
   a1.declined = @NO;
   [answers addObject:a1];
   SBBSurveyAnswer *a2 = [a1 copy];
   a2.questionGuid = @"c374b293-a060-47c9-bd99-2738837967a8";
-  a2.answer = [[NSDate dateWithTimeIntervalSinceNow:-5000000.0] ISO8601String];
+  a2.answers = @[[[NSDate dateWithTimeIntervalSinceNow:-5000000.0] ISO8601String]];
   [answers addObject:a2];
   
   return answers;
+}
+
+- (void)testSubmitAnswersToSurveyBySBBSurvey {
+    NSDictionary *identifierHolder =
+    @{
+      @"type": @"IdentifierHolder",
+      @"identifier": @"ThisIsn'tAGuid"
+      };
+    NSString *endpoint = @"/api/v1/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/2014-10-09T23:30:44.747Z";
+    [self.mockNetworkManager setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    SBBObjectManager *oMan = [SBBObjectManager objectManager];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+    SBBSurvey *survey = [oMan objectFromBridgeJSON:_sampleSurveyJSON];
+    NSArray *answers = [self someAnswers];
+    [sMan submitAnswers:answers toSurvey:survey completion:^(id identifierHolder, NSError *error) {
+        XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
+    }];
+}
+
+- (void)testSubmitAnswersToSurveyBySBBSurveyWithResponseGuid
+{
+    NSDictionary *identifierHolder =
+    @{
+      @"type": @"IdentifierHolder",
+      @"identifier": @"ThisIsn'tAGuid"
+      };
+    NSString *surveyRef = @"/api/v1/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/2014-10-09T23:30:44.747Z";
+    NSString *responseIdentifier = identifierHolder[@"identifier"];
+    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", surveyRef, responseIdentifier];
+    [self.mockNetworkManager setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    SBBObjectManager *oMan = [SBBObjectManager objectManager];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+    SBBSurvey *survey = [oMan objectFromBridgeJSON:_sampleSurveyJSON];
+    NSArray *answers = [self someAnswers];
+    [sMan submitAnswers:answers toSurvey:survey withResponseIdentifier:responseIdentifier completion:^(id identifierHolder, NSError *error) {
+        XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
+        XCTAssert([responseIdentifier isEqualToString:((SBBIdentifierHolder *)identifierHolder).identifier], @"Response identifier is equal to what was specified");
+    }];
 }
 
 - (void)testSubmitAnswersToSurveyByRef {

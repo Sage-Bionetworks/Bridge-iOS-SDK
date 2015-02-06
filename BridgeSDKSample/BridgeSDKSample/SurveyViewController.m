@@ -17,7 +17,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *createdOnTextField;
 @property (weak, nonatomic) IBOutlet UITextField *guidTextField;
-@property (weak, nonatomic) IBOutlet UITextField *numQuestionsTextField;
+@property (weak, nonatomic) IBOutlet UITextField *numElementsTextField;
 @property (weak, nonatomic) IBOutlet UITextField *sampleRefTextField;
 @property (weak, nonatomic) IBOutlet UITextField *responseIdentifierTextField;
 
@@ -68,7 +68,7 @@
 //    default:
 //      break;
 //  }
-  
+
   return surveyRef;
 }
 
@@ -112,7 +112,7 @@
           _nameTextField.text = sbbSurvey.name;
           _createdOnTextField.text = [sbbSurvey.createdOn description];
           _guidTextField.text = sbbSurvey.guid;
-          _numQuestionsTextField.text = [NSString stringWithFormat:@"%lu", (unsigned long)sbbSurvey.questions.count];
+          _numElementsTextField.text = [NSString stringWithFormat:@"%lu", (unsigned long)sbbSurvey.elements.count];
         });
       }
     }
@@ -123,12 +123,15 @@
 {
     NSMutableArray *answers = [NSMutableArray array];
     for (NSUInteger i = start; i <= end; ++i) {
-        SBBSurveyQuestion *question = _fetchedSurvey.questions[i];
+        SBBSurveyQuestion *question = _fetchedSurvey.elements[i];
+        if (![question isKindOfClass:[SBBSurveyQuestion class]]) {
+            continue;
+        }
         SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
         a1.questionGuid = question.guid;
         id answer_s_ = [self answer_s_ForQuestion:question];
         if ([answer_s_ isKindOfClass:[NSString class]]) {
-            a1.answer = answer_s_;
+            a1.answers = @[answer_s_];
         } else if ([answer_s_ isKindOfClass:[NSArray class]]) {
             a1.answers = answer_s_;
         }
@@ -146,18 +149,24 @@
 }
 
 - (IBAction)didTouchSendSampleAnswersButton:(id)sender {
-  [SBBComponent(SBBSurveyManager) submitAnswers:[self someAnswers] toSurveyByRef:[self surveyRef] withResponseIdentifier:self.responseIdentifierTextField.text completion:^(id identifierHolder, NSError *error) {
-    if (identifierHolder) {
-      id identifierHolderJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:identifierHolder];
-      NSLog(@"Identifier holder for new survey response (converted back to JSON for dump):\n%@", identifierHolderJSON);
-      if ([identifierHolder isKindOfClass:[SBBIdentifierHolder class]]) {
-        self.responseIdentifier = ((SBBIdentifierHolder *)identifierHolder).identifier;
-      }
+    SBBSurveyManagerSubmitAnswersCompletionBlock submitCompletionBlock = [^(id identifierHolder, NSError *error){
+        if (identifierHolder) {
+            id identifierHolderJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:identifierHolder];
+            NSLog(@"Identifier holder for new survey response (converted back to JSON for dump):\n%@", identifierHolderJSON);
+            if ([identifierHolder isKindOfClass:[SBBIdentifierHolder class]]) {
+                self.responseIdentifier = ((SBBIdentifierHolder *)identifierHolder).identifier;
+            }
+        }
+        if (error) {
+            NSLog(@"Error:\n%@", error);
+        }
+    } copy];
+    
+    if (_fetchedSurvey) {
+        [SBBComponent(SBBSurveyManager) submitAnswers:[self someAnswers] toSurvey:_fetchedSurvey withResponseIdentifier:self.responseIdentifierTextField.text completion:submitCompletionBlock];
+    } else {
+        [SBBComponent(SBBSurveyManager) submitAnswers:[self someAnswers] toSurveyByRef:[self surveyRef] withResponseIdentifier:self.responseIdentifierTextField.text completion:submitCompletionBlock];
     }
-    if (error) {
-      NSLog(@"Error:\n%@", error);
-    }
-  }];
 }
 
 - (IBAction)didTouchFetchResultsButton:(id)sender {
