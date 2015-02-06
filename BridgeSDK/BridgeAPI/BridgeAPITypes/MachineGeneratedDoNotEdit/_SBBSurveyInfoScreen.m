@@ -1,22 +1,22 @@
 //
-//  SBBSurveyQuestionOption.m
+//  SBBSurveyInfoScreen.m
 //
 //  $Id$
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyQuestionOption.h instead.
+// Make changes to SBBSurveyInfoScreen.h instead.
 //
 
-#import "_SBBSurveyQuestionOption.h"
+#import "_SBBSurveyInfoScreen.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBSurveyQuestionOption()
+@interface _SBBSurveyInfoScreen()
 
 @end
 
 /** \ingroup DataModel */
 
-@implementation _SBBSurveyQuestionOption
+@implementation _SBBSurveyInfoScreen
 
 - (id)init
 {
@@ -39,9 +39,11 @@
 
         self.image = [dictionary objectForKey:@"image"];
 
-        self.label = [dictionary objectForKey:@"label"];
+        self.prompt = [dictionary objectForKey:@"prompt"];
 
-        self.value = [dictionary objectForKey:@"value"];
+        self.promptDetail = [dictionary objectForKey:@"promptDetail"];
+
+        self.title = [dictionary objectForKey:@"title"];
 
 	}
 
@@ -54,9 +56,11 @@
 
     [dict setObjectIfNotNil:self.image forKey:@"image"];
 
-    [dict setObjectIfNotNil:self.label forKey:@"label"];
+    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
 
-    [dict setObjectIfNotNil:self.value forKey:@"value"];
+    [dict setObjectIfNotNil:self.promptDetail forKey:@"promptDetail"];
+
+    [dict setObjectIfNotNil:self.title forKey:@"title"];
 
 	return dict;
 }

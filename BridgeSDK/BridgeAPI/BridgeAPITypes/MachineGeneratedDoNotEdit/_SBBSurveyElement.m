@@ -1,22 +1,22 @@
 //
-//  SBBSurveyQuestionOption.m
+//  SBBSurveyElement.m
 //
 //  $Id$
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyQuestionOption.h instead.
+// Make changes to SBBSurveyElement.h instead.
 //
 
-#import "_SBBSurveyQuestionOption.h"
+#import "_SBBSurveyElement.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBSurveyQuestionOption()
+@interface _SBBSurveyElement()
 
 @end
 
 /** \ingroup DataModel */
 
-@implementation _SBBSurveyQuestionOption
+@implementation _SBBSurveyElement
 
 - (id)init
 {
@@ -37,11 +37,9 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.image = [dictionary objectForKey:@"image"];
+        self.guid = [dictionary objectForKey:@"guid"];
 
-        self.label = [dictionary objectForKey:@"label"];
-
-        self.value = [dictionary objectForKey:@"value"];
+        self.identifier = [dictionary objectForKey:@"identifier"];
 
 	}
 
@@ -52,11 +50,9 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-    [dict setObjectIfNotNil:self.image forKey:@"image"];
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
-    [dict setObjectIfNotNil:self.label forKey:@"label"];
-
-    [dict setObjectIfNotNil:self.value forKey:@"value"];
+    [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
 	return dict;
 }

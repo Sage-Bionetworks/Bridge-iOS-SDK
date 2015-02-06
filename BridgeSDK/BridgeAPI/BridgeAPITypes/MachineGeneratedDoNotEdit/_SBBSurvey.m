@@ -59,6 +59,8 @@
 
         self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
 
+        self.elements = [dictionary objectForKey:@"elements"];
+
         self.guid = [dictionary objectForKey:@"guid"];
 
         self.identifier = [dictionary objectForKey:@"identifier"];
@@ -68,8 +70,6 @@
         self.name = [dictionary objectForKey:@"name"];
 
         self.published = [dictionary objectForKey:@"published"];
-
-        self.questions = [dictionary objectForKey:@"questions"];
 
         self.version = [dictionary objectForKey:@"version"];
 
@@ -84,6 +84,8 @@
 
     [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 
+    [dict setObjectIfNotNil:self.elements forKey:@"elements"];
+
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
@@ -93,8 +95,6 @@
     [dict setObjectIfNotNil:self.name forKey:@"name"];
 
     [dict setObjectIfNotNil:self.published forKey:@"published"];
-
-    [dict setObjectIfNotNil:self.questions forKey:@"questions"];
 
     [dict setObjectIfNotNil:self.version forKey:@"version"];
 

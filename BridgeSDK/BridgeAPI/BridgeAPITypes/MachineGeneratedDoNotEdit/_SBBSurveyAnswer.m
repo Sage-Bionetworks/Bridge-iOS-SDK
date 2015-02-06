@@ -47,8 +47,6 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.answer = [dictionary objectForKey:@"answer"];
-
         self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
 
         self.answers = [dictionary objectForKey:@"answers"];
@@ -67,8 +65,6 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-
-    [dict setObjectIfNotNil:self.answer forKey:@"answer"];
 
     [dict setObjectIfNotNil:[self.answeredOn ISO8601String] forKey:@"answeredOn"];
 

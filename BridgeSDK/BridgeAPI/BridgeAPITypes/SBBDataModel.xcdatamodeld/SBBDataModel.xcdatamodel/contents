@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C109" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Activity" representedClassName="SBBActivity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
@@ -48,6 +48,11 @@
     <entity name="IdentifierHolder" representedClassName="SBBIdentifierHolder" parentEntity="BridgeObject" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Image" representedClassName="SBBImage" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="height" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+        <attribute name="source" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
+    </entity>
     <entity name="IntegerConstraints" representedClassName="SBBIntegerConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxValue" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="minValue" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -93,20 +98,19 @@
     </entity>
     <entity name="Survey" representedClassName="SBBSurvey" parentEntity="BridgeObject" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="elements" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray"/>
+            </userInfo>
+        </attribute>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="published" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="questions" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="NSArray"/>
-            </userInfo>
-        </attribute>
         <attribute name="version" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="SurveyAnswer" representedClassName="SBBSurveyAnswer" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="answer" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="answeredOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="answers" optional="YES" attributeType="Transformable" syncable="YES">
             <userInfo>
@@ -125,14 +129,29 @@
             </userInfo>
         </attribute>
     </entity>
-    <entity name="SurveyQuestion" representedClassName="SBBSurveyQuestion" parentEntity="BridgeObject" syncable="YES">
+    <entity name="SurveyElement" representedClassName="SBBSurveyElement" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="SurveyInfoScreen" representedClassName="SBBSurveyInfoScreen" parentEntity="SurveyElement" syncable="YES">
+        <attribute name="image" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="SBBImage"/>
+            </userInfo>
+        </attribute>
+        <attribute name="prompt" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="promptDetail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBImage.h"/>
+        </userInfo>
+    </entity>
+    <entity name="SurveyQuestion" representedClassName="SBBSurveyQuestion" parentEntity="SurveyElement" syncable="YES">
         <attribute name="constraints" optional="YES" attributeType="Transformable" syncable="YES">
             <userInfo>
                 <entry key="attributeValueClassName" value="SBBSurveyConstraints"/>
             </userInfo>
         </attribute>
-        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="prompt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uiHint" optional="YES" attributeType="String" syncable="YES"/>
         <userInfo>
@@ -140,8 +159,16 @@
         </userInfo>
     </entity>
     <entity name="SurveyQuestionOption" representedClassName="SBBSurveyQuestionOption" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="image" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="SBBImage"/>
+            </userInfo>
+        </attribute>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBImage.h"/>
+        </userInfo>
     </entity>
     <entity name="SurveyResponse" representedClassName="SBBSurveyResponse" parentEntity="BridgeObject" syncable="YES">
         <attribute name="answers" optional="YES" attributeType="Transformable" syncable="YES">
@@ -196,16 +223,19 @@
         <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="58"/>
         <element name="GuidCreatedOnVersionHolder" positionX="0" positionY="99" width="128" height="90"/>
         <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="60"/>
+        <element name="Image" positionX="9" positionY="117" width="128" height="90"/>
         <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="103"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="88"/>
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
         <element name="Schedule" positionX="-9" positionY="81" width="128" height="178"/>
         <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
         <element name="Survey" positionX="-36" positionY="27" width="128" height="165"/>
-        <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="133"/>
+        <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="120"/>
         <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="73"/>
-        <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="118"/>
-        <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="73"/>
+        <element name="SurveyElement" positionX="-9" positionY="99" width="128" height="73"/>
+        <element name="SurveyInfoScreen" positionX="0" positionY="108" width="128" height="103"/>
+        <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="90"/>
+        <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="88"/>
         <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="135"/>
         <element name="SurveyRule" positionX="18" positionY="108" width="128" height="90"/>
         <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>

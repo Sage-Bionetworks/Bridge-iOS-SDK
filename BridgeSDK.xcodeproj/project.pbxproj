@@ -176,6 +176,18 @@
 		80E60DA819FAD64C0053D166 /* SBBScheduleManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E60DA619FAD64C0053D166 /* SBBScheduleManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80E60DA919FAD64C0053D166 /* SBBScheduleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E60DA719FAD64C0053D166 /* SBBScheduleManager.m */; };
 		80E60DAB19FB0D7E0053D166 /* SBBScheduleManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E60DAA19FB0D7E0053D166 /* SBBScheduleManagerTests.m */; };
+		80E819661A83E89E00513919 /* _SBBImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E819601A83E89E00513919 /* _SBBImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E819671A83E89E00513919 /* _SBBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E819611A83E89E00513919 /* _SBBImage.m */; };
+		80E819681A83E89E00513919 /* _SBBSurveyElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E819621A83E89E00513919 /* _SBBSurveyElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E819691A83E89E00513919 /* _SBBSurveyElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E819631A83E89E00513919 /* _SBBSurveyElement.m */; };
+		80E8196A1A83E89E00513919 /* _SBBSurveyInfoScreen.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E819641A83E89E00513919 /* _SBBSurveyInfoScreen.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E8196B1A83E89E00513919 /* _SBBSurveyInfoScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E819651A83E89E00513919 /* _SBBSurveyInfoScreen.m */; };
+		80E819731A83E8EB00513919 /* SBBImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E8196D1A83E8EB00513919 /* SBBImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E819741A83E8EB00513919 /* SBBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E8196E1A83E8EB00513919 /* SBBImage.m */; };
+		80E819751A83E8EB00513919 /* SBBSurveyElement.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E8196F1A83E8EB00513919 /* SBBSurveyElement.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E819761A83E8EB00513919 /* SBBSurveyElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E819701A83E8EB00513919 /* SBBSurveyElement.m */; };
+		80E819771A83E8EB00513919 /* SBBSurveyInfoScreen.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E819711A83E8EB00513919 /* SBBSurveyInfoScreen.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80E819781A83E8EB00513919 /* SBBSurveyInfoScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E819721A83E8EB00513919 /* SBBSurveyInfoScreen.m */; };
 		80F7C32219E5AA8400574800 /* ModelObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 80F7C2E819E5AA7900574800 /* ModelObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80F7C32319E5AA8700574800 /* ModelObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C2E919E5AA7900574800 /* ModelObject.m */; };
 		80F7C34119E5DC0D00574800 /* _SBBBridgeObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 80F7C32E19E5DC0D00574800 /* _SBBBridgeObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -361,6 +373,18 @@
 		80E60DA619FAD64C0053D166 /* SBBScheduleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBScheduleManager.h; sourceTree = "<group>"; };
 		80E60DA719FAD64C0053D166 /* SBBScheduleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBScheduleManager.m; sourceTree = "<group>"; };
 		80E60DAA19FB0D7E0053D166 /* SBBScheduleManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBScheduleManagerTests.m; sourceTree = "<group>"; };
+		80E819601A83E89E00513919 /* _SBBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBImage.h; sourceTree = "<group>"; };
+		80E819611A83E89E00513919 /* _SBBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBImage.m; sourceTree = "<group>"; };
+		80E819621A83E89E00513919 /* _SBBSurveyElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSurveyElement.h; sourceTree = "<group>"; };
+		80E819631A83E89E00513919 /* _SBBSurveyElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBSurveyElement.m; sourceTree = "<group>"; };
+		80E819641A83E89E00513919 /* _SBBSurveyInfoScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSurveyInfoScreen.h; sourceTree = "<group>"; };
+		80E819651A83E89E00513919 /* _SBBSurveyInfoScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBSurveyInfoScreen.m; sourceTree = "<group>"; };
+		80E8196D1A83E8EB00513919 /* SBBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBImage.h; sourceTree = "<group>"; };
+		80E8196E1A83E8EB00513919 /* SBBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBImage.m; sourceTree = "<group>"; };
+		80E8196F1A83E8EB00513919 /* SBBSurveyElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSurveyElement.h; sourceTree = "<group>"; };
+		80E819701A83E8EB00513919 /* SBBSurveyElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyElement.m; sourceTree = "<group>"; };
+		80E819711A83E8EB00513919 /* SBBSurveyInfoScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSurveyInfoScreen.h; sourceTree = "<group>"; };
+		80E819721A83E8EB00513919 /* SBBSurveyInfoScreen.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyInfoScreen.m; sourceTree = "<group>"; };
 		80F7C2E819E5AA7900574800 /* ModelObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelObject.h; sourceTree = "<group>"; };
 		80F7C2E919E5AA7900574800 /* ModelObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelObject.m; sourceTree = "<group>"; };
 		80F7C2EA19E5AA7900574800 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -472,6 +496,8 @@
 				60F1E4221A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.m */,
 				606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */,
 				606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */,
+				80E8196D1A83E8EB00513919 /* SBBImage.h */,
+				80E8196E1A83E8EB00513919 /* SBBImage.m */,
 				800E795D19ED74B600EEE612 /* SBBIntegerConstraints.h */,
 				800E795E19ED74B600EEE612 /* SBBIntegerConstraints.m */,
 				800E795F19ED74B600EEE612 /* SBBMultiValueConstraints.h */,
@@ -488,6 +514,10 @@
 				8026D67119E76579008942B0 /* SBBSurveyAnswer.m */,
 				80F7C33D19E5DC0D00574800 /* SBBSurveyConstraints.h */,
 				80F7C33E19E5DC0D00574800 /* SBBSurveyConstraints.m */,
+				80E8196F1A83E8EB00513919 /* SBBSurveyElement.h */,
+				80E819701A83E8EB00513919 /* SBBSurveyElement.m */,
+				80E819711A83E8EB00513919 /* SBBSurveyInfoScreen.h */,
+				80E819721A83E8EB00513919 /* SBBSurveyInfoScreen.m */,
 				80F7C33F19E5DC0D00574800 /* SBBSurveyQuestion.h */,
 				80F7C34019E5DC0D00574800 /* SBBSurveyQuestion.m */,
 				800E796919ED74C500EEE612 /* SBBSurveyQuestionOption.h */,
@@ -802,6 +832,8 @@
 				60F1E41A1A420EAA009B380E /* _SBBGuidCreatedOnVersionHolder.m */,
 				606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */,
 				606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */,
+				80E819601A83E89E00513919 /* _SBBImage.h */,
+				80E819611A83E89E00513919 /* _SBBImage.m */,
 				800E793519ED744000EEE612 /* _SBBIntegerConstraints.h */,
 				800E793619ED744000EEE612 /* _SBBIntegerConstraints.m */,
 				800E793719ED744000EEE612 /* _SBBMultiValueConstraints.h */,
@@ -818,6 +850,10 @@
 				8026D66919E7654A008942B0 /* _SBBSurveyAnswer.m */,
 				80F7C33219E5DC0D00574800 /* _SBBSurveyConstraints.h */,
 				80F7C33319E5DC0D00574800 /* _SBBSurveyConstraints.m */,
+				80E819621A83E89E00513919 /* _SBBSurveyElement.h */,
+				80E819631A83E89E00513919 /* _SBBSurveyElement.m */,
+				80E819641A83E89E00513919 /* _SBBSurveyInfoScreen.h */,
+				80E819651A83E89E00513919 /* _SBBSurveyInfoScreen.m */,
 				80F7C33419E5DC0D00574800 /* _SBBSurveyQuestion.h */,
 				80F7C33519E5DC0D00574800 /* _SBBSurveyQuestion.m */,
 				800E793B19ED744000EEE612 /* _SBBSurveyQuestionOption.h */,
@@ -863,8 +899,11 @@
 				800E792D19ED740F00EEE612 /* _SBBDateConstraints.h in Headers */,
 				8026D67A19E77518008942B0 /* SBBUploadManager.h in Headers */,
 				800E795719ED74A600EEE612 /* SBBDateTimeConstraints.h in Headers */,
+				80E819731A83E8EB00513919 /* SBBImage.h in Headers */,
+				80E819661A83E89E00513919 /* _SBBImage.h in Headers */,
 				800E797719ED7BCB00EEE612 /* SBBSurveyRule.h in Headers */,
 				800E793319ED740F00EEE612 /* _SBBDurationConstraints.h in Headers */,
+				80E819681A83E89E00513919 /* _SBBSurveyElement.h in Headers */,
 				8026BD2619C8948E0077F3EB /* SBBComponent.h in Headers */,
 				60F1E41F1A420EE4009B380E /* SBBActivity.h in Headers */,
 				60F1E4231A420EFD009B380E /* SBBGuidCreatedOnVersionHolder.h in Headers */,
@@ -899,6 +938,7 @@
 				80E60DA419FAD5860053D166 /* SBBSchedule.h in Headers */,
 				80F7C34919E5DC0D00574800 /* _SBBUserProfile.h in Headers */,
 				80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */,
+				80E819751A83E8EB00513919 /* SBBSurveyElement.h in Headers */,
 				800E796719ED74B600EEE612 /* SBBStringConstraints.h in Headers */,
 				8026BD2819C8AE200077F3EB /* SBBAuthManagerInternal.h in Headers */,
 				800E796F19ED74D000EEE612 /* SBBTimeConstraints.h in Headers */,
@@ -907,7 +947,9 @@
 				80104A3D19D1F61B001F2573 /* SBBProfileManager.h in Headers */,
 				80E60DA819FAD64C0053D166 /* SBBScheduleManager.h in Headers */,
 				80855F7219BE27ED006601C7 /* SBBNetworkManager.h in Headers */,
+				80E819771A83E8EB00513919 /* SBBSurveyInfoScreen.h in Headers */,
 				80F7C32219E5AA8400574800 /* ModelObject.h in Headers */,
+				80E8196A1A83E89E00513919 /* _SBBSurveyInfoScreen.h in Headers */,
 				8026BD2219C892E40077F3EB /* SBBComponentManager.h in Headers */,
 				800E792219ED73FD00EEE612 /* _SBBBooleanConstraints.h in Headers */,
 				8026D68219E87CF6008942B0 /* NSData+SBBAdditions.h in Headers */,
@@ -1089,6 +1131,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80E819691A83E89E00513919 /* _SBBSurveyElement.m in Sources */,
 				80E60DA019FAD56C0053D166 /* _SBBSchedule.m in Sources */,
 				800E795819ED74A600EEE612 /* SBBDateTimeConstraints.m in Sources */,
 				80E60DA919FAD64C0053D166 /* SBBScheduleManager.m in Sources */,
@@ -1104,6 +1147,7 @@
 				60F1E4201A420EE4009B380E /* SBBActivity.m in Sources */,
 				800E795A19ED74A600EEE612 /* SBBDecimalConstraints.m in Sources */,
 				8026D67B19E77518008942B0 /* SBBUploadManager.m in Sources */,
+				80E819761A83E8EB00513919 /* SBBSurveyElement.m in Sources */,
 				80E60DA519FAD5860053D166 /* SBBSchedule.m in Sources */,
 				80F7C34819E5DC0D00574800 /* _SBBSurveyQuestion.m in Sources */,
 				800E794019ED744000EEE612 /* _SBBIntegerConstraints.m in Sources */,
@@ -1141,17 +1185,21 @@
 				80F7C34E19E5DC0D00574800 /* SBBSurvey.m in Sources */,
 				8026BD2319C892E40077F3EB /* SBBComponentManager.m in Sources */,
 				800E797819ED7BCB00EEE612 /* SBBSurveyRule.m in Sources */,
+				80E819781A83E8EB00513919 /* SBBSurveyInfoScreen.m in Sources */,
 				8017AF7319DA0359001AF9BA /* UIDevice+Hardware.m in Sources */,
 				8026BD1219C7532D0077F3EB /* UICKeyChainStore.m in Sources */,
 				8026D68319E87CF6008942B0 /* NSData+SBBAdditions.m in Sources */,
 				80F7C34419E5DC0D00574800 /* _SBBSurvey.m in Sources */,
+				80E8196B1A83E89E00513919 /* _SBBSurveyInfoScreen.m in Sources */,
 				8026D68B19E888DB008942B0 /* SBBUploadSession.m in Sources */,
 				8026D67719E7658E008942B0 /* SBBSurveyResponse.m in Sources */,
 				800E794C19ED748900EEE612 /* SBBBooleanConstraints.m in Sources */,
 				80F7C34A19E5DC0D00574800 /* _SBBUserProfile.m in Sources */,
+				80E819741A83E8EB00513919 /* SBBImage.m in Sources */,
 				8026D66B19E7654A008942B0 /* _SBBSurveyAnswer.m in Sources */,
 				80F7C35019E5DC0D00574800 /* SBBSurveyConstraints.m in Sources */,
 				800E796C19ED74C500EEE612 /* SBBSurveyQuestionOption.m in Sources */,
+				80E819671A83E89E00513919 /* _SBBImage.m in Sources */,
 				606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */,
 				800E794819ED744000EEE612 /* _SBBTimeConstraints.m in Sources */,
 				80F7C34619E5DC0D00574800 /* _SBBSurveyConstraints.m in Sources */,
