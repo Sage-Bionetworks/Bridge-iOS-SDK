@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-@class SBBSurveyQuestion;
+@class SBBSurveyElement;
 @class SBBSurveyResponse;
 
 @protocol _SBBSurvey
@@ -37,22 +37,22 @@
 
 @property (nonatomic, assign) double versionValue;
 
-@property (nonatomic, strong, readonly) NSArray *questions;
+@property (nonatomic, strong, readonly) NSArray *elements;
 
 @property (nonatomic, strong, readonly) NSArray *surveyResponses;
 
-- (void)addQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: (BOOL) setInverse;
-- (void)addQuestionsObject:(SBBSurveyQuestion*)value_;
-- (void)removeQuestionsObjects;
-- (void)removeQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeQuestionsObject:(SBBSurveyQuestion*)value_;
+- (void)addElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse;
+- (void)addElementsObject:(SBBSurveyElement*)value_;
+- (void)removeElementsObjects;
+- (void)removeElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeElementsObject:(SBBSurveyElement*)value_;
 
-- (void)insertObject:(SBBSurveyQuestion*)value inQuestionsAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromQuestionsAtIndex:(NSUInteger)idx;
-- (void)insertQuestions:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeQuestionsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInQuestionsAtIndex:(NSUInteger)idx withObject:(SBBSurveyQuestion*)value;
-- (void)replaceQuestionsAtIndexes:(NSIndexSet *)indexes withQuestions:(NSArray *)values;
+- (void)insertObject:(SBBSurveyElement*)value inElementsAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromElementsAtIndex:(NSUInteger)idx;
+- (void)insertElements:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeElementsAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInElementsAtIndex:(NSUInteger)idx withObject:(SBBSurveyElement*)value;
+- (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray *)values;
 
 - (void)addSurveyResponsesObject:(SBBSurveyResponse*)value_ settingInverse: (BOOL) setInverse;
 - (void)addSurveyResponsesObject:(SBBSurveyResponse*)value_;

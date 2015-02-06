@@ -10,6 +10,10 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+#import "SBBImage.h"
+
+@class SBBImage;
+
 @protocol _SBBSurveyQuestionOption
 
 @end
@@ -19,5 +23,9 @@
 @property (nonatomic, strong) NSString* label;
 
 @property (nonatomic, strong) NSString* value;
+
+@property (nonatomic, strong, readwrite) SBBImage *image;
+
+- (void) setImage: (SBBImage*) image_ settingInverse: (BOOL) setInverse;
 
 @end

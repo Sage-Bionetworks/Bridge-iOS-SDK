@@ -10,11 +10,11 @@
 #import "_SBBSurvey.h"
 #import "NSDate+SBBAdditions.h"
 
-#import "SBBSurveyQuestion.h"
+#import "SBBSurveyElement.h"
 #import "SBBSurveyResponse.h"
 
 @interface _SBBSurvey()
-@property (nonatomic, strong, readwrite) NSArray *questions;
+@property (nonatomic, strong, readwrite) NSArray *elements;
 @property (nonatomic, strong, readwrite) NSArray *surveyResponses;
 
 @end
@@ -76,12 +76,12 @@
 
         self.version = [dictionary objectForKey:@"version"];
 
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"questions"])
+		for(id objectRepresentationForDict in [dictionary objectForKey:@"elements"])
 		{
 
-SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+SBBSurveyElement *elementsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
-			[self addQuestionsObject:questionsObj];
+			[self addElementsObject:elementsObj];
 		}
 	}
 
@@ -106,15 +106,15 @@ SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepr
 
     [dict setObjectIfNotNil:self.version forKey:@"version"];
 
-    if([self.questions count] > 0)
+    if([self.elements count] > 0)
 	{
 
-		NSMutableArray *questionsRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.questions count]];
-		for(SBBSurveyQuestion *obj in self.questions)
+		NSMutableArray *elementsRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.elements count]];
+		for(SBBSurveyElement *obj in self.elements)
 		{
-			[questionsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+			[elementsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
-		[dict setObjectIfNotNil:questionsRepresentationsForDictionary forKey:@"questions"];
+		[dict setObjectIfNotNil:elementsRepresentationsForDictionary forKey:@"elements"];
 
 	}
 
@@ -126,14 +126,14 @@ SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepr
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	for(SBBSurveyElement *elementsObj in self.elements)
+	{
+		[elementsObj awakeFromDictionaryRepresentationInit];
+	}
+
 	for(SBBSurveyResponse *surveyResponsesObj in self.surveyResponses)
 	{
 		[surveyResponsesObj awakeFromDictionaryRepresentationInit];
-	}
-
-	for(SBBSurveyQuestion *questionsObj in self.questions)
-	{
-		[questionsObj awakeFromDictionaryRepresentationInit];
 	}
 
 	[super awakeFromDictionaryRepresentationInit];
@@ -141,121 +141,121 @@ SBBSurveyQuestion *questionsObj = [objectManager objectFromBridgeJSON:objectRepr
 
 #pragma mark Direct access
 
-- (void)addQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: (BOOL) setInverse
+- (void)addElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.questions == nil)
+    if(self.elements == nil)
 	{
 
-		self.questions = [NSMutableArray array];
+		self.elements = [NSMutableArray array];
 
 	}
 
-	[(NSMutableArray *)self.questions addObject:value_];
+	[(NSMutableArray *)self.elements addObject:value_];
 	if (setInverse == YES) {
 	    [value_ setSurvey: (SBBSurvey*)self settingInverse: NO];
 	}
 }
-- (void)addQuestionsObject:(SBBSurveyQuestion*)value_
+- (void)addElementsObject:(SBBSurveyElement*)value_
 {
-    [self addQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: YES];
+    [self addElementsObject:(SBBSurveyElement*)value_ settingInverse: YES];
 }
 
-- (void)removeQuestionsObjects
+- (void)removeElementsObjects
 {
 
-	self.questions = [NSMutableArray array];
+	self.elements = [NSMutableArray array];
 
 }
 
-- (void)removeQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: (BOOL) setInverse
+- (void)removeElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse
 {
     if (setInverse == YES) {
         [value_ setSurvey: nil settingInverse: NO];
     }
-    [(NSMutableArray *)self.questions removeObject:value_];
+    [(NSMutableArray *)self.elements removeObject:value_];
 }
 
-- (void)removeQuestionsObject:(SBBSurveyQuestion*)value_
+- (void)removeElementsObject:(SBBSurveyElement*)value_
 {
-    [self removeQuestionsObject:(SBBSurveyQuestion*)value_ settingInverse: YES];
+    [self removeElementsObject:(SBBSurveyElement*)value_ settingInverse: YES];
 }
 
-- (void)insertObject:(SBBSurveyQuestion*)value inQuestionsAtIndex:(NSUInteger)idx {
-    [self insertObject:value inQuestionsAtIndex:idx settingInverse:YES];
+- (void)insertObject:(SBBSurveyElement*)value inElementsAtIndex:(NSUInteger)idx {
+    [self insertObject:value inElementsAtIndex:idx settingInverse:YES];
 }
 
-- (void)insertObject:(SBBSurveyQuestion*)value inQuestionsAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
+- (void)insertObject:(SBBSurveyElement*)value inElementsAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
 
-    [(NSMutableArray *)self.questions insertObject:value atIndex:idx];
+    [(NSMutableArray *)self.elements insertObject:value atIndex:idx];
     if (setInverse == YES) {
     [value setSurvey:(SBBSurvey*)self settingInverse: NO];
     }
 }
 
-- (void)removeObjectFromQuestionsAtIndex:(NSUInteger)idx {
-    [self removeObjectFromQuestionsAtIndex:idx settingInverse:YES];
+- (void)removeObjectFromElementsAtIndex:(NSUInteger)idx {
+    [self removeObjectFromElementsAtIndex:idx settingInverse:YES];
 }
 
-- (void)removeObjectFromQuestionsAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
-    SBBSurveyQuestion *object = [self.questions objectAtIndex:idx];
-    [self removeQuestionsObject:object settingInverse:YES];
+- (void)removeObjectFromElementsAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
+    SBBSurveyElement *object = [self.elements objectAtIndex:idx];
+    [self removeElementsObject:object settingInverse:YES];
 }
 
-- (void)insertQuestions:(NSArray *)value atIndexes:(NSIndexSet *)indexes {
-    [self insertQuestions:value atIndexes:indexes settingInverse:YES];
+- (void)insertElements:(NSArray *)value atIndexes:(NSIndexSet *)indexes {
+    [self insertElements:value atIndexes:indexes settingInverse:YES];
 }
 
-- (void)insertQuestions:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
-    [(NSMutableArray *)self.questions insertObjects:value atIndexes:indexes];
+- (void)insertElements:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
+    [(NSMutableArray *)self.elements insertObjects:value atIndexes:indexes];
     if (setInverse == YES) {
-        for (SBBSurveyQuestion* object in value) {
+        for (SBBSurveyElement* object in value) {
             [object setSurvey:(SBBSurvey*)self settingInverse: NO];
         }
     }
 }
 
-- (void)removeQuestionsAtIndexes:(NSIndexSet *)indexes {
-    [self removeQuestionsAtIndexes:indexes settingInverse:YES];
+- (void)removeElementsAtIndexes:(NSIndexSet *)indexes {
+    [self removeElementsAtIndexes:indexes settingInverse:YES];
 }
 
-- (void)removeQuestionsAtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
+- (void)removeElementsAtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
     if (setInverse == YES) {
-    NSArray *objectsRemoved = [(NSMutableArray *)self.questions objectsAtIndexes:indexes];
-        for (SBBSurveyQuestion* object in objectsRemoved) {
+    NSArray *objectsRemoved = [(NSMutableArray *)self.elements objectsAtIndexes:indexes];
+        for (SBBSurveyElement* object in objectsRemoved) {
             [object setSurvey:nil settingInverse: NO];
         }
     }
-    [(NSMutableArray *)self.questions removeObjectsAtIndexes:indexes];
+    [(NSMutableArray *)self.elements removeObjectsAtIndexes:indexes];
 }
 
-- (void)replaceObjectInQuestionsAtIndex:(NSUInteger)idx withObject:(SBBSurveyQuestion*)value {
-    [self replaceObjectInQuestionsAtIndex:idx withObject:value settingInverse:YES];
+- (void)replaceObjectInElementsAtIndex:(NSUInteger)idx withObject:(SBBSurveyElement*)value {
+    [self replaceObjectInElementsAtIndex:idx withObject:value settingInverse:YES];
 }
 
-- (void)replaceObjectInQuestionsAtIndex:(NSUInteger)idx withObject:(SBBSurveyQuestion*)value settingInverse:(BOOL)setInverse {
+- (void)replaceObjectInElementsAtIndex:(NSUInteger)idx withObject:(SBBSurveyElement*)value settingInverse:(BOOL)setInverse {
     if (setInverse == YES) {
-    SBBSurveyQuestion* objectReplaced = [(NSMutableArray *)self.questions objectAtIndex:idx];
+    SBBSurveyElement* objectReplaced = [(NSMutableArray *)self.elements objectAtIndex:idx];
     [objectReplaced setSurvey:nil settingInverse: NO];
     [value setSurvey:(SBBSurvey*)self settingInverse: NO];
     }
-    [(NSMutableArray *)self.questions replaceObjectAtIndex:idx withObject:value];
+    [(NSMutableArray *)self.elements replaceObjectAtIndex:idx withObject:value];
 }
 
-- (void)replaceQuestionsAtIndexes:(NSIndexSet *)indexes withQuestions:(NSArray *)value {
-    [self replaceQuestionsAtIndexes:indexes withQuestions:value settingInverse:YES];
+- (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray *)value {
+    [self replaceElementsAtIndexes:indexes withElements:value settingInverse:YES];
 }
 
-- (void)replaceQuestionsAtIndexes:(NSIndexSet *)indexes withQuestions:(NSArray *)value settingInverse:(BOOL)setInverse {
+- (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray *)value settingInverse:(BOOL)setInverse {
     if (setInverse == YES) {
-    NSArray *objectsReplaced = [(NSMutableArray *)self.questions objectsAtIndexes:indexes];
-        for (SBBSurveyQuestion* object in objectsReplaced) {
+    NSArray *objectsReplaced = [(NSMutableArray *)self.elements objectsAtIndexes:indexes];
+        for (SBBSurveyElement* object in objectsReplaced) {
             [object setSurvey:nil settingInverse: NO];
         }
-        for (SBBSurveyQuestion* object in value) {
+        for (SBBSurveyElement* object in value) {
             [object setSurvey:(SBBSurvey*)self settingInverse: NO];
         }
     }
-    [(NSMutableArray *)self.questions replaceObjectsAtIndexes:indexes withObjects:value];
+    [(NSMutableArray *)self.elements replaceObjectsAtIndexes:indexes withObjects:value];
 }
 
 - (void)addSurveyResponsesObject:(SBBSurveyResponse*)value_ settingInverse: (BOOL) setInverse
