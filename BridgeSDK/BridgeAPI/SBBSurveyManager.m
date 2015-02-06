@@ -45,6 +45,16 @@
   return [self getSurveyByRef:ref completion:completion];
 }
 
+- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+{
+    return [self submitAnswers:surveyAnswers toSurvey:survey withResponseIdentifier:nil completion:completion];
+}
+
+- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey withResponseIdentifier:(NSString *)identifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+{
+    return [self submitAnswers:surveyAnswers toSurveyByGuid:survey.guid createdOn:survey.createdOn withResponseIdentifier:identifier completion:completion];
+}
+
 - (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
     return [self submitAnswers:surveyAnswers toSurveyByRef:ref withResponseIdentifier:nil completion:completion];

@@ -1,22 +1,22 @@
 //
-//  SBBSurveyQuestionOption.m
+//  SBBImage.m
 //
 //  $Id$
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyQuestionOption.h instead.
+// Make changes to SBBImage.h instead.
 //
 
-#import "_SBBSurveyQuestionOption.h"
+#import "_SBBImage.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBSurveyQuestionOption()
+@interface _SBBImage()
 
 @end
 
 /** \ingroup DataModel */
 
-@implementation _SBBSurveyQuestionOption
+@implementation _SBBImage
 
 - (id)init
 {
@@ -30,6 +30,26 @@
 
 #pragma mark Scalar values
 
+- (double)heightValue
+{
+	return [self.height doubleValue];
+}
+
+- (void)setHeightValue:(double)value_
+{
+	self.height = [NSNumber numberWithDouble:value_];
+}
+
+- (double)widthValue
+{
+	return [self.width doubleValue];
+}
+
+- (void)setWidthValue:(double)value_
+{
+	self.width = [NSNumber numberWithDouble:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
@@ -37,11 +57,11 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.image = [dictionary objectForKey:@"image"];
+        self.height = [dictionary objectForKey:@"height"];
 
-        self.label = [dictionary objectForKey:@"label"];
+        self.source = [dictionary objectForKey:@"source"];
 
-        self.value = [dictionary objectForKey:@"value"];
+        self.width = [dictionary objectForKey:@"width"];
 
 	}
 
@@ -52,11 +72,11 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-    [dict setObjectIfNotNil:self.image forKey:@"image"];
+    [dict setObjectIfNotNil:self.height forKey:@"height"];
 
-    [dict setObjectIfNotNil:self.label forKey:@"label"];
+    [dict setObjectIfNotNil:self.source forKey:@"source"];
 
-    [dict setObjectIfNotNil:self.value forKey:@"value"];
+    [dict setObjectIfNotNil:self.width forKey:@"width"];
 
 	return dict;
 }
