@@ -37,6 +37,8 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
+        self.detail = [dictionary objectForKey:@"detail"];
+
         self.image = [dictionary objectForKey:@"image"];
 
         self.label = [dictionary objectForKey:@"label"];
@@ -51,6 +53,8 @@
 - (NSDictionary *)dictionaryRepresentation
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+
+    [dict setObjectIfNotNil:self.detail forKey:@"detail"];
 
     [dict setObjectIfNotNil:self.image forKey:@"image"];
 

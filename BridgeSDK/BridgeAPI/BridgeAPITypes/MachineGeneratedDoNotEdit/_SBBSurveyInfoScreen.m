@@ -39,10 +39,6 @@
 
         self.image = [dictionary objectForKey:@"image"];
 
-        self.prompt = [dictionary objectForKey:@"prompt"];
-
-        self.promptDetail = [dictionary objectForKey:@"promptDetail"];
-
         self.title = [dictionary objectForKey:@"title"];
 
 	}
@@ -55,10 +51,6 @@
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
     [dict setObjectIfNotNil:self.image forKey:@"image"];
-
-    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
-
-    [dict setObjectIfNotNil:self.promptDetail forKey:@"promptDetail"];
 
     [dict setObjectIfNotNil:self.title forKey:@"title"];
 

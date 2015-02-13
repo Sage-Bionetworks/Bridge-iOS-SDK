@@ -20,8 +20,6 @@
 
 @property (nonatomic, strong) SBBSurveyConstraints* constraints;
 
-@property (nonatomic, strong) NSString* prompt;
-
 @property (nonatomic, strong) NSString* uiHint;
 
 @end

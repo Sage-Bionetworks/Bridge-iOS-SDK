@@ -39,8 +39,6 @@
 
         self.constraints = [dictionary objectForKey:@"constraints"];
 
-        self.prompt = [dictionary objectForKey:@"prompt"];
-
         self.uiHint = [dictionary objectForKey:@"uiHint"];
 
 	}
@@ -53,8 +51,6 @@
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
     [dict setObjectIfNotNil:self.constraints forKey:@"constraints"];
-
-    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
 
     [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
 
