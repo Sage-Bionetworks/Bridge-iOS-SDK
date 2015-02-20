@@ -39,10 +39,6 @@
   if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
-        self.prompt = [dictionary objectForKey:@"prompt"];
-
-        self.promptDetail = [dictionary objectForKey:@"promptDetail"];
-
         self.title = [dictionary objectForKey:@"title"];
 
             NSDictionary *imageDict = [dictionary objectForKey:@"image"];
@@ -60,10 +56,6 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
-
-    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
-
-    [dict setObjectIfNotNil:self.promptDetail forKey:@"promptDetail"];
 
     [dict setObjectIfNotNil:self.title forKey:@"title"];
 

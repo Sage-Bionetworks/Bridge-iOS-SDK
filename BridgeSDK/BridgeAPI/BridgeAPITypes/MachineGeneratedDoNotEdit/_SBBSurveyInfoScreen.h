@@ -20,10 +20,6 @@
 
 @interface _SBBSurveyInfoScreen : SBBSurveyElement
 
-@property (nonatomic, strong) NSString* prompt;
-
-@property (nonatomic, strong) NSString* promptDetail;
-
 @property (nonatomic, strong) NSString* title;
 
 @property (nonatomic, strong, readwrite) SBBImage *image;

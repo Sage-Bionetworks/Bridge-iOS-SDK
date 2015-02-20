@@ -43,6 +43,10 @@
 
         self.identifier = [dictionary objectForKey:@"identifier"];
 
+        self.prompt = [dictionary objectForKey:@"prompt"];
+
+        self.promptDetail = [dictionary objectForKey:@"promptDetail"];
+
 	}
 
 	return self;
@@ -55,6 +59,10 @@
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
+
+    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
+
+    [dict setObjectIfNotNil:self.promptDetail forKey:@"promptDetail"];
 
 	return dict;
 }

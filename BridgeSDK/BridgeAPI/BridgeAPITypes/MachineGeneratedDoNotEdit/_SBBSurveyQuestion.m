@@ -39,8 +39,6 @@
   if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
-        self.prompt = [dictionary objectForKey:@"prompt"];
-
         self.uiHint = [dictionary objectForKey:@"uiHint"];
 
             NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
@@ -58,8 +56,6 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
-
-    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
 
     [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
 

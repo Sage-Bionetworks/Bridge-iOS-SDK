@@ -39,6 +39,8 @@
   if((self = [super initWithDictionaryRepresentation:dictionary objectManager:objectManager]))
 	{
 
+        self.detail = [dictionary objectForKey:@"detail"];
+
         self.label = [dictionary objectForKey:@"label"];
 
         self.value = [dictionary objectForKey:@"value"];
@@ -58,6 +60,8 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+
+    [dict setObjectIfNotNil:self.detail forKey:@"detail"];
 
     [dict setObjectIfNotNil:self.label forKey:@"label"];
 

@@ -22,6 +22,10 @@
 
 @property (nonatomic, strong) NSString* identifier;
 
+@property (nonatomic, strong) NSString* prompt;
+
+@property (nonatomic, strong) NSString* promptDetail;
+
 @property (nonatomic, strong, readwrite) SBBSurvey *survey;
 
 - (void) setSurvey: (SBBSurvey*) survey_ settingInverse: (BOOL) setInverse;
