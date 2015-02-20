@@ -168,6 +168,8 @@
     <entity name="SurveyElement" representedClassName="" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="prompt" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="promptDetail" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Survey" inverseName="elements" inverseEntity="Survey" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
@@ -175,8 +177,6 @@
         </relationship>
     </entity>
     <entity name="SurveyInfoScreen" representedClassName="" parentEntity="SurveyElement" syncable="YES">
-        <attribute name="prompt" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="promptDetail" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image" inverseName="surveyInfoScreen" inverseEntity="Image" syncable="YES"/>
         <userInfo>
@@ -185,7 +185,6 @@
         </userInfo>
     </entity>
     <entity name="SurveyQuestion" representedClassName="" parentEntity="SurveyElement" syncable="YES">
-        <attribute name="prompt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uiHint" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="constraints" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SurveyConstraints" inverseName="surveyQuestion" inverseEntity="SurveyConstraints" syncable="YES"/>
         <userInfo>
@@ -194,6 +193,7 @@
         </userInfo>
     </entity>
     <entity name="SurveyQuestionOption" representedClassName="" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="detail" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image" inverseName="surveyQuestionOption" inverseEntity="Image" syncable="YES"/>
@@ -261,10 +261,10 @@
         <element name="Survey" positionX="-36" positionY="27" width="128" height="178"/>
         <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="133"/>
         <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="73"/>
-        <element name="SurveyElement" positionX="-9" positionY="99" width="128" height="88"/>
-        <element name="SurveyInfoScreen" positionX="0" positionY="108" width="128" height="103"/>
-        <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="88"/>
-        <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="88"/>
+        <element name="SurveyElement" positionX="-9" positionY="99" width="128" height="120"/>
+        <element name="SurveyInfoScreen" positionX="0" positionY="108" width="128" height="75"/>
+        <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="75"/>
+        <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="105"/>
         <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="135"/>
         <element name="SurveyRule" positionX="18" positionY="108" width="128" height="103"/>
         <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>

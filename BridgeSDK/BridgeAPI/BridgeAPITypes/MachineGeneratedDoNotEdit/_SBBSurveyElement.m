@@ -23,6 +23,10 @@
 
 @property (nonatomic, strong) NSString* identifier;
 
+@property (nonatomic, strong) NSString* prompt;
+
+@property (nonatomic, strong) NSString* promptDetail;
+
 @end
 
 /** \ingroup DataModel */
@@ -51,6 +55,10 @@
 
     self.identifier = [dictionary objectForKey:@"identifier"];
 
+    self.prompt = [dictionary objectForKey:@"prompt"];
+
+    self.promptDetail = [dictionary objectForKey:@"promptDetail"];
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -60,6 +68,10 @@
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
+
+    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
+
+    [dict setObjectIfNotNil:self.promptDetail forKey:@"promptDetail"];
 
 	return dict;
 }
@@ -88,6 +100,10 @@
 
         self.identifier = managedObject.identifier;
 
+        self.prompt = managedObject.prompt;
+
+        self.promptDetail = managedObject.promptDetail;
+
     }
 
     return self;
@@ -110,6 +126,10 @@
     managedObject.guid = self.guid;
 
     managedObject.identifier = self.identifier;
+
+    managedObject.prompt = self.prompt;
+
+    managedObject.promptDetail = self.promptDetail;
 
     // Calling code will handle saving these changes to cacheContext.
 }

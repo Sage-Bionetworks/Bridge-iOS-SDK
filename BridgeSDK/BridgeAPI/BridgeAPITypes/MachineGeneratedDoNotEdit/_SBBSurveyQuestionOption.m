@@ -21,6 +21,8 @@
  */
 @interface NSManagedObject (SurveyQuestionOption)
 
+@property (nonatomic, strong) NSString* detail;
+
 @property (nonatomic, strong) NSString* label;
 
 @property (nonatomic, strong) NSString* value;
@@ -53,6 +55,8 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.detail = [dictionary objectForKey:@"detail"];
+
     self.label = [dictionary objectForKey:@"label"];
 
     self.value = [dictionary objectForKey:@"value"];
@@ -69,6 +73,8 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+
+    [dict setObjectIfNotNil:self.detail forKey:@"detail"];
 
     [dict setObjectIfNotNil:self.label forKey:@"label"];
 
@@ -101,6 +107,8 @@
 
     if (self == [super init]) {
 
+        self.detail = managedObject.detail;
+
         self.label = managedObject.label;
 
         self.value = managedObject.value;
@@ -131,6 +139,8 @@
 {
 
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.detail = self.detail;
 
     managedObject.label = self.label;
 

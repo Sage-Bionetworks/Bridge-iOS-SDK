@@ -21,8 +21,6 @@
  */
 @interface NSManagedObject (SurveyQuestion)
 
-@property (nonatomic, strong) NSString* prompt;
-
 @property (nonatomic, strong) NSString* uiHint;
 
 @property (nonatomic, strong, readwrite) NSManagedObject *constraints;
@@ -53,8 +51,6 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.prompt = [dictionary objectForKey:@"prompt"];
-
     self.uiHint = [dictionary objectForKey:@"uiHint"];
 
         NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
@@ -69,8 +65,6 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
-
-    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
 
     [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
 
@@ -101,8 +95,6 @@
 
     if (self == [super init]) {
 
-        self.prompt = managedObject.prompt;
-
         self.uiHint = managedObject.uiHint;
 
             NSManagedObject *constraintsManagedObj = managedObject.constraints;
@@ -131,8 +123,6 @@
 {
 
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
-
-    managedObject.prompt = self.prompt;
 
     managedObject.uiHint = self.uiHint;
 

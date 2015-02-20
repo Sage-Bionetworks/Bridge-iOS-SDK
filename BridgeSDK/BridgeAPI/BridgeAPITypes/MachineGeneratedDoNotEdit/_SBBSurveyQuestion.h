@@ -20,8 +20,6 @@
 
 @interface _SBBSurveyQuestion : SBBSurveyElement
 
-@property (nonatomic, strong) NSString* prompt;
-
 @property (nonatomic, strong) NSString* uiHint;
 
 @property (nonatomic, strong, readwrite) SBBSurveyConstraints *constraints;

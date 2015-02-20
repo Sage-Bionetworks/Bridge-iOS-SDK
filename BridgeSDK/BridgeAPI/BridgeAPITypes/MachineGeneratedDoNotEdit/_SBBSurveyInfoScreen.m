@@ -21,10 +21,6 @@
  */
 @interface NSManagedObject (SurveyInfoScreen)
 
-@property (nonatomic, strong) NSString* prompt;
-
-@property (nonatomic, strong) NSString* promptDetail;
-
 @property (nonatomic, strong) NSString* title;
 
 @property (nonatomic, strong, readwrite) NSManagedObject *image;
@@ -55,10 +51,6 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.prompt = [dictionary objectForKey:@"prompt"];
-
-    self.promptDetail = [dictionary objectForKey:@"promptDetail"];
-
     self.title = [dictionary objectForKey:@"title"];
 
         NSDictionary *imageDict = [dictionary objectForKey:@"image"];
@@ -73,10 +65,6 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
-
-    [dict setObjectIfNotNil:self.prompt forKey:@"prompt"];
-
-    [dict setObjectIfNotNil:self.promptDetail forKey:@"promptDetail"];
 
     [dict setObjectIfNotNil:self.title forKey:@"title"];
 
@@ -107,10 +95,6 @@
 
     if (self == [super init]) {
 
-        self.prompt = managedObject.prompt;
-
-        self.promptDetail = managedObject.promptDetail;
-
         self.title = managedObject.title;
 
             NSManagedObject *imageManagedObj = managedObject.image;
@@ -139,10 +123,6 @@
 {
 
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
-
-    managedObject.prompt = self.prompt;
-
-    managedObject.promptDetail = self.promptDetail;
 
     managedObject.title = self.title;
 

@@ -20,6 +20,8 @@
 
 @interface _SBBSurveyQuestionOption : SBBBridgeObject
 
+@property (nonatomic, strong) NSString* detail;
+
 @property (nonatomic, strong) NSString* label;
 
 @property (nonatomic, strong) NSString* value;
