@@ -17,11 +17,11 @@
 
 static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
-@interface SBBCacheManager ()
+@interface SBBCacheManager ()<NSCacheDelegate>
 
 @property (nonatomic, weak) id<SBBAuthManagerProtocol> authManager;
 
-@property (nonatomic, strong) NSCache *objectsCachedByTypeAndID;
+@property (nonatomic, strong) NSMutableDictionary *objectsCachedByTypeAndID;
 @property (nonatomic, strong) dispatch_queue_t bridgeObjectCacheQueue;
 
 @property (nonatomic, strong) NSString *managedObjectModelName;
@@ -33,6 +33,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 @property (nonatomic, strong) NSManagedObjectContext *cacheIOContext;
 
 @property (nonatomic, weak) id appWillTerminateObserver;
+@property (nonatomic, weak) id memoryWarningObserver;
 
 @end
 
@@ -71,9 +72,25 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 {
     if (self = [super init]) {
         [self dispatchSyncToBridgeObjectCacheQueue:^{
-            self.objectsCachedByTypeAndID = [[NSCache alloc] init];
+            self.objectsCachedByTypeAndID = [NSMutableDictionary dictionary];
             self.appWillTerminateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
                 // TODO: Make sure the Core Data MOC is saved
+            }];
+            self.memoryWarningObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+                [self dispatchSyncToBridgeObjectCacheQueue:^{
+                    // clear out anything in the in-mem cache that's not currently being held somewhere else
+                    // -- first copy everything to a strong-to-weak map table
+                    NSMapTable *cacheCopy = [NSMapTable strongToWeakObjectsMapTable];
+                    for (NSString *key in self.objectsCachedByTypeAndID.allKeys) {
+                        [cacheCopy setObject:self.objectsCachedByTypeAndID[key] forKey:key];
+                    }
+                    
+                    // -- now delete the original cache
+                    self.objectsCachedByTypeAndID = nil;
+                    
+                    // -- and create a new one from the map table, which will now only contain those objects which are being held elsewhere
+                    self.objectsCachedByTypeAndID = [[cacheCopy dictionaryRepresentation] mutableCopy];
+                }];
             }];
         }];
     }
