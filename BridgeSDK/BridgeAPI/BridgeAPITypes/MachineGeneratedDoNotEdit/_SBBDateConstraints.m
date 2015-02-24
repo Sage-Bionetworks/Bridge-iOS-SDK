@@ -127,6 +127,8 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
     managedObject.allowFuture = self.allowFuture;
 
     managedObject.earliestValue = self.earliestValue;

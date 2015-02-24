@@ -123,7 +123,7 @@
     SBBTestBridgeSubObject *subObject = [SBBTestBridgeSubObject new];
     subObject.stringField = @"thing1";
     SBBTestBridgeObject *object = [SBBTestBridgeObject new];
-    object.guid = [_jsonForTests @"guid"];
+    object.guid = _jsonForTests[@"guid"];
     object.stringField = _jsonForTests[@"stringField"];
     object.shortField = _jsonForTests[@"shortField"];
     object.longField = _jsonForTests[@"longField"];

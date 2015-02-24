@@ -104,6 +104,8 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
     managedObject.lastRetrieved = self.lastRetrieved;
 
     managedObject.type = self.type;

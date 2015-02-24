@@ -96,7 +96,11 @@
     </entity>
     <entity name="ResourceList" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="total" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="BridgeObject" inverseName="resourceList" inverseEntity="BridgeObject" syncable="YES"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="resourceList" inverseEntity="BridgeObject" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="items.type"/>
+            <entry key="entityIDRegex" value="^(Schedule)$"/>
+        </userInfo>
     </entity>
     <entity name="Schedule" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityRef" optional="YES" attributeType="String" syncable="YES"/>
@@ -241,6 +245,9 @@
         <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="type"/>
+        </userInfo>
     </entity>
     <elements>
         <element name="Activity" positionX="-9" positionY="90" width="128" height="118"/>
@@ -270,6 +277,6 @@
         <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>
         <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="108" width="128" height="90"/>
-        <element name="UserProfile" positionX="-63" positionY="-18" width="128" height="120"/>
+        <element name="UserProfile" positionX="-63" positionY="-18" width="128" height="118"/>
     </elements>
 </model>

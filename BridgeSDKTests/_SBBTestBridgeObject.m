@@ -33,6 +33,8 @@
 
 @property (nonatomic, assign) float floatFieldValue;
 
+@property (nonatomic, strong) NSString* guid;
+
 @property (nonatomic, strong) NSArray* jsonArrayField;
 
 @property (nonatomic, strong) NSDictionary* jsonDictField;
@@ -192,6 +194,8 @@
 
     self.floatField = [dictionary objectForKey:@"floatField"];
 
+    self.guid = [dictionary objectForKey:@"guid"];
+
     self.jsonArrayField = [dictionary objectForKey:@"jsonArrayField"];
 
     self.jsonDictField = [dictionary objectForKey:@"jsonDictField"];
@@ -234,6 +238,8 @@
     [dict setObjectIfNotNil:self.doubleField forKey:@"doubleField"];
 
     [dict setObjectIfNotNil:self.floatField forKey:@"floatField"];
+
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.jsonArrayField forKey:@"jsonArrayField"];
 
@@ -303,6 +309,8 @@
 
         self.floatField = managedObject.floatField;
 
+        self.guid = managedObject.guid;
+
         self.jsonArrayField = managedObject.jsonArrayField;
 
         self.jsonDictField = managedObject.jsonDictField;
@@ -354,6 +362,7 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.dateField = self.dateField;
@@ -361,6 +370,8 @@
     managedObject.doubleField = self.doubleField;
 
     managedObject.floatField = self.floatField;
+
+    managedObject.guid = self.guid;
 
     managedObject.jsonArrayField = self.jsonArrayField;
 

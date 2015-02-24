@@ -168,9 +168,23 @@
     if ([objectManager respondsToSelector:@selector(cacheManager)]) {
         id<SBBCacheManagerProtocol> cacheManager = [(id)objectManager cacheManager];
         NSManagedObjectContext *cacheContext = cacheManager.cacheIOContext;
-        if ([self entityForContext:cacheContext]) {
+        NSEntityDescription *entity = [self entityForContext:cacheContext];
+        if (entity) {
+            NSString *entityIDKeyPath = entity.userInfo[@"entityIDKeyPath"];
             [cacheContext performBlockAndWait:^{
-                [self saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+                // if there's an entityIDKeyPath, we're going to look for an existing object to update
+                NSManagedObject *existingObject = nil;
+                if (entityIDKeyPath.length) {
+                    NSString *entityID = [[self dictionaryRepresentationFromObjectManager:objectManager] valueForKeyPath:entityIDKeyPath];
+                    existingObject = [cacheManager managedObjectOfEntity:entity withId:entityID atKeyPath:entityIDKeyPath];
+                }
+                
+                if (existingObject) {
+                    [self updateManagedObject:existingObject withObjectManager:objectManager cacheManager:cacheManager];
+                } else {
+                    // no existing object found to update, so creating a new one
+                    [self saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+                }
             }];
             
             [cacheManager saveCacheIOContext];

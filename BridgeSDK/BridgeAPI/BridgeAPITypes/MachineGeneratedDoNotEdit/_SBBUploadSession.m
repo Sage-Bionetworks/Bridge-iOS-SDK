@@ -115,6 +115,8 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
     managedObject.expires = self.expires;
 
     managedObject.id = self.id;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C109" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="BridgeObject_test" isAbstract="YES" syncable="YES">
         <attribute name="type" optional="YES" attributeType="String" syncable="YES">
             <userInfo>
@@ -50,7 +50,7 @@
     </entity>
     <elements>
         <element name="BridgeObject_test" positionX="-54" positionY="90" width="128" height="73"/>
-        <element name="TestBridgeObject" positionX="-63" positionY="-18" width="128" height="268"/>
+        <element name="TestBridgeObject" positionX="-63" positionY="-18" width="128" height="270"/>
         <element name="TestBridgeSubObject" positionX="-36" positionY="108" width="128" height="73"/>
     </elements>
 </model>

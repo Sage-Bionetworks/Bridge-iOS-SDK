@@ -277,6 +277,7 @@
         }
     }
     <$else$>
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;<$break$><$endif$><$endforeach do$>
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     managedObject.<$Attribute.name$> = self.<$Attribute.name$>;
@@ -289,6 +290,9 @@
             __block NSManagedObject *relMo = nil;
             NSString *keyPath = @"<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>";
             NSString *objectId = obj.<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>;
+            while ([objectId isKindOfClass:[NSArray class]]) {
+                objectId = ((NSArray *)objectId).firstObject;
+            }
 
             for (NSManagedObject *mo in managedObject.<$Relationship.name$>) {
                 if ([[mo valueForKeyPath:keyPath] isEqualToString:objectId]) {

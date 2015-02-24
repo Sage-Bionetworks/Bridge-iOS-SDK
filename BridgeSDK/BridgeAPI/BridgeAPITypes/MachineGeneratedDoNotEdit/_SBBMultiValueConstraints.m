@@ -139,6 +139,8 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
     managedObject.allowMultiple = self.allowMultiple;
 
     managedObject.allowOther = self.allowOther;

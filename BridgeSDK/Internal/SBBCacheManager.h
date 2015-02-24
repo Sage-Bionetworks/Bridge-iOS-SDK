@@ -18,6 +18,8 @@
 
 - (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create;
 
+- (SBBBridgeObject *)cachedSingletonObjectOfType:(NSString *)type createIfMissing:(BOOL)create;
+
 - (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json;
 
 - (NSManagedObjectContext *)cacheIOContext;
@@ -25,6 +27,9 @@
 - (void)saveCacheIOContext;
 
 - (NSString *)encryptionKey;
+
+// must be called in the cacheIOContext private queue
+- (NSManagedObject *)managedObjectOfEntity:(NSEntityDescription *)entity withId:(NSString *)objectId atKeyPath:(NSString *)keyPath;
 
 @end
 

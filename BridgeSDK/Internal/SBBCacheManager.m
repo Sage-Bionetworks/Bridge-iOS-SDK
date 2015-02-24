@@ -163,6 +163,12 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     return fetched;
 }
 
+- (SBBBridgeObject *)cachedSingletonObjectOfType:(NSString *)type createIfMissing:(BOOL)create
+{
+    // cacheable singletons have entityIDKeyPath set to "type"
+    return [self cachedObjectOfType:type withId:type createIfMissing:create];
+}
+
 - (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json
 {
     NSString *type = [json objectForKey:@"type"];
@@ -186,6 +192,22 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     if (!key.length) {
         NSLog(@"Attempt to fetch cached object of type '%@' from Bridge JSON failed; JSON contains no value at the specified key path %@:\n%@", type, keyPath, json);
         return nil;
+    }
+    
+    while ([key isKindOfClass:[NSArray class]]) {
+        key = ((NSArray *)key).firstObject;
+    }
+    
+    NSString *keyRegex = entity.userInfo[@"entityIDRegex"];
+    if (keyRegex) {
+        NSPredicate *keyPred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", keyRegex];
+        NSArray *keyArray = @[key];
+        NSArray *matchingKeyArray = [keyArray filteredArrayUsingPredicate:keyPred];
+        key = [matchingKeyArray firstObject];
+        if (!key.length) {
+            // again, not directly cacheable
+            return nil;
+        }
     }
     
     // Get it from the cache by type & id

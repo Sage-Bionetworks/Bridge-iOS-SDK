@@ -29,6 +29,8 @@
 
 @property (nonatomic, assign) float floatFieldValue;
 
+@property (nonatomic, strong) NSString* guid;
+
 @property (nonatomic, strong) NSArray* jsonArrayField;
 
 @property (nonatomic, strong) NSDictionary* jsonDictField;
