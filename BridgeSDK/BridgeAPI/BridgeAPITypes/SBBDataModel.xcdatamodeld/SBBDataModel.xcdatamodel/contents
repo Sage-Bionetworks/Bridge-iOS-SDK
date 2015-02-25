@@ -121,6 +121,7 @@
     <entity name="Survey" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guidAndCreatedOn" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -133,7 +134,8 @@
             </userInfo>
         </relationship>
         <userInfo>
-            <entry key="entityIDKeyPath" value="guid"/>
+            <entry key="entityIDKeyPath" value="guidAndCreatedOn"/>
+            <entry key="syntheticKeyComponentPaths" value="guid,createdOn"/>
         </userInfo>
     </entity>
     <entity name="SurveyAnswer" representedClassName="" parentEntity="BridgeObject" syncable="YES">
@@ -265,7 +267,7 @@
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
         <element name="Schedule" positionX="-9" positionY="81" width="128" height="178"/>
         <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
-        <element name="Survey" positionX="-36" positionY="27" width="128" height="178"/>
+        <element name="Survey" positionX="-36" positionY="27" width="128" height="193"/>
         <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="133"/>
         <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="73"/>
         <element name="SurveyElement" positionX="-9" positionY="99" width="128" height="120"/>
