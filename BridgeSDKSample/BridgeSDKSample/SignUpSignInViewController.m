@@ -65,6 +65,7 @@
                 if (responseObject[@"sessionToken"]) {
                     [self finishUp];
                     NSLog(@"Signed in successfully to existing account!");
+                    NSLog(@"Sharing scope:%@", responseObject[@"sharingScope"]);
                 } else {
                     NSLog(@"Sign in failed:\n%@", error);
                 }
