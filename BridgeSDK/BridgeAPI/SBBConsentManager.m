@@ -10,7 +10,7 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 
-NSString* const kSBBApiConsent = @"/api/v2/consent";
+NSString* const kSBBApiConsentV1 = @"/api/v1/consent";
 NSString* const kSBBKeyName = @"name";
 NSString* const kSBBKeyBirthdate = @"birthdate";
 NSString* const kSBBKeyImageData = @"imageData";
@@ -71,7 +71,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
   // Add sharing scope
   [ResearchConsent setObject:kSBBConsentShareScopeStrings[scope] forKey:kSBBKeyConsentShareScope];
 
-  return [self.networkManager post:kSBBApiConsent headers:headers parameters:ResearchConsent
+  return [self.networkManager post:@"/api/v2/consent" headers:headers parameters:ResearchConsent
       completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
@@ -83,7 +83,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBApiConsent headers:headers parameters:nil
+  return [self.networkManager get:kSBBApiConsentV1 headers:headers parameters:nil
       completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
     NSString* name = nil;
     NSString* birthdate = nil;
