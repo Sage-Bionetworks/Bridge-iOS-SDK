@@ -11,7 +11,6 @@
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
 #import "SBBBridgeObjects.h"
-#import "SBBBridgeAPIManagerInternal.h"
 
 @implementation SBBScheduleManager
 
@@ -27,17 +26,11 @@
   return shared;
 }
 
-- (NSString *)apiManagerName
-{
-    return @"schedules";
-}
-
 - (NSURLSessionDataTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *urlString = [self urlStringForManagerEndpoint:@"" version:@"v1"];
-  return [self.networkManager get:urlString headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager get:@"/api/v1/schedules" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     // temporary, until "type" field is added to response from this api
     if ([responseObject isKindOfClass:[NSDictionary class]] && ![responseObject objectForKey:@"type"]) {
       responseObject = [responseObject mutableCopy];

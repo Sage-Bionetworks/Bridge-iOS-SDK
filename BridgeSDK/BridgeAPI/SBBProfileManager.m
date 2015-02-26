@@ -10,7 +10,6 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
-#import "SBBBridgeAPIManagerInternal.h"
 
 @implementation SBBProfileManager
 
@@ -26,17 +25,11 @@
   return shared;
 }
 
-- (NSString *)apiManagerName
-{
-    return @"profile";
-}
-
 - (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBProfileManagerGetCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *urlString = [self urlStringForManagerEndpoint:@"" version:@"v1"];
-  return [self.networkManager get:urlString headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager get:@"/api/v1/profile" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     id userProfile = [self.objectManager objectFromBridgeJSON:responseObject];
     if (completion) {
       completion(userProfile, error);

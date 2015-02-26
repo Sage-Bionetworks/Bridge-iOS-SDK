@@ -7,9 +7,9 @@
 //
 
 #import "SBBConsentManager.h"
-#import "SBBBridgeAPIManagerInternal.h"
 
 /* CONSTANTS */
+extern NSString* const kSBBApiConsent;
 extern NSString* const kSBBKeyName;
 extern NSString* const kSBBKeyBirthdate;
 extern NSString* const kSBBKeyImageData;

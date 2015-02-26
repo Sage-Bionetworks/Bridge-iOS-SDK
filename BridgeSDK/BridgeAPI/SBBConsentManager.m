@@ -10,6 +10,7 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 
+NSString* const kSBBApiConsent = @"/api/v2/consent";
 NSString* const kSBBKeyName = @"name";
 NSString* const kSBBKeyBirthdate = @"birthdate";
 NSString* const kSBBKeyImageData = @"imageData";
@@ -35,11 +36,6 @@ NSString* const kSBBConsentShareScopeStrings[] = {
   });
   
   return shared;
-}
-
-- (NSString *)apiManagerName
-{
-    return @"consent";
 }
 
 - (NSURLSessionDataTask *)consentSignature:(NSString *)name
@@ -75,8 +71,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
   // Add sharing scope
   [ResearchConsent setObject:kSBBConsentShareScopeStrings[scope] forKey:kSBBKeyConsentShareScope];
 
-  NSString *urlString = [self urlStringForManagerEndpoint:@"" version:@"v2"];
-  return [self.networkManager post:urlString headers:headers parameters:ResearchConsent
+  return [self.networkManager post:kSBBApiConsent headers:headers parameters:ResearchConsent
       completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
@@ -88,8 +83,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *urlString = [self urlStringForManagerEndpoint:@"" version:@"v1"];
-  return [self.networkManager get:urlString headers:headers parameters:nil
+  return [self.networkManager get:kSBBApiConsent headers:headers parameters:nil
       completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
     NSString* name = nil;
     NSString* birthdate = nil;
@@ -120,8 +114,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *urlString = [self urlStringForManagerEndpoint:@"/dataSharing/suspend" version:@"v1"];
-  return [self.networkManager post:urlString headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager post:@"/api/v1/consent/dataSharing/suspend" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
@@ -132,8 +125,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *urlString = [self urlStringForManagerEndpoint:@"/dataSharing/resume" version:@"v1"];
-  return [self.networkManager post:urlString headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager post:@"/api/v1/consent/dataSharing/resume" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
@@ -145,8 +137,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     NSDictionary *parameters = @{kSBBKeyConsentShareScope: kSBBConsentShareScopeStrings[scope]};
-    NSString *urlString = [self urlStringForManagerEndpoint:@"/dataSharing" version:@"v2"];
-    return [self.networkManager post:urlString headers:headers parameters:parameters completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:@"/api/v2/consent/dataSharing" headers:headers parameters:parameters completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (completion) {
             completion(responseObject, error);
         }

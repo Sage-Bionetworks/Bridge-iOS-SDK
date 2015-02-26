@@ -135,7 +135,7 @@ NSString *kAPIPrefix = @"webservices";
   return baseURL;
 }
 
-+ (NSString *)studyForEnvironment:(SBBEnvironment)environment prefix:(NSString *)prefix
++ (NSString *)hostForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
 {
     static NSString *envFormatStrings[] = {
         @"%@",
@@ -143,23 +143,10 @@ NSString *kAPIPrefix = @"webservices";
         @"%@-develop",
         @"%@-custom"
     };
-    NSString *study = nil;
-    
-    if ([prefix length] > 0 && (NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
-        study = [NSString stringWithFormat:envFormatStrings[environment], prefix];
-    } else {
-        study = nil;
-    }
-    
-    return study;
-}
-
-+ (NSString *)hostForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
-{
     NSString *host = nil;
 
-    if ([prefix length] > 0) {
-        NSString *firstComponent = [self studyForEnvironment:environment prefix:prefix];
+    if ([prefix length] > 0 && (NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
+        NSString *firstComponent = [NSString stringWithFormat:envFormatStrings[environment], prefix];
         host = [NSString stringWithFormat:@"%@.%@", firstComponent, path];
     } else {
         host = nil;
