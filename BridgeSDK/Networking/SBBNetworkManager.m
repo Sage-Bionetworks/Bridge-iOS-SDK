@@ -95,11 +95,11 @@ NSString *kAPIPrefix = @"webservices";
 // endpoint URLs.
 @property (nonatomic, strong) NSString * baseURL;
 
-// bridgeHost is the host part of the web URL for a study, built up from the prefix (e.g. "parkinsons"), the
-// environment (prod, dev, staging), and the domain "sagebridge.org". It is used in the Bridge-Host header
-// to identify the study for which a request to the Bridge baseURL is intended (see above). For non-Bridge
-// APIs it will be nil, and will not be sent as a header.
-@property (nonatomic, strong) NSString * bridgeHost;
+// bridgeStudy is the study identifier, built from the prefix set at app launch (e.g. "parkinsons") and the
+// environment (prod, dev, staging). It is used in the Bridge-Study header to identify the study for which
+// a request to the Bridge baseURL is intended (see above). For non-Bridge APIs it will be nil, and will not
+// be sent as a header.
+@property (nonatomic, strong) NSString * bridgeStudy;
 
 @property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
 @property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
@@ -136,7 +136,7 @@ NSString *kAPIPrefix = @"webservices";
   return baseURL;
 }
 
-+ (NSString *)hostForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
++ (NSString *)studyForEnvironment:(SBBEnvironment)environment prefix:(NSString *)prefix
 {
     static NSString *envFormatStrings[] = {
         @"%@",
@@ -144,10 +144,23 @@ NSString *kAPIPrefix = @"webservices";
         @"%@-develop",
         @"%@-custom"
     };
+    NSString *study = nil;
+    
+    if ([prefix length] > 0 && (NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
+        study = [NSString stringWithFormat:envFormatStrings[environment], prefix];
+    } else {
+        study = nil;
+    }
+    
+    return study;
+}
+
++ (NSString *)hostForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
+{
     NSString *host = nil;
 
-    if ([prefix length] > 0 && (NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
-        NSString *firstComponent = [NSString stringWithFormat:envFormatStrings[environment], prefix];
+    if ([prefix length] > 0) {
+        NSString *firstComponent = [self studyForEnvironment:environment prefix:prefix];
         host = [NSString stringWithFormat:@"%@.%@", firstComponent, path];
     } else {
         host = nil;
@@ -159,10 +172,10 @@ NSString *kAPIPrefix = @"webservices";
 + (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath
 {
   NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:baseURLPath];
-  NSString *bridgeHost = [self hostForEnvironment:environment appURLPrefix:prefix baseURLPath:baseURLPath];
+  NSString *bridgeStudy = [self studyForEnvironment:environment prefix:prefix];
   SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL];
   networkManager.environment = environment;
-  networkManager.bridgeHost = bridgeHost;
+  networkManager.bridgeStudy = bridgeStudy;
   return networkManager;
 }
 
@@ -179,8 +192,8 @@ NSString *kAPIPrefix = @"webservices";
     SBBEnvironment environment = gSBBDefaultEnvironment;
     
     NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
-    NSString *bridgeHost = [self hostForEnvironment:environment appURLPrefix:gSBBAppURLPrefix baseURLPath:@"sagebridge.org"];
-    shared = [[self alloc] initWithBaseURL:baseURL bridgeHost:bridgeHost];
+    NSString *bridgeStudy = [self studyForEnvironment:environment prefix:gSBBAppURLPrefix];
+    shared = [[self alloc] initWithBaseURL:baseURL bridgeStudy:bridgeStudy];
     shared.environment = environment;
   });
   
@@ -193,15 +206,15 @@ NSString *kAPIPrefix = @"webservices";
 
 - (instancetype) initWithBaseURL: (NSString*) baseURL
 {
-    return [self initWithBaseURL:baseURL bridgeHost:nil];
+    return [self initWithBaseURL:baseURL bridgeStudy:nil];
 }
 
-- (instancetype) initWithBaseURL: (NSString*) baseURL bridgeHost: (NSString*)bridgeHost
+- (instancetype) initWithBaseURL: (NSString*) baseURL bridgeStudy: (NSString*)bridgeStudy
 {
     self = [super init]; //Using [self class] instead of APCNetworkManager to enable subclassing
     if (self) {
         self.baseURL = baseURL;
-        self.bridgeHost = bridgeHost;
+        self.bridgeStudy = bridgeStudy;
         self.internetReachability = [Reachability reachabilityForInternetConnection];
         NSURL *url = [NSURL URLWithString:baseURL];
         self.serverReachability = [Reachability reachabilityWithHostName:[url host]]; //Check if only hostname is required
@@ -506,8 +519,8 @@ NSString *kAPIPrefix = @"webservices";
   mutableRequest.HTTPMethod = method;
   [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
   [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
-  if (_bridgeHost) {
-    [mutableRequest setValue:_bridgeHost forHTTPHeaderField:@"Bridge-Host"];
+  if (_bridgeStudy) {
+    [mutableRequest setValue:_bridgeStudy forHTTPHeaderField:@"Bridge-Study"];
   }
   
   if (headers) {
