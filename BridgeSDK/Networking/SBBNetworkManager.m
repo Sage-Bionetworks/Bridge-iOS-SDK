@@ -95,10 +95,9 @@ NSString *kAPIPrefix = @"webservices";
 // endpoint URLs.
 @property (nonatomic, strong) NSString * baseURL;
 
-// bridgeStudy is the study identifier, built from the prefix set at app launch (e.g. "parkinsons") and the
-// environment (prod, dev, staging). It is used in the Bridge-Study header to identify the study for which
-// a request to the Bridge baseURL is intended (see above). For non-Bridge APIs it will be nil, and will not
-// be sent as a header.
+// bridgeStudy is the study identifier, which is the prefix set at app launch (e.g. "parkinsons"). It is used
+// in the Bridge-Study header to identify the study for which a request to the Bridge baseURL is intended
+// (see above). For non-Bridge APIs it will be nil, and will not be sent as a header.
 @property (nonatomic, strong) NSString * bridgeStudy;
 
 @property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
@@ -172,7 +171,7 @@ NSString *kAPIPrefix = @"webservices";
 + (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath
 {
   NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:baseURLPath];
-  NSString *bridgeStudy = [self studyForEnvironment:environment prefix:prefix];
+  NSString *bridgeStudy = prefix;
   SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL];
   networkManager.environment = environment;
   networkManager.bridgeStudy = bridgeStudy;
@@ -192,7 +191,7 @@ NSString *kAPIPrefix = @"webservices";
     SBBEnvironment environment = gSBBDefaultEnvironment;
     
     NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
-    NSString *bridgeStudy = [self studyForEnvironment:environment prefix:gSBBAppURLPrefix];
+    NSString *bridgeStudy = gSBBAppURLPrefix;
     shared = [[self alloc] initWithBaseURL:baseURL bridgeStudy:bridgeStudy];
     shared.environment = environment;
   });

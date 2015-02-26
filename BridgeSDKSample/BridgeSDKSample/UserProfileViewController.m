@@ -116,7 +116,9 @@ static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
     [SBBComponent(SBBConsentManager) retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate,
                                                                               UIImage* signatureImage, NSError* error) {
         if (signatureImage != nil) {
-            _signatureImageView.image = signatureImage;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _signatureImageView.image = signatureImage;
+            });
         }
         NSLog(@"Name: %@", name);
         NSLog(@"Birthdate: %@", birthdate);
