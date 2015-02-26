@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPIManager.h"
+#import "SBBBridgeAPIManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
@@ -35,6 +35,19 @@
   manager.objectManager = objectManager;
   
   return manager;
+}
+
+- (NSString *)apiManagerName
+{
+    // subclasses must override
+    return  nil;
+}
+
+- (NSString *)urlStringForManagerEndpoint:(NSString *)endpoint version:(NSString *)version
+{
+    NSString *urlForEndpoint = [NSString stringWithFormat:@"/api/%@/%@%@", version, [self apiManagerName], endpoint];
+
+    return urlForEndpoint;
 }
 
 @end

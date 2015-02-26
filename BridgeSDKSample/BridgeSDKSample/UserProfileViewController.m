@@ -9,7 +9,9 @@
 #import "UserProfileViewController.h"
 @import BridgeSDK;
 
-@interface UserProfileViewController ()
+static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
+
+@interface UserProfileViewController ()<UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *emailAddressTextField;
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
@@ -17,13 +19,13 @@
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneTextField;
 @property (weak, nonatomic) IBOutlet UIImageView *signatureImageView;
+@property (weak, nonatomic) IBOutlet UIPickerView *scopePickerView;
 
 - (IBAction)didTouchLoadButton:(id)sender;
 - (IBAction)didTouchUpdateButton:(id)sender;
 
 - (IBAction)didTouchGiveButton:(id)sender;
-- (IBAction)didTouchSuspendButton:(id)sender;
-- (IBAction)didTouchResumeButton:(id)sender;
+- (IBAction)didTouchChangeButton:(id)sender;
 
 @end
 
@@ -32,6 +34,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    NSInteger scope = [[NSUserDefaults standardUserDefaults] integerForKey:kSBBConsentSharingScopeKey];
+    [_scopePickerView selectRow:scope inComponent:0 animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -92,12 +96,19 @@
     NSData* imageData = [NSData dataWithContentsOfFile:imagePath];
     UIImage* image = [[UIImage alloc] initWithData:imageData];
     
+    NSInteger scope = [_scopePickerView selectedRowInComponent:0];
+    
     // call server
     [SBBComponent(SBBConsentManager) consentSignature:@"::name::"
-                                            birthdate:[NSDate dateWithTimeIntervalSinceNow:-946684800.0] signatureImage:image
+                                            birthdate:[NSDate dateWithTimeIntervalSinceNow:-946684800.0]
+                                       signatureImage:image
+                                          dataSharing:scope
                                            completion:^(id responseObject, NSError *error) {
                                                NSLog(@"%@", responseObject);
                                                NSLog(@"Error: %@", error);
+                                               if (!error) {
+                                                   [[NSUserDefaults standardUserDefaults] setInteger:scope forKey:kSBBConsentSharingScopeKey];
+                                               }
                                            }];
 }
 
@@ -105,27 +116,45 @@
     [SBBComponent(SBBConsentManager) retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate,
                                                                               UIImage* signatureImage, NSError* error) {
         if (signatureImage != nil) {
-            [_signatureImageView initWithImage:signatureImage];
+            _signatureImageView.image = signatureImage;
         }
         NSLog(@"Name: %@", name);
-        NSLog(@"Birtdate: %@", birthdate);
+        NSLog(@"Birthdate: %@", birthdate);
         NSLog(@"HasSignatureImage: %@", signatureImage != nil ? @"true" : @"false");
         NSLog(@"Error: %@", error);
     }];
 }
 
-- (IBAction)didTouchSuspendButton:(id)sender {
-    [SBBComponent(SBBConsentManager) suspendConsentWithCompletion:^(id responseObject, NSError *error) {
+- (IBAction)didTouchChangeButton:(id)sender {
+    NSInteger scope = [_scopePickerView selectedRowInComponent:0];
+    [SBBComponent(SBBConsentManager) dataSharing:scope completion:^(id responseObject, NSError *error) {
         NSLog(@"%@", responseObject);
         NSLog(@"Error: %@", error);
     }];
 }
 
-- (IBAction)didTouchResumeButton:(id)sender {
-    [SBBComponent(SBBConsentManager) resumeConsentWithCompletion:^(id responseObject, NSError *error) {
-        NSLog(@"%@", responseObject);
-        NSLog(@"Error: %@", error);
-    }];
+#pragma mark - UIPickerViewDataSource
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return 3;
+}
+
+#pragma mark - UIPickerViewDelegate
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    static NSString *sharingScopes[] = {
+        @"None",
+        @"This study only",
+        @"All qualified researchers"
+    };
+    return sharingScopes[row];
 }
 
 @end

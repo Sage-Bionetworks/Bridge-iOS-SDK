@@ -234,6 +234,7 @@
 		606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBIdentifierHolder.m; sourceTree = "<group>"; };
 		606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBIdentifierHolder.h; sourceTree = "<group>"; };
 		606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBIdentifierHolder.m; sourceTree = "<group>"; };
+		6080A19B1A9E6C92003ADB0E /* SBBBridgeAPIManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAPIManagerInternal.h; sourceTree = "<group>"; };
 		60F1E4141A420E96009B380E /* _SBBActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBActivity.h; sourceTree = "<group>"; };
 		60F1E4151A420E96009B380E /* _SBBActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBActivity.m; sourceTree = "<group>"; };
 		60F1E4191A420EAA009B380E /* _SBBGuidCreatedOnVersionHolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBGuidCreatedOnVersionHolder.h; sourceTree = "<group>"; };
@@ -659,6 +660,7 @@
 				8026BD2719C8AE200077F3EB /* SBBAuthManagerInternal.h */,
 				80BB09F719C2234100E419A1 /* SBBAuthManager.m */,
 				8026D67C19E857FC008942B0 /* SBBBridgeAPIManager.h */,
+				6080A19B1A9E6C92003ADB0E /* SBBBridgeAPIManagerInternal.h */,
 				8026D67D19E857FC008942B0 /* SBBBridgeAPIManager.m */,
 				8026BD2519C8948E0077F3EB /* SBBComponent.h */,
 				8026BD2019C892E40077F3EB /* SBBComponentManager.h */,
@@ -1257,7 +1259,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1279,7 +1281,6 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
@@ -1302,7 +1303,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1319,7 +1320,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -1331,7 +1331,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 2;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = BridgeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1350,7 +1350,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 2;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = BridgeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

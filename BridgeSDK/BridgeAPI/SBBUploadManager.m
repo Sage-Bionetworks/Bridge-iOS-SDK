@@ -14,6 +14,7 @@
 #import "SBBUploadSession.h"
 #import "SBBUploadRequest.h"
 #import "NSError+SBBAdditions.h"
+#import "SBBBridgeAPIManagerInternal.h"
 
 static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
@@ -75,6 +76,11 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
   }
   
   return self;
+}
+
+- (NSString *)apiManagerName
+{
+    return @"upload";
 }
 
 - (NSURL *)tempUploadDirURL
@@ -260,7 +266,8 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
   [self setUploadRequestJSON:uploadRequestJSON forFile:[tempFileURL path]];
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  [self.networkManager downloadFileFromURLString:@"/api/v1/upload" method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:nil taskCompletion:nil];
+    NSString *urlString = [self urlStringForManagerEndpoint:@"" version:@"v1"];
+  [self.networkManager downloadFileFromURLString:urlString method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:nil taskCompletion:nil];
 }
 
 #pragma mark - Delegate methods
@@ -353,10 +360,11 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     // tell the API we done did it
     SBBUploadSession *uploadSession = [self uploadSessionForFile:uploadTask.taskDescription];
     [self setUploadSessionJSON:nil forFile:uploadTask.taskDescription];
-    NSString *ref = [NSString stringWithFormat:@"/api/v1/upload/%@/complete", uploadSession.id];
+    NSString *ref = [NSString stringWithFormat:@"/%@/complete", uploadSession.id];
+    NSString *urlString = [self urlStringForManagerEndpoint:ref version:@"v1"];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self.networkManager post:urlString headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
       [self completeUploadOfFile:uploadTask.taskDescription withError:error];
     }];
   } else if ([task isKindOfClass:[NSURLSessionDownloadTask class]]) {

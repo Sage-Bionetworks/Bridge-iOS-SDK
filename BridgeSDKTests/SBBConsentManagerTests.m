@@ -28,10 +28,11 @@
 - (void)testRetrieve {
   // construct consent manager with mock response
   NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01"};
-  [self.mockNetworkManager setJson:responseDict andResponseCode:200 forEndpoint:kSBBApiConsent andMethod:@"GET"];
   SBBConsentManager* consentMan = [SBBConsentManager managerWithAuthManager:SBBComponent(SBBAuthManager)
     networkManager:self.mockNetworkManager objectManager:SBBComponent(SBBObjectManager)];
-
+    NSString *endpoint = [consentMan urlStringForManagerEndpoint:@"" version:@"v1"];
+    [self.mockNetworkManager setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    
   // execute and validate
   [consentMan retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate, UIImage* signatureImage,
       NSError* error) {
@@ -50,9 +51,10 @@
   // construct consent manager with mock response
   NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01",
     kSBBKeyImageData:imageBase64String, kSBBKeyImageMimeType:kSBBMimeTypePng};
-  [self.mockNetworkManager setJson:responseDict andResponseCode:200 forEndpoint:kSBBApiConsent andMethod:@"GET"];
   SBBConsentManager* consentMan = [SBBConsentManager managerWithAuthManager:SBBComponent(SBBAuthManager)
     networkManager:self.mockNetworkManager objectManager:SBBComponent(SBBObjectManager)];
+    NSString *endpoint = [consentMan urlStringForManagerEndpoint:@"" version:@"v1"];
+    [self.mockNetworkManager setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
 
   // execute and validate
   [consentMan retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate, UIImage* signatureImage,

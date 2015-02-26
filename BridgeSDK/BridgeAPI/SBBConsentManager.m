@@ -10,12 +10,18 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 
-NSString* const kSBBApiConsent = @"/api/v1/consent";
 NSString* const kSBBKeyName = @"name";
 NSString* const kSBBKeyBirthdate = @"birthdate";
 NSString* const kSBBKeyImageData = @"imageData";
 NSString* const kSBBKeyImageMimeType = @"imageMimeType";
 NSString* const kSBBMimeTypePng = @"image/png";
+NSString* const kSBBKeyConsentShareScope = @"scope";
+
+NSString* const kSBBConsentShareScopeStrings[] = {
+    @"no_sharing",
+    @"sponsors_and_partners",
+    @"all_qualified_researchers"
+};
 
 @implementation SBBConsentManager
 
@@ -31,8 +37,16 @@ NSString* const kSBBMimeTypePng = @"image/png";
   return shared;
 }
 
-- (NSURLSessionDataTask *)consentSignature:(NSString *)name birthdate:(NSDate *)date
-    signatureImage:(UIImage*)signatureImage completion:(SBBConsentManagerCompletionBlock)completion
+- (NSString *)apiManagerName
+{
+    return @"consent";
+}
+
+- (NSURLSessionDataTask *)consentSignature:(NSString *)name
+                                 birthdate:(NSDate *)date
+                            signatureImage:(UIImage*)signatureImage
+                              dataSharing:(SBBConsentShareScope)scope
+                                completion:(SBBConsentManagerCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
@@ -46,19 +60,23 @@ NSString* const kSBBMimeTypePng = @"image/png";
   });
   
   NSString *birthdate = [birthdateFormatter stringFromDate:date];
-  NSDictionary *ResearchConsent = [NSMutableDictionary dictionary];
-  [ResearchConsent setValue:name forKey:kSBBKeyName];
-  [ResearchConsent setValue:birthdate forKey:kSBBKeyBirthdate];
+  NSMutableDictionary *ResearchConsent = [NSMutableDictionary dictionary];
+  [ResearchConsent setObject:name forKey:kSBBKeyName];
+  [ResearchConsent setObject:birthdate forKey:kSBBKeyBirthdate];
 
   // Add signature image, if it's specified
   if (signatureImage != nil) {
     NSData* imageData = UIImagePNGRepresentation(signatureImage);
     NSString* imageBase64String = [imageData base64EncodedStringWithOptions:kNilOptions];
-    [ResearchConsent setValue:imageBase64String forKey:kSBBKeyImageData];
-    [ResearchConsent setValue:kSBBMimeTypePng forKey:kSBBKeyImageMimeType];
+    [ResearchConsent setObject:imageBase64String forKey:kSBBKeyImageData];
+    [ResearchConsent setObject:kSBBMimeTypePng forKey:kSBBKeyImageMimeType];
   }
+    
+  // Add sharing scope
+  [ResearchConsent setObject:kSBBConsentShareScopeStrings[scope] forKey:kSBBKeyConsentShareScope];
 
-  return [self.networkManager post:kSBBApiConsent headers:headers parameters:ResearchConsent
+  NSString *urlString = [self urlStringForManagerEndpoint:@"" version:@"v2"];
+  return [self.networkManager post:urlString headers:headers parameters:ResearchConsent
       completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
@@ -70,7 +88,8 @@ NSString* const kSBBMimeTypePng = @"image/png";
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBApiConsent headers:headers parameters:nil
+  NSString *urlString = [self urlStringForManagerEndpoint:@"" version:@"v1"];
+  return [self.networkManager get:urlString headers:headers parameters:nil
       completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
     NSString* name = nil;
     NSString* birthdate = nil;
@@ -101,7 +120,8 @@ NSString* const kSBBMimeTypePng = @"image/png";
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager post:@"/api/v1/consent/dataSharing/suspend" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  NSString *urlString = [self urlStringForManagerEndpoint:@"/dataSharing/suspend" version:@"v1"];
+  return [self.networkManager post:urlString headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
@@ -112,11 +132,25 @@ NSString* const kSBBMimeTypePng = @"image/png";
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager post:@"/api/v1/consent/dataSharing/resume" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  NSString *urlString = [self urlStringForManagerEndpoint:@"/dataSharing/resume" version:@"v1"];
+  return [self.networkManager post:urlString headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
   }];
+}
+
+- (NSURLSessionDataTask *)dataSharing:(SBBConsentShareScope)scope completion:(SBBConsentManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSDictionary *parameters = @{kSBBKeyConsentShareScope: kSBBConsentShareScopeStrings[scope]};
+    NSString *urlString = [self urlStringForManagerEndpoint:@"/dataSharing" version:@"v2"];
+    return [self.networkManager post:urlString headers:headers parameters:parameters completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
 }
 
 @end
