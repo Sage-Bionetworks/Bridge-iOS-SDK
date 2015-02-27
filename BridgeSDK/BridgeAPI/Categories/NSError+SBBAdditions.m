@@ -58,13 +58,13 @@
         retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerPreconditionNotMet userInfo:@{NSLocalizedDescriptionKey: @"Client not consented", SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (NSLocationInRange(statusCode, NSMakeRange(400, 99))) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: @"Client Error. Please contact SOMEBODY",  SBB_ORIGINAL_ERROR_KEY: foundationObject}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Client Error: %@. Please contact customer support.", @(statusCode)],  SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (statusCode == 503) {
         retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerUnderMaintenance userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Under Maintenance.", SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (NSLocationInRange(statusCode, NSMakeRange(500, 99))) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Error. Please contact SOMEBODY", SBB_ORIGINAL_ERROR_KEY: foundationObject}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Backend Server Error: %@. Please contact customer support.", @(statusCode)], SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     return retError;
 }
