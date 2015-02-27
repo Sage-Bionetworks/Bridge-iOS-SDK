@@ -10,12 +10,19 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 
-NSString* const kSBBApiConsent = @"/api/v1/consent";
+NSString* const kSBBApiConsentV1 = @"/api/v1/consent";
 NSString* const kSBBKeyName = @"name";
 NSString* const kSBBKeyBirthdate = @"birthdate";
 NSString* const kSBBKeyImageData = @"imageData";
 NSString* const kSBBKeyImageMimeType = @"imageMimeType";
 NSString* const kSBBMimeTypePng = @"image/png";
+NSString* const kSBBKeyConsentShareScope = @"scope";
+
+NSString* const kSBBConsentShareScopeStrings[] = {
+    @"no_sharing",
+    @"sponsors_and_partners",
+    @"all_qualified_researchers"
+};
 
 @implementation SBBConsentManager
 
@@ -31,8 +38,11 @@ NSString* const kSBBMimeTypePng = @"image/png";
   return shared;
 }
 
-- (NSURLSessionDataTask *)consentSignature:(NSString *)name birthdate:(NSDate *)date
-    signatureImage:(UIImage*)signatureImage completion:(SBBConsentManagerCompletionBlock)completion
+- (NSURLSessionDataTask *)consentSignature:(NSString *)name
+                                 birthdate:(NSDate *)date
+                            signatureImage:(UIImage*)signatureImage
+                              dataSharing:(SBBConsentShareScope)scope
+                                completion:(SBBConsentManagerCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
@@ -46,19 +56,22 @@ NSString* const kSBBMimeTypePng = @"image/png";
   });
   
   NSString *birthdate = [birthdateFormatter stringFromDate:date];
-  NSDictionary *ResearchConsent = [NSMutableDictionary dictionary];
-  [ResearchConsent setValue:name forKey:kSBBKeyName];
-  [ResearchConsent setValue:birthdate forKey:kSBBKeyBirthdate];
+  NSMutableDictionary *ResearchConsent = [NSMutableDictionary dictionary];
+  [ResearchConsent setObject:name forKey:kSBBKeyName];
+  [ResearchConsent setObject:birthdate forKey:kSBBKeyBirthdate];
 
   // Add signature image, if it's specified
   if (signatureImage != nil) {
     NSData* imageData = UIImagePNGRepresentation(signatureImage);
     NSString* imageBase64String = [imageData base64EncodedStringWithOptions:kNilOptions];
-    [ResearchConsent setValue:imageBase64String forKey:kSBBKeyImageData];
-    [ResearchConsent setValue:kSBBMimeTypePng forKey:kSBBKeyImageMimeType];
+    [ResearchConsent setObject:imageBase64String forKey:kSBBKeyImageData];
+    [ResearchConsent setObject:kSBBMimeTypePng forKey:kSBBKeyImageMimeType];
   }
+    
+  // Add sharing scope
+  [ResearchConsent setObject:kSBBConsentShareScopeStrings[scope] forKey:kSBBKeyConsentShareScope];
 
-  return [self.networkManager post:kSBBApiConsent headers:headers parameters:ResearchConsent
+  return [self.networkManager post:@"/api/v2/consent" headers:headers parameters:ResearchConsent
       completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
@@ -70,7 +83,7 @@ NSString* const kSBBMimeTypePng = @"image/png";
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBApiConsent headers:headers parameters:nil
+  return [self.networkManager get:kSBBApiConsentV1 headers:headers parameters:nil
       completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
     NSString* name = nil;
     NSString* birthdate = nil;
@@ -117,6 +130,18 @@ NSString* const kSBBMimeTypePng = @"image/png";
       completion(responseObject, error);
     }
   }];
+}
+
+- (NSURLSessionDataTask *)dataSharing:(SBBConsentShareScope)scope completion:(SBBConsentManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSDictionary *parameters = @{kSBBKeyConsentShareScope: kSBBConsentShareScopeStrings[scope]};
+    return [self.networkManager post:@"/api/v2/consent/dataSharing" headers:headers parameters:parameters completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
 }
 
 @end
