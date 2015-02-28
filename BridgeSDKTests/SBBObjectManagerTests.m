@@ -21,6 +21,7 @@
 @property (nonatomic, strong) NSDictionary *jsonForTests;
 @property (nonatomic, strong) NSDictionary *mappingForObject;
 @property (nonatomic, strong) NSDictionary *mappingForSubObject;
+@property (nonatomic, strong) SBBObjectManager *objectManager;
 
 @end
 
@@ -84,10 +85,8 @@
     SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
     delegate.password = @"123456";
     aMan.authDelegate = delegate;
-    SBBCacheManager *cMan = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING authManager:aMan];
-    [SBBComponentManager registerComponent:cMan forClass:[SBBCacheManager class]];
-    SBBObjectManager *oMan = [SBBObjectManager objectManagerWithCacheManager:cMan];
-    [SBBComponentManager registerComponent:oMan forClass:[SBBObjectManager class]];
+    SBBCacheManager *cMan = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
+    _objectManager = [SBBObjectManager objectManagerWithCacheManager:cMan];
 }
 
 - (void)tearDown {
@@ -99,7 +98,7 @@
 }
 
 - (void)testObjectFromBridgeJSONNoMapping {
-    SBBTestBridgeObject *testObject = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:_jsonForTests];
+    SBBTestBridgeObject *testObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
     XCTAssert([testObject isKindOfClass:[SBBTestBridgeObject class]], @"Creates correct type");
     XCTAssert([testObject.bridgeSubObjectField isKindOfClass:[SBBTestBridgeSubObject class]], @"Creates correct subtype for Bridge-object field");
     XCTAssert([testObject.bridgeObjectArrayField[0] isKindOfClass:[SBBTestBridgeSubObject class]], @"Creates correct subtype for Bridge-object array field");
@@ -107,16 +106,15 @@
 }
 
 - (void)testObjectFromBridgeJSONWithMapping {
-    id<SBBObjectManagerProtocol> om = SBBComponent(SBBObjectManager);
-    [om setupMappingForType:@"TestBridgeObject" toClass:[TestMappedObject class] fieldToPropertyMappings:_mappingForObject];
-    [om setupMappingForType:@"TestBridgeSubObject" toClass:[TestMappedSubObject class] fieldToPropertyMappings:_mappingForSubObject];
-    TestMappedObject *testObject = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:_jsonForTests];
+    [_objectManager setupMappingForType:@"TestBridgeObject" toClass:[TestMappedObject class] fieldToPropertyMappings:_mappingForObject];
+    [_objectManager setupMappingForType:@"TestBridgeSubObject" toClass:[TestMappedSubObject class] fieldToPropertyMappings:_mappingForSubObject];
+    TestMappedObject *testObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
     XCTAssert([testObject isKindOfClass:[TestMappedObject class]], @"Creates correct type");
     XCTAssert([testObject.mappedObjectSubField isKindOfClass:[TestMappedSubObject class]], @"Creates correct subtype for Bridge-object field");
     XCTAssert([testObject.mappedObjectArrayField[0] isKindOfClass:[TestMappedSubObject class]], @"Creates correct subtype for Bridge-object array field");
     XCTAssert([testObject.dateStringField isKindOfClass:[NSString class]] && [testObject.dateStringField isEqualToString:_jsonForTests[@"dateField"]], @"Correctly maps date field as string");
-    [om clearMappingForType:@"TestBridgeSubObject"];
-    [om clearMappingForType:@"TestBridgeObject"];
+    [_objectManager clearMappingForType:@"TestBridgeSubObject"];
+    [_objectManager clearMappingForType:@"TestBridgeObject"];
 }
 
 - (void)testBridgeJSONFromObjectNoMapping {
@@ -142,7 +140,7 @@
         [object addBridgeObjectArrayFieldObject:aSubObject];
     }
     
-    NSDictionary *json = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:object];
+    NSDictionary *json = [_objectManager bridgeJSONFromObject:object];
     
     XCTAssert([json isKindOfClass:[NSDictionary class]], @"Converted object to json dict");
     XCTAssert([json[@"guid"] isEqualToString:object.guid], @"Correctly set guid");
@@ -168,9 +166,8 @@
 }
 
 - (void)testBridgeJSONFromObjectWithMapping {
-    id<SBBObjectManagerProtocol> om = [SBBObjectManager objectManager];
-    [om setupMappingForType:@"TestBridgeObject" toClass:[TestMappedObject class] fieldToPropertyMappings:_mappingForObject];
-    [om setupMappingForType:@"TestBridgeSubObject" toClass:[TestMappedSubObject class] fieldToPropertyMappings:_mappingForSubObject];
+    [_objectManager setupMappingForType:@"TestBridgeObject" toClass:[TestMappedObject class] fieldToPropertyMappings:_mappingForObject];
+    [_objectManager setupMappingForType:@"TestBridgeSubObject" toClass:[TestMappedSubObject class] fieldToPropertyMappings:_mappingForSubObject];
     
     TestMappedSubObject *testSubObject = [TestMappedSubObject new];
     testSubObject.textField = @"thing1";
@@ -187,7 +184,7 @@
     testObject.mappedObjectArrayField = testSubObjectArray;
     testObject.numericField = 6072.0;
     
-    NSDictionary *json = [om bridgeJSONFromObject:testObject];
+    NSDictionary *json = [_objectManager bridgeJSONFromObject:testObject];
     
     XCTAssert([json isKindOfClass:[NSDictionary class]], @"Converted object to json dict");
     NSLog(@"json type: '%@'", json[@"type"]);

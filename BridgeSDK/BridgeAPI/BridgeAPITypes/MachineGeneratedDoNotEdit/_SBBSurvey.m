@@ -8,6 +8,7 @@
 //
 
 #import "_SBBSurvey.h"
+#import "_SBBSurveyInternal.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
@@ -25,6 +26,8 @@
 @property (nonatomic, strong) NSDate* createdOn;
 
 @property (nonatomic, strong) NSString* guid;
+
+@property (nonatomic, strong) NSString* guidAndCreatedOn;
 
 @property (nonatomic, strong) NSString* identifier;
 
@@ -113,6 +116,15 @@
 
     self.version = [dictionary objectForKey:@"version"];
 
+    NSArray *paths = [@"guid,createdOn" componentsSeparatedByString:@","];
+    NSString *key = @"";
+    for (NSString *path in paths) {
+        NSString *value = [dictionary valueForKeyPath:path];
+        key = [key stringByAppendingString:value];
+    }
+
+    self.guidAndCreatedOn = key;
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"elements"])
     {
         SBBSurveyElement *elementsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
@@ -183,6 +195,8 @@
 
         self.guid = managedObject.guid;
 
+        self.guidAndCreatedOn = managedObject.guidAndCreatedOn;
+
         self.identifier = managedObject.identifier;
 
         self.modifiedOn = managedObject.modifiedOn;
@@ -226,6 +240,8 @@
     managedObject.createdOn = self.createdOn;
 
     managedObject.guid = self.guid;
+
+    managedObject.guidAndCreatedOn = self.guidAndCreatedOn;
 
     managedObject.identifier = self.identifier;
 

@@ -121,7 +121,11 @@
     <entity name="Survey" representedClassName="" parentEntity="BridgeObject" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="guidAndCreatedOn" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guidAndCreatedOn" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -267,7 +271,7 @@
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
         <element name="Schedule" positionX="-9" positionY="81" width="128" height="178"/>
         <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
-        <element name="Survey" positionX="-36" positionY="27" width="128" height="193"/>
+        <element name="Survey" positionX="-36" positionY="27" width="128" height="195"/>
         <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="133"/>
         <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="73"/>
         <element name="SurveyElement" positionX="-9" positionY="99" width="128" height="120"/>

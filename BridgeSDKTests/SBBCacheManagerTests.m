@@ -17,6 +17,7 @@
 @interface SBBCacheManagerTests : XCTestCase
 
 @property (nonatomic, strong) SBBCacheManager *cacheManager;
+@property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
 
 @end
 
@@ -29,10 +30,8 @@
     SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
     delegate.password = @"123456";
     aMan.authDelegate = delegate;
-    _cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING authManager:aMan];
-    [SBBComponentManager registerComponent:_cacheManager forClass:[SBBCacheManager class]];
-    SBBObjectManager *oMan = [SBBObjectManager objectManagerWithCacheManager:_cacheManager];
-    [SBBComponentManager registerComponent:oMan forClass:[SBBObjectManager class]];
+    _cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
+    _objectManager = [SBBObjectManager objectManagerWithCacheManager:_cacheManager];
 }
 
 - (void)tearDown {

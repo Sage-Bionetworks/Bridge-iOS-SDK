@@ -28,6 +28,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 @property (nonatomic, strong) NSString *bundleId;
 @property (nonatomic, strong) NSManagedObjectModel *managedObjectModel;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (nonatomic, strong) NSString *persistentStoreType;
 @property (nonatomic, strong) NSPersistentStore *persistentStore;
 @property (nonatomic, strong) NSString *persistentStoreName;
 @property (nonatomic, strong) NSManagedObjectContext *cacheIOContext;
@@ -51,19 +52,20 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = [self cacheManagerWithDataModelName:@"SBBDataModel" bundleId:SBBBUNDLEIDSTRING authManager:SBBComponent(SBBAuthManager)];
+        shared = [self cacheManagerWithDataModelName:@"SBBDataModel" bundleId:SBBBUNDLEIDSTRING storeType:NSSQLiteStoreType authManager:SBBComponent(SBBAuthManager)];
     });
     
     return shared;
 }
 
-+ (instancetype)cacheManagerWithDataModelName:(NSString *)modelName bundleId:(NSString *)bundleId authManager:(id<SBBAuthManagerProtocol>)authManager
++ (instancetype)cacheManagerWithDataModelName:(NSString *)modelName bundleId:(NSString *)bundleId storeType:(NSString *)storeType authManager:(id<SBBAuthManagerProtocol>)authManager
 {
     SBBCacheManager *cm = [[self alloc] init];
     cm.managedObjectModelName = modelName;
     cm.bundleId = bundleId;
     NSString *storeName = [NSString stringWithFormat:@"%@.sqlite", modelName];
     cm.persistentStoreName = storeName;
+    cm.persistentStoreType = storeType;
     cm.authManager = authManager;
     return cm;
 }
@@ -370,7 +372,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
     
-    self.persistentStore = [_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:&error];
+    self.persistentStore = [_persistentStoreCoordinator addPersistentStoreWithType:_persistentStoreType configuration:nil URL:storeURL options:options error:&error];
     
     if (!self.persistentStore)
     {

@@ -35,6 +35,6 @@
 
 @interface SBBCacheManager : NSObject<SBBComponent, SBBCacheManagerProtocol>
 
-+ (instancetype)cacheManagerWithDataModelName:(NSString *)modelName bundleId:(NSString *)bundleId authManager:(id<SBBAuthManagerProtocol>)authManager;
++ (instancetype)cacheManagerWithDataModelName:(NSString *)modelName bundleId:(NSString *)bundleId storeType:(NSString *)storeType authManager:(id<SBBAuthManagerProtocol>)authManager;
 
 @end

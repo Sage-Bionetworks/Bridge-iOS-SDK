@@ -122,6 +122,16 @@
     <$endif$>
 <$endif$>
     <$endif$><$endif$><$endforeach do$>
+<$if userInfo.syntheticKeyComponentPaths.length$><$if userInfo.entityIDKeyPath.length$>
+    NSArray *paths = [@"<$userInfo.syntheticKeyComponentPaths$>" componentsSeparatedByString:@","];
+    NSString *key = @"";
+    for (NSString *path in paths) {
+        NSString *value = [dictionary valueForKeyPath:path];
+        key = [key stringByAppendingString:value];
+    }
+
+    self.<$userInfo.entityIDKeyPath$> = key;
+<$endif$><$endif$>
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
         <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
     for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
