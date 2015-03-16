@@ -141,8 +141,24 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
  @param fileUrl     The URL of the file to be uploaded.
  @param headers     An NSDictionary containing the HTTP headers as key-value pairs.
  @param urlString   The URL (as a string) to which to upload the file.
+ @param start       YES to start the upload immediately, NO to just return the task and let the caller start (resume) it.
  @param description A string to associate with this task.
  @param completion  SBBNetworkManagerTaskCompletionBlock to be called upon completion of the upload.
+ 
+ @return The NSURLSessionUploadTask used to make the request, so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description startImmediately:(BOOL)start completion:(SBBNetworkManagerTaskCompletionBlock)completion;
+
+/*!
+ Background compatibility method. Calls uploadFile:httpHeaders:toUrl:taskDescription:startImmediately:completion: with start = YES.
+ 
+ @param fileUrl     The URL of the file to be uploaded.
+ @param headers     An NSDictionary containing the HTTP headers as key-value pairs.
+ @param urlString   The URL (as a string) to which to upload the file.
+ @param description A string to associate with this task.
+ @param completion  SBBNetworkManagerTaskCompletionBlock to be called upon completion of the upload.
+ 
+ @see uploadFile:httpHeaders:toUrl:taskDescription:startImmediately:completion:
  
  @return The NSURLSessionUploadTask used to make the request, so you can cancel or suspend/resume the request.
  */

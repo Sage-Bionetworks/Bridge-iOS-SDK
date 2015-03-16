@@ -14,10 +14,12 @@
 #import "SBBUploadSession.h"
 #import "SBBUploadRequest.h"
 #import "NSError+SBBAdditions.h"
+#import "SBBErrors.h"
 
 static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
 static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
+static NSString *kUploadResponsesKey = @"SBBUploadResponsesKey";
 
 #pragma mark - SBBUploadCompletionWrapper
 
@@ -222,6 +224,47 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
   return uploadSession;
 }
 
+- (void)setUploadResponseContainerForFile:(NSString *)fileURLString
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableData *responseContainer = [NSMutableData data];
+    NSMutableDictionary *uploadResponses = [[defaults dictionaryForKey:kUploadResponsesKey] mutableCopy];
+    if (!uploadResponses) {
+        uploadResponses = [NSMutableDictionary dictionary];
+    }
+    
+    [uploadResponses setObject:responseContainer forKey:fileURLString];
+    [defaults setObject:uploadResponses forKey:fileURLString];
+    [defaults synchronize];
+}
+
+- (void)removeUploadResponseContainerForFile:(NSString *)fileURLString
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *uploadResponses = [[defaults dictionaryForKey:kUploadResponsesKey] mutableCopy];
+    [uploadResponses removeObjectForKey:fileURLString];
+    [defaults setObject:uploadResponses forKey:fileURLString];
+    [defaults synchronize];
+}
+
+- (NSData *)responseDataForFile:(NSString *)fileURLString
+{
+    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadResponsesKey][fileURLString];
+}
+
+- (void)appendData:(NSData *)data toResponseForFile:(NSString *)fileURLString
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *uploadResponses = [[defaults dictionaryForKey:kUploadResponsesKey] mutableCopy];
+    NSMutableData *container = [uploadResponses[fileURLString] mutableCopy];
+    
+    if (container) {
+        [container appendData:data];
+        [defaults setObject:uploadResponses forKey:fileURLString];
+        [defaults synchronize];
+    }
+}
+
 - (void)uploadFileToBridge:(NSURL *)fileUrl contentType:(NSString *)contentType completion:(SBBUploadManagerCompletionBlock)completion
 {
   if (![fileUrl isFileURL] || ![[NSFileManager defaultManager] isReadableFileAtPath:[fileUrl path]]) {
@@ -334,20 +377,49 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
       @"Content-MD5": uploadRequest.contentMd5
       };
     NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
-    [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription completion:nil];
+    NSURLSessionUploadTask *task = [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription startImmediately:NO completion:nil];
+    [self setUploadResponseContainerForFile:downloadTask.taskDescription];
+    [task resume];
   } else {
     NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
     [self completeUploadOfFile:downloadTask.taskDescription withError:error];
   }
 }
 
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
+{
+    [self appendData:data toResponseForFile:dataTask.taskDescription];
+}
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
   if ([task isKindOfClass:[NSURLSessionUploadTask class]]) {
     NSURLSessionUploadTask *uploadTask = (NSURLSessionUploadTask *)task;
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)uploadTask.response;
+    int httpStatusCode = httpResponse.statusCode;
     if (error) {
       [self completeUploadOfFile:uploadTask.taskDescription withError:error];
       return;
+    }
+    
+    if (httpStatusCode >= 300) {
+        // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
+        // (along with all 4xx and 5xx of course)
+        NSData *responseData = [self responseDataForFile:task.taskDescription];
+        [self removeUploadResponseContainerForFile:task.taskDescription];
+        NSDictionary *responseHeaders = httpResponse.allHeaderFields;
+        NSString *contentType = [responseHeaders objectForKey:@"Content-Type"];
+        id originalResponse = responseData;
+        if ([contentType containsString:@"application/xml"]) {
+            // thanks Amazon, I am NOT parsing XML if it's all the same to you
+            originalResponse = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        }
+        if (!originalResponse) {
+            originalResponse = @"";
+        }
+        NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: @"Background file upload to S3 failed", SBB_ORIGINAL_ERROR_KEY:originalResponse}];
+        [self completeUploadOfFile:uploadTask.taskDescription withError:s3Error];
+        return;
     }
     
     // tell the API we done did it

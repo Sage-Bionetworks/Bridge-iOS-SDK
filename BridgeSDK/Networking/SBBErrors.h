@@ -21,6 +21,8 @@ typedef NS_ENUM(NSInteger, SBBErrorCodes)
     kSBBServerNotAuthenticated = -1003,
     kSBBServerPreconditionNotMet = -1004,
     kSBBNoCredentialsAvailable = -1005,
+    
+    kSBBS3UploadErrorResponse = -1020,
   
     kSBBNotAFileURL = -1100,
     kSBBObjectNotExpectedClass = -1101
