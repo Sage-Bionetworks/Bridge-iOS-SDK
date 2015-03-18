@@ -14,6 +14,7 @@
 #import "SBBUploadSession.h"
 #import "SBBUploadRequest.h"
 #import "NSError+SBBAdditions.h"
+#import "SBBErrors.h"
 
 static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
@@ -345,9 +346,23 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 {
   if ([task isKindOfClass:[NSURLSessionUploadTask class]]) {
     NSURLSessionUploadTask *uploadTask = (NSURLSessionUploadTask *)task;
+    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)uploadTask.response;
+    NSInteger httpStatusCode = httpResponse.statusCode;
+     
+    // client-side networking issue
     if (error) {
       [self completeUploadOfFile:uploadTask.taskDescription withError:error];
       return;
+    }
+    
+    // server didn't like the request, or otherwise hiccupped
+    if (httpStatusCode >= 300) {
+        // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
+        // (along with all 4xx and 5xx of course)
+        NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
+        NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
+        [self completeUploadOfFile:uploadTask.taskDescription withError:s3Error];
+        return;
     }
     
     // tell the API we done did it
