@@ -322,6 +322,7 @@ static NSString *kUploadResponsesKey = @"SBBUploadResponsesKey";
   [self cleanUpTempFile:file];
   [self setUploadRequestJSON:nil forFile:file];
   [self setUploadSessionJSON:nil forFile:file];
+  [self removeUploadResponseContainerForFile:file];
 }
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error
@@ -340,6 +341,7 @@ static NSString *kUploadResponsesKey = @"SBBUploadResponsesKey";
   [defaults removeObjectForKey:kUploadRequestsKey];
   [defaults removeObjectForKey:kUploadSessionsKey];
   [defaults removeObjectForKey:kUploadFilesKey];
+  [defaults removeObjectForKey:kUploadResponsesKey];
   
   NSError *fileError;
   [[NSFileManager defaultManager] removeItemAtURL:[self tempUploadDirURL] error:&fileError];
@@ -386,6 +388,12 @@ static NSString *kUploadResponsesKey = @"SBBUploadResponsesKey";
   }
 }
 
+- (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveResponse:(NSURLResponse *)response completionHandler:(void (^)(NSURLSessionResponseDisposition disposition))completionHandler
+{
+    completionHandler(NSURLSessionResponseAllow);
+}
+
+
 - (void)URLSession:(NSURLSession *)session dataTask:(NSURLSessionDataTask *)dataTask didReceiveData:(NSData *)data
 {
     [self appendData:data toResponseForFile:dataTask.taskDescription];
@@ -396,17 +404,19 @@ static NSString *kUploadResponsesKey = @"SBBUploadResponsesKey";
   if ([task isKindOfClass:[NSURLSessionUploadTask class]]) {
     NSURLSessionUploadTask *uploadTask = (NSURLSessionUploadTask *)task;
     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)uploadTask.response;
-    int httpStatusCode = httpResponse.statusCode;
+    NSInteger httpStatusCode = httpResponse.statusCode;
+     
+    // client-side networking issue
     if (error) {
       [self completeUploadOfFile:uploadTask.taskDescription withError:error];
       return;
     }
     
+    // server didn't like the request, or otherwise hiccupped
     if (httpStatusCode >= 300) {
         // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
         // (along with all 4xx and 5xx of course)
         NSData *responseData = [self responseDataForFile:task.taskDescription];
-        [self removeUploadResponseContainerForFile:task.taskDescription];
         NSDictionary *responseHeaders = httpResponse.allHeaderFields;
         NSString *contentType = [responseHeaders objectForKey:@"Content-Type"];
         id originalResponse = responseData;
@@ -417,7 +427,8 @@ static NSString *kUploadResponsesKey = @"SBBUploadResponsesKey";
         if (!originalResponse) {
             originalResponse = @"";
         }
-        NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: @"Background file upload to S3 failed", SBB_ORIGINAL_ERROR_KEY:originalResponse}];
+        NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
+        NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description, SBB_ORIGINAL_ERROR_KEY:originalResponse}];
         [self completeUploadOfFile:uploadTask.taskDescription withError:s3Error];
         return;
     }
