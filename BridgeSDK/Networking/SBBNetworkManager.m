@@ -303,25 +303,18 @@ NSString *kAPIPrefix = @"webservices";
   [_uploadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
 }
 
-- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description startImmediately:(BOOL)start completion:(SBBNetworkManagerTaskCompletionBlock)completion
-{
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    [request setAllHTTPHeaderFields:headers];
-    request.HTTPMethod = @"PUT";
-    NSURLSessionUploadTask *task = [self.backgroundSession uploadTaskWithRequest:request fromFile:fileUrl];
-    [self setCompletionBlock:completion forTask:task];
-    task.taskDescription = description;
-    
-    if (start) {
-        [task resume];
-    }
-    
-    return task;
-}
-
 - (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion
 {
-    return [self uploadFile:fileUrl httpHeaders:headers toUrl:urlString taskDescription:description startImmediately:YES completion:completion];
+  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+  [request setAllHTTPHeaderFields:headers];
+  request.HTTPMethod = @"PUT";
+  NSURLSessionUploadTask *task = [self.backgroundSession uploadTaskWithRequest:request fromFile:fileUrl];
+  [self setCompletionBlock:completion forTask:task];
+  task.taskDescription = description;
+  
+  [task resume];
+  
+  return task;
 }
 
 - (SBBNetworkManagerDownloadCompletionBlock)completionBlockForDownload:(NSURLSessionDownloadTask *)task
