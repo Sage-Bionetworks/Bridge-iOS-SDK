@@ -10,8 +10,8 @@
 #import "SBBComponent.h"
 #import "SBBNetworkManager.h"
 
-/// Global prefix for Bridge API URLs, specific to each app. Must be set before attempting to access Bridge APIs.
-extern NSString *gSBBAppURLPrefix;
+/// Global study identifier, specific to each app. Must be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy: class method.
+extern NSString *gSBBAppStudy;
 
 @protocol SBBAuthManagerProtocol;
 
@@ -193,11 +193,11 @@ extern NSString *gSBBAppURLPrefix;
  * Use this method directly only if you need to redirect your Bridge API accesses to a test server.
  *
  * @param environment The SBBEnvironment to use (prod, staging, dev).
- * @param prefix The app-specific URL prefix to use (typically set in gSBBAppURLPrefix).
- * @param baseURLPath The URL path to prefix with the appURLPrefix and environment string (e.g. @"sagebridge.org")
+ * @param study The app-specific study identifier to use (typically set in gSBBAppStudy).
+ * @param baseURLPath The URL path to prefix with the app server prefix and environment string (e.g. @"sagebridge.org")
  * @return An SBBAuthManager component configured for an environment, appURLPrefix, and baseURLPath.
  */
-+ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
++ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath;
 
 /*!
  * Return an SBBAuthManager component configured for the specified baseURL with a default network manager.
