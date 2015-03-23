@@ -231,13 +231,6 @@
 			remoteGlobalIDString = 80855F4F19BE258C006601C7;
 			remoteInfo = BridgeSDK;
 		};
-		80F7C32019E5AA7900574800 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 80F7C2F219E5AA7900574800 /* PonsoTest.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 457C26881399FAC600BF00DD;
-			remoteInfo = PonsoTest;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -399,35 +392,6 @@
 		80F7C2E819E5AA7900574800 /* ModelObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelObject.h; sourceTree = "<group>"; };
 		80F7C2E919E5AA7900574800 /* ModelObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelObject.m; sourceTree = "<group>"; };
 		80F7C2EA19E5AA7900574800 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		80F7C2EE19E5AA7900574800 /* MyModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MyModel.xcdatamodel; sourceTree = "<group>"; };
-		80F7C2F019E5AA7900574800 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		80F7C2F119E5AA7900574800 /* PonsoTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PonsoTest-Prefix.pch"; sourceTree = "<group>"; };
-		80F7C2F219E5AA7900574800 /* PonsoTest.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = PonsoTest.xcodeproj; sourceTree = "<group>"; };
-		80F7C2F719E5AA7900574800 /* _ModelAssistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _ModelAssistant.h; sourceTree = "<group>"; };
-		80F7C2F819E5AA7900574800 /* _ModelAssistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _ModelAssistant.m; sourceTree = "<group>"; };
-		80F7C2F919E5AA7900574800 /* _ModelCompany.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _ModelCompany.h; sourceTree = "<group>"; };
-		80F7C2FA19E5AA7900574800 /* _ModelCompany.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _ModelCompany.m; sourceTree = "<group>"; };
-		80F7C2FB19E5AA7900574800 /* _ModelDepartment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _ModelDepartment.h; sourceTree = "<group>"; };
-		80F7C2FC19E5AA7900574800 /* _ModelDepartment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _ModelDepartment.m; sourceTree = "<group>"; };
-		80F7C2FD19E5AA7900574800 /* _ModelDepartmentAssistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _ModelDepartmentAssistant.h; sourceTree = "<group>"; };
-		80F7C2FE19E5AA7900574800 /* _ModelDepartmentAssistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _ModelDepartmentAssistant.m; sourceTree = "<group>"; };
-		80F7C2FF19E5AA7900574800 /* _ModelDepartmentEmployee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _ModelDepartmentEmployee.h; sourceTree = "<group>"; };
-		80F7C30019E5AA7900574800 /* _ModelDepartmentEmployee.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _ModelDepartmentEmployee.m; sourceTree = "<group>"; };
-		80F7C30119E5AA7900574800 /* _ModelEmployee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = _ModelEmployee.h; sourceTree = "<group>"; };
-		80F7C30219E5AA7900574800 /* _ModelEmployee.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = _ModelEmployee.m; sourceTree = "<group>"; };
-		80F7C30319E5AA7900574800 /* Model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
-		80F7C30419E5AA7900574800 /* ModelAssistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelAssistant.h; sourceTree = "<group>"; };
-		80F7C30519E5AA7900574800 /* ModelAssistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelAssistant.m; sourceTree = "<group>"; };
-		80F7C30619E5AA7900574800 /* ModelCompany.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelCompany.h; sourceTree = "<group>"; };
-		80F7C30719E5AA7900574800 /* ModelCompany.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelCompany.m; sourceTree = "<group>"; };
-		80F7C30819E5AA7900574800 /* ModelDepartment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelDepartment.h; sourceTree = "<group>"; };
-		80F7C30919E5AA7900574800 /* ModelDepartment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelDepartment.m; sourceTree = "<group>"; };
-		80F7C30A19E5AA7900574800 /* ModelDepartmentAssistant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelDepartmentAssistant.h; sourceTree = "<group>"; };
-		80F7C30B19E5AA7900574800 /* ModelDepartmentAssistant.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelDepartmentAssistant.m; sourceTree = "<group>"; };
-		80F7C30C19E5AA7900574800 /* ModelDepartmentEmployee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelDepartmentEmployee.h; sourceTree = "<group>"; };
-		80F7C30D19E5AA7900574800 /* ModelDepartmentEmployee.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelDepartmentEmployee.m; sourceTree = "<group>"; };
-		80F7C30E19E5AA7900574800 /* ModelEmployee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ModelEmployee.h; sourceTree = "<group>"; };
-		80F7C30F19E5AA7900574800 /* ModelEmployee.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelEmployee.m; sourceTree = "<group>"; };
 		80F7C31119E5AA7900574800 /* human.h.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = human.h.motemplate; sourceTree = "<group>"; };
 		80F7C31219E5AA7900574800 /* human.m.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = human.m.motemplate; sourceTree = "<group>"; };
 		80F7C31319E5AA7900574800 /* machine.h.motemplate */ = {isa = PBXFileReference; lastKnownFileType = text; path = machine.h.motemplate; sourceTree = "<group>"; };
@@ -696,7 +660,6 @@
 			children = (
 				80F7C2E719E5AA7900574800 /* code */,
 				80F7C2EA19E5AA7900574800 /* README.txt */,
-				80F7C2EB19E5AA7900574800 /* sample project */,
 				80F7C31019E5AA7900574800 /* templates */,
 			);
 			path = mogenerator_ponso_templates;
@@ -709,82 +672,6 @@
 				80F7C2E919E5AA7900574800 /* ModelObject.m */,
 			);
 			path = code;
-			sourceTree = "<group>";
-		};
-		80F7C2EB19E5AA7900574800 /* sample project */ = {
-			isa = PBXGroup;
-			children = (
-				80F7C2EC19E5AA7900574800 /* PonsoTest */,
-			);
-			path = "sample project";
-			sourceTree = "<group>";
-		};
-		80F7C2EC19E5AA7900574800 /* PonsoTest */ = {
-			isa = PBXGroup;
-			children = (
-				80F7C2ED19E5AA7900574800 /* MyModel.xcdatamodeld */,
-				80F7C2EF19E5AA7900574800 /* PonsoTest */,
-				80F7C2F219E5AA7900574800 /* PonsoTest.xcodeproj */,
-				80F7C2F519E5AA7900574800 /* Sources */,
-			);
-			path = PonsoTest;
-			sourceTree = "<group>";
-		};
-		80F7C2EF19E5AA7900574800 /* PonsoTest */ = {
-			isa = PBXGroup;
-			children = (
-				80F7C2F019E5AA7900574800 /* main.m */,
-				80F7C2F119E5AA7900574800 /* PonsoTest-Prefix.pch */,
-			);
-			path = PonsoTest;
-			sourceTree = "<group>";
-		};
-		80F7C2F319E5AA7900574800 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				80F7C32119E5AA7900574800 /* PonsoTest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		80F7C2F519E5AA7900574800 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				80F7C2F619E5AA7900574800 /* DataModel */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		80F7C2F619E5AA7900574800 /* DataModel */ = {
-			isa = PBXGroup;
-			children = (
-				80F7C2F719E5AA7900574800 /* _ModelAssistant.h */,
-				80F7C2F819E5AA7900574800 /* _ModelAssistant.m */,
-				80F7C2F919E5AA7900574800 /* _ModelCompany.h */,
-				80F7C2FA19E5AA7900574800 /* _ModelCompany.m */,
-				80F7C2FB19E5AA7900574800 /* _ModelDepartment.h */,
-				80F7C2FC19E5AA7900574800 /* _ModelDepartment.m */,
-				80F7C2FD19E5AA7900574800 /* _ModelDepartmentAssistant.h */,
-				80F7C2FE19E5AA7900574800 /* _ModelDepartmentAssistant.m */,
-				80F7C2FF19E5AA7900574800 /* _ModelDepartmentEmployee.h */,
-				80F7C30019E5AA7900574800 /* _ModelDepartmentEmployee.m */,
-				80F7C30119E5AA7900574800 /* _ModelEmployee.h */,
-				80F7C30219E5AA7900574800 /* _ModelEmployee.m */,
-				80F7C30319E5AA7900574800 /* Model.h */,
-				80F7C30419E5AA7900574800 /* ModelAssistant.h */,
-				80F7C30519E5AA7900574800 /* ModelAssistant.m */,
-				80F7C30619E5AA7900574800 /* ModelCompany.h */,
-				80F7C30719E5AA7900574800 /* ModelCompany.m */,
-				80F7C30819E5AA7900574800 /* ModelDepartment.h */,
-				80F7C30919E5AA7900574800 /* ModelDepartment.m */,
-				80F7C30A19E5AA7900574800 /* ModelDepartmentAssistant.h */,
-				80F7C30B19E5AA7900574800 /* ModelDepartmentAssistant.m */,
-				80F7C30C19E5AA7900574800 /* ModelDepartmentEmployee.h */,
-				80F7C30D19E5AA7900574800 /* ModelDepartmentEmployee.m */,
-				80F7C30E19E5AA7900574800 /* ModelEmployee.h */,
-				80F7C30F19E5AA7900574800 /* ModelEmployee.m */,
-			);
-			path = DataModel;
 			sourceTree = "<group>";
 		};
 		80F7C31019E5AA7900574800 /* templates */ = {
@@ -1050,12 +937,6 @@
 			mainGroup = 80855F4619BE258B006601C7;
 			productRefGroup = 80855F5119BE258C006601C7 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 80F7C2F319E5AA7900574800 /* Products */;
-					ProjectRef = 80F7C2F219E5AA7900574800 /* PonsoTest.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				80F7C32819E5BB1000574800 /* BridgeObjects */,
@@ -1067,16 +948,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		80F7C32119E5AA7900574800 /* PonsoTest */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = PonsoTest;
-			remoteRef = 80F7C32019E5AA7900574800 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		80855F4E19BE258C006601C7 /* Resources */ = {
@@ -1553,16 +1424,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		80F7C2ED19E5AA7900574800 /* MyModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				80F7C2EE19E5AA7900574800 /* MyModel.xcdatamodel */,
-			);
-			currentVersion = 80F7C2EE19E5AA7900574800 /* MyModel.xcdatamodel */;
-			path = MyModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
