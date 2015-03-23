@@ -504,9 +504,6 @@ NSString *kAPIPrefix = @"webservices";
   mutableRequest.HTTPMethod = method;
   [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
   [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
-//  if (_bridgeStudy) {
-//    [mutableRequest setValue:_bridgeStudy forHTTPHeaderField:@"Bridge-Study"];
-//  }
   
   if (headers) {
     for (NSString *header in headers.allKeys) {
