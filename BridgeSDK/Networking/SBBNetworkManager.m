@@ -155,19 +155,18 @@ NSString *kAPIPrefix = @"webservices";
     return host;
 }
 
-+ (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath
++ (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
 {
   NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:baseURLPath];
-  NSString *bridgeStudy = prefix;
   SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL];
   networkManager.environment = environment;
-  networkManager.bridgeStudy = bridgeStudy;
+  networkManager.bridgeStudy = study;
   return networkManager;
 }
 
 + (instancetype)defaultComponent
 {
-  if (!gSBBAppURLPrefix) {
+  if (!gSBBAppStudy) {
     return nil;
   }
   
@@ -178,7 +177,7 @@ NSString *kAPIPrefix = @"webservices";
     SBBEnvironment environment = gSBBDefaultEnvironment;
     
     NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
-    NSString *bridgeStudy = gSBBAppURLPrefix;
+    NSString *bridgeStudy = gSBBAppStudy;
     shared = [[self alloc] initWithBaseURL:baseURL bridgeStudy:bridgeStudy];
     shared.environment = environment;
   });
@@ -505,9 +504,6 @@ NSString *kAPIPrefix = @"webservices";
   mutableRequest.HTTPMethod = method;
   [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
   [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
-  if (_bridgeStudy) {
-    [mutableRequest setValue:_bridgeStudy forHTTPHeaderField:@"Bridge-Study"];
-  }
   
   if (headers) {
     for (NSString *header in headers.allKeys) {

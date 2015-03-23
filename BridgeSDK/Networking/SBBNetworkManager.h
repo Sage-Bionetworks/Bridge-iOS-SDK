@@ -188,7 +188,7 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
  */
 @interface SBBNetworkManager : NSObject<SBBComponent, SBBNetworkManagerProtocol>
 
-+ (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
++ (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath;
 
 #pragma mark - Init & Accessor Methods
 

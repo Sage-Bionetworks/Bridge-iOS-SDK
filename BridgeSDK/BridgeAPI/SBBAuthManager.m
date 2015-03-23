@@ -12,7 +12,7 @@
 #import "NSError+SBBAdditions.h"
 #import "SBBComponentManager.h"
 
-NSString *gSBBAppURLPrefix = nil;
+NSString *gSBBAppStudy = nil;
 
 NSString *kBridgeKeychainService = @"SageBridge";
 NSString *kBridgeAuthManagerFirstRunKey = @"SBBAuthManagerFirstRunCompleted";
@@ -107,9 +107,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return shared;
 }
 
-+ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath
++ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
 {
-    SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment appURLPrefix:prefix
+    SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment study:study
                                                                             baseURLPath:baseURLPath];
     SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
     [authManager setupForEnvironment];
@@ -227,17 +227,17 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/signUp" headers:nil parameters:@{@"email":email, @"username":username, @"password":password} completion:completion];
+    return [_networkManager post:@"/api/v1/auth/signUp" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"username":username, @"password":password, @"type":@"SignUp"} completion:completion];
 }
 
 - (NSURLSessionDataTask *)resendEmailVerification:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/resendEmailVerification" headers:nil parameters:@{@"email":email} completion:completion];
+    return [_networkManager post:@"/api/v1/auth/resendEmailVerification" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
 }
 
 - (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/signIn" headers:nil parameters:@{@"username":username, @"password":password} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [_networkManager post:@"/api/v1/auth/signIn" headers:nil parameters:@{@"study":gSBBAppStudy, @"username":username, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Save session token in the keychain
         // ??? Save credentials in the keychain?
         NSString *sessionToken = responseObject[@"sessionToken"];
@@ -326,7 +326,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)requestPasswordResetForEmail:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/requestResetPassword" headers:nil parameters:@{@"email":email} completion:completion];
+    return [_networkManager post:@"/api/v1/auth/requestResetPassword" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
 }
 
 - (NSURLSessionDataTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
@@ -352,12 +352,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)sessionTokenKey
 {
-    return [NSString stringWithFormat:envSessionTokenKeyFormat[_networkManager.environment], gSBBAppURLPrefix];
+    return [NSString stringWithFormat:envSessionTokenKeyFormat[_networkManager.environment], gSBBAppStudy];
 }
 
 - (NSString *)sessionTokenFromKeychain
 {
-    if (!gSBBAppURLPrefix) {
+    if (!gSBBAppStudy) {
         return nil;
     }
     
@@ -371,12 +371,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)usernameKey
 {
-    return [NSString stringWithFormat:envUsernameKeyFormat[_networkManager.environment], gSBBAppURLPrefix];
+    return [NSString stringWithFormat:envUsernameKeyFormat[_networkManager.environment], gSBBAppStudy];
 }
 
 - (NSString *)usernameFromKeychain
 {
-    if (!gSBBAppURLPrefix) {
+    if (!gSBBAppStudy) {
         return nil;
     }
     
@@ -390,12 +390,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)passwordKey
 {
-    return [NSString stringWithFormat:envPasswordKeyFormat[_networkManager.environment], gSBBAppURLPrefix];
+    return [NSString stringWithFormat:envPasswordKeyFormat[_networkManager.environment], gSBBAppStudy];
 }
 
 - (NSString *)passwordFromKeychain
 {
-    if (!gSBBAppURLPrefix) {
+    if (!gSBBAppStudy) {
         return nil;
     }
     
