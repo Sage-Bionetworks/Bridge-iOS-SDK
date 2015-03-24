@@ -11,6 +11,18 @@
 
 static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
 
+@interface SBBUserProfile (customFields)
+
+@property NSString *phone;
+
+@end
+
+@implementation SBBUserProfile (customFields)
+
+@dynamic phone;
+
+@end
+
 @interface UserProfileViewController ()<UIPickerViewDataSource, UIPickerViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *emailAddressTextField;
