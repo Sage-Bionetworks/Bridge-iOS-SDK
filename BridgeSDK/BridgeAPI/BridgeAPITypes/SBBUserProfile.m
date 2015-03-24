@@ -45,7 +45,11 @@ static NSString *nameForProperty(objc_property_t property)
 static void dynamicSetterIMP(id self, SEL _cmd, id value)
 {
     objc_property_t property = [[self class] propertyFromSelector:_cmd];
-    [[self customFields] setObject:value forKey:nameForProperty(property)];
+    if (value) {
+        [[self customFields] setObject:value forKey:nameForProperty(property)];
+    } else {
+        [[self customFields] removeObjectForKey:nameForProperty(property)];
+    }
 }
 
 static NSString *dynamicGetterIMP(id self, SEL _cmd)
