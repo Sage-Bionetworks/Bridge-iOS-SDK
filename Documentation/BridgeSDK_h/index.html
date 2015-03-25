@@ -274,72 +274,98 @@ function disclosure_triangle(elt) {
 <dd></dd>
 <dt><tt><a href="index.html#//apple_ref/c/func/setupWithAppPrefix:environment:" target="_top">+setupWithAppPrefix:environment:</a></tt></dt>
 <dd></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/setupWithStudy:" target="_top">+setupWithStudy:</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="index.html#//apple_ref/c/func/setupWithStudy:environment:" target="_top">+setupWithStudy:environment:</a></tt></dt>
+<dd></dd>
 </dl>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/setupWithAppPrefix:;   name=setupWithAppPrefix: --><a name="//apple_ref/c/func/setupWithAppPrefix:"></a>
 <h3><a name="setupWithAppPrefix:">setupWithAppPrefix:</a></h3>
 <hr class="afterName">
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithAppPrefix:;name=start -->+ (<!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a -->)<!-- a logicalPath="//apple_ref/c/instm/setupWithAppPrefix //apple_ref/c/clm/setupWithAppPrefix //apple_ref/c/intfcm/setupWithAppPrefix //apple_ref/c/intfm/setupWithAppPrefix //apple_ref/c/func/setupWithAppPrefix //apple_ref/c/ftmplt/setupWithAppPrefix //apple_ref/c/defn/setupWithAppPrefix //apple_ref/c/macro/setupWithAppPrefix //apple_ref/doc/anysymbol/setupWithAppPrefix" machineGenerated="true" --><span class="function">setupWithAppPrefix</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<!-- a logicalPath="//apple_ref/c/econst/appPrefix //apple_ref/c/data/appPrefix //apple_ref/c/clconst/appPrefix " machineGenerated="true" --><span class="var">appPrefix</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithAppPrefix:;name=end --></pre>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/setupWithAppPrefix:/appPrefix;   name=appPrefix -->
-<a name="//apple_ref/doc/methodparam/setupWithAppPrefix:/appPrefix"></a>
-<code>appPrefix</code>
-</dt>
-<dd><p>A string prefix for your app's Bridge server URLs, assigned to you by Sage Bionetworks.</p></dd>
-</dl>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithAppPrefix:;name=start -->+ (<!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a -->)<!-- a logicalPath="//apple_ref/c/instm/setupWithAppPrefix //apple_ref/c/clm/setupWithAppPrefix //apple_ref/c/intfcm/setupWithAppPrefix //apple_ref/c/intfm/setupWithAppPrefix //apple_ref/c/func/setupWithAppPrefix //apple_ref/c/ftmplt/setupWithAppPrefix //apple_ref/c/defn/setupWithAppPrefix //apple_ref/c/macro/setupWithAppPrefix //apple_ref/doc/anysymbol/setupWithAppPrefix" machineGenerated="true" --><span class="function">setupWithAppPrefix</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">appPrefix</span> <!-- a logicalPath="//apple_ref/c/econst/__deprecated //apple_ref/c/data/__deprecated //apple_ref/c/clconst/__deprecated " machineGenerated="true" --><span class="var">__deprecated</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithAppPrefix:;name=end --></pre>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithAppPrefix:;name=start --><p>Set up the Bridge SDK for the given app prefix and the appropriate server environment based on whether this is
-a debug or release build. Usually you would call this at the beginning of your AppDelegate's
-application:didFinishLaunchingWithOptions: method.
-</p>
-<p>This will register a default SBBNetworkManager instance conigured correctly for the specified app prefix and appropriate
-server environment. If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
-</p>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithAppPrefix:;name=start --><p>For backward compatibility only. Use setupWithStudy: instead (which this method calls).
 <!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithAppPrefix:;name=end --><!-- end discussion -->
+</p>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=func;  uid=//apple_ref/c/func/setupWithAppPrefix:environment:;   name=setupWithAppPrefix:environment: --><a name="//apple_ref/c/func/setupWithAppPrefix:environment:"></a>
 <h3><a name="setupWithAppPrefix:environment:">setupWithAppPrefix:environment:</a></h3>
 <hr class="afterName">
 <div class="declaration_indent">
-<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithAppPrefix:environment:;name=start -->+ (<!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a -->)<!-- a logicalPath="//apple_ref/c/instm/setupWithAppPrefix //apple_ref/c/clm/setupWithAppPrefix //apple_ref/c/intfcm/setupWithAppPrefix //apple_ref/c/intfm/setupWithAppPrefix //apple_ref/c/func/setupWithAppPrefix //apple_ref/c/ftmplt/setupWithAppPrefix //apple_ref/c/defn/setupWithAppPrefix //apple_ref/c/macro/setupWithAppPrefix //apple_ref/doc/anysymbol/setupWithAppPrefix" machineGenerated="true" --><span class="function">setupWithAppPrefix</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">appPrefix</span> <a machinegenerated="true" href="index.html#//apple_ref/doc/methodparam/setupWithAppPrefix:environment:/environment" logicalPath="//apple_ref/c/instm/environment //apple_ref/c/clm/environment //apple_ref/c/intfcm/environment //apple_ref/c/intfm/environment //apple_ref/c/func/environment //apple_ref/c/ftmplt/environment //apple_ref/c/defn/environment //apple_ref/c/macro/environment //apple_ref/doc/anysymbol/environment" target="_top"><span class="function">environment</span></a>:(<a machinegenerated="true" href="../SBBNetworkManager_h/index.html#//apple_ref/doc/title:tdef/SBBEnvironment" logicalPath="//apple_ref/c/cl/SBBEnvironment //apple_ref/c/tdef/SBBEnvironment //apple_ref/c/tag/SBBEnvironment //apple_ref/c/struct/SBBEnvironment //apple_ref/c/intf/SBBEnvironment //apple_ref/doc/anysymbol/SBBEnvironment" target="_top"><span class="type">SBBEnvironment</span></a>)<!-- a logicalPath="//apple_ref/c/econst/environment //apple_ref/c/data/environment //apple_ref/c/clconst/environment " machineGenerated="true" --><span class="var">environment</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithAppPrefix:environment:;name=end --></pre>
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithAppPrefix:environment:;name=start -->+ (<!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a -->)<!-- a logicalPath="//apple_ref/c/instm/setupWithAppPrefix //apple_ref/c/clm/setupWithAppPrefix //apple_ref/c/intfcm/setupWithAppPrefix //apple_ref/c/intfm/setupWithAppPrefix //apple_ref/c/func/setupWithAppPrefix //apple_ref/c/ftmplt/setupWithAppPrefix //apple_ref/c/defn/setupWithAppPrefix //apple_ref/c/macro/setupWithAppPrefix //apple_ref/doc/anysymbol/setupWithAppPrefix" machineGenerated="true" --><span class="function">setupWithAppPrefix</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">appPrefix</span> <a machinegenerated="true" href="index.html#//apple_ref/doc/methodparam/setupWithStudy:environment:/environment" logicalPath="//apple_ref/c/instm/environment //apple_ref/c/clm/environment //apple_ref/c/intfcm/environment //apple_ref/c/intfm/environment //apple_ref/c/func/environment //apple_ref/c/ftmplt/environment //apple_ref/c/defn/environment //apple_ref/c/macro/environment //apple_ref/doc/anysymbol/environment" target="_top"><span class="function">environment</span></a>:(<a machinegenerated="true" href="../SBBNetworkManager_h/index.html#//apple_ref/doc/title:tdef/SBBEnvironment" logicalPath="//apple_ref/c/cl/SBBEnvironment //apple_ref/c/tdef/SBBEnvironment //apple_ref/c/tag/SBBEnvironment //apple_ref/c/struct/SBBEnvironment //apple_ref/c/intf/SBBEnvironment //apple_ref/doc/anysymbol/SBBEnvironment" target="_top"><span class="type">SBBEnvironment</span></a>)<span class="param">environment</span> <!-- a logicalPath="//apple_ref/c/econst/__deprecated //apple_ref/c/data/__deprecated //apple_ref/c/clconst/__deprecated " machineGenerated="true" --><span class="var">__deprecated</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithAppPrefix:environment:;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithAppPrefix:environment:;name=start --><p>For backward compatibility only. Use setupWithStudy:environment: instead (which this method calls).
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithAppPrefix:environment:;name=end --><!-- end discussion -->
+</p>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/setupWithStudy:;   name=setupWithStudy: --><a name="//apple_ref/c/func/setupWithStudy:"></a>
+<h3><a name="setupWithStudy:">setupWithStudy:</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithStudy:;name=start -->+ (<!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a -->)<!-- a logicalPath="//apple_ref/c/instm/setupWithStudy //apple_ref/c/clm/setupWithStudy //apple_ref/c/intfcm/setupWithStudy //apple_ref/c/intfm/setupWithStudy //apple_ref/c/func/setupWithStudy //apple_ref/c/ftmplt/setupWithStudy //apple_ref/c/defn/setupWithStudy //apple_ref/c/macro/setupWithStudy //apple_ref/doc/anysymbol/setupWithStudy" machineGenerated="true" --><span class="function">setupWithStudy</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<!-- a logicalPath="//apple_ref/c/econst/study //apple_ref/c/data/study //apple_ref/c/clconst/study " machineGenerated="true" --><span class="var">study</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithStudy:;name=end --></pre>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
 <div class="param_indent">
 <dl>
 <dt>
-<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/setupWithAppPrefix:environment:/appPrefix;   name=appPrefix -->
-<a name="//apple_ref/doc/methodparam/setupWithAppPrefix:environment:/appPrefix"></a>
-<code>appPrefix</code>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/setupWithStudy:/study;   name=study -->
+<a name="//apple_ref/doc/methodparam/setupWithStudy:/study"></a>
+<code>study</code>
 </dt>
-<dd><p>A string prefix for your app's Bridge server URLs, assigned to you by Sage Bionetworks.</p></dd>
+<dd><p>A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithStudy:;name=start --><p>Set up the Bridge SDK for the given study and the appropriate server environment based on whether this is
+a debug or release build. Usually you would call this at the beginning of your AppDelegate's
+application:didFinishLaunchingWithOptions: method.
+</p>
+<p>This will register a default SBBNetworkManager instance conigured correctly for the specified study and appropriate
+server environment. If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithStudy:;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=func;  uid=//apple_ref/c/func/setupWithStudy:environment:;   name=setupWithStudy:environment: --><a name="//apple_ref/c/func/setupWithStudy:environment:"></a>
+<h3><a name="setupWithStudy:environment:">setupWithStudy:environment:</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithStudy:environment:;name=start -->+ (<!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a -->)<!-- a logicalPath="//apple_ref/c/instm/setupWithStudy //apple_ref/c/clm/setupWithStudy //apple_ref/c/intfcm/setupWithStudy //apple_ref/c/intfm/setupWithStudy //apple_ref/c/func/setupWithStudy //apple_ref/c/ftmplt/setupWithStudy //apple_ref/c/defn/setupWithStudy //apple_ref/c/macro/setupWithStudy //apple_ref/doc/anysymbol/setupWithStudy" machineGenerated="true" --><span class="function">setupWithStudy</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/c/cl/NSString //apple_ref/c/tdef/NSString //apple_ref/c/tag/NSString //apple_ref/c/struct/NSString //apple_ref/c/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">study</span> <a machinegenerated="true" href="index.html#//apple_ref/doc/methodparam/setupWithStudy:environment:/environment" logicalPath="//apple_ref/c/instm/environment //apple_ref/c/clm/environment //apple_ref/c/intfcm/environment //apple_ref/c/intfm/environment //apple_ref/c/func/environment //apple_ref/c/ftmplt/environment //apple_ref/c/defn/environment //apple_ref/c/macro/environment //apple_ref/doc/anysymbol/environment" target="_top"><span class="function">environment</span></a>:(<a machinegenerated="true" href="../SBBNetworkManager_h/index.html#//apple_ref/doc/title:tdef/SBBEnvironment" logicalPath="//apple_ref/c/cl/SBBEnvironment //apple_ref/c/tdef/SBBEnvironment //apple_ref/c/tag/SBBEnvironment //apple_ref/c/struct/SBBEnvironment //apple_ref/c/intf/SBBEnvironment //apple_ref/doc/anysymbol/SBBEnvironment" target="_top"><span class="type">SBBEnvironment</span></a>)<!-- a logicalPath="//apple_ref/c/econst/environment //apple_ref/c/data/environment //apple_ref/c/clconst/environment " machineGenerated="true" --><span class="var">environment</span><!-- /a -->;  <!-- headerDoc=declaration;uid=//apple_ref/c/func/setupWithStudy:environment:;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
 <dt>
-<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/setupWithAppPrefix:environment:/environment;   name=environment -->
-<a name="//apple_ref/doc/methodparam/setupWithAppPrefix:environment:/environment"></a>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/setupWithStudy:environment:/study;   name=study -->
+<a name="//apple_ref/doc/methodparam/setupWithStudy:environment:/study"></a>
+<code>study</code>
+</dt>
+<dd><p>A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.</p></dd>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/setupWithStudy:environment:/environment;   name=environment -->
+<a name="//apple_ref/doc/methodparam/setupWithStudy:environment:/environment"></a>
 <code>environment</code>
 </dt>
 <dd><p>Which server environment to run against.</p></dd>
 </dl>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithAppPrefix:environment:;name=start --><p>Set up the Bridge SDK for the given app prefix and server environment. Usually you would only call this version
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithStudy:environment:;name=start --><p>Set up the Bridge SDK for the given study and server environment. Usually you would only call this version
 of the method from test suites, or if you have a non-DEBUG build configuration that you don't want running against
-the production server environment. Otherwise call the version of the setupWithAppPrefix: method that doesn't
+the production server environment. Otherwise call the version of the setupWithStudy: method that doesn't
 take an environment parameter, and let the SDK use the default environment.
 </p>
-<p>This will register a default SBBNetworkManager instance conigured correctly for the specified environment and app prefix.
+<p>This will register a default SBBNetworkManager instance conigured correctly for the specified environment and study.
 If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
 </p>
-<!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithAppPrefix:environment:;name=end --><!-- end discussion -->
+<!-- headerDoc=discussion;uid=//apple_ref/c/func/setupWithStudy:environment:;name=end --><!-- end discussion -->
 <p class="gapBeforeFooter">&nbsp;</p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Tuesday, October 28, 2014
+<p class="hd_timestamp">Last Updated: Wednesday, March 25, 2015
 </p>
 </div>
 </td>

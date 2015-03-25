@@ -14,8 +14,6 @@
 
 @end
 
-/** \ingroup DataModel */
-
 @implementation _SBBSurveyAnswer
 
 - (id)init

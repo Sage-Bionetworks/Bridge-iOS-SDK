@@ -14,8 +14,6 @@
 
 @end
 
-/** \ingroup DataModel */
-
 @implementation _SBBBooleanConstraints
 
 - (id)init

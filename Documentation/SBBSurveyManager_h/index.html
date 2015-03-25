@@ -261,7 +261,8 @@ function disclosure_triangle(elt) {
 <div class="spec_sheet_info_box"><table cellspacing="0" class="specbox"><tr>
 <td scope="row"><b>Includes:</b></td>
 <td><div style="margin-bottom:1px"><div class="content_text">
-<!-- a logicalPath="//apple_ref/doc/header/Foundation.h" machineGenerated="true" -->&lt;Foundation/Foundation.h&gt;<!-- /a --><br><a machinegenerated="true" href="../SBBBridgeAPIManager_h/index.html#//apple_ref/doc/header/SBBBridgeAPIManager.h" logicalPath="//apple_ref/doc/header/SBBBridgeAPIManager.h" target="_top">"SBBBridgeAPIManager.h"</a></div></div></td>
+<!-- a logicalPath="//apple_ref/doc/header/Foundation.h" machineGenerated="true" -->&lt;Foundation/Foundation.h&gt;<!-- /a --><br><a machinegenerated="true" href="../SBBBridgeAPIManager_h/index.html#//apple_ref/doc/header/SBBBridgeAPIManager.h" logicalPath="//apple_ref/doc/header/SBBBridgeAPIManager.h" target="_top">"SBBBridgeAPIManager.h"</a><br><!-- a logicalPath="//apple_ref/doc/header/SBBSurvey.h" machineGenerated="true" -->"SBBSurvey.h"<!-- /a -->
+</div></div></td>
 </tr></table></div>
 <h2>Introduction</h2>
 <p><!-- headerDoc=abstract;uid=//apple_ref/doc/header/SBBSurveyManager.h;name=start --><!-- begin abstract -->Use the links in the table of contents to the left to access the documentation.<br><!-- end abstract --><!-- headerDoc=abstract;uid=//apple_ref/doc/header/SBBSurveyManager.h;name=end --></p>
@@ -387,18 +388,18 @@ function disclosure_triangle(elt) {
 <hr class="afterName">
 <div class="declaration_indent">
 <pre><!-- headerDoc=declaration;uid=//apple_ref/c/tdef/SBBSurveyManagerSubmitAnswersCompletionBlock;name=start --><span class="keyword">typedef</span> <!-- a logicalPath="//apple_ref/c/cl/void //apple_ref/c/tdef/void //apple_ref/c/tag/void //apple_ref/c/struct/void //apple_ref/c/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a --> (^<a machinegenerated="true" href="index.html#//apple_ref/c/tdef/SBBSurveyManagerSubmitAnswersCompletionBlock" logicalPath="//apple_ref/c/instm/SBBSurveyManagerSubmitAnswersCompletionBlock //apple_ref/c/clm/SBBSurveyManagerSubmitAnswersCompletionBlock //apple_ref/c/intfcm/SBBSurveyManagerSubmitAnswersCompletionBlock //apple_ref/c/intfm/SBBSurveyManagerSubmitAnswersCompletionBlock //apple_ref/c/func/SBBSurveyManagerSubmitAnswersCompletionBlock //apple_ref/c/ftmplt/SBBSurveyManagerSubmitAnswersCompletionBlock //apple_ref/c/defn/SBBSurveyManagerSubmitAnswersCompletionBlock //apple_ref/c/macro/SBBSurveyManagerSubmitAnswersCompletionBlock //apple_ref/doc/anysymbol/SBBSurveyManagerSubmitAnswersCompletionBlock" target="_top"><span class="function">SBBSurveyManagerSubmitAnswersCompletionBlock</span></a>)(
-    <!-- a logicalPath="//apple_ref/c/cl/id //apple_ref/c/tdef/id //apple_ref/c/tag/id //apple_ref/c/struct/id //apple_ref/c/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a --> <span class="param">guidHolder</span>,
+    <!-- a logicalPath="//apple_ref/c/cl/id //apple_ref/c/tdef/id //apple_ref/c/tag/id //apple_ref/c/struct/id //apple_ref/c/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a --> <span class="param">identifierHolder</span>,
     <!-- a logicalPath="//apple_ref/c/cl/NSError //apple_ref/c/tdef/NSError //apple_ref/c/tag/NSError //apple_ref/c/struct/NSError //apple_ref/c/intf/NSError //apple_ref/doc/anysymbol/NSError" machineGenerated="true" --><span class="type">NSError</span><!-- /a --> <span class="type">*</span><span class="param">error</span>);  <!-- headerDoc=declaration;uid=//apple_ref/c/tdef/SBBSurveyManagerSubmitAnswersCompletionBlock;name=end --></pre>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
 <div class="param_indent">
 <dl>
 <dt>
-<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/SBBSurveyManagerSubmitAnswersCompletionBlock/guidHolder;   name=guidHolder -->
-<a name="//apple_ref/doc/typedeffield/SBBSurveyManagerSubmitAnswersCompletionBlock/guidHolder"></a>
-<code>guidHolder</code>
+<!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/SBBSurveyManagerSubmitAnswersCompletionBlock/identifierHolder;   name=identifierHolder -->
+<a name="//apple_ref/doc/typedeffield/SBBSurveyManagerSubmitAnswersCompletionBlock/identifierHolder"></a>
+<code>identifierHolder</code>
 </dt>
-<dd><p>By default, an SBBGuidHolder object, unless the GuidHolder type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:. The guid in question is the guid of the SurveyResponse object created by submitting this set of answers, which can be used to later amend or delete the answers to this instance of taking the survey.</p></dd>
+<dd><p>By default, an SBBIdentifierHolder object, unless the IdentifierHolder type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:. The identifier in question is the identifier of the SurveyResponse object created by submitting this set of answers, which can be used to later amend or delete the answers to this instance of taking the survey.</p></dd>
 <dt>
 <!-- headerDoc=typedeffield;  uid=//apple_ref/doc/typedeffield/SBBSurveyManagerSubmitAnswersCompletionBlock/error;   name=error -->
 <a name="//apple_ref/doc/typedeffield/SBBSurveyManagerSubmitAnswersCompletionBlock/error"></a>
@@ -414,7 +415,7 @@ function disclosure_triangle(elt) {
 <p class="gapBeforeFooter">&nbsp;</p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Tuesday, October 28, 2014
+<p class="hd_timestamp">Last Updated: Wednesday, March 25, 2015
 </p>
 </div>
 </td>
