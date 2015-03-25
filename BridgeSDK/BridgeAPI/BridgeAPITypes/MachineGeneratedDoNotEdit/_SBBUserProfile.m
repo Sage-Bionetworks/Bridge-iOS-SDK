@@ -43,8 +43,6 @@
 
         self.lastName = [dictionary objectForKey:@"lastName"];
 
-        self.phone = [dictionary objectForKey:@"phone"];
-
         self.username = [dictionary objectForKey:@"username"];
 
 	}
@@ -61,8 +59,6 @@
     [dict setObjectIfNotNil:self.firstName forKey:@"firstName"];
 
     [dict setObjectIfNotNil:self.lastName forKey:@"lastName"];
-
-    [dict setObjectIfNotNil:self.phone forKey:@"phone"];
 
     [dict setObjectIfNotNil:self.username forKey:@"username"];
 

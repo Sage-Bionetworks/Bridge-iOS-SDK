@@ -22,8 +22,6 @@
 
 @property (nonatomic, strong) NSString* lastName;
 
-@property (nonatomic, strong) NSString* phone;
-
 @property (nonatomic, strong) NSString* username;
 
 @end
