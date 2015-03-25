@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (StringConstraints)
 
 @property (nonatomic, strong) NSNumber* maxLength;
@@ -30,8 +29,6 @@
 @property (nonatomic, strong) NSString* pattern;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBStringConstraints
 

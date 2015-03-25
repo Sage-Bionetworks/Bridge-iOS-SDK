@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (DecimalConstraints)
 
 @property (nonatomic, strong) NSNumber* maxValue;
@@ -34,8 +33,6 @@
 @property (nonatomic, strong) NSString* unit;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBDecimalConstraints
 

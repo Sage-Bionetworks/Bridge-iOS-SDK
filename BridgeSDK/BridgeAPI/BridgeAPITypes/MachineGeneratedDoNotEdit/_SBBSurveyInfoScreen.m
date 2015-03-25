@@ -17,8 +17,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyInfoScreen)
 
 @property (nonatomic, strong) NSString* title;
@@ -28,8 +27,6 @@
 - (void) setImage: (NSManagedObject *) image_ settingInverse: (BOOL) setInverse;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBSurveyInfoScreen
 

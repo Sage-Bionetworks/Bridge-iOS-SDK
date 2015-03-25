@@ -17,8 +17,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (Activity)
 
 @property (nonatomic, strong) NSString* activityType;
@@ -32,8 +31,6 @@
 - (void) setSurvey: (NSManagedObject *) survey_ settingInverse: (BOOL) setInverse;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBActivity
 

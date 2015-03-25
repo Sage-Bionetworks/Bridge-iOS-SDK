@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (UploadSession)
 
 @property (nonatomic, strong) NSDate* expires;
@@ -26,8 +25,6 @@
 @property (nonatomic, strong) NSString* url;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBUploadSession
 

@@ -282,6 +282,12 @@ abstracted out for use in mock objects for testing, and to allow selecting among
 <dd></dd>
 <dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/ensureSignedInWithCompletion:" target="_top">-ensureSignedInWithCompletion:</a></tt></dt>
 <dd></dd>
+<dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:" target="_top">-requestPasswordResetForEmail:completion:</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/resendEmailVerification:completion:" target="_top">-resendEmailVerification:completion:</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:" target="_top">-resetPasswordToNewPassword:resetToken:completion:</a></tt></dt>
+<dd></dd>
 <dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/signInWithUsername:password:completion:" target="_top">-signInWithUsername:password:completion:</a></tt></dt>
 <dd></dd>
 <dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/signOutWithCompletion:" target="_top">-signOutWithCompletion:</a></tt></dt>
@@ -337,6 +343,121 @@ abstracted out for use in mock objects for testing, and to allow selecting among
 <p>The completion block should check for error code kSBBNoCredentialsAvailable and ask the user to sign up/sign in.
 </p>
 <!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/ensureSignedInWithCompletion:;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:;   name=SBBAuthManagerProtocol::requestPasswordResetForEmail:completion: --><a name="//apple_ref/occ/intfm/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:"></a>
+<h3><a name="requestPasswordResetForEmail:completion:">requestPasswordResetForEmail:completion:</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><tt>@optional</tt>
+<br>- (<!-- a logicalPath="//apple_ref/occ/cl/NSURLSessionDataTask //apple_ref/occ/tdef/NSURLSessionDataTask //apple_ref/occ/tag/NSURLSessionDataTask //apple_ref/occ/struct/NSURLSessionDataTask //apple_ref/occ/intf/NSURLSessionDataTask //apple_ref/doc/anysymbol/NSURLSessionDataTask" machineGenerated="true" --><span class="type">NSURLSessionDataTask</span><!-- /a --> <span class="type">*</span>)<a machinegenerated="true" href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:" logicalPath="//apple_ref/occ/instm/SBBAuthManagerProtocol/requestPasswordResetForEmail //apple_ref/occ/clm/SBBAuthManagerProtocol/requestPasswordResetForEmail //apple_ref/occ/intfcm/SBBAuthManagerProtocol/requestPasswordResetForEmail //apple_ref/occ/intfm/SBBAuthManagerProtocol/requestPasswordResetForEmail" target="_top"><span class="function">requestPasswordResetForEmail</span></a>:(<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">email</span> 
+        <a machinegenerated="true" href="index.html#//apple_ref/doc/methodparam/SBBAuthManagerProtocol/signUpWithEmail:username:password:completion:/completion" logicalPath="//apple_ref/occ/instm/SBBAuthManagerProtocol/completion //apple_ref/occ/clm/SBBAuthManagerProtocol/completion //apple_ref/occ/intfcm/SBBAuthManagerProtocol/completion //apple_ref/occ/intfm/SBBAuthManagerProtocol/completion //apple_ref/occ/func/completion //apple_ref/occ/ftmplt/SBBAuthManagerProtocol/completion //apple_ref/occ/defn/completion //apple_ref/occ/macro/completion //apple_ref/doc/anysymbol/completion" target="_top"><span class="function">completion</span></a>:(<a machinegenerated="true" href="../../../SBBNetworkManager_h/index.html#//apple_ref/c/tdef/SBBNetworkManagerCompletionBlock" logicalPath="//apple_ref/occ/cl/SBBNetworkManagerCompletionBlock //apple_ref/occ/tdef/SBBNetworkManagerCompletionBlock" target="_top"><span class="type">SBBNetworkManagerCompletionBlock</span></a>)<!-- a logicalPath="//apple_ref/occ/econst/completion //apple_ref/occ/data/SBBAuthManagerProtocol/completion //apple_ref/occ/data/completion //apple_ref/occ/clconst/SBBAuthManagerProtocol/completion " machineGenerated="true" --><span class="var">completion</span><!-- /a -->; </pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:/email;   name=requestPasswordResetForEmail:completion:::email -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:/email"></a>
+<code>email</code>
+</dt>
+<dd><p>The email address associated with the account whose password is to be reset.</p></dd>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:/completion;   name=requestPasswordResetForEmail:completion:::completion -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:/completion"></a>
+<code>completion</code>
+</dt>
+<dd><p>A SBBNetworkManagerCompletionBlock to be called upon completion.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:;name=start --><p>Request that the password be reset for the account associated with the given email address. An email will be sent
+to that address with instructions for choosing a new password.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/resendEmailVerification:completion:;   name=SBBAuthManagerProtocol::resendEmailVerification:completion: --><a name="//apple_ref/occ/intfm/SBBAuthManagerProtocol/resendEmailVerification:completion:"></a>
+<h3><a name="resendEmailVerification:completion:">resendEmailVerification:completion:</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><tt>@optional</tt>
+<br>- (<!-- a logicalPath="//apple_ref/occ/cl/NSURLSessionDataTask //apple_ref/occ/tdef/NSURLSessionDataTask //apple_ref/occ/tag/NSURLSessionDataTask //apple_ref/occ/struct/NSURLSessionDataTask //apple_ref/occ/intf/NSURLSessionDataTask //apple_ref/doc/anysymbol/NSURLSessionDataTask" machineGenerated="true" --><span class="type">NSURLSessionDataTask</span><!-- /a --> <span class="type">*</span>)<a machinegenerated="true" href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/resendEmailVerification:completion:" logicalPath="//apple_ref/occ/instm/SBBAuthManagerProtocol/resendEmailVerification //apple_ref/occ/clm/SBBAuthManagerProtocol/resendEmailVerification //apple_ref/occ/intfcm/SBBAuthManagerProtocol/resendEmailVerification //apple_ref/occ/intfm/SBBAuthManagerProtocol/resendEmailVerification" target="_top"><span class="function">resendEmailVerification</span></a>:(<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">email</span> 
+        <a machinegenerated="true" href="index.html#//apple_ref/doc/methodparam/SBBAuthManagerProtocol/signUpWithEmail:username:password:completion:/completion" logicalPath="//apple_ref/occ/instm/SBBAuthManagerProtocol/completion //apple_ref/occ/clm/SBBAuthManagerProtocol/completion //apple_ref/occ/intfcm/SBBAuthManagerProtocol/completion //apple_ref/occ/intfm/SBBAuthManagerProtocol/completion //apple_ref/occ/func/completion //apple_ref/occ/ftmplt/SBBAuthManagerProtocol/completion //apple_ref/occ/defn/completion //apple_ref/occ/macro/completion //apple_ref/doc/anysymbol/completion" target="_top"><span class="function">completion</span></a>:(<a machinegenerated="true" href="../../../SBBNetworkManager_h/index.html#//apple_ref/c/tdef/SBBNetworkManagerCompletionBlock" logicalPath="//apple_ref/occ/cl/SBBNetworkManagerCompletionBlock //apple_ref/occ/tdef/SBBNetworkManagerCompletionBlock" target="_top"><span class="type">SBBNetworkManagerCompletionBlock</span></a>)<!-- a logicalPath="//apple_ref/occ/econst/completion //apple_ref/occ/data/SBBAuthManagerProtocol/completion //apple_ref/occ/data/completion //apple_ref/occ/clconst/SBBAuthManagerProtocol/completion " machineGenerated="true" --><span class="var">completion</span><!-- /a -->; </pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resendEmailVerification:completion:/email;   name=resendEmailVerification:completion:::email -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resendEmailVerification:completion:/email"></a>
+<code>email</code>
+</dt>
+<dd><p>The email address for which to re-send the verification link.</p></dd>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resendEmailVerification:completion:/completion;   name=resendEmailVerification:completion:::completion -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resendEmailVerification:completion:/completion"></a>
+<code>completion</code>
+</dt>
+<dd><p>A SBBNetworkManagerCompletionBlock to be called upon completion.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/resendEmailVerification:completion:;name=start --><p>Request Bridge to re-send the email verification link to the specified email address.
+</p>
+<p>A 404 Not Found HTTP status indicates there is no pending verification for that email address,
+either because it was not used to sign up for an account, or because it has already been verified.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/resendEmailVerification:completion:;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:;   name=SBBAuthManagerProtocol::resetPasswordToNewPassword:resetToken:completion: --><a name="//apple_ref/occ/intfm/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:"></a>
+<h3><a name="resetPasswordToNewPassword:resetToken:completion:">resetPasswordToNewPassword:resetToken:completion:</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><tt>@optional</tt>
+<br>- (<!-- a logicalPath="//apple_ref/occ/cl/NSURLSessionDataTask //apple_ref/occ/tdef/NSURLSessionDataTask //apple_ref/occ/tag/NSURLSessionDataTask //apple_ref/occ/struct/NSURLSessionDataTask //apple_ref/occ/intf/NSURLSessionDataTask //apple_ref/doc/anysymbol/NSURLSessionDataTask" machineGenerated="true" --><span class="type">NSURLSessionDataTask</span><!-- /a --> <span class="type">*</span>)<a machinegenerated="true" href="index.html#//apple_ref/occ/intfm/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:" logicalPath="//apple_ref/occ/instm/SBBAuthManagerProtocol/resetPasswordToNewPassword //apple_ref/occ/clm/SBBAuthManagerProtocol/resetPasswordToNewPassword //apple_ref/occ/intfcm/SBBAuthManagerProtocol/resetPasswordToNewPassword //apple_ref/occ/intfm/SBBAuthManagerProtocol/resetPasswordToNewPassword" target="_top"><span class="function">resetPasswordToNewPassword</span></a>:(<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">password</span> 
+        <!-- a logicalPath="//apple_ref/occ/instm/SBBAuthManagerProtocol/resetToken //apple_ref/occ/clm/SBBAuthManagerProtocol/resetToken //apple_ref/occ/intfcm/SBBAuthManagerProtocol/resetToken //apple_ref/occ/intfm/SBBAuthManagerProtocol/resetToken //apple_ref/occ/func/resetToken //apple_ref/occ/ftmplt/SBBAuthManagerProtocol/resetToken //apple_ref/occ/defn/resetToken //apple_ref/occ/macro/resetToken //apple_ref/doc/anysymbol/resetToken" machineGenerated="true" --><span class="function">resetToken</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">token</span> <a machinegenerated="true" href="index.html#//apple_ref/doc/methodparam/SBBAuthManagerProtocol/signUpWithEmail:username:password:completion:/completion" logicalPath="//apple_ref/occ/instm/SBBAuthManagerProtocol/completion //apple_ref/occ/clm/SBBAuthManagerProtocol/completion //apple_ref/occ/intfcm/SBBAuthManagerProtocol/completion //apple_ref/occ/intfm/SBBAuthManagerProtocol/completion //apple_ref/occ/func/completion //apple_ref/occ/ftmplt/SBBAuthManagerProtocol/completion //apple_ref/occ/defn/completion //apple_ref/occ/macro/completion //apple_ref/doc/anysymbol/completion" target="_top"><span class="function">completion</span></a>:(<a machinegenerated="true" href="../../../SBBNetworkManager_h/index.html#//apple_ref/c/tdef/SBBNetworkManagerCompletionBlock" logicalPath="//apple_ref/occ/cl/SBBNetworkManagerCompletionBlock //apple_ref/occ/tdef/SBBNetworkManagerCompletionBlock" target="_top"><span class="type">SBBNetworkManagerCompletionBlock</span></a>)<!-- a logicalPath="//apple_ref/occ/econst/completion //apple_ref/occ/data/SBBAuthManagerProtocol/completion //apple_ref/occ/data/completion //apple_ref/occ/clconst/SBBAuthManagerProtocol/completion " machineGenerated="true" --><span class="var">completion</span><!-- /a -->; </pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:/password;   name=resetPasswordToNewPassword:resetToken:completion:::password -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:/password"></a>
+<code>password</code>
+</dt>
+<dd><p>The new password for this user's account.</p></dd>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:/token;   name=resetPasswordToNewPassword:resetToken:completion:::token -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:/token"></a>
+<code>token</code>
+</dt>
+<dd><p>The sptoken sent to the user's email address in response to a requestPasswordResetForEmail: call.</p></dd>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:/completion;   name=resetPasswordToNewPassword:resetToken:completion:::completion -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:/completion"></a>
+<code>completion</code>
+</dt>
+<dd><p>A SBBNetworkManagerCompletionBlock to be called upon completion.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:;name=start --><p>Reset the password for this user's account.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:;name=end --><!-- end discussion -->
 <hr class="betweenAPIEntries">
 <!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBAuthManagerProtocol/signInWithUsername:password:completion:;   name=SBBAuthManagerProtocol::signInWithUsername:password:completion: --><a name="//apple_ref/occ/intfm/SBBAuthManagerProtocol/signInWithUsername:password:completion:"></a>
 <h3><a name="signInWithUsername:password:completion:">signInWithUsername:password:completion:</a></h3>
@@ -459,7 +580,7 @@ userName and password won't be valid for signing in until the email has been ver
 <p class="gapBeforeFooter">&nbsp;</p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Tuesday, October 28, 2014
+<p class="hd_timestamp">Last Updated: Wednesday, March 25, 2015
 </p>
 </div>
 </td>

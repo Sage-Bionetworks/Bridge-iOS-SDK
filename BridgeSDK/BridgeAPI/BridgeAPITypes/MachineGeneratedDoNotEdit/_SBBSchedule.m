@@ -18,8 +18,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (Schedule)
 
 @property (nonatomic, strong) NSString* activityRef;
@@ -54,8 +53,6 @@
 - (void)replaceActivitiesAtIndexes:(NSIndexSet *)indexes withActivities:(NSArray *)values;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBSchedule
 

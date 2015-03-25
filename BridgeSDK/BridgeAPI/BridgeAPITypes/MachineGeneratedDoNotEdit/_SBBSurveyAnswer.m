@@ -19,8 +19,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyAnswer)
 
 @property (nonatomic, strong) NSDate* answeredOn;
@@ -38,8 +37,6 @@
 @property (nonatomic, strong) NSString* questionGuid;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBSurveyAnswer
 

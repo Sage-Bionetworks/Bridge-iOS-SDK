@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (UserProfile)
 
 @property (nonatomic, strong) NSString* email;
@@ -25,13 +24,9 @@
 
 @property (nonatomic, strong) NSString* lastName;
 
-@property (nonatomic, strong) NSString* phone;
-
 @property (nonatomic, strong) NSString* username;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBUserProfile
 
@@ -59,8 +54,6 @@
 
     self.lastName = [dictionary objectForKey:@"lastName"];
 
-    self.phone = [dictionary objectForKey:@"phone"];
-
     self.username = [dictionary objectForKey:@"username"];
 
 }
@@ -74,8 +67,6 @@
     [dict setObjectIfNotNil:self.firstName forKey:@"firstName"];
 
     [dict setObjectIfNotNil:self.lastName forKey:@"lastName"];
-
-    [dict setObjectIfNotNil:self.phone forKey:@"phone"];
 
     [dict setObjectIfNotNil:self.username forKey:@"username"];
 
@@ -108,8 +99,6 @@
 
         self.lastName = managedObject.lastName;
 
-        self.phone = managedObject.phone;
-
         self.username = managedObject.username;
 
     }
@@ -138,8 +127,6 @@
     managedObject.firstName = self.firstName;
 
     managedObject.lastName = self.lastName;
-
-    managedObject.phone = self.phone;
 
     managedObject.username = self.username;
 

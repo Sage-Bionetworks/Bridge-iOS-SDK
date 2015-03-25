@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (MultiValueConstraints)
 
 @property (nonatomic, strong) NSNumber* allowMultiple;
@@ -30,8 +29,6 @@
 @property (nonatomic, strong) NSArray* enumeration;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBMultiValueConstraints
 

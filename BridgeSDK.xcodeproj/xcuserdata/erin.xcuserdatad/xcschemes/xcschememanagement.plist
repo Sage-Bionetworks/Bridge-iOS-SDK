@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>AppStoreFrameworkBuilder.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>9</integer>
+		</dict>
 		<key>BridgeObjects.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -22,7 +27,7 @@
 		<key>Documentation.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>5</integer>
+			<integer>6</integer>
 		</dict>
 		<key>FrameworkBuilder.xcscheme</key>
 		<dict>
@@ -32,12 +37,12 @@
 		<key>RNCryptor.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>7</integer>
 		</dict>
 		<key>TestBridgeObjects.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>9</integer>
+			<integer>8</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
@@ -78,6 +83,11 @@
 			<true/>
 		</dict>
 		<key>80F7C32819E5BB1000574800</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F50981C91AA57B1E002E2264</key>
 		<dict>
 			<key>primary</key>
 			<true/>

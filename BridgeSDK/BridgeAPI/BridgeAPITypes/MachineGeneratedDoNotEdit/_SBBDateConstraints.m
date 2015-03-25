@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (DateConstraints)
 
 @property (nonatomic, strong) NSNumber* allowFuture;
@@ -28,8 +27,6 @@
 @property (nonatomic, strong) NSDate* latestValue;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBDateConstraints
 

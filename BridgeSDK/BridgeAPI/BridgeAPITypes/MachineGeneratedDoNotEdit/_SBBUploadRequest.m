@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (UploadRequest)
 
 @property (nonatomic, strong) NSNumber* contentLength;
@@ -30,8 +29,6 @@
 @property (nonatomic, strong) NSString* name;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBUploadRequest
 

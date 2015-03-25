@@ -11,16 +11,26 @@
 
 @implementation BridgeSDK
 
++ (void)setupWithStudy:(NSString *)study
+{
+    [self setupWithStudy:study environment:gDefaultEnvironment];
+}
+
 + (void)setupWithAppPrefix:(NSString *)appPrefix
 {
-  [self setupWithAppPrefix:appPrefix environment:gDefaultEnvironment];
+    [self setupWithStudy:appPrefix];
+}
+
++ (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment
+{
+    gSBBAppStudy = study;
+    gSBBDefaultEnvironment = environment;
+    [SBBComponent(SBBNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
 }
 
 + (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment
 {
-  gSBBAppURLPrefix = appPrefix;
-  gSBBDefaultEnvironment = environment;
-  [SBBComponent(SBBNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
+    [self setupWithStudy:appPrefix environment:environment];
 }
 
 @end

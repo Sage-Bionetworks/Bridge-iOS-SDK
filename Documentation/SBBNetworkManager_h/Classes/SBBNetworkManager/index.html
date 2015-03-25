@@ -278,10 +278,45 @@ function disclosure_triangle(elt) {
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/cl/SBBNetworkManager;name=start --><p>This class handles HTTP networking with the Bridge REST API.
 <!-- headerDoc=discussion;uid=//apple_ref/occ/cl/SBBNetworkManager;name=end --><!-- end discussion -->
 </p>
+<hr class="afterClassOrHeaderInfo">
+<br><a name="HeaderDoc_methods"></a>
+<h2 class="h2tight">Methods</h2>
+<dl>
+<dt><tt><a href="index.html#//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL:" target="_top">-initWithBaseURL:</a></tt></dt>
+<dd></dd>
+</dl>
+<hr class="betweenAPIEntries">
+<!-- headerDoc=instm;  uid=//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL:;   name=SBBNetworkManager::initWithBaseURL: --><a name="//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL:"></a>
+<h3><a name="initWithBaseURL:">initWithBaseURL:</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><!-- headerDoc=declaration;uid=//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL:;name=start -->- (<!-- a logicalPath="//apple_ref/occ/cl/instancetype //apple_ref/occ/tdef/instancetype //apple_ref/occ/tag/instancetype //apple_ref/occ/struct/instancetype //apple_ref/occ/intf/instancetype //apple_ref/doc/anysymbol/instancetype" machineGenerated="true" --><span class="type">instancetype</span><!-- /a -->) <a machinegenerated="true" href="index.html#//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL:" logicalPath="//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL" target="_top"><span class="function">initWithBaseURL</span></a>: (<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --><span class="type">*</span>) <!-- a logicalPath="//apple_ref/occ/econst/baseURL //apple_ref/occ/data/SBBNetworkManager/baseURL //apple_ref/occ/data/baseURL //apple_ref/occ/clconst/SBBNetworkManager/baseURL " machineGenerated="true" --><span class="var">baseURL</span><!-- /a -->; <!-- headerDoc=declaration;uid=//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL:;name=end --></pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBNetworkManager/initWithBaseURL:/baseURL;   name=initWithBaseURL:::baseURL -->
+<a name="//apple_ref/doc/methodparam/SBBNetworkManager/initWithBaseURL:/baseURL"></a>
+<code>baseURL</code>
+</dt>
+<dd><p>The scheme and host part of a third-party REST API, e.g. https://webapi.somecompany.com . The urlString parameter of the put, get, etc. methods could then either be the fully-qualified URL of the endpoint you are accessing, or just the path part.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>An initialized SBBNetworkManager instance with the given baseURL.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL:;name=start --><p>If you want to use SBBNetworkManager's features to access a different REST API, you can create an instance
+using this initializer, with the scheme and host part of that API's URL as the baseURL.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/occ/instm/SBBNetworkManager/initWithBaseURL:;name=end --><!-- end discussion -->
 <p class="gapBeforeFooter">&nbsp;</p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Tuesday, October 28, 2014
+<p class="hd_timestamp">Last Updated: Wednesday, March 25, 2015
 </p>
 </div>
 </td>

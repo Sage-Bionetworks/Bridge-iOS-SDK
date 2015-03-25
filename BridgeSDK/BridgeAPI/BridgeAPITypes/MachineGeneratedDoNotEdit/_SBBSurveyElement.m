@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyElement)
 
 @property (nonatomic, strong) NSString* guid;
@@ -28,8 +27,6 @@
 @property (nonatomic, strong) NSString* promptDetail;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBSurveyElement
 

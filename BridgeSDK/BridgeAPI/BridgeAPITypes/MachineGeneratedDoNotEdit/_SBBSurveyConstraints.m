@@ -18,8 +18,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyConstraints)
 
 @property (nonatomic, strong) NSString* dataType;
@@ -40,8 +39,6 @@
 - (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBSurveyConstraints
 

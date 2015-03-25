@@ -15,8 +15,7 @@
 
 @end
 
-/*! xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
- */
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyRule)
 
 @property (nonatomic, strong) NSString* operator;
@@ -26,8 +25,6 @@
 @property (nonatomic, strong) id value;
 
 @end
-
-/** \ingroup DataModel */
 
 @implementation _SBBSurveyRule
 

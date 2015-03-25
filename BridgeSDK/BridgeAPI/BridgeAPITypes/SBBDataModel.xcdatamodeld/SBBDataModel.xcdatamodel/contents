@@ -249,7 +249,6 @@
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="type"/>
@@ -283,6 +282,6 @@
         <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>
         <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="108" width="128" height="90"/>
-        <element name="UserProfile" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="UserProfile" positionX="-63" positionY="-18" width="128" height="105"/>
     </elements>
 </model>
