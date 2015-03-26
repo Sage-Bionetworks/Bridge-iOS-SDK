@@ -22,7 +22,7 @@
 
 - (void)reloadSchedules
 {
-    NSURLSessionDataTask *task = [SBBComponent(SBBScheduleManager) getSchedulesWithCompletion:^(id schedulesList, NSError *error) {
+    [SBBComponent(SBBScheduleManager) getSchedulesWithCompletion:^(id schedulesList, NSError *error) {
         SBBResourceList *list = (SBBResourceList *)schedulesList;
         self.schedules = list.items;
         dispatch_sync(dispatch_get_main_queue(), ^{

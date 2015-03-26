@@ -465,7 +465,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
 {
     __block BOOL reset = NO;
     [self dispatchSyncToBridgeObjectCacheQueue:^{
-        self.objectsCachedByTypeAndID = [[NSCache alloc] init];
+        self.objectsCachedByTypeAndID = [NSMutableDictionary dictionary];
         reset = [self resetDatabase];
     }];
     

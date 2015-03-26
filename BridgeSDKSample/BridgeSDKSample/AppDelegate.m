@@ -47,9 +47,9 @@
     //    appURLPrefix:@"" baseURLPath:@"http://192.168.55.1:9000"];
     //[SBBComponentManager registerComponent:networkMan forClass:[SBBNetworkManager class]];
 
-    // To run this sample app in your study, change this prefix to the one assigned to your study.
+    // To run this sample app in your study, change this study identifier to the one assigned to your study.
     // Leave it set to @"api" to run in the generic test study.
-    [BridgeSDK setupWithAppPrefix:@"api"];
+    [BridgeSDK setupWithStudy:@"api"];
     
     [SBBComponent(SBBAuthManager) ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (error.code == kSBBNoCredentialsAvailable)
