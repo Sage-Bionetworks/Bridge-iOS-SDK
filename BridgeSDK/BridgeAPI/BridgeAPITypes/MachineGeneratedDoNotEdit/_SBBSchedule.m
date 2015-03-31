@@ -37,10 +37,6 @@
 
         self.activities = [dictionary objectForKey:@"activities"];
 
-        self.activityRef = [dictionary objectForKey:@"activityRef"];
-
-        self.activityType = [dictionary objectForKey:@"activityType"];
-
         self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
 
         self.endsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endsOn"]];
@@ -63,10 +59,6 @@
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
     [dict setObjectIfNotNil:self.activities forKey:@"activities"];
-
-    [dict setObjectIfNotNil:self.activityRef forKey:@"activityRef"];
-
-    [dict setObjectIfNotNil:self.activityType forKey:@"activityType"];
 
     [dict setObjectIfNotNil:self.cronTrigger forKey:@"cronTrigger"];
 
