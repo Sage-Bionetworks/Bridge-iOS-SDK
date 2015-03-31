@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="VYa-ZN-xew">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+    </dependencies>
+    <scenes>
+        <!--Consent View Controller-->
+        <scene sceneID="2sb-0y-Sdh">
+            <objects>
+                <viewController id="VYa-ZN-xew" customClass="ConsentViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="b5G-6a-rt2"/>
+                        <viewControllerLayoutGuide type="bottom" id="ffJ-mh-TEY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2bz-Mn-Tpc">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Za2-Fh-nP8">
+                                <rect key="frame" x="16" y="101" width="568" height="162"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="162" id="JyR-fV-XfX"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="dataSource" destination="VYa-ZN-xew" id="A7k-ea-aMy"/>
+                                    <outlet property="delegate" destination="VYa-ZN-xew" id="HWa-lD-ezN"/>
+                                </connections>
+                            </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7a6-eG-SgM">
+                                <rect key="frame" x="16" y="293" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="Hzx-y1-1u3"/>
+                                    <constraint firstAttribute="height" constant="30" id="VNn-VM-uPo"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <state key="normal" title="Give">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTouchGiveButton:" destination="VYa-ZN-xew" eventType="touchUpInside" id="goJ-ye-rGU"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yeg-sD-P7u">
+                                <rect key="frame" x="128" y="293" width="64" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="ZZ2-2l-RZb"/>
+                                    <constraint firstAttribute="width" constant="64" id="bVy-qd-Wvt"/>
+                                </constraints>
+                                <state key="normal" title="Change">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTouchChangeButton:" destination="VYa-ZN-xew" eventType="touchUpInside" id="N1L-iT-17H"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Consent" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MX4-gF-0IW">
+                                <rect key="frame" x="16" y="64" width="568" height="29"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vta-w2-W8p">
+                                <rect key="frame" x="16" y="353" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="apC-6W-fdw"/>
+                                    <constraint firstAttribute="height" constant="30" id="mzy-w9-eIo"/>
+                                </constraints>
+                                <state key="normal" title="Get">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTouchGetButton:" destination="VYa-ZN-xew" eventType="touchUpInside" id="MbU-RG-KZ9"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PkC-3f-0Zt">
+                                <rect key="frame" x="96" y="345" width="80" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="XeV-Hx-3gG"/>
+                                    <constraint firstAttribute="width" constant="80" id="xvI-Qf-bYh"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Vta-w2-W8p" firstAttribute="top" secondItem="7a6-eG-SgM" secondAttribute="bottom" constant="30" id="2se-Uh-kew"/>
+                            <constraint firstItem="7a6-eG-SgM" firstAttribute="baseline" secondItem="Yeg-sD-P7u" secondAttribute="baseline" id="3lU-Ip-9Cp"/>
+                            <constraint firstItem="7a6-eG-SgM" firstAttribute="leading" secondItem="2bz-Mn-Tpc" secondAttribute="leading" constant="16" id="3t5-wr-u2T"/>
+                            <constraint firstItem="Za2-Fh-nP8" firstAttribute="leading" secondItem="2bz-Mn-Tpc" secondAttribute="leading" constant="16" id="8fe-QI-KRw"/>
+                            <constraint firstAttribute="trailing" secondItem="Za2-Fh-nP8" secondAttribute="trailing" constant="16" id="Ark-zg-NZn"/>
+                            <constraint firstItem="Vta-w2-W8p" firstAttribute="leading" secondItem="2bz-Mn-Tpc" secondAttribute="leading" constant="16" id="BcU-Fe-sSV"/>
+                            <constraint firstItem="PkC-3f-0Zt" firstAttribute="centerY" secondItem="Vta-w2-W8p" secondAttribute="centerY" id="I3X-Xc-140"/>
+                            <constraint firstItem="MX4-gF-0IW" firstAttribute="leading" secondItem="2bz-Mn-Tpc" secondAttribute="leading" constant="16" id="PqC-L0-HXz"/>
+                            <constraint firstItem="MX4-gF-0IW" firstAttribute="top" secondItem="2bz-Mn-Tpc" secondAttribute="top" constant="64" id="SjX-16-V6r"/>
+                            <constraint firstItem="Yeg-sD-P7u" firstAttribute="leading" secondItem="7a6-eG-SgM" secondAttribute="trailing" constant="66" id="Vp5-lT-aNQ"/>
+                            <constraint firstAttribute="trailing" secondItem="MX4-gF-0IW" secondAttribute="trailing" constant="16" id="bZq-eG-AJK"/>
+                            <constraint firstItem="Za2-Fh-nP8" firstAttribute="top" secondItem="2bz-Mn-Tpc" secondAttribute="top" constant="101" id="bmR-qt-n4x"/>
+                            <constraint firstItem="PkC-3f-0Zt" firstAttribute="leading" secondItem="Vta-w2-W8p" secondAttribute="trailing" constant="34" id="kVL-BQ-6Xs"/>
+                            <constraint firstItem="7a6-eG-SgM" firstAttribute="top" secondItem="Za2-Fh-nP8" secondAttribute="bottom" constant="30" id="n6f-dM-8Pf"/>
+                            <constraint firstItem="PkC-3f-0Zt" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Za2-Fh-nP8" secondAttribute="trailing" constant="16" id="noz-tR-ma1"/>
+                            <constraint firstAttribute="bottom" secondItem="PkC-3f-0Zt" secondAttribute="bottom" constant="48" id="rzu-Qd-Osl"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="noz-tR-ma1"/>
+                                <exclude reference="rzu-Qd-Osl"/>
+                            </mask>
+                        </variation>
+                    </view>
+                    <connections>
+                        <outlet property="scopePickerView" destination="Za2-Fh-nP8" id="IyJ-CK-beb"/>
+                        <outlet property="signatureImageView" destination="PkC-3f-0Zt" id="y9q-UT-Sui"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MUA-N5-zjA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-119" y="161"/>
+        </scene>
+    </scenes>
+</document>

@@ -70,7 +70,8 @@
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:NSLocalizedString(@"Sign Up/Sign In", @"Sign Up/Sign In"),
                                   NSLocalizedString(@"Sign Out", @"Sign Out"),
-                                  NSLocalizedString(@"Profile & Consent", @"Profile & Consent"),
+                                  NSLocalizedString(@"Profile", @"Profile"),
+                                  NSLocalizedString(@"Consent", @"Consent"),
                                   NSLocalizedString(@"Survey", @"Survey"),
                                   NSLocalizedString(@"Upload", @"Upload"),
                                   NSLocalizedString(@"Schedule", @"Schedule"),
@@ -82,7 +83,8 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
   asCancel = -1,
   asSignUpSignIn,
   asSignOut,
-  asProfileConsent,
+  asProfile,
+  asConsent,
   asSurvey,
   asUpload,
   asSchedule
@@ -119,9 +121,17 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
         }
             break;
             
-        case asProfileConsent:
+        case asProfile:
         {
             UIStoryboard *ups = [UIStoryboard storyboardWithName:@"UserProfile" bundle:nil];
+            UserProfileViewController *upvc = [ups instantiateInitialViewController];
+            [self.navigationController pushViewController:upvc animated:YES];
+        }
+            break;
+            
+        case asConsent:
+        {
+            UIStoryboard *ups = [UIStoryboard storyboardWithName:@"Consent" bundle:nil];
             UserProfileViewController *upvc = [ups instantiateInitialViewController];
             [self.navigationController pushViewController:upvc animated:YES];
         }

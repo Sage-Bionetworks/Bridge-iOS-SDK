@@ -54,4 +54,19 @@
   }];
 }
 
+- (NSURLSessionDataTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBProfileManagerUpdateCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSDictionary *params = @{
+                                @"identifier": externalID,
+                                @"type": @"ExternalIdentifier"
+                             };
+    return [self.networkManager post:@"/api/v1/profile/external-id" headers:headers parameters:params completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
+}
+
 @end
