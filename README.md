@@ -85,9 +85,9 @@ BridgeSDK includes Apple's Reachability code, version 3.5, which includes the fo
  
 	 Copyright (C) 2014 Apple Inc. All Rights Reserved.
 
-Certain networking and sample code is included under the following Apple license:
+Certain networking and sample code is included under the following modified BSD license:
 
-	 Copyright (c) 2015, Apple Inc. All rights reserved.
+	 Copyright (c) 2015, Sage Bionetworks. All rights reserved.
  
 	 Redistribution and use in source and binary forms, with or without modification,
 	 are permitted provided that the following conditions are met:
