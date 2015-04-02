@@ -252,6 +252,7 @@
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="type"/>
+            <entry key="isExtendable" value="1"/>
         </userInfo>
     </entity>
     <elements>

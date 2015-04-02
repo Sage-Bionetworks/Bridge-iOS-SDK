@@ -65,6 +65,7 @@
         self.image = imageObj;
 
     }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

@@ -80,6 +80,7 @@
 
         [self addItemsObject:itemsObj];
     }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

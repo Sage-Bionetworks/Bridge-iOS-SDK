@@ -57,6 +57,7 @@
         self.constraints = constraintsObj;
 
     }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

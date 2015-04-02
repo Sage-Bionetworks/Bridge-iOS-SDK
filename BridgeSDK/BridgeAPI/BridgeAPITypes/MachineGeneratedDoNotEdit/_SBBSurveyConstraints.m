@@ -68,6 +68,7 @@
 
         [self addRulesObject:rulesObj];
     }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

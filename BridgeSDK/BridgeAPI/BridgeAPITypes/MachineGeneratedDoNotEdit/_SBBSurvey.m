@@ -128,6 +128,7 @@
 
         [self addElementsObject:elementsObj];
     }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

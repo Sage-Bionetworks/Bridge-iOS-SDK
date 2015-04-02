@@ -15,6 +15,9 @@
 #import "RNEncryptor.h"
 #import "RNDecryptor.h"
 <$endif$>
+<$if userInfo.isExtendable$>
+@import ObjectiveC;
+<$endif$>
 
 <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>#import "<$Relationship.destinationEntity.generatedObjectClassName$>.h"
 <$endif$><$endforeach do$>
@@ -100,6 +103,95 @@
 
 
 #pragma mark Dictionary representation
+<$if userInfo.isExtendable$>
+// Check that the selector corresponds to a property.
+// Note that this doesn't handle custom getter/setter names in the declaration.
++ (objc_property_t)propertyFromSelector:(SEL)sel
+{
+    NSString *propertyName = NSStringFromSelector(sel);
+    objc_property_t property = NULL;
+    if ([propertyName hasSuffix:@":"]) {
+        // setter--assume sel is of the form 'setXxxXxx:' where the property name is 'XxxXxx' or 'xxxXxx'
+        // - cut off the trailing ':'
+        propertyName = [[propertyName substringToIndex:propertyName.length - 1] substringFromIndex:3];
+        property = class_getProperty([self class], [propertyName UTF8String]);
+        if (property == NULL) {
+            // dromedary-camelCase the string and try again
+            propertyName = [[[propertyName substringToIndex:1] lowercaseString] stringByAppendingString:[propertyName substringFromIndex:1]];
+            property = class_getProperty([self class], [propertyName UTF8String]);
+        }
+    } else {
+        // getter--assume selector is property name
+        property = class_getProperty([self class], [propertyName UTF8String]);
+    }
+
+    return property;
+}
+
+static NSString *nameForProperty(objc_property_t property)
+{
+    return [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+}
+
+static void dynamicSetterIMP(id self, SEL _cmd, id value)
+{
+    objc_property_t property = [[self class] propertyFromSelector:_cmd];
+    if (value) {
+        [[self customFields] setObject:value forKey:nameForProperty(property)];
+    } else {
+        [[self customFields] removeObjectForKey:nameForProperty(property)];
+    }
+}
+
+static NSString *dynamicGetterIMP(id self, SEL _cmd)
+{
+    objc_property_t property = [[self class] propertyFromSelector:_cmd];
+    return [[self customFields] objectForKey:nameForProperty(property)];
+}
+
+// Create the custom fields container on demand.
+// Note: it's an associated object and not just a property because we don't want to include it when serializing the object to JSON.
+- (NSMutableDictionary *)customFields
+{
+    NSMutableDictionary *customFields = objc_getAssociatedObject(self, @selector(customFields));
+    if (!customFields) {
+        customFields = [NSMutableDictionary dictionary];
+        objc_setAssociatedObject(self, @selector(customFields), customFields, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    return customFields;
+}
+
+
+// This is called by the Objective-C runtime when the object receives a message on a selector it doesn't implement.
+// We're going to take advantage of that to provide setter and getter implementations for @dynamic properties
+// declared in categories of <$generatedObjectClassName$>, so that all the existing machinery around marshaling and serializing
+// objects to/from Bridge JSON will just work.
++ (BOOL)resolveInstanceMethod:(SEL)sel
+{
+    BOOL isSetter = [NSStringFromSelector(sel) hasSuffix:@":"];
+    objc_property_t property = [self propertyFromSelector:sel];
+    if (property) {
+        if (isSetter) {
+            // set the IMP for sel to dynamicSetterIMP
+            class_addMethod(self, sel, (IMP)dynamicSetterIMP, "v@:@");
+        } else {
+            // set the IMP for sel to dynamicGetterIMP
+            class_addMethod(self, sel, (IMP)dynamicGetterIMP, "@@:");
+        }
+    }
+    
+    return [super resolveInstanceMethod:sel];
+}
+
+- (NSArray *)originalProperties
+{
+    NSMutableArray *props = [@[<$foreach Attribute allAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>@"<$Attribute.name$>", <$endif$><$endif$><$endforeach do$><$if userInfo.syntheticKeyComponentPaths.length$><$if userInfo.entityIDKeyPath.length$><$userInfo.entityIDKeyPath$>, <$endif$><$endif$><$foreach Relationship allRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$>@"<$Relationship.name$>", <$endif$><$endif$><$endif$><$endforeach do$>@"__end_of_properties__"] mutableCopy];
+    [props removeLastObject];
+
+    return props;
+}
+<$endif$>
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
@@ -144,6 +236,23 @@
         self.<$Relationship.name$> = <$Relationship.name$>Obj;
         <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
     }<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
+    <$if userInfo.isExtendable$>
+    // now update from the custom fields
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.originalProperties];
+    NSArray *customProperties = [dictionary.allKeys filteredArrayUsingPredicate:pred];
+    for (NSString *propertyName in customProperties) {
+        // assuming custom properties are not readonly, and why would they be, after all?
+        // ...also assume they are not something like NSDates that have to be handled funkily
+        // ...and that they are not using custom setter names
+        NSString *value = [dictionary objectForKey:propertyName];
+        NSString *camelizedProp = [[[propertyName substringToIndex:1] uppercaseString] stringByAppendingString:[propertyName substringFromIndex:1]];
+        NSString *setterName = [NSString stringWithFormat:@"set%@:", camelizedProp];
+        SEL setter = NSSelectorFromString(setterName);
+        if ([self respondsToSelector:setter]) {
+            [self performSelector:setter withObject:value];
+        }
+    }
+    <$endif$>
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -177,6 +286,12 @@
 	<$endif$>
     <$endif$>
 	<$endforeach do$>
+
+    <$if userInfo.isExtendable$>
+    // add in the custom fields
+    [dict addEntriesFromDictionary:[self customFields]];
+    <$endif$>
+
 	return dict;
 }
 

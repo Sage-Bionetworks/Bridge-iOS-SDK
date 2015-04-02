@@ -96,6 +96,7 @@
 
         [self addActivitiesObject:activitiesObj];
     }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager

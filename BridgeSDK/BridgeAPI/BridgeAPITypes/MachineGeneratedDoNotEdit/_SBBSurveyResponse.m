@@ -92,6 +92,7 @@
         self.survey = surveyObj;
 
     }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
