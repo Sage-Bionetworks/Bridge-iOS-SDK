@@ -107,6 +107,18 @@
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBNotAFileURL userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
++ (NSError *)generateSBBTempFileErrorForURL:(NSURL *)url
+{
+  NSString *desc = [NSString stringWithFormat:@"Error copying file at URL to temp file:\n%@", url];
+  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
+}
+
++ (NSError *)generateSBBTempFileReadErrorForURL:(NSURL *)url
+{
+  NSString *desc = [NSString stringWithFormat:@"Error reading temp file for original file URL:\n%@", url];
+  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
+}
+
 + (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass
 {
   NSString *desc = [NSString stringWithFormat:@"Object '%@' is of class %@, expected class %@", object, NSStringFromClass([object class]), NSStringFromClass(expectedClass)];

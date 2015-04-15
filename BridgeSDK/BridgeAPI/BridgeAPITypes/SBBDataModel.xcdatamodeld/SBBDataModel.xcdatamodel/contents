@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C109" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="14C1514" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Activity" representedClassName="SBBActivity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
@@ -82,8 +82,6 @@
                 <entry key="attributeValueClassName" value="NSArray"/>
             </userInfo>
         </attribute>
-        <attribute name="activityRef" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cronTrigger" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="endsOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="expires" optional="YES" attributeType="String" syncable="YES"/>
@@ -226,7 +224,7 @@
         <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="103"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="88"/>
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
-        <element name="Schedule" positionX="-9" positionY="81" width="128" height="178"/>
+        <element name="Schedule" positionX="-9" positionY="81" width="128" height="148"/>
         <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
         <element name="Survey" positionX="-36" positionY="27" width="128" height="165"/>
         <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="120"/>

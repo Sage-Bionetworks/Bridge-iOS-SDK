@@ -262,6 +262,12 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
   
   // make a temp copy with a unique name
   NSURL *tempFileURL = [self tempFileForFileURL:fileUrl];
+  if (!tempFileURL) {
+    if (completion) {
+      completion([NSError generateSBBTempFileErrorForURL:fileUrl]);
+    }
+    return;
+  }
   [self setCompletionBlock:completion forFile:[tempFileURL path]];
   
   if (!_cleanObjectManager) {
@@ -275,6 +281,12 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
   
   NSString *name = [fileUrl lastPathComponent];
   NSData *fileData = [NSData dataWithContentsOfURL:tempFileURL];
+  if (!fileData) {
+    if (completion) {
+      completion([NSError generateSBBTempFileReadErrorForURL:fileUrl]);
+    }
+    return;
+  }
   SBBUploadRequest *uploadRequest = [SBBUploadRequest new];
   uploadRequest.name = name;
   uploadRequest.contentLengthValue = fileData.length;
