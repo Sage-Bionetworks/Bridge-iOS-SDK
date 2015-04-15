@@ -171,8 +171,16 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 + (NSString *)bundleSeedID {
     static NSString *_bundleSeedID = nil;
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+    // This is always called in the non-concurrent keychain queue, so the dispatch_once
+    // construct isn't necessary to ensure it doesn't happen in two threads simultaneously;
+    // also apparently it can fail under rare circumstances (???), so we'll handle it this
+    // way instead so the app can at least potentially recover the next time it tries.
+    // Apps that use an auth delegate to get and store credentials (which currently is
+    // all of them) should only call this on first run, once, and it really doesn't matter
+    // if it fails because it won't be used.
+    if (!_bundleSeedID) {
         NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
                                (__bridge id)(kSecClassGenericPassword), kSecClass,
                                @"bundleSeedID", kSecAttrAccount,
@@ -188,20 +196,31 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             NSArray *components = [accessGroup componentsSeparatedByString:@"."];
             _bundleSeedID = [[components objectEnumerator] nextObject];
         }
-        CFRelease(result);
-    });
+        if (result) {
+            CFRelease(result);
+        }
+    }
+//    });
     
     return _bundleSeedID;
 }
 
 + (NSString *)sdkKeychainAccessGroup
 {
-    return [NSString stringWithFormat:@"%@.org.sagebase.Bridge", [self bundleSeedID]];
+    NSString *bundleSeedID = [self bundleSeedID];
+    if (!bundleSeedID) {
+        return nil;
+    }
+    return [NSString stringWithFormat:@"%@.org.sagebase.Bridge", bundleSeedID];
 }
 
 + (UICKeyChainStore *)sdkKeychainStore
 {
-    return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:self.sdkKeychainAccessGroup];
+    NSString *accessGroup = self.sdkKeychainAccessGroup;
+    if (!accessGroup) {
+        return nil;
+    }
+    return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:accessGroup];
 }
 
 - (void)setupForEnvironment
