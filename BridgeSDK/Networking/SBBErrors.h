@@ -47,5 +47,7 @@ typedef NS_ENUM(NSInteger, SBBErrorCodes)
     kSBBS3UploadErrorResponse = -1020,
   
     kSBBNotAFileURL = -1100,
-    kSBBObjectNotExpectedClass = -1101
+    kSBBObjectNotExpectedClass = -1101,
+    kSBBTempFileError = -1102,
+    kSBBTempFileReadError = -1103
 };
