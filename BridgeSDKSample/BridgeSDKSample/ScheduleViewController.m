@@ -54,7 +54,6 @@
   [super viewWillAppear:animated];
   
   self.labelTextField.text = self.schedule.label;
-  self.activityRefTextField.text = self.schedule.activityRef;
   self.scheduleTypeTextField.text = self.schedule.scheduleType;
   self.cronTriggerTextField.text = self.schedule.cronTrigger;
 }

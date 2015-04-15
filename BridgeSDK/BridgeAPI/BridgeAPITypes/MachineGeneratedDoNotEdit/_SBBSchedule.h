@@ -41,10 +41,6 @@
 
 @property (nonatomic, strong) NSArray* activities;
 
-@property (nonatomic, strong) NSString* activityRef;
-
-@property (nonatomic, strong) NSString* activityType;
-
 @property (nonatomic, strong) NSString* cronTrigger;
 
 @property (nonatomic, strong) NSDate* endsOn;
