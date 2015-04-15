@@ -171,8 +171,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 + (NSString *)bundleSeedID {
     static NSString *_bundleSeedID = nil;
     
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
     // This is always called in the non-concurrent keychain queue, so the dispatch_once
     // construct isn't necessary to ensure it doesn't happen in two threads simultaneously;
     // also apparently it can fail under rare circumstances (???), so we'll handle it this
@@ -200,7 +198,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             CFRelease(result);
         }
     }
-//    });
     
     return _bundleSeedID;
 }
