@@ -42,6 +42,8 @@
 + (NSError *)SBBNotAuthenticatedError;
 + (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url;
 + (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass;
++ (NSError *)generateSBBTempFileErrorForURL:(NSURL *)url;
++ (NSError *)generateSBBTempFileReadErrorForURL:(NSURL *)url;
 
 /*********************************************************************************/
 #pragma mark - Error handlers
