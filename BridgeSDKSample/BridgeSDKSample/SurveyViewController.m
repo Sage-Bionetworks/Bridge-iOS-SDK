@@ -109,6 +109,19 @@
     if (mvc.allowMultipleValue) {
       answer_s_ = @[answer_s_];
     }
+  } else if ([constraints isKindOfClass:[SBBIntegerConstraints class]]) {
+      SBBIntegerConstraints *intc = (SBBIntegerConstraints *)constraints;
+      int32_t min = INT32_MIN;
+      int32_t max = INT32_MAX;
+      if (intc.minValue) {
+          min = [intc.minValue intValue];
+      }
+      if (intc.maxValue) {
+          max = [intc.maxValue intValue];
+      }
+      u_int32_t range = max - min;
+      int32_t val = arc4random_uniform(range) + min;
+      answer_s_ = @(val).stringValue;
   }
   // TODO: Make this work for other constraint types
   
