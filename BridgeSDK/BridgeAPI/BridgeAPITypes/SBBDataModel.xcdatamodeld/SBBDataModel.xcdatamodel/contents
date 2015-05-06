@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6751" systemVersion="14C1514" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7549" systemVersion="14D136" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Activity" representedClassName="SBBActivity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
@@ -192,6 +192,19 @@
         <attribute name="skipTo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="Transformable" syncable="YES"/>
     </entity>
+    <entity name="Task" representedClassName="SBBTask" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="activity" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="SBBActivity"/>
+            </userInfo>
+        </attribute>
+        <attribute name="expiresOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="finishedOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="scheduledOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="startedOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="TimeConstraints" representedClassName="SBBTimeConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="UploadRequest" representedClassName="SBBUploadRequest" parentEntity="BridgeObject" syncable="YES">
         <attribute name="contentLength" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -239,5 +252,6 @@
         <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="108" width="128" height="90"/>
         <element name="UserProfile" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="Task" positionX="-9" positionY="81" width="128" height="150"/>
     </elements>
 </model>
