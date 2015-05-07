@@ -361,6 +361,13 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
   
   SBBUploadSession *uploadSession = [_cleanObjectManager objectFromBridgeJSON:jsonObject];
   SBBUploadRequest *uploadRequest = [self uploadRequestForFile:downloadTask.taskDescription];
+  if (!uploadRequest || !uploadRequest.contentLength || !uploadRequest.contentType || !uploadRequest.contentMd5) {
+    NSLog(@"Failed to retrieve upload request headers for temp file %@", downloadTask.taskDescription);
+    NSString *desc = [NSString stringWithFormat:@"Error retrieving upload request headers for temp file URL:\n%@", downloadTask.taskDescription];
+    error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
+    [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+    return;
+  }
   [self setUploadRequestJSON:nil forFile:downloadTask.taskDescription];
   if ([uploadSession isKindOfClass:[SBBUploadSession class]]) {
     [self setUploadSessionJSON:jsonObject forFile:downloadTask.taskDescription];
