@@ -83,11 +83,19 @@
             </userInfo>
         </attribute>
         <attribute name="cronTrigger" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="delay" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="endsOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="eventId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="expires" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="interval" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="scheduleType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startsOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="times" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray"/>
+            </userInfo>
+        </attribute>
     </entity>
     <entity name="StringConstraints" representedClassName="SBBStringConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxLength" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -204,6 +212,9 @@
         <attribute name="scheduledOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="startedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBActivity.h"/>
+        </userInfo>
     </entity>
     <entity name="TimeConstraints" representedClassName="SBBTimeConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="UploadRequest" representedClassName="SBBUploadRequest" parentEntity="BridgeObject" syncable="YES">
@@ -237,7 +248,7 @@
         <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="103"/>
         <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="88"/>
         <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
-        <element name="Schedule" positionX="-9" positionY="81" width="128" height="148"/>
+        <element name="Schedule" positionX="-9" positionY="81" width="128" height="210"/>
         <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
         <element name="Survey" positionX="-36" positionY="27" width="128" height="165"/>
         <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="120"/>
@@ -248,10 +259,10 @@
         <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="105"/>
         <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="135"/>
         <element name="SurveyRule" positionX="18" positionY="108" width="128" height="90"/>
+        <element name="Task" positionX="-9" positionY="81" width="128" height="150"/>
         <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>
         <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="108" width="128" height="90"/>
         <element name="UserProfile" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="Task" positionX="-9" positionY="81" width="128" height="150"/>
     </elements>
 </model>

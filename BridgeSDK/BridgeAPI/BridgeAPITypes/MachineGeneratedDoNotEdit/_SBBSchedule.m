@@ -62,15 +62,23 @@
 
         self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
 
+        self.delay = [dictionary objectForKey:@"delay"];
+
         self.endsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endsOn"]];
 
+        self.eventId = [dictionary objectForKey:@"eventId"];
+
         self.expires = [dictionary objectForKey:@"expires"];
+
+        self.interval = [dictionary objectForKey:@"interval"];
 
         self.label = [dictionary objectForKey:@"label"];
 
         self.scheduleType = [dictionary objectForKey:@"scheduleType"];
 
         self.startsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startsOn"]];
+
+        self.times = [dictionary objectForKey:@"times"];
 
 	}
 
@@ -85,15 +93,23 @@
 
     [dict setObjectIfNotNil:self.cronTrigger forKey:@"cronTrigger"];
 
+    [dict setObjectIfNotNil:self.delay forKey:@"delay"];
+
     [dict setObjectIfNotNil:[self.endsOn ISO8601String] forKey:@"endsOn"];
 
+    [dict setObjectIfNotNil:self.eventId forKey:@"eventId"];
+
     [dict setObjectIfNotNil:self.expires forKey:@"expires"];
+
+    [dict setObjectIfNotNil:self.interval forKey:@"interval"];
 
     [dict setObjectIfNotNil:self.label forKey:@"label"];
 
     [dict setObjectIfNotNil:self.scheduleType forKey:@"scheduleType"];
 
     [dict setObjectIfNotNil:[self.startsOn ISO8601String] forKey:@"startsOn"];
+
+    [dict setObjectIfNotNil:self.times forKey:@"times"];
 
 	return dict;
 }

@@ -1,7 +1,10 @@
 //
-//  SBBTask.h
+//  TaskViewController.h
+//  BridgeSDKSample
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//  Created by Erin Mounts on 5/6/15.
+//
+//	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -26,33 +29,12 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBTask.h instead.
-//
 
-#import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import <UIKit/UIKit.h>
+@import BridgeSDK;
 
-#import "SBBActivity.h"
+@interface TaskViewController : UIViewController
 
-@protocol _SBBTask
-
-@end
-
-@interface _SBBTask : SBBBridgeObject
-
-@property (nonatomic, strong) SBBActivity* activity;
-
-@property (nonatomic, strong) NSDate* expiresOn;
-
-@property (nonatomic, strong) NSDate* finishedOn;
-
-@property (nonatomic, strong) NSString* guid;
-
-@property (nonatomic, strong) NSDate* scheduledOn;
-
-@property (nonatomic, strong) NSDate* startedOn;
-
-@property (nonatomic, strong) NSString* status;
+@property (nonatomic, weak) SBBTask *task;
 
 @end

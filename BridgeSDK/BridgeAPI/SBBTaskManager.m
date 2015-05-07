@@ -71,37 +71,26 @@
 - (NSURLSessionDataTask *)startTask:(SBBTask *)task asOf:(NSDate *)startDate withCompletion:(SBBTaskManagerUpdateCompletionBlock)completion
 {
     task.startedOn = startDate;
-    [self updateTasks:@[task] withCompletion:completion];
+    return [self updateTasks:@[task] withCompletion:completion];
 }
 
 - (NSURLSessionDataTask *)finishTask:(SBBTask *)task asOf:(NSDate *)finishDate withCompletion:(SBBTaskManagerUpdateCompletionBlock)completion
 {
     task.finishedOn = finishDate;
-    [self updateTasks:@[task] withCompletion:completion];
+    return [self updateTasks:@[task] withCompletion:completion];
 }
 
 - (NSURLSessionDataTask *)deleteTask:(SBBTask *)task withCompletion:(SBBTaskManagerUpdateCompletionBlock)completion
 {
-    [self finishTask:task asOf:[NSDate date] withCompletion:completion];
+    return [self finishTask:task asOf:[NSDate date] withCompletion:completion];
 }
 
 - (NSURLSessionDataTask *)updateTasks:(NSArray *)tasks withCompletion:(SBBTaskManagerUpdateCompletionBlock)completion
 {
-    NSMutableArray *jsonTasks = [NSMutableArray arrayWithCapacity:tasks.count];
-    for (SBBTask *task in tasks) {
-        NSMutableDictionary *jsonTask = [NSMutableDictionary dictionary];
-        [jsonTask setObject:task.type forKey:@"type"];
-        [jsonTask setObject:task.guid forKey:@"guid"];
-        if (task.startedOn) {
-            [jsonTask setObject:[task.startedOn ISO8601String] forKey:@"startedOn"];
-        }
-        if (task.finishedOn) {
-            [jsonTask setObject:[task.finishedOn ISO8601String] forKey:@"finishedOn"];
-        }
-    }
+    id jsonTasks = [self.objectManager bridgeJSONFromObject:tasks];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    return [self.networkManager post:@"/api/v1/profile" headers:headers parameters:jsonProfile completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:@"/api/v1/tasks" headers:headers parameters:jsonTasks completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (completion) {
             completion(responseObject, error);
         }

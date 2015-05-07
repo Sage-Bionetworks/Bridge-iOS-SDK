@@ -111,7 +111,7 @@ typedef void (^SBBTaskManagerUpdateCompletionBlock)(id responseObject, NSError *
 /*!
  Update multiple tasks' statuses with the API at one time.
  
- Only the startedOn and finishedOn fields of Tasks are user-writable, so only those fields (if set) and the guid will be sent to the server for each Task in the tasks list.
+ Only the startedOn and finishedOn fields of Tasks are user-writable, so only changes to those fields will have any effect on the server state.
  
  @param tasks      The list of Tasks whose statuses are to be updated to the API.
  @param completion An SBBTaskManagerUpdateCompletionBlock to be called upon completion.
