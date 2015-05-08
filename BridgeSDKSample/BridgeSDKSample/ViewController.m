@@ -34,6 +34,7 @@
 #import "UserProfileViewController.h"
 #import "SurveyViewController.h"
 #import "SchedulesTableViewController.h"
+#import "TasksTableViewController.h"
 #import <BridgeSDK/BridgeSDK.h>
 
 @interface ViewController () <UIActionSheetDelegate>
@@ -75,6 +76,7 @@
                                   NSLocalizedString(@"Survey", @"Survey"),
                                   NSLocalizedString(@"Upload", @"Upload"),
                                   NSLocalizedString(@"Schedule", @"Schedule"),
+                                  NSLocalizedString(@"Tasks", @"Tasks"),
                                   nil];
     [actionSheet showFromBarButtonItem:self.moreBarButtonItem animated:YES];
 }
@@ -87,7 +89,8 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
   asConsent,
   asSurvey,
   asUpload,
-  asSchedule
+  asSchedule,
+  asTasks
 };
 
 #pragma mark - Action sheet delegate methods
@@ -158,14 +161,21 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
         }
             break;
             
-      case asSchedule:
-      {
-        UIStoryboard *ss = [UIStoryboard storyboardWithName:@"Schedule" bundle:nil];
-        SchedulesTableViewController *stvc = [ss instantiateInitialViewController];
-        [self.navigationController pushViewController:stvc animated:YES];
-      }
-        break;
-        
+        case asSchedule:
+        {
+            UIStoryboard *ss = [UIStoryboard storyboardWithName:@"Schedule" bundle:nil];
+            SchedulesTableViewController *stvc = [ss instantiateInitialViewController];
+            [self.navigationController pushViewController:stvc animated:YES];
+        }
+            break;
+            
+        case asTasks:
+        {
+            UIStoryboard *ss = [UIStoryboard storyboardWithName:@"Tasks" bundle:nil];
+            TasksTableViewController *ttvc = [ss instantiateInitialViewController];
+            [self.navigationController pushViewController:ttvc animated:YES];
+        }
+            break;
         default:
             break;
     }

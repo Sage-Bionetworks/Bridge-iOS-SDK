@@ -45,9 +45,23 @@
 
 @implementation TasksTableViewController
 
+- (void)reloadTasks
+{
+    NSURLSessionDataTask *sdtask = [SBBComponent(SBBTaskManager) getTasksUntil:_untilDatePicker.date withCompletion:^(id tasksList, NSError *error) {
+        SBBResourceList *list = (SBBResourceList *)tasksList;
+        self.tasks = list.items;
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+    }];
+#pragma unused(sdtask)
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _untilDatePicker.date = [NSDate date];
+    [self reloadTasks];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -63,26 +77,25 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return _tasks.count;
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"taskCell" forIndexPath:indexPath];
+    SBBTask *task = _tasks[indexPath.row];
     
     // Configure the cell...
+    cell.textLabel.text = task.activity.ref;
+    cell.detailTextLabel.text = task.status;
     
     return cell;
 }
-*/
 
 /*
 // Override to support conditional editing of the table view.
@@ -126,7 +139,12 @@
     // Pass the selected object to the new view controller.
     TaskViewController *tvc = (TaskViewController *)[segue destinationViewController];
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-    tvc.task = self.schedules[indexPath.row];
+    tvc.task = _tasks[indexPath.row];
+}
+
+- (IBAction)didTouchLoadButton:(id)sender
+{
+    [self reloadTasks];
 }
 
 @end

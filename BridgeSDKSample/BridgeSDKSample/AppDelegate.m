@@ -49,7 +49,7 @@
 
     // To run this sample app in your study, change this identifier to the one assigned to your study.
     // Leave it set to @"api" to run in the generic test study.
-    [BridgeSDK setupWithStudy:@"api"];
+    [BridgeSDK setupWithStudy:@"parkinson"];
     
     [SBBComponent(SBBAuthManager) ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (error.code == kSBBNoCredentialsAvailable)

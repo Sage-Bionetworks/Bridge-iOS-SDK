@@ -72,7 +72,7 @@ typedef void (^SBBTaskManagerUpdateCompletionBlock)(id responseObject, NSError *
  This method notifies the server API that the task was started, and calls the completion block upon success (or failure) of that notification.
  
  @param task       The Task to be marked as started.
- @param asOf       The date/time as of which the Task was started.
+ @param startDate  The date/time as of which the Task was started.
  @param completion An SBBTaskManagerUpdateCompletionBlock to be called upon completion.
  
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
@@ -87,7 +87,7 @@ typedef void (^SBBTaskManagerUpdateCompletionBlock)(id responseObject, NSError *
  This method notifies the server API that the task was finished, and calls the completion block upon success (or failure) of that notification.
  
  @param task       The Task to be marked as started.
- @param asOf       The date/time as of which the Task was finished.
+ @param finishDate The date/time as of which the Task was finished.
  @param completion An SBBTaskManagerUpdateCompletionBlock to be called upon completion.
  
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
