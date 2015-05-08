@@ -55,11 +55,6 @@
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
   return [self.networkManager get:@"/api/v1/schedules" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    // temporary, until "type" field is added to response from this api
-    if ([responseObject isKindOfClass:[NSDictionary class]] && ![responseObject objectForKey:@"type"]) {
-      responseObject = [responseObject mutableCopy];
-      [responseObject setObject:@"ResourceList" forKey:@"type"];
-    }
     SBBResourceList *schedules = [self.objectManager objectFromBridgeJSON:responseObject];
     if (completion) {
       completion(schedules, error);
