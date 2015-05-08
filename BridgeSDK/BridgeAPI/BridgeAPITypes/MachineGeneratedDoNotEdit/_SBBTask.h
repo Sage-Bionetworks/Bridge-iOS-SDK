@@ -1,10 +1,7 @@
 //
-//  SBBScheduleManager.m
-//  BridgeSDK
+//  SBBTask.h
 //
-//  Created by Erin Mounts on 10/24/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -29,37 +26,33 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBTask.h instead.
+//
 
-#import "SBBScheduleManager.h"
-#import "SBBComponentManager.h"
-#import "SBBAuthManager.h"
-#import "SBBObjectManager.h"
-#import "SBBBridgeObjects.h"
+#import <Foundation/Foundation.h>
+#import "SBBBridgeObject.h"
 
-@implementation SBBScheduleManager
+#import "SBBActivity.h"
 
-+ (instancetype)defaultComponent
-{
-  static SBBScheduleManager *shared;
-  
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    shared = [self instanceWithRegisteredDependencies];
-  });
-  
-  return shared;
-}
+@protocol _SBBTask
 
-- (NSURLSessionDataTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:@"/api/v1/schedules" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    SBBResourceList *schedules = [self.objectManager objectFromBridgeJSON:responseObject];
-    if (completion) {
-      completion(schedules, error);
-    }
-  }];
-}
+@end
+
+@interface _SBBTask : SBBBridgeObject
+
+@property (nonatomic, strong) SBBActivity* activity;
+
+@property (nonatomic, strong) NSDate* expiresOn;
+
+@property (nonatomic, strong) NSDate* finishedOn;
+
+@property (nonatomic, strong) NSString* guid;
+
+@property (nonatomic, strong) NSDate* scheduledOn;
+
+@property (nonatomic, strong) NSDate* startedOn;
+
+@property (nonatomic, strong) NSString* status;
 
 @end

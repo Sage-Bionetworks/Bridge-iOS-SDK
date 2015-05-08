@@ -43,14 +43,22 @@
 
 @property (nonatomic, strong) NSString* cronTrigger;
 
+@property (nonatomic, strong) NSString* delay;
+
 @property (nonatomic, strong) NSDate* endsOn;
 
+@property (nonatomic, strong) NSString* eventId;
+
 @property (nonatomic, strong) NSString* expires;
+
+@property (nonatomic, strong) NSString* interval;
 
 @property (nonatomic, strong) NSString* label;
 
 @property (nonatomic, strong) NSString* scheduleType;
 
 @property (nonatomic, strong) NSDate* startsOn;
+
+@property (nonatomic, strong) NSArray* times;
 
 @end

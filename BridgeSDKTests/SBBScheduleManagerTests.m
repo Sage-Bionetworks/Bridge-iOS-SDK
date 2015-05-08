@@ -32,8 +32,6 @@
       @{
           @"type": @"Schedule",
           @"label": @"Schedule 1 Label",
-          @"activityType": @"survey",
-          @"activityRef": @"url-to-retrieve-survey/guid-goes-here/2014-12-12T18:26:01.855Z",
           @"activities": @[
                   @{
                       @"activityType": @"survey",
@@ -53,18 +51,28 @@
                       @"type": @"Activity"
                       }
                   ],
-          @"scheduleType": @"once"
+          @"scheduleType": @"once",
+          @"delay": @"PT3H",
+          @"eventId": @"completedOn:survey:e3ec1b8b-3d82-4fa2-9516-5b18895ec924"
           }
       ];
-    [self.mockNetworkManager setJson:schedules andResponseCode:200 forEndpoint:@"/api/v1/schedules" andMethod:@"GET"];
+    NSDictionary *response = @{
+                                  @"type": @"ResourceList",
+                                  @"items": schedules,
+                                  @"total": @(schedules.count)
+                                  };
+
+    [self.mockNetworkManager setJson:response andResponseCode:200 forEndpoint:@"/api/v1/schedules" andMethod:@"GET"];
     SBBScheduleManager *sMan = [SBBScheduleManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:SBBComponent(SBBObjectManager)];
     
-    [sMan getSchedulesWithCompletion:^(NSArray *schedules, NSError *error) {
-        XCTAssert([schedules isKindOfClass:[NSArray class]], @"Converted incoming json to NSArray");
-        XCTAssert(schedules.count, @"Converted incoming json to non-empty NSArray");
+    [sMan getSchedulesWithCompletion:^(SBBResourceList *schedulesRList, NSError *error) {
+        XCTAssert([schedulesRList isKindOfClass:[SBBResourceList class]], @"Converted incoming json to SBBResourceList");
+        NSArray *schedules = schedulesRList.items;
+        XCTAssert([schedules isKindOfClass:[NSArray class]], @"Converted items to NSArray");
+        XCTAssert(schedules.count, @"Converted items to non-empty NSArray");
         if (schedules.count) {
             SBBSchedule *schedule0 = schedules[0];
-            XCTAssert([schedule0 isKindOfClass:[SBBSchedule class]], @"Converted incoming json to NSArray of SBBSchedule objects");
+            XCTAssert([schedule0 isKindOfClass:[SBBSchedule class]], @"Converted items to NSArray of SBBSchedule objects");
             SBBActivity *activity0 = schedule0.activities[0];
             XCTAssert([activity0 isKindOfClass:[SBBActivity class]], @"Converted 'activities' json to NSArray and first item is an SBBActivity object");
             XCTAssert([activity0.survey isKindOfClass:[SBBGuidCreatedOnVersionHolder class]], @"Converted 'survey' json to SBBGuidCreatedOnVersionHolder object");
