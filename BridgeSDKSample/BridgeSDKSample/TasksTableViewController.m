@@ -35,38 +35,27 @@
 
 @interface TasksTableViewController ()
 
-@property (strong, nonatomic) NSArray *tasks;
-@property (weak, nonatomic) TasksTableViewController *tasksTableViewController;
-@property (weak, nonatomic) IBOutlet UIDatePicker *untilDatePicker;
-
-- (IBAction)didTouchLoadButton:(id)sender;
-
 @end
 
 @implementation TasksTableViewController
 
-- (void)reloadTasks
-{
-    NSURLSessionDataTask *sdtask = [SBBComponent(SBBTaskManager) getTasksUntil:_untilDatePicker.date withCompletion:^(id tasksList, NSError *error) {
-        SBBResourceList *list = (SBBResourceList *)tasksList;
-        self.tasks = list.items;
-        dispatch_sync(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
-    }];
-#pragma unused(sdtask)
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _untilDatePicker.date = [NSDate date];
-    [self reloadTasks];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if ([self.presentingViewController respondsToSelector:@selector(reloadTasks)]) {
+        [self.presentingViewController performSelector:@selector(reloadTasks)];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -140,11 +129,6 @@
     TaskViewController *tvc = (TaskViewController *)[segue destinationViewController];
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
     tvc.task = _tasks[indexPath.row];
-}
-
-- (IBAction)didTouchLoadButton:(id)sender
-{
-    [self reloadTasks];
 }
 
 @end

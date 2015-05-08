@@ -44,6 +44,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *statusTextField;
 @property (weak, nonatomic) IBOutlet UIView *ActivityContainer;
 
+- (IBAction)didTouchStartButton:(id)sender;
+- (IBAction)didTouchFinishButton:(id)sender;
+- (IBAction)didTouchDeleteButton:(id)sender;
+
 @end
 
 @implementation TaskViewController
@@ -79,6 +83,33 @@
     // Pass the selected object to the new view controller.
     ActivityViewController *avc = (ActivityViewController *)[segue destinationViewController];
     avc.activity = _task.activity;
+}
+
+- (IBAction)didTouchStartButton:(id)sender {
+    [SBBComponent(SBBTaskManager) startTask:_task asOf:[NSDate date] withCompletion:^(id responseObject, NSError *error) {
+        NSLog(@"Start task %@ response:\n%@\nerror:\n%@", _task.guid, responseObject, error);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.navigationController popViewControllerAnimated:YES];
+        });
+    }];
+}
+
+- (IBAction)didTouchFinishButton:(id)sender {
+    [SBBComponent(SBBTaskManager) finishTask:_task asOf:[NSDate date] withCompletion:^(id responseObject, NSError *error) {
+        NSLog(@"Finish task %@ response:\n%@\nerror:\n%@", _task.guid, responseObject, error);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.navigationController popViewControllerAnimated:YES];
+        });
+    }];
+}
+
+- (IBAction)didTouchDeleteButton:(id)sender {
+    [SBBComponent(SBBTaskManager) deleteTask:_task withCompletion:^(id responseObject, NSError *error) {
+        NSLog(@"Delete task %@ response:\n%@\nerror:\n%@", _task.guid, responseObject, error);
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self.navigationController popViewControllerAnimated:YES];
+        });
+    }];
 }
 
 @end

@@ -10,6 +10,7 @@
 		60CAA6F51AFABA8B00DE3305 /* Tasks.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60CAA6F41AFABA8B00DE3305 /* Tasks.storyboard */; };
 		60CAA7001AFAD4EB00DE3305 /* TasksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60CAA6FF1AFAD4EB00DE3305 /* TasksTableViewController.m */; };
 		60CAA7031AFAD50F00DE3305 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60CAA7021AFAD50F00DE3305 /* TaskViewController.m */; };
+		60CAA70D1AFD2DE900DE3305 /* TasksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60CAA70C1AFD2DE900DE3305 /* TasksViewController.m */; };
 		60F1E4291A424E6E009B380E /* ActivitiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E4281A424E6E009B380E /* ActivitiesTableViewController.m */; };
 		60F1E4301A425D8F009B380E /* ActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E42F1A425D8F009B380E /* ActivityViewController.m */; };
 		8009F9E41ACB461700698B50 /* Consent.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8009F9E21ACB461700698B50 /* Consent.storyboard */; };
@@ -93,6 +94,8 @@
 		60CAA6FF1AFAD4EB00DE3305 /* TasksTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasksTableViewController.m; sourceTree = "<group>"; };
 		60CAA7011AFAD50F00DE3305 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
 		60CAA7021AFAD50F00DE3305 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
+		60CAA70B1AFD2DE900DE3305 /* TasksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasksViewController.h; sourceTree = "<group>"; };
+		60CAA70C1AFD2DE900DE3305 /* TasksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasksViewController.m; sourceTree = "<group>"; };
 		60F1E4271A424E6E009B380E /* ActivitiesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivitiesTableViewController.h; sourceTree = "<group>"; };
 		60F1E4281A424E6E009B380E /* ActivitiesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivitiesTableViewController.m; sourceTree = "<group>"; };
 		60F1E42E1A425D8F009B380E /* ActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityViewController.h; sourceTree = "<group>"; };
@@ -204,6 +207,8 @@
 				8053B62719FEF30D00A2E6C4 /* ScheduleViewController.m */,
 				8053B62919FEF69900A2E6C4 /* SchedulesTableViewController.h */,
 				8053B62A19FEF69900A2E6C4 /* SchedulesTableViewController.m */,
+				60CAA70B1AFD2DE900DE3305 /* TasksViewController.h */,
+				60CAA70C1AFD2DE900DE3305 /* TasksViewController.m */,
 				60CAA6FE1AFAD4EB00DE3305 /* TasksTableViewController.h */,
 				60CAA6FF1AFAD4EB00DE3305 /* TasksTableViewController.m */,
 				60CAA7011AFAD50F00DE3305 /* TaskViewController.h */,
@@ -383,6 +388,7 @@
 				808822881A01993A003E78BF /* SchedulesTableViewController.m in Sources */,
 				F5AF857C19F970700007296A /* ViewController.m in Sources */,
 				8009F9EE1ACB47C400698B50 /* ConsentViewController.m in Sources */,
+				60CAA70D1AFD2DE900DE3305 /* TasksViewController.m in Sources */,
 				60CAA7031AFAD50F00DE3305 /* TaskViewController.m in Sources */,
 				80A7318919C9D61E007FE828 /* SignUpSignInViewController.m in Sources */,
 				F5AF857F19F9708A0007296A /* AppDelegate.m in Sources */,

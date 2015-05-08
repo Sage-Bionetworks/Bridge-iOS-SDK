@@ -91,6 +91,10 @@
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     return [self.networkManager post:@"/api/v1/tasks" headers:headers parameters:jsonTasks completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+#if DEBUG
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
+        NSLog(@"Update tasks HTTP response code: %ld", (long)httpResponse.statusCode);
+#endif
         if (completion) {
             completion(responseObject, error);
         }

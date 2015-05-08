@@ -34,4 +34,6 @@
 
 @interface TasksTableViewController : UITableViewController
 
+@property (nonatomic, weak) NSArray *tasks;
+
 @end
