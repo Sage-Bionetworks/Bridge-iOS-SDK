@@ -131,6 +131,7 @@ NSString *kAPIPrefix = @"webservices";
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
 
+- (instancetype)initWithBaseURL:(NSString*)baseURL bridgeStudy:(NSString*)bridgeStudy;
 
 @end
 

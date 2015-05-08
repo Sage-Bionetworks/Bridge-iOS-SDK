@@ -1,10 +1,10 @@
 //
-//  SchedulesTableViewController.m
+//  TasksTableViewController.m
 //  BridgeSDKSample
 //
-//  Created by Erin Mounts on 10/27/14.
+//  Created by Erin Mounts on 5/6/15.
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,31 +30,14 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SchedulesTableViewController.h"
-#import "ScheduleViewController.h"
-#import <BridgeSDK/BridgeSDK.h>
+#import "TasksTableViewController.h"
+#import "TaskViewController.h"
 
-@interface SchedulesTableViewController ()
-
-@property (nonatomic, strong) NSArray *schedules;
-
-- (IBAction)didTouchReloadButton:(id)sender;
+@interface TasksTableViewController ()
 
 @end
 
-@implementation SchedulesTableViewController
-
-- (void)reloadSchedules
-{
-    NSURLSessionDataTask *task = [SBBComponent(SBBScheduleManager) getSchedulesWithCompletion:^(id schedulesList, NSError *error) {
-        SBBResourceList *list = (SBBResourceList *)schedulesList;
-        self.schedules = list.items;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
-    }];
-#pragma unused(task)
-}
+@implementation TasksTableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -64,8 +47,15 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
-    [self reloadSchedules];
+    if ([self.presentingViewController respondsToSelector:@selector(reloadTasks)]) {
+        [self.presentingViewController performSelector:@selector(reloadTasks)];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -82,57 +72,53 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return self.schedules.count;
+    return _tasks.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"scheduleCell" forIndexPath:indexPath];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"taskCell" forIndexPath:indexPath];
+    SBBTask *task = _tasks[indexPath.row];
     
     // Configure the cell...
-    SBBSchedule *schedule = [self.schedules objectAtIndex:indexPath.row];
-    cell.textLabel.text = schedule.scheduleType;
-    NSString *detailText = schedule.cronTrigger;
-    if ([schedule.scheduleType isEqualToString:@"once"]) {
-        detailText = [schedule.startsOn description];
-    }
-    cell.detailTextLabel.text = detailText ? detailText : @"";
+    cell.textLabel.text = task.activity.ref;
+    cell.detailTextLabel.text = task.status;
     
     return cell;
 }
 
 /*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
 
 /*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
- } else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }
- }
- */
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
+*/
 
 /*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
- }
- */
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+}
+*/
 
 /*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
 
 #pragma mark - Navigation
 
@@ -140,13 +126,9 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    ScheduleViewController *svc = (ScheduleViewController *)[segue destinationViewController];
+    TaskViewController *tvc = (TaskViewController *)[segue destinationViewController];
     NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-    svc.schedule = self.schedules[indexPath.row];
-}
-
-- (IBAction)didTouchReloadButton:(id)sender {
-    [self reloadSchedules];
+    tvc.task = _tasks[indexPath.row];
 }
 
 @end

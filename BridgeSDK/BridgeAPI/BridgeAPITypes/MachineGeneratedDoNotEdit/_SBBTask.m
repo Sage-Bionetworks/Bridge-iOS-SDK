@@ -1,5 +1,5 @@
 //
-//  SBBSchedule.m
+//  SBBTask.m
 //
 //	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
@@ -27,17 +27,17 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSchedule.h instead.
+// Make changes to SBBTask.h instead.
 //
 
-#import "_SBBSchedule.h"
+#import "_SBBTask.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBSchedule()
+@interface _SBBTask()
 
 @end
 
-@implementation _SBBSchedule
+@implementation _SBBTask
 
 - (id)init
 {
@@ -58,27 +58,19 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.activities = [dictionary objectForKey:@"activities"];
+        self.activity = [dictionary objectForKey:@"activity"];
 
-        self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
+        self.expiresOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"expiresOn"]];
 
-        self.delay = [dictionary objectForKey:@"delay"];
+        self.finishedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"finishedOn"]];
 
-        self.endsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endsOn"]];
+        self.guid = [dictionary objectForKey:@"guid"];
 
-        self.eventId = [dictionary objectForKey:@"eventId"];
+        self.scheduledOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"scheduledOn"]];
 
-        self.expires = [dictionary objectForKey:@"expires"];
+        self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
 
-        self.interval = [dictionary objectForKey:@"interval"];
-
-        self.label = [dictionary objectForKey:@"label"];
-
-        self.scheduleType = [dictionary objectForKey:@"scheduleType"];
-
-        self.startsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startsOn"]];
-
-        self.times = [dictionary objectForKey:@"times"];
+        self.status = [dictionary objectForKey:@"status"];
 
 	}
 
@@ -89,27 +81,19 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-    [dict setObjectIfNotNil:self.activities forKey:@"activities"];
+    [dict setObjectIfNotNil:self.activity forKey:@"activity"];
 
-    [dict setObjectIfNotNil:self.cronTrigger forKey:@"cronTrigger"];
+    [dict setObjectIfNotNil:[self.expiresOn ISO8601String] forKey:@"expiresOn"];
 
-    [dict setObjectIfNotNil:self.delay forKey:@"delay"];
+    [dict setObjectIfNotNil:[self.finishedOn ISO8601String] forKey:@"finishedOn"];
 
-    [dict setObjectIfNotNil:[self.endsOn ISO8601String] forKey:@"endsOn"];
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
-    [dict setObjectIfNotNil:self.eventId forKey:@"eventId"];
+    [dict setObjectIfNotNil:[self.scheduledOn ISO8601String] forKey:@"scheduledOn"];
 
-    [dict setObjectIfNotNil:self.expires forKey:@"expires"];
+    [dict setObjectIfNotNil:[self.startedOn ISO8601String] forKey:@"startedOn"];
 
-    [dict setObjectIfNotNil:self.interval forKey:@"interval"];
-
-    [dict setObjectIfNotNil:self.label forKey:@"label"];
-
-    [dict setObjectIfNotNil:self.scheduleType forKey:@"scheduleType"];
-
-    [dict setObjectIfNotNil:[self.startsOn ISO8601String] forKey:@"startsOn"];
-
-    [dict setObjectIfNotNil:self.times forKey:@"times"];
+    [dict setObjectIfNotNil:self.status forKey:@"status"];
 
 	return dict;
 }

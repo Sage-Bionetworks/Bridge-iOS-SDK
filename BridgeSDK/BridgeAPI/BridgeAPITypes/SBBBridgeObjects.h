@@ -22,6 +22,7 @@
 #import "SBBSurveyQuestionOption.h"
 #import "SBBSurveyResponse.h"
 #import "SBBSurveyRule.h"
+#import "SBBTask.h"
 #import "SBBTimeConstraints.h"
 #import "SBBUploadRequest.h"
 #import "SBBUploadSession.h"

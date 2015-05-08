@@ -1,10 +1,7 @@
 //
-//  SBBScheduleManager.m
-//  BridgeSDK
+//  SBBTask.m
 //
-//  Created by Erin Mounts on 10/24/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,36 +27,12 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBScheduleManager.h"
-#import "SBBComponentManager.h"
-#import "SBBAuthManager.h"
-#import "SBBObjectManager.h"
-#import "SBBBridgeObjects.h"
+#import "SBBTask.h"
 
-@implementation SBBScheduleManager
+@implementation SBBTask
 
-+ (instancetype)defaultComponent
-{
-  static SBBScheduleManager *shared;
-  
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    shared = [self instanceWithRegisteredDependencies];
-  });
-  
-  return shared;
-}
+#pragma mark Abstract method overrides
 
-- (NSURLSessionDataTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:@"/api/v1/schedules" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    SBBResourceList *schedules = [self.objectManager objectFromBridgeJSON:responseObject];
-    if (completion) {
-      completion(schedules, error);
-    }
-  }];
-}
+// Custom logic goes here.
 
 @end

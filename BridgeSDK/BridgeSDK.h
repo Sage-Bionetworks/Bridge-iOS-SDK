@@ -4,7 +4,7 @@
 //
 //  Created by Erin Mounts on 9/8/14.
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2105, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -53,6 +53,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBNetworkManager.h>
 #import <BridgeSDK/SBBScheduleManager.h>
 #import <BridgeSDK/SBBSurveyManager.h>
+#import <BridgeSDK/SBBTaskManager.h>
 #import <BridgeSDK/SBBUploadManager.h>
 #import <BridgeSDK/SBBErrors.h>
 #import <BridgeSDK/SBBBridgeObjects.h>
