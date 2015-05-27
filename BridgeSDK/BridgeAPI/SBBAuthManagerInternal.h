@@ -34,6 +34,13 @@
 
 extern SBBEnvironment gSBBDefaultEnvironment;
 
+@protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>
+
+- (BOOL)isAuthenticated;
+- (void)clearSessionToken;
+
+@end
+
 @interface SBBAuthManager(internal)
 
 - (void)clearKeychainStore;

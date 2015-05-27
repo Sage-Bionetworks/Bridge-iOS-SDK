@@ -459,4 +459,20 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     });
 }
 
+// used by SBBBridgeNetworkManager to auto-reauth when session tokens expire
+- (void)clearSessionToken
+{
+    if (_authDelegate) {
+        [_authDelegate authManager:self didGetSessionToken:nil];
+    } else {
+        _sessionToken = nil;
+        dispatchSyncToKeychainQueue(^{
+            UICKeyChainStore *store = [self.class sdkKeychainStore];
+            [store setString:nil forKey:self.sessionTokenKey];
+            
+            [store synchronize];
+        });
+    }
+}
+
 @end
