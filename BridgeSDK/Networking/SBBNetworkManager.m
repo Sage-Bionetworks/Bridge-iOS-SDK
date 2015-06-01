@@ -121,10 +121,6 @@ NSString *kAPIPrefix = @"webservices";
 @property (nonatomic, strong) NSMutableDictionary *uploadCompletionHandlers;
 @property (nonatomic, strong) NSMutableDictionary *downloadCompletionHandlers;
 
-+ (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
-
-- (instancetype)initWithBaseURL:(NSString*)baseURL bridgeStudy:(NSString*)bridgeStudy;
-
 @end
 
 @implementation SBBNetworkManager

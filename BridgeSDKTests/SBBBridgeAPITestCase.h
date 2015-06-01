@@ -8,11 +8,11 @@
 
 #import <XCTest/XCTest.h>
 @import BridgeSDK;
-#import "MockNetworkManager.h"
+#import "MockURLSession.h"
 #import "SBBTestBridgeObject.h"
 
 @interface SBBBridgeAPITestCase : XCTestCase
 
-@property (nonatomic, strong) MockNetworkManager *mockNetworkManager;
+@property (nonatomic, strong) MockURLSession *mockURLSession;
 
 @end

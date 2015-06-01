@@ -34,9 +34,9 @@
     @"username": @"1337p4t13nt",
     @"email": @"email@fake.tld"
     };
-  [self.mockNetworkManager setJson:userProfile andResponseCode:200 forEndpoint:@"/api/v1/profile" andMethod:@"GET"];
+  [self.mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:@"/api/v1/profile" andMethod:@"GET"];
   SBBObjectManager *oMan = [SBBObjectManager objectManager];
-  SBBProfileManager *pMan = [SBBProfileManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+  SBBProfileManager *pMan = [SBBProfileManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
   [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
   [pMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
     XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");

@@ -66,8 +66,8 @@
                                   @"items": tasks,
                                   @"total": @(tasks.count)
                                   };
-    [self.mockNetworkManager setJson:response andResponseCode:200 forEndpoint:@"/api/v1/tasks" andMethod:@"GET"];
-    SBBTaskManager *tMan = [SBBTaskManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:SBBComponent(SBBObjectManager)];
+    [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:@"/api/v1/tasks" andMethod:@"GET"];
+    SBBTaskManager *tMan = SBBComponent(SBBTaskManager);
     
     [tMan getTasksUntil:[NSDate date] withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
         XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], @"Converted incoming json to SBBResourceList");

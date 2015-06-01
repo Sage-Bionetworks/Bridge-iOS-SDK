@@ -103,8 +103,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 @interface SBBAuthManager()
 
-@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
 @property (nonatomic, strong) NSString *sessionToken;
+@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
 
 + (void)resetAuthKeychain;
 
@@ -457,6 +457,24 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         [store removeAllItems];
         [store synchronize];
     });
+}
+
+// used internally for unit testing
+- (void)setSessionToken:(NSString *)sessionToken
+{
+    if (sessionToken.length) {
+        if (_authDelegate) {
+            [_authDelegate authManager:self didGetSessionToken:sessionToken];
+        } else {
+            _sessionToken = sessionToken;
+            dispatchSyncToKeychainQueue(^{
+                UICKeyChainStore *store = [self.class sdkKeychainStore];
+                [store setString:_sessionToken forKey:self.sessionTokenKey];
+                
+                [store synchronize];
+            });
+        }
+    }
 }
 
 // used by SBBBridgeNetworkManager to auto-reauth when session tokens expire

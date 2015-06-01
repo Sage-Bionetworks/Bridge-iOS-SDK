@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBNetworkManager.h"
+#import "SBBBridgeNetworkManager.h"
 
-@interface MockNetworkManager : NSObject <SBBNetworkManagerProtocol>
+@interface MockNetworkManager : SBBBridgeNetworkManager
 
 - (void)setJson:(id)jsonObject andResponseCode:(NSInteger)statusCode forEndpoint:(NSString *)endpoint andMethod:(NSString *)HTTPMethod;
 

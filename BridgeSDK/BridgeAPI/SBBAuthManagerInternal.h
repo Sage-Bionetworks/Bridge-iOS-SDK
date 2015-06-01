@@ -37,11 +37,12 @@ extern SBBEnvironment gSBBDefaultEnvironment;
 @protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>
 
 - (BOOL)isAuthenticated;
+- (void)setSessionToken:(NSString *)sessionToken;
 - (void)clearSessionToken;
 
 @end
 
-@interface SBBAuthManager(internal)
+@interface SBBAuthManager(internal)<SBBAuthManagerInternalProtocol>
 
 - (void)clearKeychainStore;
 

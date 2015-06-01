@@ -30,6 +30,8 @@
 
 #import "SBBNetworkManager.h"
 
+extern NSString *kAPIPrefix;
+
 #pragma mark - APC Retry Object - Keeps track of retry count
 
 @interface APCNetworkRetryObject : NSObject
@@ -43,6 +45,13 @@
 #pragma mark - SBBNetworkManager Bridge category
 
 @interface SBBNetworkManager (Bridge)
+
+@property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
+@property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
+
++ (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
+
+- (instancetype)initWithBaseURL:(NSString*)baseURL bridgeStudy:(NSString*)bridgeStudy;
 
 - (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task retryObject:(APCNetworkRetryObject *)retryObject;
 
