@@ -43,6 +43,16 @@ extern NSString *gSBBAppStudy;
 
 /*!
  *  This protocol defines the interfaces for the Auth Manager delegate.
+ *
+ *  Without an Auth Manager delegate, the default SBBAuthManager implementation will keep track of the login
+ *  credentials (username and password) and the current session token in the keychain. Implement an Auth Manager
+ *  delegate if you want to handle storing those items yourself; in that case the default SBBAuthManager
+ *  implementation will not keep track of any of those items itself.
+ *
+ *  Note that if you implement an Auth Manager delegate at all, you would need to implement at least some of the
+ *  optional methods in the delegate protocol to preserve the Bridge SDK's ability to automatically handle
+ *  refreshing the session token whenever an API call indicates that it has expired (by returning a 401 HTTP
+ *  status code). See the individual method documentation below for details.
  */
 @protocol SBBAuthManagerDelegateProtocol <NSObject>
 @required
@@ -71,6 +81,18 @@ extern NSString *gSBBAppStudy;
 - (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken;
 
 @optional
+
+/*!
+ *  If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
+ *  when it obtains a new session token, so that the delegate can store the username and password used,
+ *  to be returned later in the usernameForAuthManager: and passwordForAuthManager: calls.
+ *
+ *  @note This method is optional. It provides a convenient interface for keeping track of the auth credentials used in the most recent successful signIn, for re-use when automatically refreshing an expired session token.
+ *
+ *  @param authManager The auth manager instance making the delegate request.
+ *  @param sessionToken The session token just obtained by the auth manager.
+ */
+- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken forUsername:(NSString *)username andPassword:(NSString *)password;
 
 /*!
  *  This delegate method should return the username for the user account last signed up for or signed in to,

@@ -54,5 +54,6 @@ extern NSString *kAPIPrefix;
 - (instancetype)initWithBaseURL:(NSString*)baseURL bridgeStudy:(NSString*)bridgeStudy;
 
 - (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task retryObject:(APCNetworkRetryObject *)retryObject;
+- (NSDictionary *)headersPreparedForRetry:(NSDictionary *)headers;
 
 @end

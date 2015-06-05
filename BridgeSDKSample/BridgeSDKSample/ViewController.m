@@ -71,6 +71,7 @@
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:NSLocalizedString(@"Sign Up/Sign In", @"Sign Up/Sign In"),
                                   NSLocalizedString(@"Sign Out", @"Sign Out"),
+                                  NSLocalizedString(@"Simulate Expired Session", @"Simulate Expired Session"),
                                   NSLocalizedString(@"Profile", @"Profile"),
                                   NSLocalizedString(@"Consent", @"Consent"),
                                   NSLocalizedString(@"Survey", @"Survey"),
@@ -85,6 +86,7 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
   asCancel = -1,
   asSignUpSignIn,
   asSignOut,
+  asExpireSession,
   asProfile,
   asConsent,
   asSurvey,
@@ -121,6 +123,18 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
                     [self.navigationController pushViewController:suvc animated:YES];
                 });
             }];
+        }
+            break;
+            
+        case asExpireSession:
+        {
+            // give it a bogus session token so the Bridge API will return "401 not auth" from the next call
+            // to any endpoint requiring auth, e.g. profile, schedules, surveys, etc.
+            id<SBBAuthManagerProtocol> authMan = SBBComponent(SBBAuthManager);
+            [authMan.authDelegate authManager:authMan didGetSessionToken:@"notAValidSessionToken"];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self didTouchMoreBarButtonitem:nil];
+            });
         }
             break;
             

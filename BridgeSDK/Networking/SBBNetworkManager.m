@@ -376,6 +376,12 @@ NSString *kAPIPrefix = @"webservices";
 /*********************************************************************************/
 #pragma mark - Helper Methods
 /*********************************************************************************/
+
+- (NSDictionary *)headersPreparedForRetry:(NSDictionary *)headers
+{
+    return headers;
+}
+
 - (NSURLSessionDataTask *) doDataTask: (NSString*) method
                           retryObject: (APCNetworkRetryObject*) retryObject
                             URLString: (NSString*)URLString
@@ -391,7 +397,7 @@ NSString *kAPIPrefix = @"webservices";
         localRetryObject.completionBlock = completion;
         localRetryObject.retryBlock = ^ {
             __strong APCNetworkRetryObject * strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
-          [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:headers parameters:parameters completion:completion];
+          [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:[self headersPreparedForRetry:headers] parameters:parameters completion:completion];
         };
     }
     else

@@ -283,7 +283,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         NSString *sessionToken = responseObject[@"sessionToken"];
         if (sessionToken.length) {
             if (_authDelegate) {
-                [_authDelegate authManager:self didGetSessionToken:sessionToken];
+                if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forUsername:andPassword:)]) {
+                    [_authDelegate authManager:self didGetSessionToken:sessionToken forUsername:username andPassword:password];
+                } else {
+                    [_authDelegate authManager:self didGetSessionToken:sessionToken];
+                }
             } else {
                 _sessionToken = sessionToken;
                 dispatchSyncToKeychainQueue(^{

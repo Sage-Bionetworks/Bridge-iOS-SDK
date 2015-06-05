@@ -53,12 +53,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SBBEnvironment environment = gSBBDefaultEnvironment;
-        
-        NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
-        NSString *bridgeStudy = gSBBAppStudy;
-        shared = [[self alloc] initWithBaseURL:baseURL bridgeStudy:bridgeStudy];
-        shared.environment = environment;
+        shared = [[self alloc] initWithAuthManager:SBBComponent(SBBAuthManager)];
     });
     
     return shared;
@@ -82,15 +77,24 @@
 {
     if (retryObject && retryObject.retryBlock && error.code == kSBBServerNotAuthenticated && [_authManager isAuthenticated])
     {
+#if DEBUG
+        NSLog(@"Bridge API call returned status code 401; attempting to refresh session token");
+#endif
         // clear the stored session token if any, and attempt reauth
         [_authManager clearSessionToken];
         [_authManager ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
             // ignore 412 Not Consented on signIn when auto-renewing the session token; some Bridge endpoints still work when not consented,
             // and those that don't will themselves return a 412 status code
-            BOOL relevantError = (error.code != kSBBServerPreconditionNotMet);
+            BOOL relevantError = (error && error.code != kSBBServerPreconditionNotMet);
             if (relevantError) {
+#if DEBUG
+                NSLog(@"Session token auto-refresh failed:\n%@", error);
+#endif
                 [super handleHTTPError:error task:task retryObject:retryObject];
             } else {
+#if DEBUG
+                NSLog(@"Session token auto-refresh succeeded, retrying original request");
+#endif
                 dispatch_async(dispatch_get_main_queue(), ^{
                     retryObject.retryBlock();
                     // don't count this against retries
@@ -100,6 +104,16 @@
     } else {
         [super handleHTTPError:error task:task retryObject:retryObject];
     }
+}
+
+- (NSDictionary *)headersPreparedForRetry:(NSDictionary *)headers
+{
+    NSMutableDictionary *preparedHeaders = [headers mutableCopy];
+    
+    // rewrite the auth headers in case the session token got refreshed
+    [_authManager addAuthHeaderToHeaders:preparedHeaders];
+    
+    return preparedHeaders;
 }
 
 @end
