@@ -67,7 +67,7 @@
                                   @"total": @(tasks.count)
                                   };
     [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:@"/api/v1/tasks" andMethod:@"GET"];
-    SBBTaskManager *tMan = SBBComponent(SBBTaskManager);
+    id<SBBTaskManagerProtocol> tMan = SBBComponent(SBBTaskManager);
     
     [tMan getTasksUntil:[NSDate date] withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
         XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], @"Converted incoming json to SBBResourceList");

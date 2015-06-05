@@ -63,7 +63,7 @@
                                   };
 
     [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:@"/api/v1/schedules" andMethod:@"GET"];
-    SBBScheduleManager *sMan = SBBComponent(SBBScheduleManager);
+    id <SBBScheduleManagerProtocol> sMan = SBBComponent(SBBScheduleManager);
     
     [sMan getSchedulesWithCompletion:^(SBBResourceList *schedulesRList, NSError *error) {
         XCTAssert([schedulesRList isKindOfClass:[SBBResourceList class]], @"Converted incoming json to SBBResourceList");

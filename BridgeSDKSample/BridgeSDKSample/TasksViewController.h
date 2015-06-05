@@ -34,4 +34,6 @@
 
 @interface TasksViewController : UIViewController
 
+- (void)reloadTasks;
+
 @end

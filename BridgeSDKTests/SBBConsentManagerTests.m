@@ -50,7 +50,7 @@
   NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01",
     kSBBKeyImageData:imageBase64String, kSBBKeyImageMimeType:kSBBMimeTypePng};
   [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:kSBBApiConsentV1 andMethod:@"GET"];
-  SBBConsentManager* consentMan = SBBComponent(SBBConsentManager);
+  id<SBBConsentManagerProtocol> consentMan = SBBComponent(SBBConsentManager);
 
   // execute and validate
   [consentMan retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate, UIImage* signatureImage,

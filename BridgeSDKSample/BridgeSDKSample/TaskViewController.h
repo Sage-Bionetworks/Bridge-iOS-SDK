@@ -37,6 +37,4 @@
 
 @property (nonatomic, weak) SBBTask *task;
 
-- (void)reloadTasks;
-
 @end

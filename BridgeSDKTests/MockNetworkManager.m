@@ -44,7 +44,7 @@
 
 - (BOOL)headersContainValidAuth:(NSDictionary *)headers
 {
-  return ![headers[@"Bridge-Session"] isEqualToString:@"expired"];
+  return YES;
 }
 
 - (NSURLSessionDataTask *)dataTaskFor:(NSString *)URLString

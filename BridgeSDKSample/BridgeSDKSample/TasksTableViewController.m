@@ -32,6 +32,7 @@
 
 #import "TasksTableViewController.h"
 #import "TaskViewController.h"
+#import "TasksViewController.h"
 
 @interface TasksTableViewController ()
 
