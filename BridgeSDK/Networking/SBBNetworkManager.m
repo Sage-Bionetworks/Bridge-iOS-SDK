@@ -29,7 +29,7 @@
  */
 
 #import "BridgeSDK.h"
-#import "SBBNetworkManager.h"
+#import "SBBNetworkManagerInternal.h"
 #import "SBBErrors.h"
 #import "NSError+SBBAdditions.h"
 #import "Reachability.h"
@@ -45,14 +45,6 @@ NSString *kBackgroundSessionIdentifier = @"org.sagebase.backgroundsession";
 NSString *kAPIPrefix = @"webservices";
 
 #pragma mark - APC Retry Object - Keeps track of retry count
-
-@interface APCNetworkRetryObject : NSObject
-
-@property (nonatomic) NSInteger retryCount;
-@property (nonatomic, copy) SBBNetworkManagerCompletionBlock completionBlock;
-@property (nonatomic, copy) void (^retryBlock)(void);
-
-@end
 
 @implementation APCNetworkRetryObject
 
@@ -128,10 +120,6 @@ NSString *kAPIPrefix = @"webservices";
 @property (nonatomic, copy) void (^backgroundCompletionHandler)(void);
 @property (nonatomic, strong) NSMutableDictionary *uploadCompletionHandlers;
 @property (nonatomic, strong) NSMutableDictionary *downloadCompletionHandlers;
-
-+ (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)baseURLPath;
-
-- (instancetype)initWithBaseURL:(NSString*)baseURL bridgeStudy:(NSString*)bridgeStudy;
 
 @end
 
@@ -388,6 +376,12 @@ NSString *kAPIPrefix = @"webservices";
 /*********************************************************************************/
 #pragma mark - Helper Methods
 /*********************************************************************************/
+
+- (NSDictionary *)headersPreparedForRetry:(NSDictionary *)headers
+{
+    return headers;
+}
+
 - (NSURLSessionDataTask *) doDataTask: (NSString*) method
                           retryObject: (APCNetworkRetryObject*) retryObject
                             URLString: (NSString*)URLString
@@ -403,7 +397,7 @@ NSString *kAPIPrefix = @"webservices";
         localRetryObject.completionBlock = completion;
         localRetryObject.retryBlock = ^ {
             __strong APCNetworkRetryObject * strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
-          [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:headers parameters:parameters completion:completion];
+          [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:[self headersPreparedForRetry:headers] parameters:parameters completion:completion];
         };
     }
     else
@@ -421,10 +415,7 @@ NSString *kAPIPrefix = @"webservices";
         }
         else if (httpError)
         {
-            //TODO: Add retry for Server maintenance
-            if (completion) {
-                completion(task, responseObject, httpError);
-            }
+            [self handleHTTPError:httpError task:task retryObject:localRetryObject];
         }
         else
         {
@@ -690,6 +681,16 @@ NSString *kAPIPrefix = @"webservices";
         }
         retryObject.retryBlock = nil;
     }
+}
+
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task retryObject:(APCNetworkRetryObject *)retryObject
+{
+    //TODO: Add retry for Server maintenance
+    if (retryObject.completionBlock)
+    {
+        retryObject.completionBlock(task, nil, error);
+    }
+    retryObject.retryBlock = nil;
 }
 
 - (BOOL) checkForTemporaryErrors:(NSInteger) errorCode

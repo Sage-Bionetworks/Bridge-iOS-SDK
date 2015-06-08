@@ -103,8 +103,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 @interface SBBAuthManager()
 
-@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
 @property (nonatomic, strong) NSString *sessionToken;
+@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
 
 + (void)resetAuthKeychain;
 
@@ -283,7 +283,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         NSString *sessionToken = responseObject[@"sessionToken"];
         if (sessionToken.length) {
             if (_authDelegate) {
-                [_authDelegate authManager:self didGetSessionToken:sessionToken];
+                if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forUsername:andPassword:)]) {
+                    [_authDelegate authManager:self didGetSessionToken:sessionToken forUsername:username andPassword:password];
+                } else {
+                    [_authDelegate authManager:self didGetSessionToken:sessionToken];
+                }
             } else {
                 _sessionToken = sessionToken;
                 dispatchSyncToKeychainQueue(^{
@@ -457,6 +461,40 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         [store removeAllItems];
         [store synchronize];
     });
+}
+
+// used internally for unit testing
+- (void)setSessionToken:(NSString *)sessionToken
+{
+    if (sessionToken.length) {
+        if (_authDelegate) {
+            [_authDelegate authManager:self didGetSessionToken:sessionToken];
+        } else {
+            _sessionToken = sessionToken;
+            dispatchSyncToKeychainQueue(^{
+                UICKeyChainStore *store = [self.class sdkKeychainStore];
+                [store setString:_sessionToken forKey:self.sessionTokenKey];
+                
+                [store synchronize];
+            });
+        }
+    }
+}
+
+// used by SBBBridgeNetworkManager to auto-reauth when session tokens expire
+- (void)clearSessionToken
+{
+    if (_authDelegate) {
+        [_authDelegate authManager:self didGetSessionToken:nil];
+    } else {
+        _sessionToken = nil;
+        dispatchSyncToKeychainQueue(^{
+            UICKeyChainStore *store = [self.class sdkKeychainStore];
+            [store setString:nil forKey:self.sessionTokenKey];
+            
+            [store synchronize];
+        });
+    }
 }
 
 @end

@@ -234,9 +234,9 @@
 }
 
 - (void)testGetSurveyByRef {
-  [self.mockNetworkManager setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:@"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z" andMethod:@"GET"];
+  [self.mockURLSession setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:@"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z" andMethod:@"GET"];
   SBBObjectManager *oMan = [SBBObjectManager objectManager];
-  SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+  SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
   [sMan getSurveyByRef:@"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z" completion:^(id survey, NSError *error) {
     XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
     SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
@@ -253,9 +253,9 @@
   NSArray *pathComponents = [endpoint componentsSeparatedByString:@"/"];
   NSString *guid = pathComponents[pathComponents.count - 3];
   NSDate *createdOn = [NSDate dateWithISO8601String:pathComponents[pathComponents.count - 1]];
-  [self.mockNetworkManager setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+  [self.mockURLSession setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
   SBBObjectManager *oMan = [SBBObjectManager objectManager];
-  SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+  SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
   [sMan getSurveyByGuid:guid createdOn:createdOn completion:^(id survey, NSError *error) {
     XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
     SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
@@ -291,9 +291,9 @@
       @"identifier": @"ThisIsn'tAGuid"
       };
     NSString *endpoint = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
-    [self.mockNetworkManager setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     SBBSurvey *survey = [oMan objectFromBridgeJSON:_sampleSurveyJSON];
     NSArray *answers = [self someAnswers];
     [sMan submitAnswers:answers toSurvey:survey completion:^(id identifierHolder, NSError *error) {
@@ -311,9 +311,9 @@
     NSString *surveyRef = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
     NSString *responseIdentifier = identifierHolder[@"identifier"];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", surveyRef, responseIdentifier];
-    [self.mockNetworkManager setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     SBBSurvey *survey = [oMan objectFromBridgeJSON:_sampleSurveyJSON];
     NSArray *answers = [self someAnswers];
     [sMan submitAnswers:answers toSurvey:survey withResponseIdentifier:responseIdentifier completion:^(id identifierHolder, NSError *error) {
@@ -329,9 +329,9 @@
       @"identifier": @"ThisIsn'tAGuid"
       };
     NSString *endpoint = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
-    [self.mockNetworkManager setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     NSArray *answers = [self someAnswers];
     [sMan submitAnswers:answers toSurveyByRef:endpoint completion:^(id identifierHolder, NSError *error) {
         XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
@@ -347,9 +347,9 @@
     NSString *surveyRef = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
     NSString *responseIdentifier = identifierHolder[@"identifier"];
     NSString *endpoint = [NSString stringWithFormat:@"%@/%@", surveyRef, responseIdentifier];
-    [self.mockNetworkManager setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     NSArray *answers = [self someAnswers];
     [sMan submitAnswers:answers toSurveyByRef:surveyRef withResponseIdentifier:responseIdentifier completion:^(id identifierHolder, NSError *error) {
         XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
@@ -367,9 +367,9 @@
     NSArray *pathComponents = [endpoint componentsSeparatedByString:@"/"];
     NSString *guid = pathComponents[pathComponents.count - 3];
     NSDate *createdOn = [NSDate dateWithISO8601String:pathComponents[pathComponents.count - 1]];
-    [self.mockNetworkManager setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     [sMan submitAnswers:[self someAnswers] toSurveyByGuid:guid createdOn:createdOn completion:^(id identifierHolder, NSError *error) {
         XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
     }];
@@ -386,9 +386,9 @@
     NSString *responseIdentifier = identifierHolder[@"identifier"];
     NSString *endpoint = [NSString stringWithFormat:@"/api/v2/surveys/%@/revisions/%@/%@", guid, createdOnString, responseIdentifier];
     NSDate *createdOn = [NSDate dateWithISO8601String:createdOnString];
-    [self.mockNetworkManager setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:self.mockNetworkManager objectManager:oMan];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     [sMan submitAnswers:[self someAnswers] toSurveyByGuid:guid createdOn:createdOn withResponseIdentifier:responseIdentifier completion:^(id identifierHolder, NSError *error) {
         XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
         XCTAssert([responseIdentifier isEqualToString:((SBBIdentifierHolder *)identifierHolder).identifier], @"Response identifier is equal to what was specified");
