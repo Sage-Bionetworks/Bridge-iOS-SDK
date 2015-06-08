@@ -83,6 +83,7 @@ static NSString *kPasswordKey = @"BridgeSDKSamplePassword";
 
 - (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken
 {
+    // ***** REALLY BAD IDEA. DEMO ONLY. DON'T EVER DO THIS IN A REAL APP. *****
     [[NSUserDefaults standardUserDefaults] setObject:sessionToken forKey:kSessionTokenKey];
 }
 
