@@ -49,7 +49,9 @@
 {
     gSBBAppStudy = study;
     gSBBDefaultEnvironment = environment;
-    [SBBComponent(SBBNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
+    
+    // make sure the Bridge network manager is set up as the delegate for the background session
+    SBBComponent(SBBBridgeNetworkManager);
 }
 
 + (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment
