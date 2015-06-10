@@ -75,7 +75,7 @@ static NSString *kPasswordKey = @"BridgeSDKSamplePassword";
 
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler {
     if ([identifier isEqualToString:kBackgroundSessionIdentifier]) {
-        [SBBComponent(SBBNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
+        [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
     }
 }
 
