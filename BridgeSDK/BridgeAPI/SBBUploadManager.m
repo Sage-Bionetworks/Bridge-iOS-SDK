@@ -370,6 +370,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
   }
   [self setUploadRequestJSON:nil forFile:downloadTask.taskDescription];
   if ([uploadSession isKindOfClass:[SBBUploadSession class]]) {
+    NSLog(@"Successfully obtained upload session with upload ID %@", uploadSession.id);
     [self setUploadSessionJSON:jsonObject forFile:downloadTask.taskDescription];
     NSDictionary *uploadHeaders =
     @{
@@ -378,7 +379,14 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
       @"Content-MD5": uploadRequest.contentMd5
       };
     NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
-    [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription completion:nil];
+    [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription
+        completion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+      if (error) {
+        NSLog(@"Error uploading to S3 for upload ID %@", uploadSession.id);
+      } else {
+        NSLog(@"Successfully uploaded to S3 for upload ID %@", uploadSession.id);
+      }
+    }];
   } else {
     NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
     [self completeUploadOfFile:downloadTask.taskDescription withError:error];
@@ -415,6 +423,12 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+      if (error) {
+        NSLog(@"Error calling upload complete for URL %@", ref);
+      } else {
+        NSLog(@"Successfully called upload complete for URL %@", ref);
+      }
+
       [self completeUploadOfFile:uploadTask.taskDescription withError:error];
     }];
   } else if ([task isKindOfClass:[NSURLSessionDownloadTask class]]) {
