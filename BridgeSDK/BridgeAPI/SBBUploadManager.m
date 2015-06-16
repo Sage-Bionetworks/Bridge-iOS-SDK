@@ -370,7 +370,9 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
   }
   [self setUploadRequestJSON:nil forFile:downloadTask.taskDescription];
   if ([uploadSession isKindOfClass:[SBBUploadSession class]]) {
+#if DEBUG
     NSLog(@"Successfully obtained upload session with upload ID %@", uploadSession.id);
+#endif
     [self setUploadSessionJSON:jsonObject forFile:downloadTask.taskDescription];
     NSDictionary *uploadHeaders =
     @{
@@ -378,15 +380,19 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
       @"Content-Type": uploadRequest.contentType,
       @"Content-MD5": uploadRequest.contentMd5
       };
-    NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
-    [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription
-        completion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+    SBBNetworkManagerTaskCompletionBlock uploadFileCompletion = nil;
+#if DEBUG
+    uploadFileCompletion = ^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
       if (error) {
-        NSLog(@"Error uploading to S3 for upload ID %@", uploadSession.id);
+        NSLog(@"Error uploading to S3 for upload ID %@:\n%@", uploadSession.id, error);
       } else {
         NSLog(@"Successfully uploaded to S3 for upload ID %@", uploadSession.id);
       }
-    }];
+    };
+#endif
+    NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
+    [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription
+        completion:uploadFileCompletion];
   } else {
     NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
     [self completeUploadOfFile:downloadTask.taskDescription withError:error];
@@ -423,11 +429,13 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+#if DEBUG
       if (error) {
-        NSLog(@"Error calling upload complete for URL %@", ref);
+        NSLog(@"Error calling upload complete for URL %@:\n%@", ref, error);
       } else {
         NSLog(@"Successfully called upload complete for URL %@", ref);
       }
+#endif
 
       [self completeUploadOfFile:uploadTask.taskDescription withError:error];
     }];
