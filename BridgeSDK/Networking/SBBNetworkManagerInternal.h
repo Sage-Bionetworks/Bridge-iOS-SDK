@@ -56,4 +56,6 @@ extern NSString *kAPIPrefix;
 - (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task retryObject:(APCNetworkRetryObject *)retryObject;
 - (NSDictionary *)headersPreparedForRetry:(NSDictionary *)headers;
 
+- (NSURL *) URLForRelativeorAbsoluteURLString: (NSString*) URLString;
+
 @end

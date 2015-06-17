@@ -34,6 +34,7 @@
 #import "NSData+SBBAdditions.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
+#import "SBBNetworkManagerInternal.h"
 #import "SBBObjectManager.h"
 #import "SBBUploadSession.h"
 #import "SBBUploadRequest.h"
@@ -431,9 +432,15 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
 #if DEBUG
       if (error) {
-        NSLog(@"Error calling upload complete for URL %@:\n%@", ref, error);
+        NSLog(@"Error calling upload complete for upload ID %@:\n%@", uploadSession.id, error);
       } else {
-        NSLog(@"Successfully called upload complete for URL %@", ref);
+        NSString* uploadStatusUrlString = nil;
+        if ([self.networkManager isKindOfClass:[SBBNetworkManager class]]) {
+          NSString* relativeUrl = [NSString stringWithFormat:@"/api/v1/upload/%@/status", uploadSession.id];
+          NSURL* url = [(SBBNetworkManager*) self.networkManager URLForRelativeorAbsoluteURLString:relativeUrl];
+          uploadStatusUrlString = [url absoluteString];
+        }
+        NSLog(@"Successfully called upload complete for upload ID %@, check status at %@", uploadSession.id, uploadStatusUrlString);
       }
 #endif
 
