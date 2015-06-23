@@ -51,6 +51,18 @@ typedef void (^SBBUploadManagerCompletionBlock)(NSError *error);
  */
 - (void)uploadManager:(SBBUploadManager *)manager uploadOfFile:(NSString *)file completedWithError:(NSError *)error;
 
+@optional
+/*!
+ Optional delegate method available only in debug builds.
+ Called when a background file upload task finishes, successfully or otherwise in debug builds.
+ Provides a URL that can be called for more information about the post-upload status of the data.
+ 
+ @param manager The upload manager instance making the call.
+ @param file    The path to the file whose upload task finished or failed.
+ @param url     The url to call to get more information about the post-upload status of the data.
+ */
+- (void)uploadManager:(SBBUploadManager *)manager uploadOfFile:(NSString *)file completedWithVerificationURL:(NSURL *)url;
+
 @end
 
 /*!
