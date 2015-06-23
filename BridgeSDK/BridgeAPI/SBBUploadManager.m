@@ -430,18 +430,24 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+
 #if DEBUG
-      if (error) {
-        NSLog(@"Error calling upload complete for upload ID %@:\n%@", uploadSession.id, error);
-      } else {
-        NSString* uploadStatusUrlString = nil;
-        if ([self.networkManager isKindOfClass:[SBBNetworkManager class]]) {
-          NSString* relativeUrl = [NSString stringWithFormat:@"/api/v1/upload/%@/status", uploadSession.id];
-          NSURL* url = [(SBBNetworkManager*) self.networkManager URLForRelativeorAbsoluteURLString:relativeUrl];
-          uploadStatusUrlString = [url absoluteString];
+        if (error) {
+            NSLog(@"Error calling upload complete for upload ID %@:\n%@", uploadSession.id, error);
+        } else {
+            NSString* uploadStatusUrlString = nil;
+            if ([self.networkManager isKindOfClass:[SBBNetworkManager class]]) {
+                NSString* relativeUrl = [NSString stringWithFormat:@"/api/v1/upload/%@/status", uploadSession.id];
+                NSURL* url = [(SBBNetworkManager*) self.networkManager URLForRelativeorAbsoluteURLString:relativeUrl];
+                uploadStatusUrlString = [url absoluteString];
+                
+                if ([_uploadDelegate respondsToSelector:@selector(uploadManager:uploadOfFile:completedWithVerificationURL:)]) {
+                    
+                    [_uploadDelegate uploadManager:self uploadOfFile:uploadTask.taskDescription completedWithVerificationURL:url];
+                }
+            }
+            NSLog(@"Successfully called upload complete for upload ID %@, check status at %@", uploadSession.id, uploadStatusUrlString);
         }
-        NSLog(@"Successfully called upload complete for upload ID %@, check status at %@", uploadSession.id, uploadStatusUrlString);
-      }
 #endif
 
       [self completeUploadOfFile:uploadTask.taskDescription withError:error];
