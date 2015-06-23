@@ -53,8 +53,8 @@ typedef void (^SBBUploadManagerCompletionBlock)(NSError *error);
 
 @optional
 /*!
- Optional delegate method available only in debug mode.
- Called when a background file upload task finishes, successfully or otherwise in debug mode.
+ Optional delegate method available only in debug builds.
+ Called when a background file upload task finishes, successfully or otherwise in debug builds.
  Provides a URL that can be called for more information about the post-upload status of the data.
  
  @param manager The upload manager instance making the call.
