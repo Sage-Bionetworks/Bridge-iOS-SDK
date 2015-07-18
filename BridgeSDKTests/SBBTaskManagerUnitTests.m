@@ -1,20 +1,20 @@
 //
-//  SBBTaskManagerTests.m
+//  SBBTaskManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 5/6/15.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPITestCase.h"
+#import "SBBBridgeAPIUnitTestCase.h"
 #import <BridgeSDK/SBBTaskManager.h>
 #import <BridgeSDK/SBBBridgeObjects.h>
 
-@interface SBBTaskManagerTests : SBBBridgeAPITestCase
+@interface SBBTaskManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @end
 
-@implementation SBBTaskManagerTests
+@implementation SBBTaskManagerUnitTests
 
 - (void)setUp {
     [super setUp];

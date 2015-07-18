@@ -1,19 +1,19 @@
 //
-//  SBBConsentManagerTests.m
+//  SBBConsentManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Dwayne Jeng on 11/29/14.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPITestCase.h"
+#import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBConsentManagerInternal.h"
 
-@interface SBBConsentManagerTests : SBBBridgeAPITestCase
+@interface SBBConsentManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @end
 
-@implementation SBBConsentManagerTests
+@implementation SBBConsentManagerUnitTests
 
 - (void)setUp {
   [super setUp];

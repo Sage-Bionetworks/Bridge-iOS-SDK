@@ -1,17 +1,17 @@
 //
-//  SBBBridgeAPITestCase.m
+//  SBBBridgeAPIUnitTestCase.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/13/14.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPITestCase.h"
+#import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBAuthManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
 #import "SBBNetworkManagerInternal.h"
 
-@implementation SBBBridgeAPITestCase
+@implementation SBBBridgeAPIUnitTestCase
 
 - (void)setUp {
     [super setUp];

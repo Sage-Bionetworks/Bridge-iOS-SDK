@@ -126,6 +126,7 @@ NSString *kAPIPrefix = @"webservices";
 @implementation SBBNetworkManager
 @synthesize environment = _environment;
 @synthesize backgroundTransferDelegate = _backgroundTransferDelegate;
+@synthesize sendCookies = _sendCookies;
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
 {
@@ -168,9 +169,8 @@ NSString *kAPIPrefix = @"webservices";
 + (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
 {
   NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:baseURLPath];
-  SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL];
+  SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL bridgeStudy:study];
   networkManager.environment = environment;
-  networkManager.bridgeStudy = study;
   return networkManager;
 }
 
@@ -218,6 +218,11 @@ NSString *kAPIPrefix = @"webservices";
         self.environment = SBBEnvironmentCustom;
         self.uploadCompletionHandlers = [NSMutableDictionary dictionary];
         self.downloadCompletionHandlers = [NSMutableDictionary dictionary];
+        if (bridgeStudy.length) {
+            self.sendCookies = NO;
+        } else {
+            self.sendCookies = YES;
+        }
     }
     return self;
 }
@@ -515,6 +520,7 @@ NSString *kAPIPrefix = @"webservices";
   NSURL *url = [self URLForRelativeorAbsoluteURLString:URLString];
   NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
   mutableRequest.HTTPMethod = method;
+  mutableRequest.HTTPShouldHandleCookies = self.sendCookies;
   [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
   [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
   

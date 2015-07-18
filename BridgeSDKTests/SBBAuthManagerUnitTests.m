@@ -1,25 +1,25 @@
 //
-//  SBBAuthManagerTests.m
+//  SBBAuthManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/13/14.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPITestCase.h"
+#import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBAuthManagerInternal.h"
 #import "SBBTestAuthManagerDelegate.h"
 #import "SBBNetworkManagerInternal.h"
 #import "MockNetworkManager.h"
 #import "MockURLSession.h"
 
-@interface SBBAuthManagerTests : SBBBridgeAPITestCase
+@interface SBBAuthManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @property (nonatomic, strong) MockNetworkManager *mockNetworkManager;
 
 @end
 
-@implementation SBBAuthManagerTests
+@implementation SBBAuthManagerUnitTests
 
 - (void)setUp {
     [super setUp];
@@ -35,7 +35,7 @@
     gSBBAppStudy = nil;
 }
 
-- (void)testSignIn {
+ - (void)testSignIn {
   [self.mockNetworkManager setJson:nil andResponseCode:404 forEndpoint:@"/api/v1/auth/signIn" andMethod:@"POST"];
   SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
   [aMan signInWithUsername:@"notSignedUp" password:@"" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {

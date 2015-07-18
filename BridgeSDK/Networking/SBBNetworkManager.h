@@ -86,6 +86,13 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
 
 @property (nonatomic, weak) id<NSURLSessionDataDelegate, NSURLSessionDownloadDelegate> backgroundTransferDelegate;
 
+/*!
+ This property tells the network manager whether it should send cookies with its requests.
+ 
+ For network managers communicating with Bridge servers, this should be set to NO. Otherwise defaults to YES.
+ */
+@property (nonatomic, assign) BOOL sendCookies;
+
 #pragma mark - Basic HTTP Methods
 
 /*!

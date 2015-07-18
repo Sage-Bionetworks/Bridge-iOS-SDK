@@ -289,7 +289,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                     [_authDelegate authManager:self didGetSessionToken:sessionToken];
                 }
             } else {
-                _sessionToken = sessionToken;
+                dispatchSyncToAuthQueue(^{
+                    _sessionToken = sessionToken;
+                });
                 dispatchSyncToKeychainQueue(^{
                     UICKeyChainStore *store = [self.class sdkKeychainStore];
                     [store setString:_sessionToken forKey:self.sessionTokenKey];
@@ -324,7 +326,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             });
             // clear the in-memory copy of the session token, too
             dispatchSyncToAuthQueue(^{
-                self.sessionToken = nil;
+                _sessionToken = nil;
             });
         }
         
@@ -470,7 +472,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         if (_authDelegate) {
             [_authDelegate authManager:self didGetSessionToken:sessionToken];
         } else {
-            _sessionToken = sessionToken;
+            dispatchSyncToAuthQueue(^{
+                _sessionToken = sessionToken;
+            });
             dispatchSyncToKeychainQueue(^{
                 UICKeyChainStore *store = [self.class sdkKeychainStore];
                 [store setString:_sessionToken forKey:self.sessionTokenKey];
@@ -487,7 +491,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (_authDelegate) {
         [_authDelegate authManager:self didGetSessionToken:nil];
     } else {
-        _sessionToken = nil;
+        dispatchSyncToAuthQueue(^{
+            _sessionToken = nil;
+        });
         dispatchSyncToKeychainQueue(^{
             UICKeyChainStore *store = [self.class sdkKeychainStore];
             [store setString:nil forKey:self.sessionTokenKey];
