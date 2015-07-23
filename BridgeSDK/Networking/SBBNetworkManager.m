@@ -411,16 +411,16 @@ NSString *kAPIPrefix = @"webservices";
     }
     
   NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
-    NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    __block NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
         NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if (error)
         {
-            [self handleError:error task:task retryObject:localRetryObject];
+            [self handleError:error task:task response:responseObject retryObject:localRetryObject];
         }
         else if (httpError)
         {
-            [self handleHTTPError:httpError task:task retryObject:localRetryObject];
+            [self handleHTTPError:httpError task:task response:responseObject retryObject:localRetryObject];
         }
         else
         {
@@ -539,7 +539,7 @@ NSString *kAPIPrefix = @"webservices";
     [mutableRequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:0 error:error]];
   }
 #if DEBUG
-    NSLog(@"Prepared request--URL:\n%@\nHeaders:\n%@", mutableRequest.URL.absoluteString, mutableRequest.allHTTPHeaderFields);
+    NSLog(@"Prepared request--URL:\n%@\nHeaders:\n%@\nBody:\n%@", mutableRequest.URL.absoluteString, mutableRequest.allHTTPHeaderFields, [[NSString alloc] initWithData:mutableRequest.HTTPBody encoding:NSUTF8StringEncoding]);
 #endif
   
   return mutableRequest;
@@ -647,7 +647,7 @@ NSString *kAPIPrefix = @"webservices";
 /*********************************************************************************/
 #pragma mark - Error Handler
 /*********************************************************************************/
-- (void)handleError:(NSError*)error task:(NSURLSessionDataTask*) task retryObject: (APCNetworkRetryObject*) retryObject
+- (void)handleError:(NSError*)error task:(NSURLSessionDataTask*)task response:(id)responseObject retryObject: (APCNetworkRetryObject*)retryObject
 {
     NSInteger errorCode = error.code;
     NSError * apcError = [NSError generateSBBErrorForNSURLError:error isInternetConnected:self.isInternetConnected isServerReachable:self.isServerReachable];
@@ -655,7 +655,7 @@ NSString *kAPIPrefix = @"webservices";
     if (!self.isInternetConnected || !self.isServerReachable) {
         if (retryObject.completionBlock)
         {
-            retryObject.completionBlock(task, nil, apcError);
+            retryObject.completionBlock(task, responseObject, apcError);
         }
         retryObject.retryBlock = nil;
     }
@@ -674,7 +674,7 @@ NSString *kAPIPrefix = @"webservices";
         {
             if (retryObject.completionBlock)
             {
-                retryObject.completionBlock(task, nil, apcError);
+                retryObject.completionBlock(task, responseObject, apcError);
             }
             retryObject.retryBlock = nil;
         }
@@ -683,18 +683,18 @@ NSString *kAPIPrefix = @"webservices";
     {
         if (retryObject.completionBlock)
         {
-            retryObject.completionBlock(task, nil, apcError);
+            retryObject.completionBlock(task, responseObject, apcError);
         }
         retryObject.retryBlock = nil;
     }
 }
 
-- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task retryObject:(APCNetworkRetryObject *)retryObject
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(APCNetworkRetryObject *)retryObject
 {
     //TODO: Add retry for Server maintenance
     if (retryObject.completionBlock)
     {
-        retryObject.completionBlock(task, nil, error);
+        retryObject.completionBlock(task, responseObject, error);
     }
     retryObject.retryBlock = nil;
 }

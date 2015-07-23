@@ -171,20 +171,36 @@
 		8026D6A019EC46E3008942B0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8026D69E19EC465B008942B0 /* libz.dylib */; };
 		8026D6A319EC531F008942B0 /* SBBAuthManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */; };
 		8026D6A519EC56E8008942B0 /* SBBSurveyManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A419EC56E8008942B0 /* SBBSurveyManagerUnitTests.m */; };
-		80314E8C1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */; };
-		80314E8F1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */; };
 		8053B62E1A00356000A2E6C4 /* _SBBResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8053B62C1A00356000A2E6C4 /* _SBBResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8053B62F1A00356000A2E6C4 /* _SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */; };
 		8053B6331A00357400A2E6C4 /* SBBResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8053B6311A00357400A2E6C4 /* SBBResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8053B6341A00357400A2E6C4 /* SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B6321A00357400A2E6C4 /* SBBResourceList.m */; };
+		807AE28C1B603309002588BB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28B1B603309002588BB /* main.m */; };
+		807AE28F1B60330A002588BB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28E1B60330A002588BB /* AppDelegate.m */; };
+		807AE2921B60330A002588BB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE2911B60330A002588BB /* ViewController.m */; };
+		807AE2951B60330A002588BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807AE2931B60330A002588BB /* Main.storyboard */; };
+		807AE2971B60330A002588BB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 807AE2961B60330A002588BB /* Images.xcassets */; };
+		807AE29A1B60330B002588BB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 807AE2981B60330B002588BB /* LaunchScreen.xib */; };
+		807AE2AD1B603472002588BB /* SBBTestAuthManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */; };
+		807AE2AE1B603498002588BB /* SBBBridgeAPIIntegrationTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */; };
+		807AE2AF1B60349D002588BB /* SBBAuthManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */; };
+		807AE2B61B6034AD002588BB /* TestAdminAuthDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */; };
+		807AE2B71B6034B5002588BB /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38021A2B144000E7CF1E /* sample-signature.png */; };
+		807AE2BA1B603552002588BB /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; };
+		807AE2BB1B6035F8002588BB /* SBBConsentManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786811B5AB1DC0029EAE6 /* SBBConsentManagerIntegrationTests.m */; };
+		807AE2BC1B6035FD002588BB /* SBBProfileManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786831B5BF71D0029EAE6 /* SBBProfileManagerIntegrationTests.m */; };
+		807AE2BD1B603601002588BB /* SBBScheduleManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786851B5BF7860029EAE6 /* SBBScheduleManagerIntegrationTests.m */; };
+		807AE2BE1B603605002588BB /* SBBSurveyManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786871B5BF79C0029EAE6 /* SBBSurveyManagerIntegrationTests.m */; };
+		807AE2BF1B603609002588BB /* SBBTaskManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B7868B1B5BF8350029EAE6 /* SBBTaskManagerIntegrationTests.m */; };
+		807AE2C01B60360D002588BB /* SBBUploadManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786891B5BF7AF0029EAE6 /* SBBUploadManagerIntegrationTests.m */; };
+		807AE2C11B603622002588BB /* cat.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 807AE2811B5F090E002588BB /* cat.jpg */; };
+		807AE2C21B60403E002588BB /* BridgeAdminCredentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80B7867F1B59CE3E0029EAE6 /* BridgeAdminCredentials.plist */; };
 		80855F5619BE258C006601C7 /* BridgeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F5519BE258C006601C7 /* BridgeSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		80855F6019BE258C006601C7 /* BridgeSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F5F19BE258C006601C7 /* BridgeSDKTests.m */; };
 		80855F7119BE27ED006601C7 /* SBBErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F6A19BE27ED006601C7 /* SBBErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80855F7219BE27ED006601C7 /* SBBNetworkManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F6B19BE27ED006601C7 /* SBBNetworkManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80855F7319BE27ED006601C7 /* SBBNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F6C19BE27ED006601C7 /* SBBNetworkManager.m */; };
 		80855F7D19BE41C9006601C7 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F7B19BE41C9006601C7 /* Reachability.h */; };
 		80855F7E19BE41C9006601C7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F7C19BE41C9006601C7 /* Reachability.m */; };
-		80B786801B59CE3E0029EAE6 /* BridgeAdminCredentials.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80B7867F1B59CE3E0029EAE6 /* BridgeAdminCredentials.plist */; };
 		80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BB09F619C2234100E419A1 /* SBBAuthManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80BB09F919C2234100E419A1 /* SBBAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BB09F719C2234100E419A1 /* SBBAuthManager.m */; };
 		80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */; };
@@ -239,6 +255,20 @@
 
 /* Begin PBXContainerItemProxy section */
 		8017AF6919D9E67C001AF9BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 80855F4F19BE258C006601C7;
+			remoteInfo = BridgeSDK;
+		};
+		807AE2A01B60330C002588BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 807AE2861B603309002588BB;
+			remoteInfo = BridgeSDKIntegration;
+		};
+		807AE2B81B603545002588BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
 			proxyType = 1;
@@ -368,25 +398,45 @@
 		8026D6A119EC49E1008942B0 /* SBBBridgeAPIUnitTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAPIUnitTestCase.h; sourceTree = "<group>"; };
 		8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBAuthManagerUnitTests.m; sourceTree = "<group>"; };
 		8026D6A419EC56E8008942B0 /* SBBSurveyManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSurveyManagerUnitTests.m; sourceTree = "<group>"; };
-		80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeAPIIntegrationTestCase.m; sourceTree = "<group>"; };
-		80314E8D1B56FF4700D029D3 /* SBBBridgeAPIIntegrationTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAPIIntegrationTestCase.h; sourceTree = "<group>"; };
-		80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBAuthManagerIntegrationTests.m; sourceTree = "<group>"; };
+		80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBBridgeAPIIntegrationTestCase.m; path = ../BridgeSDKTests/SBBBridgeAPIIntegrationTestCase.m; sourceTree = "<group>"; };
+		80314E8D1B56FF4700D029D3 /* SBBBridgeAPIIntegrationTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBBBridgeAPIIntegrationTestCase.h; path = ../BridgeSDKTests/SBBBridgeAPIIntegrationTestCase.h; sourceTree = "<group>"; };
+		80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBAuthManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBAuthManagerIntegrationTests.m; sourceTree = "<group>"; };
 		8053B62C1A00356000A2E6C4 /* _SBBResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBResourceList.h; sourceTree = "<group>"; };
 		8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBResourceList.m; sourceTree = "<group>"; };
 		8053B6311A00357400A2E6C4 /* SBBResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBResourceList.h; sourceTree = "<group>"; };
 		8053B6321A00357400A2E6C4 /* SBBResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBResourceList.m; sourceTree = "<group>"; };
+		807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdminAuthDelegate.h; path = ../BridgeSDKTests/TestAdminAuthDelegate.h; sourceTree = "<group>"; };
+		807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestAdminAuthDelegate.m; path = ../BridgeSDKTests/TestAdminAuthDelegate.m; sourceTree = "<group>"; };
+		807AE2811B5F090E002588BB /* cat.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = cat.jpg; path = ../BridgeSDKSample/cat.jpg; sourceTree = "<group>"; };
+		807AE2871B603309002588BB /* BridgeSDKIntegration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BridgeSDKIntegration.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		807AE28A1B603309002588BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		807AE28B1B603309002588BB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		807AE28D1B60330A002588BB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		807AE28E1B60330A002588BB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		807AE2901B60330A002588BB /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		807AE2911B60330A002588BB /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		807AE2941B60330A002588BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		807AE2961B60330A002588BB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		807AE2991B60330B002588BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		807AE29F1B60330C002588BB /* BridgeSDKIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BridgeSDKIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		807AE2A41B60330C002588BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80855F5019BE258C006601C7 /* BridgeSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BridgeSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		80855F5419BE258C006601C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		80855F5519BE258C006601C7 /* BridgeSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeSDK.h; sourceTree = "<group>"; };
 		80855F5B19BE258C006601C7 /* BridgeSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BridgeSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		80855F5E19BE258C006601C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		80855F5F19BE258C006601C7 /* BridgeSDKTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BridgeSDKTests.m; sourceTree = "<group>"; };
 		80855F6A19BE27ED006601C7 /* SBBErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBErrors.h; sourceTree = "<group>"; };
 		80855F6B19BE27ED006601C7 /* SBBNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBNetworkManager.h; sourceTree = "<group>"; };
 		80855F6C19BE27ED006601C7 /* SBBNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBNetworkManager.m; sourceTree = "<group>"; };
 		80855F7B19BE41C9006601C7 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		80855F7C19BE41C9006601C7 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		80B7867F1B59CE3E0029EAE6 /* BridgeAdminCredentials.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = BridgeAdminCredentials.plist; path = ../../BridgeAdminCredentials.plist; sourceTree = "<group>"; };
+		80B786811B5AB1DC0029EAE6 /* SBBConsentManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBConsentManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBConsentManagerIntegrationTests.m; sourceTree = "<group>"; };
+		80B786831B5BF71D0029EAE6 /* SBBProfileManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBProfileManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBProfileManagerIntegrationTests.m; sourceTree = "<group>"; };
+		80B786851B5BF7860029EAE6 /* SBBScheduleManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBScheduleManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBScheduleManagerIntegrationTests.m; sourceTree = "<group>"; };
+		80B786871B5BF79C0029EAE6 /* SBBSurveyManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBSurveyManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBSurveyManagerIntegrationTests.m; sourceTree = "<group>"; };
+		80B786891B5BF7AF0029EAE6 /* SBBUploadManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBUploadManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBUploadManagerIntegrationTests.m; sourceTree = "<group>"; };
+		80B7868B1B5BF8350029EAE6 /* SBBTaskManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBTaskManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBTaskManagerIntegrationTests.m; sourceTree = "<group>"; };
 		80BB09F619C2234100E419A1 /* SBBAuthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBAuthManager.h; sourceTree = "<group>"; };
 		80BB09F719C2234100E419A1 /* SBBAuthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBAuthManager.m; sourceTree = "<group>"; };
 		80C3D07419DCA03C00DEA044 /* BridgeSDK.hdoc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BridgeSDK.hdoc; path = BridgeSDK/BridgeSDK.hdoc; sourceTree = "<group>"; };
@@ -458,6 +508,21 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		807AE2841B603309002588BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				807AE2BA1B603552002588BB /* BridgeSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		807AE29C1B60330C002588BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		80855F4C19BE258C006601C7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -569,6 +634,59 @@
 			path = UICKeychainStore;
 			sourceTree = "<group>";
 		};
+		807AE2881B603309002588BB /* BridgeSDKIntegration */ = {
+			isa = PBXGroup;
+			children = (
+				807AE28D1B60330A002588BB /* AppDelegate.h */,
+				807AE28E1B60330A002588BB /* AppDelegate.m */,
+				807AE2901B60330A002588BB /* ViewController.h */,
+				807AE2911B60330A002588BB /* ViewController.m */,
+				807AE2931B60330A002588BB /* Main.storyboard */,
+				807AE2961B60330A002588BB /* Images.xcassets */,
+				807AE2981B60330B002588BB /* LaunchScreen.xib */,
+				807AE2891B603309002588BB /* Supporting Files */,
+			);
+			path = BridgeSDKIntegration;
+			sourceTree = "<group>";
+		};
+		807AE2891B603309002588BB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				807AE28A1B603309002588BB /* Info.plist */,
+				807AE28B1B603309002588BB /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		807AE2A21B60330C002588BB /* BridgeSDKIntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+				80314E8D1B56FF4700D029D3 /* SBBBridgeAPIIntegrationTestCase.h */,
+				80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */,
+				80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */,
+				80B786811B5AB1DC0029EAE6 /* SBBConsentManagerIntegrationTests.m */,
+				80B786831B5BF71D0029EAE6 /* SBBProfileManagerIntegrationTests.m */,
+				80B786851B5BF7860029EAE6 /* SBBScheduleManagerIntegrationTests.m */,
+				80B786871B5BF79C0029EAE6 /* SBBSurveyManagerIntegrationTests.m */,
+				80B7868B1B5BF8350029EAE6 /* SBBTaskManagerIntegrationTests.m */,
+				80B786891B5BF7AF0029EAE6 /* SBBUploadManagerIntegrationTests.m */,
+				807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */,
+				807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */,
+				807AE2811B5F090E002588BB /* cat.jpg */,
+				80B7867F1B59CE3E0029EAE6 /* BridgeAdminCredentials.plist */,
+				807AE2A31B60330C002588BB /* Supporting Files */,
+			);
+			path = BridgeSDKIntegrationTests;
+			sourceTree = "<group>";
+		};
+		807AE2A31B60330C002588BB /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				807AE2A41B60330C002588BB /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		80855F4619BE258B006601C7 = {
 			isa = PBXGroup;
 			children = (
@@ -578,6 +696,8 @@
 				80C3D07519DCA03C00DEA044 /* TemplateIcon2x.png */,
 				80855F5219BE258C006601C7 /* BridgeSDK */,
 				80855F5C19BE258C006601C7 /* BridgeSDKTests */,
+				807AE2881B603309002588BB /* BridgeSDKIntegration */,
+				807AE2A21B60330C002588BB /* BridgeSDKIntegrationTests */,
 				80855F5119BE258C006601C7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -587,6 +707,8 @@
 			children = (
 				80855F5019BE258C006601C7 /* BridgeSDK.framework */,
 				80855F5B19BE258C006601C7 /* BridgeSDKTests.xctest */,
+				807AE2871B603309002588BB /* BridgeSDKIntegration.app */,
+				807AE29F1B60330C002588BB /* BridgeSDKIntegrationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -616,13 +738,9 @@
 		80855F5C19BE258C006601C7 /* BridgeSDKTests */ = {
 			isa = PBXGroup;
 			children = (
-				80855F5F19BE258C006601C7 /* BridgeSDKTests.m */,
 				8026D6A119EC49E1008942B0 /* SBBBridgeAPIUnitTestCase.h */,
 				8026D69A19EC3F4A008942B0 /* SBBBridgeAPIUnitTestCase.m */,
-				80314E8D1B56FF4700D029D3 /* SBBBridgeAPIIntegrationTestCase.h */,
-				80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */,
 				8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */,
-				80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */,
 				D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */,
 				8017AF6719D9D909001AF9BA /* SBBObjectManagerTests.m */,
 				8026D69C19EC4025008942B0 /* SBBProfileManagerUnitTests.m */,
@@ -639,7 +757,6 @@
 				601E8A0F1B191DAE00BB02FB /* MockURLSession.m */,
 				D4FA38021A2B144000E7CF1E /* sample-signature.png */,
 				80855F5D19BE258C006601C7 /* Supporting Files */,
-				80B7867F1B59CE3E0029EAE6 /* BridgeAdminCredentials.plist */,
 			);
 			path = BridgeSDKTests;
 			sourceTree = "<group>";
@@ -914,6 +1031,42 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		807AE2861B603309002588BB /* BridgeSDKIntegration */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 807AE2A71B60330D002588BB /* Build configuration list for PBXNativeTarget "BridgeSDKIntegration" */;
+			buildPhases = (
+				807AE2831B603309002588BB /* Sources */,
+				807AE2841B603309002588BB /* Frameworks */,
+				807AE2851B603309002588BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				807AE2B91B603545002588BB /* PBXTargetDependency */,
+			);
+			name = BridgeSDKIntegration;
+			productName = BridgeSDKIntegration;
+			productReference = 807AE2871B603309002588BB /* BridgeSDKIntegration.app */;
+			productType = "com.apple.product-type.application";
+		};
+		807AE29E1B60330C002588BB /* BridgeSDKIntegrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 807AE2AA1B60330D002588BB /* Build configuration list for PBXNativeTarget "BridgeSDKIntegrationTests" */;
+			buildPhases = (
+				807AE29B1B60330C002588BB /* Sources */,
+				807AE29C1B60330C002588BB /* Frameworks */,
+				807AE29D1B60330C002588BB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				807AE2A11B60330C002588BB /* PBXTargetDependency */,
+			);
+			name = BridgeSDKIntegrationTests;
+			productName = BridgeSDKIntegrationTests;
+			productReference = 807AE29F1B60330C002588BB /* BridgeSDKIntegrationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		80855F4F19BE258C006601C7 /* BridgeSDK */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 80855F6319BE258C006601C7 /* Build configuration list for PBXNativeTarget "BridgeSDK" */;
@@ -960,6 +1113,13 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Sage Bionetworks";
 				TargetAttributes = {
+					807AE2861B603309002588BB = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					807AE29E1B60330C002588BB = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = 807AE2861B603309002588BB;
+					};
 					80855F4F19BE258C006601C7 = {
 						CreatedOnToolsVersion = 6.0;
 					};
@@ -983,6 +1143,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 80855F4619BE258B006601C7;
 			productRefGroup = 80855F5119BE258C006601C7 /* Products */;
@@ -995,11 +1156,33 @@
 				F52619FB19D9F73400B48C90 /* FrameworkBuilder */,
 				80E09AD019F8493100EB5F0B /* Documentation */,
 				F50981C91AA57B1E002E2264 /* AppStoreFrameworkBuilder */,
+				807AE2861B603309002588BB /* BridgeSDKIntegration */,
+				807AE29E1B60330C002588BB /* BridgeSDKIntegrationTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		807AE2851B603309002588BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				807AE2951B60330A002588BB /* Main.storyboard in Resources */,
+				807AE29A1B60330B002588BB /* LaunchScreen.xib in Resources */,
+				807AE2971B60330A002588BB /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		807AE29D1B60330C002588BB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				807AE2C11B603622002588BB /* cat.jpg in Resources */,
+				807AE2C21B60403E002588BB /* BridgeAdminCredentials.plist in Resources */,
+				807AE2B71B6034B5002588BB /* sample-signature.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		80855F4E19BE258C006601C7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1011,7 +1194,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80B786801B59CE3E0029EAE6 /* BridgeAdminCredentials.plist in Resources */,
 				D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1074,6 +1256,33 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		807AE2831B603309002588BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				807AE2921B60330A002588BB /* ViewController.m in Sources */,
+				807AE28F1B60330A002588BB /* AppDelegate.m in Sources */,
+				807AE28C1B603309002588BB /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		807AE29B1B60330C002588BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				807AE2BC1B6035FD002588BB /* SBBProfileManagerIntegrationTests.m in Sources */,
+				807AE2BB1B6035F8002588BB /* SBBConsentManagerIntegrationTests.m in Sources */,
+				807AE2BD1B603601002588BB /* SBBScheduleManagerIntegrationTests.m in Sources */,
+				807AE2C01B60360D002588BB /* SBBUploadManagerIntegrationTests.m in Sources */,
+				807AE2B61B6034AD002588BB /* TestAdminAuthDelegate.m in Sources */,
+				807AE2BE1B603605002588BB /* SBBSurveyManagerIntegrationTests.m in Sources */,
+				807AE2BF1B603609002588BB /* SBBTaskManagerIntegrationTests.m in Sources */,
+				807AE2AE1B603498002588BB /* SBBBridgeAPIIntegrationTestCase.m in Sources */,
+				807AE2AD1B603472002588BB /* SBBTestAuthManagerDelegate.m in Sources */,
+				807AE2AF1B60349D002588BB /* SBBAuthManagerIntegrationTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		80855F4B19BE258C006601C7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1165,7 +1374,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */,
-				80855F6019BE258C006601C7 /* BridgeSDKTests.m in Sources */,
 				80104A4A19D3631E001F2573 /* MockNetworkManager.m in Sources */,
 				D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m in Sources */,
 				601E8A101B191DAE00BB02FB /* MockURLSession.m in Sources */,
@@ -1174,11 +1382,9 @@
 				8026D69B19EC3F4A008942B0 /* SBBBridgeAPIUnitTestCase.m in Sources */,
 				8026D6A519EC56E8008942B0 /* SBBSurveyManagerUnitTests.m in Sources */,
 				80E60DAB19FB0D7E0053D166 /* SBBScheduleManagerUnitTests.m in Sources */,
-				80314E8C1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m in Sources */,
 				8026D69D19EC4025008942B0 /* SBBProfileManagerUnitTests.m in Sources */,
 				8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObject.m in Sources */,
 				8026D6A319EC531F008942B0 /* SBBAuthManagerUnitTests.m in Sources */,
-				80314E8F1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1190,9 +1396,108 @@
 			target = 80855F4F19BE258C006601C7 /* BridgeSDK */;
 			targetProxy = 8017AF6919D9E67C001AF9BA /* PBXContainerItemProxy */;
 		};
+		807AE2A11B60330C002588BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 807AE2861B603309002588BB /* BridgeSDKIntegration */;
+			targetProxy = 807AE2A01B60330C002588BB /* PBXContainerItemProxy */;
+		};
+		807AE2B91B603545002588BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 80855F4F19BE258C006601C7 /* BridgeSDK */;
+			targetProxy = 807AE2B81B603545002588BB /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		807AE2931B60330A002588BB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				807AE2941B60330A002588BB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		807AE2981B60330B002588BB /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				807AE2991B60330B002588BB /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		807AE2A81B60330D002588BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BridgeSDKIntegration/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		807AE2A91B60330D002588BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = BridgeSDKIntegration/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		807AE2AB1B60330D002588BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = BridgeSDKIntegrationTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeSDKIntegration.app/BridgeSDKIntegration";
+			};
+			name = Debug;
+		};
+		807AE2AC1B60330D002588BB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = BridgeSDKIntegrationTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BridgeSDKIntegration.app/BridgeSDKIntegration";
+			};
+			name = Release;
+		};
 		80855F6119BE258C006601C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1417,6 +1722,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		807AE2A71B60330D002588BB /* Build configuration list for PBXNativeTarget "BridgeSDKIntegration" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				807AE2A81B60330D002588BB /* Debug */,
+				807AE2A91B60330D002588BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		807AE2AA1B60330D002588BB /* Build configuration list for PBXNativeTarget "BridgeSDKIntegrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				807AE2AB1B60330D002588BB /* Debug */,
+				807AE2AC1B60330D002588BB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		80855F4A19BE258B006601C7 /* Build configuration list for PBXProject "BridgeSDK" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

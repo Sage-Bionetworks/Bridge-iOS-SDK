@@ -316,7 +316,15 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [_networkManager get:@"/api/v1/auth/signOut" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Remove the session token (and credentials?) from the keychain
         // ??? Do we want to not do this in case of error?
-        if (!_authDelegate) {
+        if (_authDelegate) {
+            if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forUsername:andPassword:)] &&
+                [_authDelegate respondsToSelector:@selector(usernameForAuthManager:)] &&
+                [_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
+                [_authDelegate authManager:self didGetSessionToken:nil forUsername:nil andPassword:nil];
+            } else {
+                [_authDelegate authManager:self didGetSessionToken:nil];
+            }
+        } else {
             dispatchSyncToKeychainQueue(^{
                 UICKeyChainStore *store = [self.class sdkKeychainStore];
                 [store removeItemForKey:self.sessionTokenKey];

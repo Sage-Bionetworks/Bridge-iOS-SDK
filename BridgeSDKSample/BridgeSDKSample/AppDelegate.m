@@ -84,16 +84,29 @@ static NSString *kPasswordKey = @"BridgeSDKSamplePassword";
 - (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken
 {
     // ***** REALLY BAD IDEA. DEMO ONLY. DON'T EVER DO THIS IN A REAL APP. *****
-    [[NSUserDefaults standardUserDefaults] setObject:sessionToken forKey:kSessionTokenKey];
+    if (sessionToken) {
+        [[NSUserDefaults standardUserDefaults] setObject:sessionToken forKey:kSessionTokenKey];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kSessionTokenKey];
+    }
 }
 
 - (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken forUsername:(NSString *)username andPassword:(NSString *)password
 {
     [self authManager:authManager didGetSessionToken:sessionToken];
-    [[NSUserDefaults standardUserDefaults] setObject:username forKey:kUsernameKey];
+    
+    if (username) {
+        [[NSUserDefaults standardUserDefaults] setObject:username forKey:kUsernameKey];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUsernameKey];
+    }
     
     // ***** REALLY BAD IDEA. DEMO ONLY. DON'T EVER DO THIS IN A REAL APP. *****
-    [[NSUserDefaults standardUserDefaults] setObject:password forKey:kPasswordKey];
+    if (password) {
+        [[NSUserDefaults standardUserDefaults] setObject:password forKey:kPasswordKey];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPasswordKey];
+    }
 }
 
 - (NSString *)sessionTokenForAuthManager:(id<SBBAuthManagerProtocol>)authManager

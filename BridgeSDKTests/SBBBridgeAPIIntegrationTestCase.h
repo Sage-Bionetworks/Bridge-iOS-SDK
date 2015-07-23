@@ -17,7 +17,9 @@ typedef void (^SBBBridgeAPIIntegrationTestCaseCreateCompletionBlock)(NSString *e
 @property (nonatomic, strong) NSString *testUserUsername;
 @property (nonatomic, strong) NSString *testUserPassword;
 
-- (void)createTestUserConsented:(BOOL)consented completionHandler:(SBBBridgeAPIIntegrationTestCaseCreateCompletionBlock)completion;
+@property (nonatomic, strong) id testSignInResponseObject;
+
+- (void)createTestUserConsented:(BOOL)consented roles:(NSArray *)roles completionHandler:(SBBBridgeAPIIntegrationTestCaseCreateCompletionBlock)completion;
 - (void)deleteUser:(NSString *)emailAddress completionHandler:(SBBNetworkManagerCompletionBlock)completion;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
 #import "SBBAuthManagerInternal.h"
+#import "SBBTestAuthManagerDelegate.h"
 
 @interface SBBAuthManagerIntegrationTests : SBBBridgeAPIIntegrationTestCase
 
@@ -65,8 +66,10 @@
 }
 
 - (void)testSignInSignOut {
-    // we need our own auth manager instance so we don't eff with the global test user
-    SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBBridgeNetworkManager)];
+    // we need our own auth manager instance (with its own delegate) so we don't eff with the global test user
+    SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
+    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
+    aMan.authDelegate = delegate;
     XCTestExpectation *expectBadUserFails = [self expectationWithDescription:@"signIn failed for nonexistent user"];
 
     [aMan signInWithUsername:@"notSignedUp" password:@"notAPassword" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
@@ -83,7 +86,7 @@
     XCTestExpectation *expect412Unconsented = [self expectationWithDescription:@"signIn returns a 412 status code for unconsented user"];
     
     __block NSString *unconsentedEmail = nil;
-    [self createTestUserConsented:NO completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             unconsentedEmail = emailAddress;
             [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
@@ -111,7 +114,7 @@
     
     XCTestExpectation *expectSignedIn = [self expectationWithDescription:@"consented test user signed in"];
     __block NSString *consentedEmail = nil;
-    [self createTestUserConsented:YES completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             consentedEmail = emailAddress;
             [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {

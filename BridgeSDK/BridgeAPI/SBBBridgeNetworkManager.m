@@ -73,7 +73,7 @@
     return self;
 }
 
-- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task retryObject:(APCNetworkRetryObject *)retryObject
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(APCNetworkRetryObject *)retryObject
 {
     if (retryObject && retryObject.retryBlock && error.code == kSBBServerNotAuthenticated && [_authManager isAuthenticated])
     {
@@ -90,7 +90,7 @@
 #if DEBUG
                 NSLog(@"Session token auto-refresh failed:\n%@", error);
 #endif
-                [super handleHTTPError:error task:task retryObject:retryObject];
+                [super handleHTTPError:error task:task response:responseObject retryObject:retryObject];
             } else {
 #if DEBUG
                 NSLog(@"Session token auto-refresh succeeded, retrying original request");
@@ -102,7 +102,7 @@
             }
         }];
     } else {
-        [super handleHTTPError:error task:task retryObject:retryObject];
+        [super handleHTTPError:error task:task response:responseObject retryObject:retryObject];
     }
 }
 
