@@ -1,10 +1,7 @@
 //
-//  SBBScheduleManager.m
-//  BridgeSDK
+//  SBBUserSessionInfo.h
 //
-//  Created by Erin Mounts on 10/24/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -29,42 +26,41 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBUserSessionInfo.h instead.
+//
 
-#import "SBBScheduleManagerInternal.h"
-#import "SBBComponentManager.h"
-#import "SBBAuthManager.h"
-#import "SBBObjectManager.h"
-#import "SBBBridgeObjects.h"
-#import "BridgeSDKInternal.h"
+#import <Foundation/Foundation.h>
+#import "SBBBridgeObject.h"
 
-#define SCHEDULE_API GLOBAL_API_PREFIX @"/schedules"
+@protocol _SBBUserSessionInfo
 
-NSString * const kSBBScheduleAPI =       SCHEDULE_API;
+@end
 
-@implementation SBBScheduleManager
+@interface _SBBUserSessionInfo : SBBBridgeObject
 
-+ (instancetype)defaultComponent
-{
-  static SBBScheduleManager *shared;
-  
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    shared = [self instanceWithRegisteredDependencies];
-  });
-  
-  return shared;
-}
+@property (nonatomic, strong) NSNumber* authenticated;
 
-- (NSURLSessionDataTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBScheduleAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    SBBResourceList *schedules = [self.objectManager objectFromBridgeJSON:responseObject];
-    if (completion) {
-      completion(schedules, error);
-    }
-  }];
-}
+@property (nonatomic, assign) BOOL authenticatedValue;
+
+@property (nonatomic, strong) NSNumber* consented;
+
+@property (nonatomic, assign) BOOL consentedValue;
+
+@property (nonatomic, strong) NSNumber* dataSharing;
+
+@property (nonatomic, assign) BOOL dataSharingValue;
+
+@property (nonatomic, strong) NSString* environment;
+
+@property (nonatomic, strong) NSString* sessionToken;
+
+@property (nonatomic, strong) NSString* sharingScope;
+
+@property (nonatomic, strong) NSNumber* signedMostRecentConsent;
+
+@property (nonatomic, assign) BOOL signedMostRecentConsentValue;
+
+@property (nonatomic, strong) NSString* username;
 
 @end

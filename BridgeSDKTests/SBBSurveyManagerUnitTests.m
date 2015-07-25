@@ -8,6 +8,7 @@
 
 #import "SBBBridgeAPIUnitTestCase.h"
 #import "NSDate+SBBAdditions.h"
+#import "SBBSurveyManagerInternal.h"
 
 @interface SBBSurveyManagerUnitTests : SBBBridgeAPIUnitTestCase
 
@@ -20,8 +21,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-  
-  NSString *sampleSurveyJsonString = @"{\n"
+    
+    NSString *sampleSurveyJsonString = @"{\n"
     "\"guid\":\"55d9973d-1092-42b0-81e2-bbfb86f483c0\",\n"
     "\"createdOn\":\"2014-10-09T23:30:44.747Z\",\n"
     "\"modifiedOn\":\"2014-10-09T23:30:44.747Z\",\n"
@@ -222,66 +223,83 @@
                  "}\n"
                  "],\n"
     "\"type\":\"Survey\"\n"
-  "}";
-  NSData *jsonData = [sampleSurveyJsonString dataUsingEncoding:NSUTF8StringEncoding];
-  _sampleSurveyJSON = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:NULL];
+    "}";
+    NSData *jsonData = [sampleSurveyJsonString dataUsingEncoding:NSUTF8StringEncoding];
+    _sampleSurveyJSON = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:NULL];
 }
 
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
-  _sampleSurveyJSON = nil;
+    _sampleSurveyJSON = nil;
 }
 
 - (void)testGetSurveyByRef {
-  [self.mockURLSession setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:@"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z" andMethod:@"GET"];
-  SBBObjectManager *oMan = [SBBObjectManager objectManager];
-  SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
-  [sMan getSurveyByRef:@"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z" completion:^(id survey, NSError *error) {
-    XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
-    SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
-    XCTAssert([info0 isKindOfClass:[SBBSurveyInfoScreen class]], @"Survey Info Screen converted to SBBSurveyInfoScreen");
-    XCTAssert([info0.image isKindOfClass:[SBBImage class]], @"Image converted to SBBImage");
-    SBBSurveyQuestion *question0 = ((SBBSurvey *)survey).elements[1];
-    XCTAssert([question0 isKindOfClass:[SBBSurveyQuestion class]], @"Questions converted to SBBSurveyQuestion");
-    XCTAssert([question0.constraints isKindOfClass:[SBBSurveyConstraints class]], @"Constraints converted to SBBSurveyConstraints");
-  }];
+    NSString *ref = @"/v3/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
+    [self.mockURLSession setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:ref andMethod:@"GET"];
+    SBBObjectManager *oMan = [SBBObjectManager objectManager];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+    XCTestExpectation *expectGotSurvey = [self expectationWithDescription:@"got survey by ref"];
+    [sMan getSurveyByRef:ref completion:^(id survey, NSError *error) {
+        XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
+        SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
+        XCTAssert([info0 isKindOfClass:[SBBSurveyInfoScreen class]], @"Survey Info Screen converted to SBBSurveyInfoScreen");
+        XCTAssert([info0.image isKindOfClass:[SBBImage class]], @"Image converted to SBBImage");
+        SBBSurveyQuestion *question0 = ((SBBSurvey *)survey).elements[1];
+        XCTAssert([question0 isKindOfClass:[SBBSurveyQuestion class]], @"Questions converted to SBBSurveyQuestion");
+        XCTAssert([question0.constraints isKindOfClass:[SBBSurveyConstraints class]], @"Constraints converted to SBBSurveyConstraints");
+        [expectGotSurvey fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to get survey by ref:\n%@", error);
+        }
+    }];
 }
 
 - (void)testGetSurveyByGuidCreatedOn {
-  NSString *endpoint = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
-  NSArray *pathComponents = [endpoint componentsSeparatedByString:@"/"];
-  NSString *guid = pathComponents[pathComponents.count - 3];
-  NSDate *createdOn = [NSDate dateWithISO8601String:pathComponents[pathComponents.count - 1]];
-  [self.mockURLSession setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
-  SBBObjectManager *oMan = [SBBObjectManager objectManager];
-  SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
-  [sMan getSurveyByGuid:guid createdOn:createdOn completion:^(id survey, NSError *error) {
-    XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
-    SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
-    XCTAssert([info0 isKindOfClass:[SBBSurveyInfoScreen class]], @"Survey Info Screen converted to SBBSurveyInfoScreen");
-    XCTAssert([info0.image isKindOfClass:[SBBImage class]], @"Image converted to SBBImage");
-    SBBSurveyQuestion *question0 = ((SBBSurvey *)survey).elements[1];
-    XCTAssert([question0 isKindOfClass:[SBBSurveyQuestion class]], @"Questions converted to SBBSurveyQuestion");
-    XCTAssert([question0.constraints isKindOfClass:[SBBSurveyConstraints class]], @"Constraints converted to SBBSurveyConstraints");
-  }];
+    NSString *guid = @"55d9973d-1092-42b0-81e2-bbfb86f483c0";
+    NSString *createdOnISO8601 = @"2014-10-09T23:30:44.747Z";
+    NSDate *createdOn = [NSDate dateWithISO8601String:createdOnISO8601];
+    NSString *endpoint = [NSString stringWithFormat:kSBBSurveyAPIFormat, guid, createdOnISO8601];
+    [self.mockURLSession setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    SBBObjectManager *oMan = [SBBObjectManager objectManager];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+    XCTestExpectation *expectGotSurvey = [self expectationWithDescription:@"got survey by guid/createdOn"];
+    [sMan getSurveyByGuid:guid createdOn:createdOn completion:^(id survey, NSError *error) {
+        XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
+        SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
+        XCTAssert([info0 isKindOfClass:[SBBSurveyInfoScreen class]], @"Survey Info Screen converted to SBBSurveyInfoScreen");
+        XCTAssert([info0.image isKindOfClass:[SBBImage class]], @"Image converted to SBBImage");
+        SBBSurveyQuestion *question0 = ((SBBSurvey *)survey).elements[1];
+        XCTAssert([question0 isKindOfClass:[SBBSurveyQuestion class]], @"Questions converted to SBBSurveyQuestion");
+        XCTAssert([question0.constraints isKindOfClass:[SBBSurveyConstraints class]], @"Constraints converted to SBBSurveyConstraints");
+        [expectGotSurvey fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to get survey by guid/createdOn:\n%@", error);
+        }
+    }];
 }
 
 - (NSArray *)someAnswers {
-  NSMutableArray *answers = [NSMutableArray array];
-  SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
-  a1.questionGuid = @"e872f85a-c157-457b-890f-9e28eeed6efa";
-  a1.answers = @[@"true"];
-  a1.answeredOn = [NSDate date];
-  a1.client = @"test";
-  a1.declined = @NO;
-  [answers addObject:a1];
-  SBBSurveyAnswer *a2 = [a1 copy];
-  a2.questionGuid = @"c374b293-a060-47c9-bd99-2738837967a8";
-  a2.answers = @[[[NSDate dateWithTimeIntervalSinceNow:-5000000.0] ISO8601String]];
-  [answers addObject:a2];
-  
-  return answers;
+    NSMutableArray *answers = [NSMutableArray array];
+    SBBSurveyAnswer *a1 = [SBBSurveyAnswer new];
+    a1.questionGuid = @"e872f85a-c157-457b-890f-9e28eeed6efa";
+    a1.answers = @[@"true"];
+    a1.answeredOn = [NSDate date];
+    a1.client = @"test";
+    a1.declined = @NO;
+    [answers addObject:a1];
+    SBBSurveyAnswer *a2 = [a1 copy];
+    a2.questionGuid = @"c374b293-a060-47c9-bd99-2738837967a8";
+    a2.answers = @[[[NSDate dateWithTimeIntervalSinceNow:-5000000.0] ISO8601String]];
+    [answers addObject:a2];
+    
+    return answers;
 }
 
 - (void)testSubmitAnswersToSurveyBySBBSurvey {
@@ -290,14 +308,23 @@
       @"type": @"IdentifierHolder",
       @"identifier": @"ThisIsn'tAGuid"
       };
-    NSString *endpoint = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
-    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
     SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     SBBSurvey *survey = [oMan objectFromBridgeJSON:_sampleSurveyJSON];
     NSArray *answers = [self someAnswers];
+    NSString *createdOnISO8601 = [survey.createdOn ISO8601StringUTC];
+    NSString *endpoint = [NSString stringWithFormat:kSBBSurveyResponseSubmitAPIFormat, survey.guid, createdOnISO8601];
+    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
+    XCTestExpectation *expectAnswers = [self expectationWithDescription:@"submitted survey answers"];
     [sMan submitAnswers:answers toSurvey:survey completion:^(id identifierHolder, NSError *error) {
         XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
+        [expectAnswers fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to submit survey answers:\n%@", error);
+        }
     }];
 }
 
@@ -308,54 +335,28 @@
       @"type": @"IdentifierHolder",
       @"identifier": @"ThisIsn'tAGuid"
       };
-    NSString *surveyRef = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
-    NSString *responseIdentifier = identifierHolder[@"identifier"];
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", surveyRef, responseIdentifier];
-    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
     SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     SBBSurvey *survey = [oMan objectFromBridgeJSON:_sampleSurveyJSON];
+    NSString *createdOnISO8601 = [survey.createdOn ISO8601StringUTC];
+    NSString *responseIdentifier = identifierHolder[@"identifier"];
+    NSString *endpoint = [NSString stringWithFormat:kSBBSurveyResponseSubmitIdentifierAPIFormat, survey.guid, createdOnISO8601, responseIdentifier];
+    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     NSArray *answers = [self someAnswers];
+    XCTestExpectation *expectAnswers = [self expectationWithDescription:@"submitted survey answers"];
     [sMan submitAnswers:answers toSurvey:survey withResponseIdentifier:responseIdentifier completion:^(id identifierHolder, NSError *error) {
         XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
         XCTAssert([responseIdentifier isEqualToString:((SBBIdentifierHolder *)identifierHolder).identifier], @"Response identifier is equal to what was specified");
+        [expectAnswers fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to submit survey answers:\n%@", error);
+        }
     }];
 }
 
-- (void)testSubmitAnswersToSurveyByRef {
-    NSDictionary *identifierHolder =
-    @{
-      @"type": @"IdentifierHolder",
-      @"identifier": @"ThisIsn'tAGuid"
-      };
-    NSString *endpoint = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
-    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
-    SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
-    NSArray *answers = [self someAnswers];
-    [sMan submitAnswers:answers toSurveyByRef:endpoint completion:^(id identifierHolder, NSError *error) {
-        XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
-    }];
-}
-
-- (void)testSubmitAnswersToSurveyByRefWithResponseGuid {
-    NSDictionary *identifierHolder =
-    @{
-      @"type": @"IdentifierHolder",
-      @"identifier": @"ThisIsn'tAGuid"
-      };
-    NSString *surveyRef = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
-    NSString *responseIdentifier = identifierHolder[@"identifier"];
-    NSString *endpoint = [NSString stringWithFormat:@"%@/%@", surveyRef, responseIdentifier];
-    [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
-    SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
-    NSArray *answers = [self someAnswers];
-    [sMan submitAnswers:answers toSurveyByRef:surveyRef withResponseIdentifier:responseIdentifier completion:^(id identifierHolder, NSError *error) {
-        XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
-        XCTAssert([responseIdentifier isEqualToString:((SBBIdentifierHolder *)identifierHolder).identifier], @"Response identifier is equal to what was specified");
-    }];
-}
 
 - (void)testSubmitAnswersToSurveyByGuidCreatedOn {
     NSDictionary *identifierHolder =
@@ -363,19 +364,27 @@
       @"type": @"IdentifierHolder",
       @"identifier": @"ThisIsn'tAGuid"
       };
-    NSString *endpoint = @"/api/v2/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
-    NSArray *pathComponents = [endpoint componentsSeparatedByString:@"/"];
-    NSString *guid = pathComponents[pathComponents.count - 3];
-    NSDate *createdOn = [NSDate dateWithISO8601String:pathComponents[pathComponents.count - 1]];
+    NSString *guid = @"55d9973d-1092-42b0-81e2-bbfb86f483c0";
+    NSString *createdOnISO8601 = @"2014-10-09T23:30:44.747Z";
+    NSDate *createdOn = [NSDate dateWithISO8601String:createdOnISO8601];
+    NSString *endpoint = [NSString stringWithFormat:kSBBSurveyResponseSubmitAPIFormat, guid, createdOnISO8601];
     [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
     SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+    XCTestExpectation *expectAnswers = [self expectationWithDescription:@"submitted survey answers"];
     [sMan submitAnswers:[self someAnswers] toSurveyByGuid:guid createdOn:createdOn completion:^(id identifierHolder, NSError *error) {
         XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
+        [expectAnswers fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to submit survey answers:\n%@", error);
+        }
     }];
 }
 
-- (void)testSubmitAnswersToSurveyByGuidCreatedOnWithResponseGuid {
+- (void)testSubmitAnswersToSurveyByGuidCreatedOnWithResponseIdentifier {
     NSDictionary *identifierHolder =
     @{
       @"type": @"IdentifierHolder",
@@ -384,27 +393,35 @@
     NSString *guid = @"55d9973d-1092-42b0-81e2-bbfb86f483c0";
     NSString *createdOnString = @"2014-10-09T23:30:44.747Z";
     NSString *responseIdentifier = identifierHolder[@"identifier"];
-    NSString *endpoint = [NSString stringWithFormat:@"/api/v2/surveys/%@/revisions/%@/%@", guid, createdOnString, responseIdentifier];
+    NSString *endpoint = [NSString stringWithFormat:kSBBSurveyResponseSubmitIdentifierAPIFormat, guid, createdOnString, responseIdentifier];
     NSDate *createdOn = [NSDate dateWithISO8601String:createdOnString];
     [self.mockURLSession setJson:identifierHolder andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
     SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+    XCTestExpectation *expectAnswers = [self expectationWithDescription:@"submitted survey answers"];
     [sMan submitAnswers:[self someAnswers] toSurveyByGuid:guid createdOn:createdOn withResponseIdentifier:responseIdentifier completion:^(id identifierHolder, NSError *error) {
         XCTAssert([identifierHolder isKindOfClass:[SBBIdentifierHolder class]], @"IdentifierHolder converted to SBBIdentifierHolder");
         XCTAssert([responseIdentifier isEqualToString:((SBBIdentifierHolder *)identifierHolder).identifier], @"Response identifier is equal to what was specified");
+        [expectAnswers fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to submit survey answers:\n%@", error);
+        }
     }];
 }
 
 - (void)testGetSurveyResponse {
-  
+    
 }
 
 - (void)testAddAnswersToSurveyResponse {
-  
+    
 }
 
 - (void)testDeleteSurveyResponse {
-  
+    
 }
 
 @end

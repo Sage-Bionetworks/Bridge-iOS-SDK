@@ -33,7 +33,9 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-#import "SBBGuidCreatedOnVersionHolder.h"
+#import "SBBSurveyReference.h"
+#import "SBBSurveyResponseReference.h"
+#import "SBBTaskReference.h"
 
 @protocol _SBBActivity
 
@@ -45,8 +47,12 @@
 
 @property (nonatomic, strong) NSString* label;
 
-@property (nonatomic, strong) NSString* ref;
+@property (nonatomic, strong) NSString* labelDetail;
 
-@property (nonatomic, strong) SBBGuidCreatedOnVersionHolder* survey;
+@property (nonatomic, strong) SBBSurveyReference* survey;
+
+@property (nonatomic, strong) SBBSurveyResponseReference* surveyResponse;
+
+@property (nonatomic, strong) SBBTaskReference* task;
 
 @end

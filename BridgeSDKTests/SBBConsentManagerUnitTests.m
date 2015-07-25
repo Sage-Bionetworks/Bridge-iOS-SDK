@@ -28,7 +28,7 @@
 - (void)testRetrieve {
   // construct consent manager with mock response
   NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01"};
-  [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:kSBBApiConsentV1 andMethod:@"GET"];
+  [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:kSBBConsentAPI andMethod:@"GET"];
   SBBConsentManager* consentMan = (SBBConsentManager *)SBBComponent(SBBConsentManager);
 
   // execute and validate
@@ -49,7 +49,7 @@
   // construct consent manager with mock response
   NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01",
     kSBBKeyImageData:imageBase64String, kSBBKeyImageMimeType:kSBBMimeTypePng};
-  [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:kSBBApiConsentV1 andMethod:@"GET"];
+  [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:kSBBConsentAPI andMethod:@"GET"];
   id<SBBConsentManagerProtocol> consentMan = SBBComponent(SBBConsentManager);
 
   // execute and validate

@@ -1,5 +1,5 @@
 //
-//  SBBProfileManager.m
+//  SBBUserManager.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 9/23/14.
@@ -30,16 +30,30 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBProfileManager.h"
+#import "SBBUserManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
+#import "BridgeSDKInternal.h"
 
-@implementation SBBProfileManager
+#define USER_API GLOBAL_API_PREFIX @"/users/self"
+
+NSString * const kSBBUserProfileAPI =       USER_API;
+NSString * const kSBBUserExternalIdAPI =    USER_API @"/externalId";
+NSString * const kSBBUserDataSharingAPI =     USER_API @"/dataSharing";
+
+NSString * const kSBBUserDataSharingScopeKey = @"scope";
+NSString* const kSBBUserDataSharingScopeStrings[] = {
+    @"no_sharing",
+    @"sponsors_and_partners",
+    @"all_qualified_researchers"
+};
+
+@implementation SBBUserManager
 
 + (instancetype)defaultComponent
 {
-  static SBBProfileManager *shared;
+  static SBBUserManager *shared;
   
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -49,11 +63,11 @@
   return shared;
 }
 
-- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBProfileManagerGetCompletionBlock)completion
+- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:@"/api/v1/profile" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager get:kSBBUserProfileAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     id userProfile = [self.objectManager objectFromBridgeJSON:responseObject];
     if (completion) {
       completion(userProfile, error);
@@ -61,7 +75,7 @@
   }];
 }
 
-- (NSURLSessionDataTask *)updateUserProfileWithProfile:(id)profile completion:(SBBProfileManagerUpdateCompletionBlock)completion
+- (NSURLSessionDataTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion
 {
   id jsonProfile = [self.objectManager bridgeJSONFromObject:profile];
   if (!jsonProfile) {
@@ -71,14 +85,14 @@
   
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager post:@"/api/v1/profile" headers:headers parameters:jsonProfile completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager post:kSBBUserProfileAPI headers:headers parameters:jsonProfile completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
   }];
 }
 
-- (NSURLSessionDataTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBProfileManagerUpdateCompletionBlock)completion
+- (NSURLSessionDataTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
@@ -86,7 +100,19 @@
                                 @"identifier": externalID,
                                 @"type": @"ExternalIdentifier"
                              };
-    return [self.networkManager post:@"/api/v1/profile/external-id" headers:headers parameters:params completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:kSBBUserExternalIdAPI headers:headers parameters:params completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
+}
+
+- (NSURLSessionDataTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSDictionary *parameters = @{kSBBUserDataSharingScopeKey: kSBBUserDataSharingScopeStrings[scope]};
+    return [self.networkManager post:kSBBUserDataSharingAPI headers:headers parameters:parameters completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (completion) {
             completion(responseObject, error);
         }

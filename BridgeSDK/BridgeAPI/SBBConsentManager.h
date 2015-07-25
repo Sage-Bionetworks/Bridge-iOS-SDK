@@ -33,19 +33,7 @@
 #import <Foundation/Foundation.h>
 @import UIKit;
 #import "SBBBridgeAPIManager.h"
-
-/*!
- * @typedef SBBConsentShareScope
- * @brief An enumeration of the choices for the scope of sharing collected data.
- * @constant SBBConsentShareScopeNone The user has not consented to sharing their data.
- * @constant SBBConsentShareScopeStudy The user has consented only to sharing their de-identified data with the sponsors and partners of the current research study.
- * @constant SBBConsentShareScopeAll The user has consented to sharing their de-identified data for current and future research, which may or may not involve the same institutions or investigators.
- */
-typedef NS_ENUM(NSInteger, SBBConsentShareScope) {
-    SBBConsentShareScopeNone = 0,
-    SBBConsentShareScopeStudy,
-    SBBConsentShareScopeAll
-};
+#import "SBBUserManager.h"
 
 /*!
  Completion block for SBBConsentManagerProtocol methods.
@@ -87,7 +75,7 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
 - (NSURLSessionDataTask *)consentSignature:(NSString *)name
                                  birthdate:(NSDate *)date
                             signatureImage:(UIImage*)signatureImage
-                              dataSharing:(SBBConsentShareScope)scope
+                              dataSharing:(SBBUserDataSharingScope)scope
                                 completion:(SBBConsentManagerCompletionBlock)completion;
 
 /*!
@@ -99,40 +87,6 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
 - (NSURLSessionDataTask*)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion;
-
-/*!
- *  DEPRECATED: Suspend the user's previously-given consent to participate.
- *
- *  @warning This method is deprecated as of BridgeSDK version 2. You should call the dataSharing: method instead. This method is equivalent to calling dataSharing: with a scope of SBBConsentShareScopeNone.
- *
- *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
- *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
- */
-- (NSURLSessionDataTask *)suspendConsentWithCompletion:(SBBConsentManagerCompletionBlock)completion __deprecated;
-
-/*!
- *  DEPRECATED: Resume the user's previously-suspended consent to participate.
- *
- *  @warning This method is deprecated as of BridgeSDK version 2. You should call the dataSharing: method instead. This method is equivalent to calling dataSharing: with a scope of SBBConsentShareScopeStudy.
- *
- *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
- *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
- */
-- (NSURLSessionDataTask *)resumeConsentWithCompletion:(SBBConsentManagerCompletionBlock)completion __deprecated;
-
-/**
- *  Change the scope of data sharing for this user.
- *  This should only be done in response to an explicit choice on the part of the user to change the sharing scope.
- *
- *  @param scope The scope of data sharing to set for this user.
- *
- *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
- *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
- */
-- (NSURLSessionDataTask *)dataSharing:(SBBConsentShareScope)scope completion:(SBBConsentManagerCompletionBlock)completion;
 
 @end
 

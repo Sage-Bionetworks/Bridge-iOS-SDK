@@ -1,7 +1,7 @@
 //
-//  SBBGuidCreatedOnVersionHolder.m
+//  SBBSurveyReference.h
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -27,12 +27,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBGuidCreatedOnVersionHolder.h"
+#import "_SBBSurveyReference.h"
 
-@implementation SBBGuidCreatedOnVersionHolder
-
-#pragma mark Abstract method overrides
-
+@interface SBBSurveyReference : _SBBSurveyReference <_SBBSurveyReference>
 // Custom logic goes here.
-
 @end

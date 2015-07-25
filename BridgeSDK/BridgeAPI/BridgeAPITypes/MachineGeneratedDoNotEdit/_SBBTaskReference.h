@@ -1,10 +1,7 @@
 //
-//  SBBScheduleManager.m
-//  BridgeSDK
+//  SBBTaskReference.h
 //
-//  Created by Erin Mounts on 10/24/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -29,42 +26,19 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBTaskReference.h instead.
+//
 
-#import "SBBScheduleManagerInternal.h"
-#import "SBBComponentManager.h"
-#import "SBBAuthManager.h"
-#import "SBBObjectManager.h"
-#import "SBBBridgeObjects.h"
-#import "BridgeSDKInternal.h"
+#import <Foundation/Foundation.h>
+#import "SBBBridgeObject.h"
 
-#define SCHEDULE_API GLOBAL_API_PREFIX @"/schedules"
+@protocol _SBBTaskReference
 
-NSString * const kSBBScheduleAPI =       SCHEDULE_API;
+@end
 
-@implementation SBBScheduleManager
+@interface _SBBTaskReference : SBBBridgeObject
 
-+ (instancetype)defaultComponent
-{
-  static SBBScheduleManager *shared;
-  
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    shared = [self instanceWithRegisteredDependencies];
-  });
-  
-  return shared;
-}
-
-- (NSURLSessionDataTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBScheduleAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    SBBResourceList *schedules = [self.objectManager objectFromBridgeJSON:responseObject];
-    if (completion) {
-      completion(schedules, error);
-    }
-  }];
-}
+@property (nonatomic, strong) NSString* identifier;
 
 @end

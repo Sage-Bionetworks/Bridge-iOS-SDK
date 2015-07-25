@@ -44,7 +44,7 @@
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
                 } else {
-                    [cMan consentSignature:@"Eggplant McTester" birthdate:[NSDate dateWithTimeIntervalSinceNow:-(30 * 365.25 * 86400)] signatureImage:signatureImage dataSharing:SBBConsentShareScopeStudy completion:^(id responseObject, NSError *error) {
+                    [cMan consentSignature:@"Eggplant McTester" birthdate:[NSDate dateWithTimeIntervalSinceNow:-(30 * 365.25 * 86400)] signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id responseObject, NSError *error) {
                         if (error) {
                             NSLog(@"Error recording consent signature:\n%@\nResponse: %@", error, responseObject);
                         }
@@ -87,33 +87,6 @@
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout retrieving consent signature: %@", error);
-        }
-    }];
-}
-
-- (void)testDataSharing
-{
-    // test user is created with consent signed but sharing = none
-    XCTestExpectation *expectChangedSharing = [self expectationWithDescription:@"changed data sharing"];
-    [SBBComponent(SBBConsentManager) dataSharing:SBBConsentShareScopeAll completion:^(id responseObject, NSError *error) {
-        XCTAssert(!error, @"Server accepted data sharing scope change");
-        if (error) {
-            NSLog(@"Error changing data sharing scope:\n%@\nResponse: %@", error, responseObject);
-            [expectChangedSharing fulfill];
-        } else {
-            [SBBComponent(SBBAuthManager) signInWithUsername:self.testUserUsername password:self.testUserPassword completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-                if (error) {
-                    NSLog(@"Error signing in to get user session info after changing data sharing scope:\n%@\nResponse: %@", error, responseObject);
-                }
-                XCTAssert([responseObject[@"dataSharing"] integerValue] == 1 && [responseObject[@"sharingScope"] isEqualToString:@"all_qualified_researchers"], @"Server reported new sharing scope on signIn");
-                [expectChangedSharing fulfill];
-            }];
-        }
-    }];
-    
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
-        if (error) {
-            NSLog(@"Timeout changing & checking data sharing scope: %@", error);
         }
     }];
 }

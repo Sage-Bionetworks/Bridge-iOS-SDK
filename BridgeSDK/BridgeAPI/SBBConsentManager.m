@@ -33,20 +33,18 @@
 #import "SBBConsentManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
+#import "SBBUserManagerInternal.h"
+#import "BridgeSDKInternal.h"
 
-NSString* const kSBBApiConsentV1 = @"/api/v1/consent";
-NSString* const kSBBKeyName = @"name";
-NSString* const kSBBKeyBirthdate = @"birthdate";
-NSString* const kSBBKeyImageData = @"imageData";
-NSString* const kSBBKeyImageMimeType = @"imageMimeType";
-NSString* const kSBBMimeTypePng = @"image/png";
-NSString* const kSBBKeyConsentShareScope = @"scope";
+#define CONSENT_API GLOBAL_API_PREFIX @"/consents/signature"
 
-NSString* const kSBBConsentShareScopeStrings[] = {
-    @"no_sharing",
-    @"sponsors_and_partners",
-    @"all_qualified_researchers"
-};
+NSString * const kSBBConsentAPI = CONSENT_API;
+
+NSString * const kSBBKeyName = @"name";
+NSString * const kSBBKeyBirthdate = @"birthdate";
+NSString * const kSBBKeyImageData = @"imageData";
+NSString * const kSBBKeyImageMimeType = @"imageMimeType";
+NSString * const kSBBMimeTypePng = @"image/png";
 
 @implementation SBBConsentManager
 
@@ -65,7 +63,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
 - (NSURLSessionDataTask *)consentSignature:(NSString *)name
                                  birthdate:(NSDate *)date
                             signatureImage:(UIImage*)signatureImage
-                              dataSharing:(SBBConsentShareScope)scope
+                              dataSharing:(SBBUserDataSharingScope)scope
                                 completion:(SBBConsentManagerCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
@@ -93,9 +91,9 @@ NSString* const kSBBConsentShareScopeStrings[] = {
   }
     
   // Add sharing scope
-  [ResearchConsent setObject:kSBBConsentShareScopeStrings[scope] forKey:kSBBKeyConsentShareScope];
+  [ResearchConsent setObject:kSBBUserDataSharingScopeStrings[scope] forKey:kSBBUserDataSharingScopeKey];
 
-  return [self.networkManager post:@"/api/v2/consent" headers:headers parameters:ResearchConsent
+  return [self.networkManager post:kSBBConsentAPI headers:headers parameters:ResearchConsent
       completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
@@ -107,7 +105,7 @@ NSString* const kSBBConsentShareScopeStrings[] = {
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBApiConsentV1 headers:headers parameters:nil
+  return [self.networkManager get:kSBBConsentAPI headers:headers parameters:nil
       completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
     NSString* name = nil;
     NSString* birthdate = nil;
@@ -132,40 +130,6 @@ NSString* const kSBBConsentShareScopeStrings[] = {
       completion(name, birthdate, image, error);
     }
   }];
-}
-
-- (NSURLSessionDataTask *)suspendConsentWithCompletion:(SBBConsentManagerCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager post:@"/api/v1/consent/dataSharing/suspend" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    if (completion) {
-      completion(responseObject, error);
-    }
-  }];
-}
-
-- (NSURLSessionDataTask *)resumeConsentWithCompletion:(SBBConsentManagerCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager post:@"/api/v1/consent/dataSharing/resume" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    if (completion) {
-      completion(responseObject, error);
-    }
-  }];
-}
-
-- (NSURLSessionDataTask *)dataSharing:(SBBConsentShareScope)scope completion:(SBBConsentManagerCompletionBlock)completion
-{
-    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-    [self.authManager addAuthHeaderToHeaders:headers];
-    NSDictionary *parameters = @{kSBBKeyConsentShareScope: kSBBConsentShareScopeStrings[scope]};
-    return [self.networkManager post:@"/api/v2/consent/dataSharing" headers:headers parameters:parameters completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-        if (completion) {
-            completion(responseObject, error);
-        }
-    }];
 }
 
 @end

@@ -1,5 +1,5 @@
 //
-//  SBBGuidCreatedOnVersionHolder.m
+//  SBBUserSessionInfo.m
 //
 //	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
@@ -27,17 +27,17 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBGuidCreatedOnVersionHolder.h instead.
+// Make changes to SBBUserSessionInfo.h instead.
 //
 
-#import "_SBBGuidCreatedOnVersionHolder.h"
+#import "_SBBUserSessionInfo.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBGuidCreatedOnVersionHolder()
+@interface _SBBUserSessionInfo()
 
 @end
 
-@implementation _SBBGuidCreatedOnVersionHolder
+@implementation _SBBUserSessionInfo
 
 - (id)init
 {
@@ -51,14 +51,44 @@
 
 #pragma mark Scalar values
 
-- (int64_t)versionValue
+- (BOOL)authenticatedValue
 {
-	return [self.version longLongValue];
+	return [self.authenticated boolValue];
 }
 
-- (void)setVersionValue:(int64_t)value_
+- (void)setAuthenticatedValue:(BOOL)value_
 {
-	self.version = [NSNumber numberWithLongLong:value_];
+	self.authenticated = [NSNumber numberWithBool:value_];
+}
+
+- (BOOL)consentedValue
+{
+	return [self.consented boolValue];
+}
+
+- (void)setConsentedValue:(BOOL)value_
+{
+	self.consented = [NSNumber numberWithBool:value_];
+}
+
+- (BOOL)dataSharingValue
+{
+	return [self.dataSharing boolValue];
+}
+
+- (void)setDataSharingValue:(BOOL)value_
+{
+	self.dataSharing = [NSNumber numberWithBool:value_];
+}
+
+- (BOOL)signedMostRecentConsentValue
+{
+	return [self.signedMostRecentConsent boolValue];
+}
+
+- (void)setSignedMostRecentConsentValue:(BOOL)value_
+{
+	self.signedMostRecentConsent = [NSNumber numberWithBool:value_];
 }
 
 #pragma mark Dictionary representation
@@ -68,11 +98,21 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
+        self.authenticated = [dictionary objectForKey:@"authenticated"];
 
-        self.guid = [dictionary objectForKey:@"guid"];
+        self.consented = [dictionary objectForKey:@"consented"];
 
-        self.version = [dictionary objectForKey:@"version"];
+        self.dataSharing = [dictionary objectForKey:@"dataSharing"];
+
+        self.environment = [dictionary objectForKey:@"environment"];
+
+        self.sessionToken = [dictionary objectForKey:@"sessionToken"];
+
+        self.sharingScope = [dictionary objectForKey:@"sharingScope"];
+
+        self.signedMostRecentConsent = [dictionary objectForKey:@"signedMostRecentConsent"];
+
+        self.username = [dictionary objectForKey:@"username"];
 
 	}
 
@@ -83,11 +123,21 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-    [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
+    [dict setObjectIfNotNil:self.authenticated forKey:@"authenticated"];
 
-    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+    [dict setObjectIfNotNil:self.consented forKey:@"consented"];
 
-    [dict setObjectIfNotNil:self.version forKey:@"version"];
+    [dict setObjectIfNotNil:self.dataSharing forKey:@"dataSharing"];
+
+    [dict setObjectIfNotNil:self.environment forKey:@"environment"];
+
+    [dict setObjectIfNotNil:self.sessionToken forKey:@"sessionToken"];
+
+    [dict setObjectIfNotNil:self.sharingScope forKey:@"sharingScope"];
+
+    [dict setObjectIfNotNil:self.signedMostRecentConsent forKey:@"signedMostRecentConsent"];
+
+    [dict setObjectIfNotNil:self.username forKey:@"username"];
 
 	return dict;
 }

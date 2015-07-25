@@ -7,8 +7,8 @@
 //
 
 #import "SBBBridgeAPIUnitTestCase.h"
-#import <BridgeSDK/SBBScheduleManager.h>
-#import <BridgeSDK/SBBBridgeObjects.h>
+#import "SBBScheduleManagerInternal.h"
+#import "SBBBridgeObjects.h"
 
 @interface SBBScheduleManagerUnitTests : SBBBridgeAPIUnitTestCase
 
@@ -36,18 +36,23 @@
                   @{
                       @"activityType": @"survey",
                       @"label": @"This is a survey",
-                      @"ref": @"url-to-retrieve-survey/guid-goes-here/2014-12-12T18:26:01.855Z",
                       @"survey": @{
+                              @"identifier": @"this-is-a-survey",
                               @"guid": @"guid-goes-here",
                               @"createdOn": @"2014-12-12T18:26:01.855Z",
-                              @"type": @"GuidCreatedOnVersionHolder"
+                              @"href": @"url-to-retrieve-survey/guid-goes-here/2014-12-12T18:26:01.855Z",
+                              @"type": @"SurveyReference"
                               },
                       @"type": @"Activity"
                       },
                   @{
                       @"activityType": @"task",
                       @"label": @"This is a task",
-                      @"ref": @"task1",
+                      @"labelDetail": @"It will be tricky and frustrating to perform",
+                      @"task": @{
+                              @"identifier": @"this-is-a-task",
+                              @"type": @"TaskReference"
+                              },
                       @"type": @"Activity"
                       }
                   ],
@@ -62,7 +67,7 @@
                                   @"total": @(schedules.count)
                                   };
 
-    [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:@"/api/v1/schedules" andMethod:@"GET"];
+    [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:kSBBScheduleAPI andMethod:@"GET"];
     id <SBBScheduleManagerProtocol> sMan = SBBComponent(SBBScheduleManager);
     
     [sMan getSchedulesWithCompletion:^(SBBResourceList *schedulesRList, NSError *error) {
@@ -75,10 +80,11 @@
             XCTAssert([schedule0 isKindOfClass:[SBBSchedule class]], @"Converted items to NSArray of SBBSchedule objects");
             SBBActivity *activity0 = schedule0.activities[0];
             XCTAssert([activity0 isKindOfClass:[SBBActivity class]], @"Converted 'activities' json to NSArray and first item is an SBBActivity object");
-            XCTAssert([activity0.survey isKindOfClass:[SBBGuidCreatedOnVersionHolder class]], @"Converted 'survey' json to SBBGuidCreatedOnVersionHolder object");
+            XCTAssert([activity0.survey isKindOfClass:[SBBSurveyReference class]], @"Converted 'survey' json to SBBSurveyReference object");
             SBBActivity *activity1 = schedule0.activities[1];
             XCTAssert([activity1 isKindOfClass:[SBBActivity class]], @"Second item of 'activities' is also an SBBActivity object");
             XCTAssert([activity1.activityType isEqualToString:@"task"], @"Put activities into array in correct order");
+            XCTAssert([activity1.task isKindOfClass:[SBBTaskReference class]], @"Converted 'task' json to SBBTaskReference object");
         }
     }];
 }

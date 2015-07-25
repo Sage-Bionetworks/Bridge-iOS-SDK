@@ -36,6 +36,8 @@
 <$if hasAdditionalHeaderFile$>
 #import "<$additionalHeaderFileName$>"
 <$endif$>
+<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasTransformableAttributeType$><$if Attribute.userInfo.attributeValueClassName$><$if Attribute.userInfo.importHeaderForClass$>#import "<$Attribute.userInfo.attributeValueClassName$>.h"
+<$endif$><$endif$><$endif$><$endforeach do$>
 
 <$checkNonTransientRelationshipCycles $>
 <$foreach Relationship noninheritedRelationships do$>@class <$Relationship.destinationEntity.managedObjectClassName$>;

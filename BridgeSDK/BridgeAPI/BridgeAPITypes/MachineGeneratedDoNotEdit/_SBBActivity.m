@@ -62,9 +62,13 @@
 
         self.label = [dictionary objectForKey:@"label"];
 
-        self.ref = [dictionary objectForKey:@"ref"];
+        self.labelDetail = [dictionary objectForKey:@"labelDetail"];
 
         self.survey = [dictionary objectForKey:@"survey"];
+
+        self.surveyResponse = [dictionary objectForKey:@"surveyResponse"];
+
+        self.task = [dictionary objectForKey:@"task"];
 
 	}
 
@@ -79,9 +83,13 @@
 
     [dict setObjectIfNotNil:self.label forKey:@"label"];
 
-    [dict setObjectIfNotNil:self.ref forKey:@"ref"];
+    [dict setObjectIfNotNil:self.labelDetail forKey:@"labelDetail"];
 
     [dict setObjectIfNotNil:self.survey forKey:@"survey"];
+
+    [dict setObjectIfNotNil:self.surveyResponse forKey:@"surveyResponse"];
+
+    [dict setObjectIfNotNil:self.task forKey:@"task"];
 
 	return dict;
 }

@@ -1,10 +1,10 @@
 //
-//  SBBProfileManager.h
+//  SBBUserManager.h
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 9/23/14.
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -34,45 +34,58 @@
 #import "SBBBridgeAPIManager.h"
 
 /*!
+ * @typedef SBBUserDataShareScope
+ * @brief An enumeration of the choices for the scope of sharing collected data.
+ * @constant SBBUserDataSharingScopeNone The user has not consented to sharing their data.
+ * @constant SBBUserDataSharingScopeStudy The user has consented only to sharing their de-identified data with the sponsors and partners of the current research study.
+ * @constant SBBUserDataSharingScopeAll The user has consented to sharing their de-identified data for current and future research, which may or may not involve the same institutions or investigators.
+ */
+typedef NS_ENUM(NSInteger, SBBUserDataSharingScope) {
+    SBBUserDataSharingScopeNone = 0,
+    SBBUserDataSharingScopeStudy,
+    SBBUserDataSharingScopeAll
+};
+
+/*!
  Completion block called when retrieving user profile from the API.
  
  @param userProfile By default, an SBBUserProfile object, unless the UserProfile type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:
  @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBProfileManagerGetCompletionBlock)(id userProfile, NSError *error);
+typedef void (^SBBUserManagerGetCompletionBlock)(id userProfile, NSError *error);
 
 /*!
- Completion block called when updating user profile to the API.
+ Completion block called when making other calls to the users API.
  
  @param responseObject JSON response from the server.
  @param error          An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBProfileManagerUpdateCompletionBlock)(id responseObject, NSError *error);
+typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error);
 
 /*!
- *  This protocol defines the interface to the SBBProfileManager's non-constructor, non-initializer methods. The interface is
+ *  This protocol defines the interface to the SBBUserManager's non-constructor, non-initializer methods. The interface is
  *  abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.
  */
-@protocol SBBProfileManagerProtocol <SBBBridgeAPIManagerProtocol>
+@protocol SBBUserManagerProtocol <SBBBridgeAPIManagerProtocol>
 
 /*!
  *  Fetch the UserProfile from the Bridge API.
  *
- *  @param completion An SBBProfileManagerGetCompletionBlock to be called upon completion.
+ *  @param completion An SBBUserManagerGetCompletionBlock to be called upon completion.
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBProfileManagerGetCompletionBlock)completion;
+- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetCompletionBlock)completion;
 
 /*!
  *  Update the UserProfile to the Bridge API.
  *
  *  @param profile A client object representing the UserProfile as it should be updated.
- *  @param completion An SBBProfileManagerGetCompletionBlock to be called upon completion.
+ *  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)updateUserProfileWithProfile:(id)profile completion:(SBBProfileManagerUpdateCompletionBlock)completion;
+- (NSURLSessionDataTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion;
 
 /*!
  *  Add an external identifier for a participant.
@@ -85,17 +98,29 @@ typedef void (^SBBProfileManagerUpdateCompletionBlock)(id responseObject, NSErro
  *  necessary, set it to a "deleted" value like "N/A")
  *
  *  @param externalID An external identifier to allow this participant to be tracked outside of the Bridge-specific study.
- *  @param completion An SBBProfileManagerUpdateCompletionBlock to be called upon completion.
+ *  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBProfileManagerUpdateCompletionBlock)completion;
+- (NSURLSessionDataTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion;
+
+/*!
+ *  Change the scope of data sharing for this user.
+ *  This should only be done in response to an explicit choice on the part of the user to change the sharing scope.
+ *
+ *  @param scope The scope of data sharing to set for this user.
+ *
+ *  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
+ *
+ *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion;
 
 @end
 
 /*!
- *  This class handles communication with the Bridge profile API.
+ *  This class handles communication with the Bridge users API.
  */
-@interface SBBProfileManager : SBBBridgeAPIManager<SBBComponent, SBBProfileManagerProtocol>
+@interface SBBUserManager : SBBBridgeAPIManager<SBBComponent, SBBUserManagerProtocol>
 
 @end
