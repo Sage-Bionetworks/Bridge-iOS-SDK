@@ -218,6 +218,10 @@ NSString *kAPIPrefix = @"webservices";
         self.environment = SBBEnvironmentCustom;
         self.uploadCompletionHandlers = [NSMutableDictionary dictionary];
         self.downloadCompletionHandlers = [NSMutableDictionary dictionary];
+        
+        // If this network manager communicates with Bridge servers, turn off cookies so we don't get
+        // unexpected authentication-related behavior. In general though, leave cookies on (default NSURLSession
+        // behavior) and let the caller turn them off if so desired.
         if (bridgeStudy.length) {
             self.sendCookies = NO;
         } else {
