@@ -80,7 +80,7 @@ typedef void (^SBBProfileManagerUpdateCompletionBlock)(id responseObject, NSErro
  *  For research studies designed to enroll participants who are tracked outside of the Bridge-specific study, you can build
  *  your application to submit a unique external identifier to the Bridge Server for that user. This can happen any time after
  *  an email address has been validated. The identifier will be exported with research data, but not with exports that provide
- *  the identifies of the people in the study (like the participant roster). The identifier should be unique for the user in
+ *  the identities of the people in the study (like the participant roster). The identifier should be unique for the user in
  *  this study, but this is not validated by the Bridge server. The identifier can be updated, but never deleted (if absolutely
  *  necessary, set it to a "deleted" value like "N/A")
  *

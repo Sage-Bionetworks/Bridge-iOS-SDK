@@ -1,21 +1,21 @@
 //
-//  SBBSurveyManagerTests.m
+//  SBBSurveyManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/13/14.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPITestCase.h"
+#import "SBBBridgeAPIUnitTestCase.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface SBBSurveyManagerTests : SBBBridgeAPITestCase
+@interface SBBSurveyManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @property (nonatomic, strong) NSDictionary *sampleSurveyJSON;
 
 @end
 
-@implementation SBBSurveyManagerTests
+@implementation SBBSurveyManagerUnitTests
 
 - (void)setUp {
     [super setUp];

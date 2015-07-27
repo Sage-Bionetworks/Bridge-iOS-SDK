@@ -1,20 +1,20 @@
 //
-//  SBBScheduleManagerTests.m
+//  SBBScheduleManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/24/14.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPITestCase.h"
+#import "SBBBridgeAPIUnitTestCase.h"
 #import <BridgeSDK/SBBScheduleManager.h>
 #import <BridgeSDK/SBBBridgeObjects.h>
 
-@interface SBBScheduleManagerTests : SBBBridgeAPITestCase
+@interface SBBScheduleManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @end
 
-@implementation SBBScheduleManagerTests
+@implementation SBBScheduleManagerUnitTests
 
 - (void)setUp {
     [super setUp];

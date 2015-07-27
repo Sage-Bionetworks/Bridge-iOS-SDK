@@ -1,18 +1,18 @@
 //
-//  SBBProfileManagerTests.m
+//  SBBProfileManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/13/14.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPITestCase.h"
+#import "SBBBridgeAPIUnitTestCase.h"
 
-@interface SBBProfileManagerTests : SBBBridgeAPITestCase
+@interface SBBProfileManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @end
 
-@implementation SBBProfileManagerTests
+@implementation SBBProfileManagerUnitTests
 
 - (void)setUp {
     [super setUp];

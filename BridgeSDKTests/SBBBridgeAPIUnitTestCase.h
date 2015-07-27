@@ -1,5 +1,5 @@
 //
-//  SBBBridgeAPITestCase.h
+//  SBBBridgeAPIUnitTestCase.h
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/13/14.
@@ -11,7 +11,7 @@
 #import "MockURLSession.h"
 #import "SBBTestBridgeObject.h"
 
-@interface SBBBridgeAPITestCase : XCTestCase
+@interface SBBBridgeAPIUnitTestCase : XCTestCase
 
 @property (nonatomic, strong) MockURLSession *mockURLSession;
 

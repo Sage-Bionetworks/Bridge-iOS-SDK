@@ -1,25 +1,25 @@
 //
-//  SBBAuthManagerTests.m
+//  SBBAuthManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/13/14.
 //  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
 //
 
-#import "SBBBridgeAPITestCase.h"
+#import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBAuthManagerInternal.h"
 #import "SBBTestAuthManagerDelegate.h"
 #import "SBBNetworkManagerInternal.h"
 #import "MockNetworkManager.h"
 #import "MockURLSession.h"
 
-@interface SBBAuthManagerTests : SBBBridgeAPITestCase
+@interface SBBAuthManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @property (nonatomic, strong) MockNetworkManager *mockNetworkManager;
 
 @end
 
-@implementation SBBAuthManagerTests
+@implementation SBBAuthManagerUnitTests
 
 - (void)setUp {
     [super setUp];
@@ -35,9 +35,12 @@
     gSBBAppStudy = nil;
 }
 
-- (void)testSignIn {
+ - (void)testSignIn {
   [self.mockNetworkManager setJson:nil andResponseCode:404 forEndpoint:@"/api/v1/auth/signIn" andMethod:@"POST"];
   SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
+  // always use an auth delegate so we don't pollute the keychain for integration tests
+  SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
+  aMan.authDelegate = delegate;
   [aMan signInWithUsername:@"notSignedUp" password:@"" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
   }];
@@ -51,12 +54,6 @@
   [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:@"/api/v1/auth/signIn" andMethod:@"POST"];
   [aMan signInWithUsername:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == kSBBServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
-    [aMan clearKeychainStore];
-  }];
-  
-  SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-  aMan.authDelegate = delegate;
-  [aMan signInWithUsername:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([delegate.sessionToken isEqualToString:uuid], @"Delegate received sessionToken");
   }];
 }

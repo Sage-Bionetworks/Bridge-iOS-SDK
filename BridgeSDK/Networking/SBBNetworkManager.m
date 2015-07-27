@@ -126,6 +126,7 @@ NSString *kAPIPrefix = @"webservices";
 @implementation SBBNetworkManager
 @synthesize environment = _environment;
 @synthesize backgroundTransferDelegate = _backgroundTransferDelegate;
+@synthesize sendCookies = _sendCookies;
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
 {
@@ -168,9 +169,8 @@ NSString *kAPIPrefix = @"webservices";
 + (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
 {
   NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:baseURLPath];
-  SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL];
+  SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL bridgeStudy:study];
   networkManager.environment = environment;
-  networkManager.bridgeStudy = study;
   return networkManager;
 }
 
@@ -218,6 +218,15 @@ NSString *kAPIPrefix = @"webservices";
         self.environment = SBBEnvironmentCustom;
         self.uploadCompletionHandlers = [NSMutableDictionary dictionary];
         self.downloadCompletionHandlers = [NSMutableDictionary dictionary];
+        
+        // If this network manager communicates with Bridge servers, turn off cookies so we don't get
+        // unexpected authentication-related behavior. In general though, leave cookies on (default NSURLSession
+        // behavior) and let the caller turn them off if so desired.
+        if (bridgeStudy.length) {
+            self.sendCookies = NO;
+        } else {
+            self.sendCookies = YES;
+        }
     }
     return self;
 }
@@ -406,16 +415,16 @@ NSString *kAPIPrefix = @"webservices";
     }
     
   NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
-    NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+    __block NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
         NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if (error)
         {
-            [self handleError:error task:task retryObject:localRetryObject];
+            [self handleError:error task:task response:responseObject retryObject:localRetryObject];
         }
         else if (httpError)
         {
-            [self handleHTTPError:httpError task:task retryObject:localRetryObject];
+            [self handleHTTPError:httpError task:task response:responseObject retryObject:localRetryObject];
         }
         else
         {
@@ -515,6 +524,7 @@ NSString *kAPIPrefix = @"webservices";
   NSURL *url = [self URLForRelativeorAbsoluteURLString:URLString];
   NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
   mutableRequest.HTTPMethod = method;
+  mutableRequest.HTTPShouldHandleCookies = self.sendCookies;
   [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
   [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
   
@@ -533,7 +543,7 @@ NSString *kAPIPrefix = @"webservices";
     [mutableRequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:0 error:error]];
   }
 #if DEBUG
-    NSLog(@"Prepared request--URL:\n%@\nHeaders:\n%@", mutableRequest.URL.absoluteString, mutableRequest.allHTTPHeaderFields);
+    NSLog(@"Prepared request--URL:\n%@\nHeaders:\n%@\nBody:\n%@", mutableRequest.URL.absoluteString, mutableRequest.allHTTPHeaderFields, [[NSString alloc] initWithData:mutableRequest.HTTPBody encoding:NSUTF8StringEncoding]);
 #endif
   
   return mutableRequest;
@@ -641,7 +651,7 @@ NSString *kAPIPrefix = @"webservices";
 /*********************************************************************************/
 #pragma mark - Error Handler
 /*********************************************************************************/
-- (void)handleError:(NSError*)error task:(NSURLSessionDataTask*) task retryObject: (APCNetworkRetryObject*) retryObject
+- (void)handleError:(NSError*)error task:(NSURLSessionDataTask*)task response:(id)responseObject retryObject: (APCNetworkRetryObject*)retryObject
 {
     NSInteger errorCode = error.code;
     NSError * apcError = [NSError generateSBBErrorForNSURLError:error isInternetConnected:self.isInternetConnected isServerReachable:self.isServerReachable];
@@ -649,7 +659,7 @@ NSString *kAPIPrefix = @"webservices";
     if (!self.isInternetConnected || !self.isServerReachable) {
         if (retryObject.completionBlock)
         {
-            retryObject.completionBlock(task, nil, apcError);
+            retryObject.completionBlock(task, responseObject, apcError);
         }
         retryObject.retryBlock = nil;
     }
@@ -668,7 +678,7 @@ NSString *kAPIPrefix = @"webservices";
         {
             if (retryObject.completionBlock)
             {
-                retryObject.completionBlock(task, nil, apcError);
+                retryObject.completionBlock(task, responseObject, apcError);
             }
             retryObject.retryBlock = nil;
         }
@@ -677,18 +687,18 @@ NSString *kAPIPrefix = @"webservices";
     {
         if (retryObject.completionBlock)
         {
-            retryObject.completionBlock(task, nil, apcError);
+            retryObject.completionBlock(task, responseObject, apcError);
         }
         retryObject.retryBlock = nil;
     }
 }
 
-- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task retryObject:(APCNetworkRetryObject *)retryObject
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(APCNetworkRetryObject *)retryObject
 {
     //TODO: Add retry for Server maintenance
     if (retryObject.completionBlock)
     {
-        retryObject.completionBlock(task, nil, error);
+        retryObject.completionBlock(task, responseObject, error);
     }
     retryObject.retryBlock = nil;
 }

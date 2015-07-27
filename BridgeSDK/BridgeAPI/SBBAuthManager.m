@@ -289,7 +289,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                     [_authDelegate authManager:self didGetSessionToken:sessionToken];
                 }
             } else {
-                _sessionToken = sessionToken;
+                dispatchSyncToAuthQueue(^{
+                    _sessionToken = sessionToken;
+                });
                 dispatchSyncToKeychainQueue(^{
                     UICKeyChainStore *store = [self.class sdkKeychainStore];
                     [store setString:_sessionToken forKey:self.sessionTokenKey];
@@ -314,7 +316,15 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [_networkManager get:@"/api/v1/auth/signOut" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Remove the session token (and credentials?) from the keychain
         // ??? Do we want to not do this in case of error?
-        if (!_authDelegate) {
+        if (_authDelegate) {
+            if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forUsername:andPassword:)] &&
+                [_authDelegate respondsToSelector:@selector(usernameForAuthManager:)] &&
+                [_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
+                [_authDelegate authManager:self didGetSessionToken:nil forUsername:nil andPassword:nil];
+            } else {
+                [_authDelegate authManager:self didGetSessionToken:nil];
+            }
+        } else {
             dispatchSyncToKeychainQueue(^{
                 UICKeyChainStore *store = [self.class sdkKeychainStore];
                 [store removeItemForKey:self.sessionTokenKey];
@@ -324,7 +334,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             });
             // clear the in-memory copy of the session token, too
             dispatchSyncToAuthQueue(^{
-                self.sessionToken = nil;
+                _sessionToken = nil;
             });
         }
         
@@ -470,7 +480,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         if (_authDelegate) {
             [_authDelegate authManager:self didGetSessionToken:sessionToken];
         } else {
-            _sessionToken = sessionToken;
+            dispatchSyncToAuthQueue(^{
+                _sessionToken = sessionToken;
+            });
             dispatchSyncToKeychainQueue(^{
                 UICKeyChainStore *store = [self.class sdkKeychainStore];
                 [store setString:_sessionToken forKey:self.sessionTokenKey];
@@ -487,7 +499,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (_authDelegate) {
         [_authDelegate authManager:self didGetSessionToken:nil];
     } else {
-        _sessionToken = nil;
+        dispatchSyncToAuthQueue(^{
+            _sessionToken = nil;
+        });
         dispatchSyncToKeychainQueue(^{
             UICKeyChainStore *store = [self.class sdkKeychainStore];
             [store setString:nil forKey:self.sessionTokenKey];
