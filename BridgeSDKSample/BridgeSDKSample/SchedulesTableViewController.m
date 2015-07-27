@@ -47,11 +47,15 @@
 - (void)reloadSchedules
 {
     NSURLSessionDataTask *task = [SBBComponent(SBBScheduleManager) getSchedulesWithCompletion:^(id schedulesList, NSError *error) {
-        SBBResourceList *list = (SBBResourceList *)schedulesList;
-        self.schedules = list.items;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        if (error) {
+            NSLog(@"Error getting schedules from server:\n%@\nResponse:\n%@", error, schedulesList);
+        } else {
+            SBBResourceList *list = (SBBResourceList *)schedulesList;
+            self.schedules = list.items;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadData];
+            });
+        }
     }];
 #pragma unused(task)
 }

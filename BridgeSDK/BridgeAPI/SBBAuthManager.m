@@ -35,6 +35,16 @@
 #import "UICKeyChainStore.h"
 #import "NSError+SBBAdditions.h"
 #import "SBBComponentManager.h"
+#import "BridgeSDKInternal.h"
+
+#define AUTH_API GLOBAL_API_PREFIX @"/auth"
+
+NSString * const kSBBAuthSignUpAPI =       AUTH_API @"/signUp";
+NSString * const kSBBAuthResendAPI =       AUTH_API @"/resendEmailVerification";
+NSString * const kSBBAuthSignInAPI =       AUTH_API @"/signIn";
+NSString * const kSBBAuthSignOutAPI =      AUTH_API @"/signOut";
+NSString * const kSBBAuthRequestResetAPI = AUTH_API @"/requestResetPassword";
+NSString * const kSBBAuthResetAPI =        AUTH_API @"/resetPassword";
 
 NSString *gSBBAppStudy = nil;
 
@@ -267,17 +277,17 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/signUp" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"username":username, @"password":password, @"type":@"SignUp"} completion:completion];
+    return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"username":username, @"password":password, @"type":@"SignUp"} completion:completion];
 }
 
 - (NSURLSessionDataTask *)resendEmailVerification:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/resendEmailVerification" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
+    return [_networkManager post:kSBBAuthResendAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
 }
 
 - (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/signIn" headers:nil parameters:@{@"study":gSBBAppStudy, @"username":username, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"username":username, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Save session token in the keychain
         // ??? Save credentials in the keychain?
         NSString *sessionToken = responseObject[@"sessionToken"];
@@ -313,7 +323,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self addAuthHeaderToHeaders:headers];
-    return [_networkManager get:@"/api/v1/auth/signOut" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [_networkManager post:kSBBAuthSignOutAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Remove the session token (and credentials?) from the keychain
         // ??? Do we want to not do this in case of error?
         if (_authDelegate) {
@@ -380,12 +390,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)requestPasswordResetForEmail:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/requestResetPassword" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
+    return [_networkManager post:kSBBAuthRequestResetAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
 }
 
 - (NSURLSessionDataTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/resetPassword" headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
+    return [_networkManager post:kSBBAuthResetAPI headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
 }
 
 #pragma mark Internal helper methods

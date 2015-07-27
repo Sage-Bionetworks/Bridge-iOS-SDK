@@ -4,7 +4,7 @@
 //
 //  Created by Erin Mounts on 9/8/14.
 //
-//	Copyright (c) 2014-2105, Sage Bionetworks
+//	Copyright (c) 2014-2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without

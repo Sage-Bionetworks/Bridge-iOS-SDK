@@ -32,6 +32,14 @@
 
 #import "SBBAuthManager.h"
 
+extern NSString * const kSBBAuthSignUpAPI;
+extern NSString * const kSBBAuthResendAPI;
+extern NSString * const kSBBAuthSignInAPI;
+extern NSString * const kSBBAuthSignOutAPI;
+extern NSString * const kSBBAuthRequestResetAPI;
+extern NSString * const kSBBAuthResetAPI;
+
+
 extern SBBEnvironment gSBBDefaultEnvironment;
 
 @protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>

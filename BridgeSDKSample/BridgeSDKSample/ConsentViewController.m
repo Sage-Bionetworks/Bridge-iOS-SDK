@@ -84,7 +84,7 @@ static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
 
 - (IBAction)didTouchChangeButton:(id)sender {
     NSInteger scope = [_scopePickerView selectedRowInComponent:0];
-    [SBBComponent(SBBConsentManager) dataSharing:scope completion:^(id responseObject, NSError *error) {
+    [SBBComponent(SBBUserManager) dataSharing:scope completion:^(id responseObject, NSError *error) {
         NSLog(@"%@", responseObject);
         NSLog(@"Error: %@", error);
     }];

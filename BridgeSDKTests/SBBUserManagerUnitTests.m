@@ -1,5 +1,5 @@
 //
-//  SBBProfileManagerUnitTests.m
+//  SBBUserManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/13/14.
@@ -7,12 +7,13 @@
 //
 
 #import "SBBBridgeAPIUnitTestCase.h"
+#import "SBBUserManagerInternal.h"
 
-@interface SBBProfileManagerUnitTests : SBBBridgeAPIUnitTestCase
+@interface SBBUserManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @end
 
-@implementation SBBProfileManagerUnitTests
+@implementation SBBUserManagerUnitTests
 
 - (void)setUp {
     [super setUp];
@@ -34,11 +35,11 @@
     @"username": @"1337p4t13nt",
     @"email": @"email@fake.tld"
     };
-  [self.mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:@"/api/v1/profile" andMethod:@"GET"];
+  [self.mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
   SBBObjectManager *oMan = [SBBObjectManager objectManager];
-  SBBProfileManager *pMan = [SBBProfileManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+  SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
   [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
-  [pMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
+  [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
     XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
   }];
 }

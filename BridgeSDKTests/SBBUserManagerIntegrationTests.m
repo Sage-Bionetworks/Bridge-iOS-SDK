@@ -1,5 +1,5 @@
 //
-//  SBBProfileManagerIntegrationTests.m
+//  SBBUserManagerIntegrationTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 7/18/15.
@@ -8,11 +8,11 @@
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
 
-@interface SBBProfileManagerIntegrationTests : SBBBridgeAPIIntegrationTestCase
+@interface SBBUserManagerIntegrationTests : SBBBridgeAPIIntegrationTestCase
 
 @end
 
-@implementation SBBProfileManagerIntegrationTests
+@implementation SBBUserManagerIntegrationTests
 
 - (void)setUp {
     [super setUp];
@@ -26,7 +26,7 @@
 
 - (void)testGetUserProfile {
     XCTestExpectation *expectGotProfile = [self expectationWithDescription:@"Retrieved user profile"];
-    [SBBComponent(SBBProfileManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
+    [SBBComponent(SBBUserManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         if (error) {
             NSLog(@"Error getting user profile:\n%@", error);
         }
@@ -50,7 +50,7 @@
     profile.email = self.testUserEmail;
     profile.username = self.testUserUsername;
     
-    [SBBComponent(SBBProfileManager) updateUserProfileWithProfile:profile completion:^(id responseObject, NSError *error) {
+    [SBBComponent(SBBUserManager) updateUserProfileWithProfile:profile completion:^(id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error updating user profile:\n%@\nResponse: %@", error, responseObject);
         }
@@ -65,7 +65,7 @@
     }];
     
     XCTestExpectation *expectGotProfile = [self expectationWithDescription:@"Retrieved updated user profile"];
-    [SBBComponent(SBBProfileManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
+    [SBBComponent(SBBUserManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         if (error) {
             NSLog(@"Error getting user profile:\n%@", error);
         }
@@ -77,6 +77,33 @@
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout getting updated user profile: %@", error);
+        }
+    }];
+}
+
+- (void)testDataSharing
+{
+    // test user is created with consent signed but sharing = none
+    XCTestExpectation *expectChangedSharing = [self expectationWithDescription:@"changed data sharing"];
+    [SBBComponent(SBBUserManager) dataSharing:SBBUserDataSharingScopeAll completion:^(id responseObject, NSError *error) {
+        XCTAssert(!error, @"Server accepted data sharing scope change");
+        if (error) {
+            NSLog(@"Error changing data sharing scope:\n%@\nResponse: %@", error, responseObject);
+            [expectChangedSharing fulfill];
+        } else {
+            [SBBComponent(SBBAuthManager) signInWithUsername:self.testUserUsername password:self.testUserPassword completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                if (error) {
+                    NSLog(@"Error signing in to get user session info after changing data sharing scope:\n%@\nResponse: %@", error, responseObject);
+                }
+                XCTAssert([responseObject[@"dataSharing"] integerValue] == 1 && [responseObject[@"sharingScope"] isEqualToString:@"all_qualified_researchers"], @"Server reported new sharing scope on signIn");
+                [expectChangedSharing fulfill];
+            }];
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout changing & checking data sharing scope: %@", error);
         }
     }];
 }

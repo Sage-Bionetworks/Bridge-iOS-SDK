@@ -40,6 +40,14 @@
 #import "SBBUploadRequest.h"
 #import "NSError+SBBAdditions.h"
 #import "SBBErrors.h"
+#import "BridgeSDKInternal.h"
+
+#define UPLOAD_API GLOBAL_API_PREFIX @"/uploads"
+#define UPLOAD_STATUS_API GLOBAL_API_PREFIX @"/uploadstatuses"
+
+static NSString * const kSBBUploadAPI =                 UPLOAD_API;
+static NSString * const kSBBUploadCompleteAPIFormat =   UPLOAD_API @"/%@/complete";
+static NSString * const kSBBUploadStatusAPIFormat =     UPLOAD_STATUS_API @"/%@";
 
 static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
@@ -298,7 +306,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     [self setUploadRequestJSON:uploadRequestJSON forFile:[tempFileURL path]];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    [self.networkManager downloadFileFromURLString:@"/api/v1/upload" method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:nil taskCompletion:nil];
+    [self.networkManager downloadFileFromURLString:kSBBUploadAPI method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:nil taskCompletion:nil];
 }
 
 #pragma mark - Delegate methods
@@ -426,7 +434,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
         // tell the API we done did it
         SBBUploadSession *uploadSession = [self uploadSessionForFile:uploadTask.taskDescription];
         [self setUploadSessionJSON:nil forFile:uploadTask.taskDescription];
-        NSString *ref = [NSString stringWithFormat:@"/api/v1/upload/%@/complete", uploadSession.id];
+        NSString *ref = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, uploadSession.id];
         NSMutableDictionary *headers = [NSMutableDictionary dictionary];
         [self.authManager addAuthHeaderToHeaders:headers];
         [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
@@ -437,7 +445,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
             } else {
                 NSString* uploadStatusUrlString = nil;
                 if ([self.networkManager isKindOfClass:[SBBNetworkManager class]]) {
-                    NSString* relativeUrl = [NSString stringWithFormat:@"/api/v1/upload/%@/status", uploadSession.id];
+                    NSString* relativeUrl = [NSString stringWithFormat:kSBBUploadStatusAPIFormat, uploadSession.id];
                     NSURL* url = [(SBBNetworkManager*) self.networkManager URLForRelativeorAbsoluteURLString:relativeUrl];
                     uploadStatusUrlString = [url absoluteString];
                     if ([_uploadDelegate respondsToSelector:@selector(uploadManager:uploadOfFile:completedWithVerificationURL:)]) {

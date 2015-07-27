@@ -81,7 +81,8 @@
     SBBTask *task = _tasks[indexPath.row];
     
     // Configure the cell...
-    cell.textLabel.text = task.activity.ref;
+    NSString *identifier = task.activity.survey ? task.activity.survey.identifier : task.activity.task.identifier;
+    cell.textLabel.text = identifier;
     cell.detailTextLabel.text = task.status;
     
     return cell;

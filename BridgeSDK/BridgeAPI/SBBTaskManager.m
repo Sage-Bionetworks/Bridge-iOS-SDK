@@ -30,12 +30,17 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBTaskManager.h"
+#import "SBBTaskManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
 #import "SBBBridgeObjects.h"
 #import "NSDate+SBBAdditions.h"
+#import "BridgeSDKInternal.h"
+
+#define TASK_API GLOBAL_API_PREFIX @"/tasks"
+
+NSString * const kSBBTaskAPI =       TASK_API;
 
 @implementation SBBTaskManager
 
@@ -55,7 +60,7 @@
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    return [self.networkManager get:@"/api/v1/tasks" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager get:kSBBTaskAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         SBBResourceList *tasks = [self.objectManager objectFromBridgeJSON:responseObject];
         if (completion) {
             completion(tasks, error);
@@ -85,7 +90,7 @@
     id jsonTasks = [self.objectManager bridgeJSONFromObject:tasks];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    return [self.networkManager post:@"/api/v1/tasks" headers:headers parameters:jsonTasks completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:kSBBTaskAPI headers:headers parameters:jsonTasks completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
 #if DEBUG
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
         NSLog(@"Update tasks HTTP response code: %ld", (long)httpResponse.statusCode);
