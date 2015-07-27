@@ -72,6 +72,20 @@
 			remoteGlobalIDString = 80855F9719BFAA36006601C7;
 			remoteInfo = BridgeSDKSample;
 		};
+		80C5F1971B66C4D700011B49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80855FC419BFAA55006601C7 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 807AE2871B603309002588BB;
+			remoteInfo = BridgeSDKIntegration;
+		};
+		80C5F1991B66C4D700011B49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80855FC419BFAA55006601C7 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 807AE29F1B60330C002588BB;
+			remoteInfo = BridgeSDKIntegrationTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -158,6 +172,8 @@
 			children = (
 				800E79A519F18DB200EEE612 /* BridgeSDK.framework */,
 				800E79A719F18DB200EEE612 /* BridgeSDKTests.xctest */,
+				80C5F1981B66C4D700011B49 /* BridgeSDKIntegration.app */,
+				80C5F19A1B66C4D700011B49 /* BridgeSDKIntegrationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -349,6 +365,20 @@
 			fileType = wrapper.cfbundle;
 			path = BridgeSDKTests.xctest;
 			remoteRef = 800E79A619F18DB200EEE612 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		80C5F1981B66C4D700011B49 /* BridgeSDKIntegration.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = BridgeSDKIntegration.app;
+			remoteRef = 80C5F1971B66C4D700011B49 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		80C5F19A1B66C4D700011B49 /* BridgeSDKIntegrationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BridgeSDKIntegrationTests.xctest;
+			remoteRef = 80C5F1991B66C4D700011B49 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

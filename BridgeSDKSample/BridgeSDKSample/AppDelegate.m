@@ -58,7 +58,7 @@ static NSString *kPasswordKey = @"BridgeSDKSamplePassword";
 
     // To run this sample app in your study, change this identifier to the one assigned to your study.
     // Leave it set to @"api" to run in the generic test study.
-    [BridgeSDK setupWithStudy:@"parkinson"];
+    [BridgeSDK setupWithStudy:@"api"];
     id<SBBAuthManagerProtocol> authMan = SBBComponent(SBBAuthManager);
     authMan.authDelegate = self;
     [authMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {

@@ -36,5 +36,6 @@
 @interface SurveyViewController : UIViewController
 
 @property (nonatomic, strong) SBBSurveyReference *surveyReference;
+@property (nonatomic, strong) SBBSurveyResponseReference *responseReference;
 
 @end

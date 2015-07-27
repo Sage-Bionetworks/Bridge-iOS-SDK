@@ -74,6 +74,12 @@
             _sampleRefTextField.text = _surveyReference.href;
         }
     }
+    
+    if (_responseReference) {
+        _responseIdentifierTextField.text = _responseReference.identifier;
+    } else {
+        _responseIdentifierTextField.text = @"";
+    }
 }
 
 - (void)didReceiveMemoryWarning {

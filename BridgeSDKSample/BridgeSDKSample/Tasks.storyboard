@@ -391,11 +391,24 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mVo-PR-Dcx">
-                                <rect key="frame" x="16" y="8" width="504" height="32"/>
+                                <rect key="frame" x="16" y="8" width="450" height="32"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="57T-uf-HrU">
+                                <rect key="frame" x="474" y="13" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="C5O-D2-gah"/>
+                                    <constraint firstAttribute="width" constant="46" id="Uze-P7-YOj"/>
+                                </constraints>
+                                <state key="normal" title="View">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTouchViewButton:" destination="9oU-6N-iah" eventType="touchUpInside" id="S3f-15-yXi"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -404,6 +417,7 @@
                             <constraint firstAttribute="trailing" secondItem="Cpx-8F-3XC" secondAttribute="trailing" constant="16" id="9QH-Kx-D9C"/>
                             <constraint firstItem="6dN-m7-Hy6" firstAttribute="leading" secondItem="OZE-so-gd1" secondAttribute="leading" constant="146" id="D3J-c6-7TN"/>
                             <constraint firstItem="DnG-IA-gr6" firstAttribute="baseline" secondItem="Hco-Ca-jtv" secondAttribute="baseline" id="GeU-KH-KZA"/>
+                            <constraint firstItem="57T-uf-HrU" firstAttribute="baseline" secondItem="mVo-PR-Dcx" secondAttribute="baseline" id="I0B-ql-vPJ"/>
                             <constraint firstItem="2IE-iR-kZx" firstAttribute="baseline" secondItem="d3k-Pz-5JU" secondAttribute="baseline" id="IFG-Kg-w9w"/>
                             <constraint firstItem="Cpx-8F-3XC" firstAttribute="leading" secondItem="OZE-so-gd1" secondAttribute="leading" constant="146" id="KJo-rR-mEG"/>
                             <constraint firstItem="DnG-IA-gr6" firstAttribute="top" secondItem="mVo-PR-Dcx" secondAttribute="bottom" constant="4" id="Olq-R9-K3Z"/>
@@ -413,21 +427,31 @@
                             <constraint firstItem="63b-Yc-Nwg" firstAttribute="leading" secondItem="OZE-so-gd1" secondAttribute="leading" constant="16" id="W9H-C2-ORz"/>
                             <constraint firstItem="mVo-PR-Dcx" firstAttribute="top" secondItem="OZE-so-gd1" secondAttribute="top" constant="8" id="WO7-sf-AYV"/>
                             <constraint firstAttribute="trailing" secondItem="6dN-m7-Hy6" secondAttribute="trailing" constant="16" id="XE7-93-ARE"/>
+                            <constraint firstAttribute="trailing" secondItem="57T-uf-HrU" secondAttribute="trailing" constant="16" id="XHw-wV-Wwg"/>
                             <constraint firstItem="Hco-Ca-jtv" firstAttribute="leading" secondItem="OZE-so-gd1" secondAttribute="leading" constant="146" id="ZzJ-Lx-Fmw"/>
                             <constraint firstItem="zye-dM-Kd2" firstAttribute="leading" secondItem="OZE-so-gd1" secondAttribute="leading" constant="16" id="bsw-Gd-yfZ"/>
                             <constraint firstAttribute="trailing" secondItem="Hco-Ca-jtv" secondAttribute="trailing" constant="16" id="nrn-yg-MMi"/>
                             <constraint firstItem="mVo-PR-Dcx" firstAttribute="leading" secondItem="OZE-so-gd1" secondAttribute="leading" constant="16" id="p57-yD-CXv"/>
+                            <constraint firstItem="57T-uf-HrU" firstAttribute="leading" secondItem="mVo-PR-Dcx" secondAttribute="trailing" constant="8" id="qe5-LD-IFT"/>
+                            <constraint firstItem="57T-uf-HrU" firstAttribute="top" secondItem="OZE-so-gd1" secondAttribute="top" constant="9" id="rRX-bf-cH3"/>
                             <constraint firstItem="63b-Yc-Nwg" firstAttribute="baseline" secondItem="Cpx-8F-3XC" secondAttribute="baseline" id="tzK-YH-tFu"/>
                             <constraint firstItem="zye-dM-Kd2" firstAttribute="top" secondItem="63b-Yc-Nwg" secondAttribute="bottom" constant="13" id="wOS-ge-fUP"/>
                             <constraint firstItem="2IE-iR-kZx" firstAttribute="leading" secondItem="OZE-so-gd1" secondAttribute="leading" constant="16" id="xGi-dv-uuS"/>
                             <constraint firstAttribute="trailing" secondItem="d3k-Pz-5JU" secondAttribute="trailing" constant="16" id="xGw-tu-Sy3"/>
                             <constraint firstItem="63b-Yc-Nwg" firstAttribute="top" secondItem="DnG-IA-gr6" secondAttribute="bottom" constant="13" id="zQd-ef-VKn"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="8U4-dM-4rE"/>
+                                <exclude reference="rRX-bf-cH3"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="activityTypeTextField" destination="d3k-Pz-5JU" id="dVa-T8-YQU"/>
                         <outlet property="identifierTextField" destination="6dN-m7-Hy6" id="bFe-QN-6Ig"/>
                         <outlet property="labelTextField" destination="Hco-Ca-jtv" id="feA-xD-Qis"/>
+                        <outlet property="viewSurveyButton" destination="57T-uf-HrU" id="mPH-zC-yeK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sd6-bD-d0V" userLabel="First Responder" sceneMemberID="firstResponder"/>

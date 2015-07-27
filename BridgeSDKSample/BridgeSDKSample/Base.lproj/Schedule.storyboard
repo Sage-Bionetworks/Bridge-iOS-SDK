@@ -280,8 +280,8 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FCL-VM-RHw">
-                                <rect key="frame" x="16" y="64" width="536" height="32"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FCL-VM-RHw">
+                                <rect key="frame" x="16" y="64" width="482" height="32"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="26"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -295,12 +295,28 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ffj-rs-26e">
+                                <rect key="frame" x="506" y="69" width="46" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="46" id="jeS-ML-kuV"/>
+                                    <constraint firstAttribute="height" constant="30" id="vP4-jQ-rVl"/>
+                                </constraints>
+                                <state key="normal" title="View">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="didTouchViewButton:" destination="Hiv-93-aDA" eventType="touchUpInside" id="O8p-NT-uY2"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="20j-eh-wbL" firstAttribute="baseline" secondItem="X4Y-5L-rpS" secondAttribute="baseline" id="291-n0-4n7"/>
                             <constraint firstItem="IK3-J9-7Ul" firstAttribute="leading" secondItem="FHM-A0-hjq" secondAttribute="leading" constant="16" id="8mU-bb-qn2"/>
+                            <constraint firstItem="ffj-rs-26e" firstAttribute="leading" secondItem="FCL-VM-RHw" secondAttribute="trailing" constant="8" id="903-rI-rOX"/>
+                            <constraint firstItem="ffj-rs-26e" firstAttribute="baseline" secondItem="FCL-VM-RHw" secondAttribute="baseline" id="AbS-9o-wi8"/>
                             <constraint firstItem="FPo-ND-5F7" firstAttribute="leading" secondItem="FHM-A0-hjq" secondAttribute="leading" constant="146" id="Fmh-Nn-CoL"/>
+                            <constraint firstAttribute="trailing" secondItem="ffj-rs-26e" secondAttribute="trailing" constant="16" id="Fr2-MM-vWt"/>
                             <constraint firstItem="FCL-VM-RHw" firstAttribute="top" secondItem="FHM-A0-hjq" secondAttribute="top" constant="64" id="Jrq-rm-Lpb"/>
                             <constraint firstItem="FPo-ND-5F7" firstAttribute="baseline" secondItem="za5-Ee-NtF" secondAttribute="baseline" id="Lah-3b-luw"/>
                             <constraint firstAttribute="trailing" secondItem="SSo-va-vKd" secondAttribute="trailing" constant="16" id="MQV-lW-uUq"/>
@@ -325,6 +341,7 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="dhg-Sm-oZT"/>
                                 <exclude reference="UhX-zF-h0Y"/>
                             </mask>
                         </variation>
@@ -334,6 +351,7 @@
                         <outlet property="identifierTextField" destination="FPo-ND-5F7" id="ax3-SV-pWG"/>
                         <outlet property="labelDetailTextField" destination="v6H-2N-My7" id="KQD-3Z-bQ9"/>
                         <outlet property="labelTextField" destination="SSo-va-vKd" id="KTt-8j-0fW"/>
+                        <outlet property="viewSurveyButton" destination="ffj-rs-26e" id="qPT-17-FWa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DsI-ta-w8K" userLabel="First Responder" sceneMemberID="firstResponder"/>

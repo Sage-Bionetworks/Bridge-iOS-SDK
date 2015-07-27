@@ -31,6 +31,7 @@
 //
 
 #import "ActivityViewController.h"
+#import "SurveyViewController.h"
 
 @interface ActivityViewController ()
 
@@ -38,6 +39,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *labelDetailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *identifierTextField;
 @property (weak, nonatomic) IBOutlet UITextField *activityTypeTextField;
+@property (weak, nonatomic) IBOutlet UIButton *viewSurveyButton;
+
+- (IBAction)didTouchViewButton:(id)sender;
 
 @end
 
@@ -56,6 +60,7 @@
     self.labelDetailTextField.text = self.activity.labelDetail;
     self.identifierTextField.text = self.activity.survey ? self.activity.survey.identifier : self.activity.task.identifier;
     self.activityTypeTextField.text = self.activity.activityType;
+    self.viewSurveyButton.hidden = !self.activity.survey;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -78,6 +83,14 @@
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     return NO;
+}
+
+- (IBAction)didTouchViewButton:(id)sender {
+    UIStoryboard *ss = [UIStoryboard storyboardWithName:@"Survey" bundle:nil];
+    SurveyViewController *svc = [ss instantiateInitialViewController];
+    svc.surveyReference = self.activity.survey;
+    svc.responseReference = self.activity.surveyResponse;
+    [self.navigationController pushViewController:svc animated:YES];
 }
 
 @end
