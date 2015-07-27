@@ -111,7 +111,7 @@
 }
 
 - (IBAction)didTouchLoadButton:(id)sender {
-    [SBBComponent(SBBProfileManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
+    [SBBComponent(SBBUserManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         if (userProfile) {
             SBBUserProfile *profile = userProfile;
             [self updateWithProfile:profile];
@@ -130,7 +130,7 @@
     profile.phone = _phoneTextField.text;
     profile.can_be_recontacted = [[NSNumber numberWithBool:_canRecontactSwitch.on] stringValue];
     
-    [SBBComponent(SBBProfileManager) updateUserProfileWithProfile:profile completion:^(id responseObject, NSError *error) {
+    [SBBComponent(SBBUserManager) updateUserProfileWithProfile:profile completion:^(id responseObject, NSError *error) {
         NSLog(@"%@", responseObject);
         NSLog(@"Error: %@", error);
     }];
@@ -138,7 +138,7 @@
 }
 
 - (IBAction)didTouchSetButton:(id)sender {
-    [SBBComponent(SBBProfileManager) addExternalIdentifier:_externalIDTextField.text completion:^(id responseObject, NSError *error) {
+    [SBBComponent(SBBUserManager) addExternalIdentifier:_externalIDTextField.text completion:^(id responseObject, NSError *error) {
         NSLog(@"%@", responseObject);
         NSLog(@"Error: %@", error);
     }];

@@ -35,7 +35,8 @@
 @interface ActivityViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *labelTextField;
-@property (weak, nonatomic) IBOutlet UITextField *refTextField;
+@property (weak, nonatomic) IBOutlet UITextField *labelDetailTextField;
+@property (weak, nonatomic) IBOutlet UITextField *identifierTextField;
 @property (weak, nonatomic) IBOutlet UITextField *activityTypeTextField;
 
 @end
@@ -52,7 +53,8 @@
     [super viewWillAppear:animated];
     
     self.labelTextField.text = self.activity.label;
-    self.refTextField.text = self.activity.ref;
+    self.labelDetailTextField.text = self.activity.labelDetail;
+    self.identifierTextField.text = self.activity.survey ? self.activity.survey.identifier : self.activity.task.identifier;
     self.activityTypeTextField.text = self.activity.activityType;
 }
 
