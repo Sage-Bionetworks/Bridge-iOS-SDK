@@ -49,7 +49,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBComponent.h>
 #import <BridgeSDK/SBBComponentManager.h>
 #import <BridgeSDK/SBBConsentManager.h>
-#import <BridgeSDK/SBBProfileManager.h>
+#import <BridgeSDK/SBBUserManager.h>
 #import <BridgeSDK/SBBObjectManager.h>
 #import <BridgeSDK/SBBNetworkManager.h>
 #import <BridgeSDK/SBBScheduleManager.h>
