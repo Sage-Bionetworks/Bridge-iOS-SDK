@@ -51,6 +51,16 @@
 
 #pragma mark Scalar values
 
+- (BOOL)persistentValue
+{
+	return [self.persistent boolValue];
+}
+
+- (void)setPersistentValue:(BOOL)value_
+{
+	self.persistent = [NSNumber numberWithBool:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
@@ -73,6 +83,8 @@
         self.interval = [dictionary objectForKey:@"interval"];
 
         self.label = [dictionary objectForKey:@"label"];
+
+        self.persistent = [dictionary objectForKey:@"persistent"];
 
         self.scheduleType = [dictionary objectForKey:@"scheduleType"];
 
@@ -104,6 +116,8 @@
     [dict setObjectIfNotNil:self.interval forKey:@"interval"];
 
     [dict setObjectIfNotNil:self.label forKey:@"label"];
+
+    [dict setObjectIfNotNil:self.persistent forKey:@"persistent"];
 
     [dict setObjectIfNotNil:self.scheduleType forKey:@"scheduleType"];
 

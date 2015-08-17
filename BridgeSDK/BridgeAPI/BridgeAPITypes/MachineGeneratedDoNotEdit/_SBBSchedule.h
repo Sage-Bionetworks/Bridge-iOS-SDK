@@ -55,6 +55,10 @@
 
 @property (nonatomic, strong) NSString* label;
 
+@property (nonatomic, strong) NSNumber* persistent;
+
+@property (nonatomic, assign) BOOL persistentValue;
+
 @property (nonatomic, strong) NSString* scheduleType;
 
 @property (nonatomic, strong) NSDate* startsOn;
