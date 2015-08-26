@@ -38,5 +38,6 @@
 
 - (NSString *)ISO8601String;
 - (NSString *)ISO8601StringUTC;
+- (NSString *)ISO8601DateOnlyString;
 
 @end

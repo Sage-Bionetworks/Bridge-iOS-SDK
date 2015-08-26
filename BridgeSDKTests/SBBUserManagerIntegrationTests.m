@@ -108,4 +108,22 @@
     }];
 }
 
+- (void)testEmailData
+{
+    XCTestExpectation *expectSentData = [self expectationWithDescription:@"emailed data"];
+    [SBBComponent(SBBUserManager) emailDataToUserFrom:[NSDate dateWithTimeIntervalSince1970:0] to:[NSDate date] completion:^(id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"Error requesting user data:\n%@\nResponse: %@", error, responseObject);
+        }
+        XCTAssert(!error, @"Server emailed data");
+        [expectSentData fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout requesting user data: %@", error);
+        }
+    }];
+}
+
 @end
