@@ -35,12 +35,14 @@
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
 #import "BridgeSDKInternal.h"
+#import "NSDate+SBBAdditions.h"
 
 #define USER_API GLOBAL_API_PREFIX @"/users/self"
 
 NSString * const kSBBUserProfileAPI =       USER_API;
 NSString * const kSBBUserExternalIdAPI =    USER_API @"/externalId";
-NSString * const kSBBUserDataSharingAPI =     USER_API @"/dataSharing";
+NSString * const kSBBUserDataSharingAPI =   USER_API @"/dataSharing";
+NSString * const kSBBUserDataEmailDataAPI = USER_API @"/emailData";
 
 NSString * const kSBBUserDataSharingScopeKey = @"scope";
 NSString* const kSBBUserDataSharingScopeStrings[] = {
@@ -101,6 +103,24 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
                                 @"type": @"ExternalIdentifier"
                              };
     return [self.networkManager post:kSBBUserExternalIdAPI headers:headers parameters:params completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
+}
+
+- (NSURLSessionDataTask *)emailDataToUserFrom:(NSDate *)startDate to:(NSDate *)endDate completion:(SBBUserManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSString *startDateString = [startDate ISO8601DateOnlyString];
+    NSString *endDateString = [endDate ISO8601DateOnlyString];
+    NSDictionary *params = @{
+                             @"startDate": startDateString,
+                             @"endDate": endDateString,
+                             @"type": @"DateRange"
+                             };
+    return [self.networkManager post:kSBBUserDataEmailDataAPI headers:headers parameters:params completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (completion) {
             completion(responseObject, error);
         }

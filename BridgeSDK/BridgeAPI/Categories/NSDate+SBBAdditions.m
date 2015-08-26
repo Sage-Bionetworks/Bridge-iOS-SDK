@@ -50,14 +50,26 @@
 
 + (NSDateFormatter *)ISO8601UTCformatter
 {
-  static NSDateFormatter *formatter;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    formatter = [[self ISO8601formatter] copy];
-    [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
-  });
-  
-  return formatter;
+    static NSDateFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[self ISO8601formatter] copy];
+        [formatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+    });
+    
+    return formatter;
+}
+
++ (NSDateFormatter *)ISO8601DateOnlyformatter
+{
+    static NSDateFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[self ISO8601formatter] copy];
+        [formatter setDateFormat:@"yyyy-MM-dd"];
+    });
+    
+    return formatter;
 }
 
 + (instancetype)dateWithISO8601String:(NSString *)iso8601string
@@ -73,6 +85,11 @@
 - (NSString *)ISO8601StringUTC
 {
   return [[[self class] ISO8601UTCformatter] stringFromDate:self];
+}
+
+- (NSString *)ISO8601DateOnlyString
+{
+    return [[[self class] ISO8601DateOnlyformatter] stringFromDate:self];
 }
 
 @end

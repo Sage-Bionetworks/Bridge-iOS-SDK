@@ -105,6 +105,15 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
 - (NSURLSessionDataTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion;
 
 /*!
+ *  Email the user's study data in the specified date range to the email address associated with their account.
+ *  @param startDate The starting date for the data to be sent.
+ *  @param endDate The ending date for the data to be sent.
+ *
+ *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask *)emailDataToUserFrom:(NSDate *)startDate to:(NSDate *)endDate completion:(SBBUserManagerCompletionBlock)completion;
+
+/*!
  *  Change the scope of data sharing for this user.
  *  This should only be done in response to an explicit choice on the part of the user to change the sharing scope.
  *

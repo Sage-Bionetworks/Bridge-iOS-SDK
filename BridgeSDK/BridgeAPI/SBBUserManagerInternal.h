@@ -36,6 +36,7 @@
 extern NSString * const kSBBUserProfileAPI;
 extern NSString * const kSBBUserExternalIdAPI;
 extern NSString * const kSBBUserDataSharingAPI;
+extern NSString * const kSBBUserDataEmailDataAPI;
 
 extern NSString * const kSBBUserDataSharingScopeKey;
 extern NSString * const kSBBUserDataSharingScopeStrings[];
