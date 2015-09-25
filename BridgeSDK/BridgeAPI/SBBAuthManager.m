@@ -387,9 +387,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (void)addAuthHeaderToHeaders:(NSMutableDictionary *)headers
 {
+//    IBM WATSON changes START here, use key as Auth-Session instead of Bridge-Session
     if (self.isAuthenticated) {
-        [headers setObject:self.sessionToken forKey:@"Bridge-Session"];
+        [headers setObject:self.sessionToken forKey:@"Auth-Session"];
     }
+//    IBM WATSON changes END here.
 }
 
 #pragma mark Internal keychain-related methods

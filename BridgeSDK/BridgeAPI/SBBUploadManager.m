@@ -392,8 +392,11 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
         };
 #endif
         NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
-        [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription
-                             completion:uploadFileCompletion];
+//    IBM WATSON changes START here:
+        [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders
+                                  toUrl:uploadSession.url uploadSession:uploadSession
+                        taskDescription:downloadTask.taskDescription completion:nil];
+//    IBM WATSON changes END here:
     } else {
         NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
         [self completeUploadOfFile:downloadTask.taskDescription withError:error];

@@ -83,6 +83,9 @@ NSString* const kSBBConsentShareScopeStrings[] = {
   NSMutableDictionary *ResearchConsent = [NSMutableDictionary dictionary];
   [ResearchConsent setObject:name forKey:kSBBKeyName];
   [ResearchConsent setObject:birthdate forKey:kSBBKeyBirthdate];
+//    IBM WATSON changes START here:
+    [ResearchConsent setObject:@"ConsentSignature" forKey:@"type"];
+//    IBM WATSON changes END here.
 
   // Add signature image, if it's specified
   if (signatureImage != nil) {

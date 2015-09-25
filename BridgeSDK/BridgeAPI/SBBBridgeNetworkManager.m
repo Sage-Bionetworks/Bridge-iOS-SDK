@@ -63,13 +63,19 @@
 {
     SBBEnvironment environment = gSBBDefaultEnvironment;
     
-    NSString *baseURL = [[self class] baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
+//    IBM WATSON changes START here:
+    // NSString *baseURL = [[self class] baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@“sagebridge.org"];
+    
+    NSBundle  *bundle = [NSBundle bundleForClass:[self class]];
+    NSString  *path = [bundle pathForResource: @"Info" ofType: @"plist"];
+    NSDictionary  *dict = [NSDictionary dictionaryWithContentsOfFile:path];
+    NSString *baseURL = [dict objectForKey: @"Bridge Server Address"];
+//    IBM WATSON changes END here.
     NSString *bridgeStudy = gSBBAppStudy;
     if (self = [super initWithBaseURL:baseURL bridgeStudy:bridgeStudy]) {
         self.environment = environment;
         _authManager = authManager;
     }
-    
     return self;
 }
 

@@ -186,7 +186,14 @@ NSString *kAPIPrefix = @"webservices";
   dispatch_once(&onceToken, ^{
     SBBEnvironment environment = gSBBDefaultEnvironment;
     
-    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
+//    IBM WATSON changes START here:
+//    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
+      
+    NSBundle  *bundle = [NSBundle bundleForClass:[self class]];
+    NSString  *path = [bundle pathForResource: @"Info" ofType: @"plist"];
+    NSDictionary  *dict = [NSDictionary dictionaryWithContentsOfFile: path];
+    NSString  *baseURL = [dict objectForKey: @"Bridge Server Address"];
+//    IBM WATSON changes END here.
     NSString *bridgeStudy = gSBBAppStudy;
     shared = [[self alloc] initWithBaseURL:baseURL bridgeStudy:bridgeStudy];
     shared.environment = environment;
@@ -312,7 +319,10 @@ NSString *kAPIPrefix = @"webservices";
   [_uploadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
 }
 
-- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion
+- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers
+                                 toUrl:(NSString *)urlString uploadSession:(SBBUploadSession *)uploadSession
+                       taskDescription:(NSString *)description
+                            completion:(SBBNetworkManagerTaskCompletionBlock)completion
 {
   NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
   [request setAllHTTPHeaderFields:headers];
@@ -408,7 +418,8 @@ NSString *kAPIPrefix = @"webservices";
   NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
     NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
-        NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+//        NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+        
         if (error)
         {
             [self handleError:error task:task retryObject:localRetryObject];
@@ -419,6 +430,8 @@ NSString *kAPIPrefix = @"webservices";
         }
         else
         {
+            NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            
             if (completion) {
                 completion(task, responseObject, nil);
             }
@@ -547,8 +560,16 @@ NSString *kAPIPrefix = @"webservices";
     }
     else
     {
-        NSURL * tempURL =[NSURL URLWithString:URLString relativeToURL:[NSURL URLWithString:self.baseURL]];
-        return [NSURL URLWithString:[tempURL absoluteString]];
+//    IBM WATSON changes START here:
+        /*
+         NSURL * tempURL = [NSURL URLWithString:URLString relativeToURL:
+         [NSURL URLWithString:self.baseURL]];
+         return [NSURL URLWithString:[tempURL absoluteString]];
+         */
+        NSString  *serverUrl = self.baseURL;
+        serverUrl = [serverUrl stringByAppendingString:URLString];
+        return [NSURL URLWithString:serverUrl];
+//    IBM WATSON changes END here.
     }
 }
 

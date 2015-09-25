@@ -30,6 +30,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SBBComponent.h"
+#import "SBBUploadSession.h"
 
 /*!
  Session identifier for the Bridge SDK's background session.
@@ -168,7 +169,14 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
  
  @return The NSURLSessionUploadTask used to make the request, so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion;
+//- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion;
+
+//    IBM WATSON changes START here: added uploadSession parameter
+- (NSURLSessionUploadTask *) uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers
+                                  toUrl:(NSString *)urlString uploadSession:(SBBUploadSession *)uploadSession
+                        taskDescription:(NSString *)description
+                             completion:(SBBNetworkManagerTaskCompletionBlock)completion;
+//    IBM WATSON changes END here.
 
 /*!
  Perform a background download of a file from a given URL with provided method, headers, and parameters.
