@@ -56,11 +56,12 @@ NSString * const kSBBTaskAPI =       TASK_API;
     return shared;
 }
 
-- (NSURLSessionDataTask *)getTasksUntil:(NSDate *)until withCompletion:(SBBTaskManagerGetCompletionBlock)completion
+- (NSURLSessionDataTask *)getTasksForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBTaskManagerGetCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    return [self.networkManager get:kSBBTaskAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    
+    return [self.networkManager get:kSBBTaskAPI headers:headers parameters:@{@"daysAhead": @(daysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         SBBResourceList *tasks = [self.objectManager objectFromBridgeJSON:responseObject];
         if (completion) {
             completion(tasks, error);

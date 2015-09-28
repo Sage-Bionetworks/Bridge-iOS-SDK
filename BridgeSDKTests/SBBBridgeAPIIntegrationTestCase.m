@@ -17,7 +17,6 @@ static TestAdminAuthDelegate *gAdminAuthDelegate;
 
 //#define ADMIN_API @"/admin/v1/users"
 #define ADMIN_API @"/v3/users"
-#define TEST_STUDY @"api"
 
 @implementation SBBBridgeAPIIntegrationTestCase
 

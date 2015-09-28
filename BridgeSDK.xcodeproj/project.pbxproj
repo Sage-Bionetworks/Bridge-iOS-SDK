@@ -182,7 +182,6 @@
 		807AE2AF1B60349D002588BB /* SBBAuthManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */; };
 		807AE2B61B6034AD002588BB /* TestAdminAuthDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */; };
 		807AE2B71B6034B5002588BB /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38021A2B144000E7CF1E /* sample-signature.png */; };
-		807AE2BA1B603552002588BB /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; };
 		807AE2BB1B6035F8002588BB /* SBBConsentManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786811B5AB1DC0029EAE6 /* SBBConsentManagerIntegrationTests.m */; };
 		807AE2BC1B6035FD002588BB /* SBBUserManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786831B5BF71D0029EAE6 /* SBBUserManagerIntegrationTests.m */; };
 		807AE2BD1B603601002588BB /* SBBScheduleManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786851B5BF7860029EAE6 /* SBBScheduleManagerIntegrationTests.m */; };
@@ -220,6 +219,9 @@
 		80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BB09F619C2234100E419A1 /* SBBAuthManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80BB09F919C2234100E419A1 /* SBBAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BB09F719C2234100E419A1 /* SBBAuthManager.m */; };
 		80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */; };
+		80DB6BA01BACB06F0062D1EF /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; };
+		80DB6BA41BACB27C0062D1EF /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; };
+		80DB6BA51BACB27C0062D1EF /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		80E60D9F19FAD56C0053D166 /* _SBBSchedule.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E60D9D19FAD56C0053D166 /* _SBBSchedule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80E60DA019FAD56C0053D166 /* _SBBSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E60D9E19FAD56C0053D166 /* _SBBSchedule.m */; };
 		80E60DA419FAD5860053D166 /* SBBSchedule.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E60DA219FAD5860053D166 /* SBBSchedule.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -284,7 +286,7 @@
 			remoteGlobalIDString = 807AE2861B603309002588BB;
 			remoteInfo = BridgeSDKIntegration;
 		};
-		807AE2B81B603545002588BB /* PBXContainerItemProxy */ = {
+		80DB6BA61BACB27C0062D1EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
 			proxyType = 1;
@@ -292,6 +294,20 @@
 			remoteInfo = BridgeSDK;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		80DB6BA81BACB27D0062D1EF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				80DB6BA51BACB27C0062D1EF /* BridgeSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		601E8A0E1B191DAE00BB02FB /* MockURLSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockURLSession.h; sourceTree = "<group>"; };
@@ -545,7 +561,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				807AE2BA1B603552002588BB /* BridgeSDK.framework in Frameworks */,
+				80DB6BA41BACB27C0062D1EF /* BridgeSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,6 +569,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80DB6BA01BACB06F0062D1EF /* BridgeSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1098,11 +1115,12 @@
 				807AE2831B603309002588BB /* Sources */,
 				807AE2841B603309002588BB /* Frameworks */,
 				807AE2851B603309002588BB /* Resources */,
+				80DB6BA81BACB27D0062D1EF /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				807AE2B91B603545002588BB /* PBXTargetDependency */,
+				80DB6BA71BACB27C0062D1EF /* PBXTargetDependency */,
 			);
 			name = BridgeSDKIntegration;
 			productName = BridgeSDKIntegration;
@@ -1467,10 +1485,10 @@
 			target = 807AE2861B603309002588BB /* BridgeSDKIntegration */;
 			targetProxy = 807AE2A01B60330C002588BB /* PBXContainerItemProxy */;
 		};
-		807AE2B91B603545002588BB /* PBXTargetDependency */ = {
+		80DB6BA71BACB27C0062D1EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 80855F4F19BE258C006601C7 /* BridgeSDK */;
-			targetProxy = 807AE2B81B603545002588BB /* PBXContainerItemProxy */;
+			targetProxy = 80DB6BA61BACB27C0062D1EF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1498,6 +1516,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BridgeSDKIntegration/Info.plist;
@@ -1511,6 +1531,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1784,6 +1806,7 @@
 				807AE2A91B60330D002588BB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		807AE2AA1B60330D002588BB /* Build configuration list for PBXNativeTarget "BridgeSDKIntegrationTests" */ = {
 			isa = XCConfigurationList;
@@ -1792,6 +1815,7 @@
 				807AE2AC1B60330D002588BB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		80855F4A19BE258B006601C7 /* Build configuration list for PBXProject "BridgeSDK" */ = {
 			isa = XCConfigurationList;

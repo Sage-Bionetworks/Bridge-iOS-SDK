@@ -9,6 +9,8 @@
 #import <XCTest/XCTest.h>
 @import BridgeSDK;
 
+#define TEST_STUDY @"api"
+
 typedef void (^SBBBridgeAPIIntegrationTestCaseCreateCompletionBlock)(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error);
 
 @interface SBBBridgeAPIIntegrationTestCase : XCTestCase

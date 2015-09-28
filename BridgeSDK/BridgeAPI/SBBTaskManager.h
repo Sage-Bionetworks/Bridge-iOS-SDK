@@ -57,14 +57,14 @@ typedef void (^SBBTaskManagerUpdateCompletionBlock)(id responseObject, NSError *
 @protocol SBBTaskManagerProtocol <SBBBridgeAPIManagerProtocol>
 
 /*!
- Get all available, started, or scheduled tasks for a user. The "until" parameter allows you to retrieve tasks that are scheduled in the future up to the date/time supplied (to a maximum of four days, at this time). This allows certain kinds of UIs (e.g. "You have N tasks tomorrow" or "You have compiled N of X tasks today", even when the tasks are not yet to be performed). Once a task is finished, or expires (the time has passed for it to be started), it will be removed from the list of tasks returned to the user.
+ Gets all available, started, or scheduled tasks for a user. The "daysAhead" parameter allows you to retrieve tasks that are scheduled in the future for the indicated number of days past today (to a maximum of four days, at this time). This allows certain kinds of UIs (e.g. "You have N tasks tomorrow" or "You have compiled N of X tasks today", even when the tasks are not yet to be performed). Tasks will be returned in the timezone of the device at the time of the request. Once a task is finished, or expires (the time has passed for it to be started), it will be removed from the list of tasks returned to the user.
  
- @param until      A date/time (usually in the near future) up to which to retrieve available/started/scheduled tasks.
+ @param daysAhead  A number of days in the future (0-4) for which to retrieve available/started/scheduled tasks.
  @param completion An SBBTaskManagerGetCompletionBlock to be called upon completion.
  
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)getTasksUntil:(NSDate *)until withCompletion:(SBBTaskManagerGetCompletionBlock)completion;
+- (NSURLSessionDataTask *)getTasksForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBTaskManagerGetCompletionBlock)completion;
 
 /*!
  Mark a Task as started, as of the time this method is called.
