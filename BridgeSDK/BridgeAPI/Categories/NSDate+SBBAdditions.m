@@ -72,6 +72,20 @@
     return formatter;
 }
 
++ (NSDateFormatter *)ISO8601OffsetOnlyformatter
+{
+    static NSDateFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"ZZZZZ"];
+        NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [formatter setLocale:enUSPOSIXLocale];
+    });
+    
+    return formatter;
+}
+
 + (instancetype)dateWithISO8601String:(NSString *)iso8601string
 {
   return [[self ISO8601formatter] dateFromString:iso8601string];
@@ -90,6 +104,11 @@
 - (NSString *)ISO8601DateOnlyString
 {
     return [[[self class] ISO8601DateOnlyformatter] stringFromDate:self];
+}
+
+- (NSString *)ISO8601OffsetString
+{
+    return [[[self class] ISO8601OffsetOnlyformatter] stringFromDate:self];
 }
 
 @end

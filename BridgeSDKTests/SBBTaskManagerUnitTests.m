@@ -75,7 +75,7 @@
     [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:kSBBTaskAPI andMethod:@"GET"];
     id<SBBTaskManagerProtocol> tMan = SBBComponent(SBBTaskManager);
     
-    [tMan getTasksUntil:[NSDate date] withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
+    [tMan getTasksForDaysAhead:0 withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
         XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], @"Converted incoming json to SBBResourceList");
         NSArray *tasks = tasksRList.items;
         XCTAssert([tasks isKindOfClass:[NSArray class]], @"Converted items to NSArray");
