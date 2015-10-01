@@ -128,7 +128,7 @@
 		8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6D19DA0359001AF9BA /* NSError+SBBAdditions.m */; };
 		8017AF7219DA0359001AF9BA /* UIDevice+Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF6E19DA0359001AF9BA /* UIDevice+Hardware.h */; };
 		8017AF7319DA0359001AF9BA /* UIDevice+Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6F19DA0359001AF9BA /* UIDevice+Hardware.m */; };
-		8017AF7619DA038D001AF9BA /* NSDate+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF7419DA038D001AF9BA /* NSDate+SBBAdditions.h */; };
+		8017AF7619DA038D001AF9BA /* NSDate+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF7419DA038D001AF9BA /* NSDate+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8017AF7719DA038D001AF9BA /* NSDate+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF7519DA038D001AF9BA /* NSDate+SBBAdditions.m */; };
 		8026BD1119C7532D0077F3EB /* UICKeyChainStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026BD0F19C7532D0077F3EB /* UICKeyChainStore.h */; };
 		8026BD1219C7532D0077F3EB /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026BD1019C7532D0077F3EB /* UICKeyChainStore.m */; };

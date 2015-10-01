@@ -58,6 +58,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBUploadManager.h>
 #import <BridgeSDK/SBBErrors.h>
 #import <BridgeSDK/SBBBridgeObjects.h>
+#import <BridgeSDK/NSDate+SBBAdditions.h>
   
 // This sets the default environment at app (not SDK) compile time to Staging for debug builds and Production for non-debug.
 #if DEBUG
