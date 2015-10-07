@@ -21,7 +21,7 @@
 //	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 //	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 //	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-//	DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
 //	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 //	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 //	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -38,7 +38,7 @@
 
 @property (strong, nonatomic) NSArray *tasks;
 @property (weak, nonatomic) TasksTableViewController *tasksTableViewController;
-@property (weak, nonatomic) IBOutlet UIDatePicker *untilDatePicker;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *daysAheadSegmentedControl;
 
 - (IBAction)didTouchLoadButton:(id)sender;
 
@@ -48,7 +48,7 @@
 
 - (void)reloadTasks
 {
-    NSURLSessionDataTask *sdtask = [SBBComponent(SBBTaskManager) getTasksUntil:_untilDatePicker.date withCompletion:^(id tasksList, NSError *error) {
+    NSURLSessionDataTask *sdtask = [SBBComponent(SBBTaskManager) getTasksForDaysAhead:[_daysAheadSegmentedControl selectedSegmentIndex] withCompletion:^(id tasksList, NSError *error) {
         SBBResourceList *list = (SBBResourceList *)tasksList;
         self.tasks = list.items;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -62,7 +62,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _untilDatePicker.date = [NSDate date];
+    _daysAheadSegmentedControl.selectedSegmentIndex = _daysAheadSegmentedControl.numberOfSegments - 1;
     [self reloadTasks];
 }
 
