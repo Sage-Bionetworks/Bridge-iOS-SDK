@@ -142,4 +142,14 @@
     });
 }
 
+// UITextFieldDelegate
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if (textField == _passwordTextField) {
+        [textField resignFirstResponder];
+        return NO;
+    }
+    return YES;
+}
+
 @end
