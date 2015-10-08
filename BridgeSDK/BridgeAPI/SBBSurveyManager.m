@@ -65,7 +65,7 @@
 - (NSURLSessionDataTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
   NSString *version = [createdOn ISO8601StringUTC];
-  NSString *ref = [NSString stringWithFormat:@"/api/v2/surveys/%@/revisions/%@", guid, version];
+  NSString *ref = [NSString stringWithFormat:@"/api/v1/surveys/%@/revisions/%@", guid, version];
   return [self getSurveyByRef:ref completion:completion];
 }
 
@@ -109,7 +109,7 @@
 - (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)surveyGuid createdOn:(NSDate *)createdOn withResponseIdentifier:(NSString *)responseIdentifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
     NSString *version = [createdOn ISO8601StringUTC];
-    NSString *ref = [NSString stringWithFormat:@"/api/v2/surveys/%@/revisions/%@", surveyGuid, version];
+    NSString *ref = [NSString stringWithFormat:@"/api/v1/surveys/%@/revisions/%@", surveyGuid, version];
     return [self submitAnswers:surveyAnswers toSurveyByRef:ref withResponseIdentifier:responseIdentifier completion:completion];
 }
 
@@ -117,7 +117,7 @@
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *ref = [NSString stringWithFormat:@"/api/v2/surveyresponses/%@", identifier];
+  NSString *ref = [NSString stringWithFormat:@"/api/v1/surveyresponses/%@", identifier];
   return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     id surveyResponse = [self.objectManager objectFromBridgeJSON:responseObject];
     if (completion) {
@@ -131,7 +131,7 @@
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
   id jsonAnswers = [self.objectManager bridgeJSONFromObject:surveyAnswers];
-  NSString *ref = [NSString stringWithFormat:@"/api/v2/surveyresponses/%@", guid];
+  NSString *ref = [NSString stringWithFormat:@"/api/v1/surveyresponses/%@", guid];
   return [self.networkManager post:ref headers:headers parameters:jsonAnswers completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
@@ -143,7 +143,7 @@
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *ref = [NSString stringWithFormat:@"/api/v2/surveyresponses/%@", guid];
+  NSString *ref = [NSString stringWithFormat:@"/api/v1/surveyresponses/%@", guid];
   return [self.networkManager delete:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);

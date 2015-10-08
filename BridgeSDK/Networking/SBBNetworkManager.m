@@ -187,7 +187,7 @@ NSString *kAPIPrefix = @"webservices";
     SBBEnvironment environment = gSBBDefaultEnvironment;
     
 //    IBM WATSON changes START here:
-//    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
+
       
     NSBundle  *bundle = [NSBundle bundleForClass:[self class]];
     NSString  *path = [bundle pathForResource: @"Info" ofType: @"plist"];

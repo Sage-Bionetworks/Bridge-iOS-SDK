@@ -24,9 +24,5 @@
 	<string></string>
 	<key>Bridge Server Address</key>
 	<string>https://wwwtest.watson-health.ibm.com/research</string>
-	<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-	<true/>
-	<key>NSTemporaryExceptionMinimumTLSVersion</key>
-	<string>TLSv1.1</string>
 </dict>
 </plist>
