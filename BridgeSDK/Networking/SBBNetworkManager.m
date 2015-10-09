@@ -493,17 +493,16 @@ NSString *kAPIPrefix = @"webservices";
 
 - (NSString *)userAgentHeader
 {
-  NSDictionary *localizedInfoDictionary = [[NSBundle mainBundle] localizedInfoDictionary];
-  if (!localizedInfoDictionary) {
-    localizedInfoDictionary = [[NSBundle mainBundle] infoDictionary];
-  }
-  NSString *appName = [localizedInfoDictionary objectForKey:(NSString *)kCFBundleNameKey];
-  NSString *appVersion = [localizedInfoDictionary objectForKey:(NSString *)kCFBundleVersionKey];
-  NSString *deviceModel = [[UIDevice currentDevice] platformString];
-  NSString *osName = [[UIDevice currentDevice] systemName];
-  NSString *osVersion = [[UIDevice currentDevice] systemVersion];
-  
-  return [NSString stringWithFormat:@"%@/%@ (%@; %@ %@) BridgeSDK/%0.0f", appName, appVersion, deviceModel, osName, osVersion, BridgeSDKVersionNumber];
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    UIDevice *currentDevice = [UIDevice currentDevice];
+    
+    NSString *appName = [mainBundle objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+    NSString *appVersion = [mainBundle objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+    NSString *deviceModel = [currentDevice platformString];
+    NSString *osName = [currentDevice systemName];
+    NSString *osVersion = [currentDevice systemVersion];
+    
+    return [NSString stringWithFormat:@"%@/%@ (%@; %@ %@) BridgeSDK/%0.0f", appName, appVersion, deviceModel, osName, osVersion, BridgeSDKVersionNumber];
 }
 
 - (NSString *)acceptLanguageHeader

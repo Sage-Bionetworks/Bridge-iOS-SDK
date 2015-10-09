@@ -38,7 +38,7 @@
 
 @property (strong, nonatomic) NSArray *tasks;
 @property (weak, nonatomic) TasksTableViewController *tasksTableViewController;
-@property (weak, nonatomic) IBOutlet UIDatePicker *untilDatePicker;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *daysAheadSegmentedControl;
 
 - (IBAction)didTouchLoadButton:(id)sender;
 
@@ -48,13 +48,17 @@
 
 - (void)reloadTasks
 {
-    NSURLSessionDataTask *sdtask = [SBBComponent(SBBTaskManager) getTasksUntil:_untilDatePicker.date withCompletion:^(id tasksList, NSError *error) {
-        SBBResourceList *list = (SBBResourceList *)tasksList;
-        self.tasks = list.items;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            _tasksTableViewController.tasks = _tasks;
-            [_tasksTableViewController.tableView reloadData];
-        });
+    NSURLSessionDataTask *sdtask = [SBBComponent(SBBTaskManager) getTasksForDaysAhead:[_daysAheadSegmentedControl selectedSegmentIndex] withCompletion:^(id tasksList, NSError *error) {
+        if (error) {
+            NSLog(@"Error loading tasks:\n%@", error);
+        } else {
+            SBBResourceList *list = (SBBResourceList *)tasksList;
+            self.tasks = list.items;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                _tasksTableViewController.tasks = _tasks;
+                [_tasksTableViewController.tableView reloadData];
+            });
+        }
     }];
 #pragma unused(sdtask)
 }
@@ -62,7 +66,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _untilDatePicker.date = [NSDate date];
+    _daysAheadSegmentedControl.selectedSegmentIndex = 0;
     [self reloadTasks];
 }
 

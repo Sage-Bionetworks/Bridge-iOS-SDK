@@ -32,6 +32,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SignUpSignInViewController : UIViewController
+@interface SignUpSignInViewController : UIViewController<UITextFieldDelegate>
 
 @end
