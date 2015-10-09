@@ -66,7 +66,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _daysAheadSegmentedControl.selectedSegmentIndex = _daysAheadSegmentedControl.numberOfSegments - 1;
+    _daysAheadSegmentedControl.selectedSegmentIndex = 0;
     [self reloadTasks];
 }
 

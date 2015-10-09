@@ -48,14 +48,14 @@
                                 </connections>
                             </button>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wwP-dW-ENm">
-                                <rect key="frame" x="0.0" y="146" width="600" height="454"/>
+                                <rect key="frame" x="0.0" y="177" width="600" height="423"/>
                                 <animations/>
                                 <connections>
                                     <segue destination="m4h-qf-iwV" kind="embed" id="T8s-cP-Yy3"/>
                                 </connections>
                             </containerView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="5cM-bB-N0x">
-                                <rect key="frame" x="118" y="102" width="200" height="29"/>
+                                <rect key="frame" x="16" y="133" width="200" height="29"/>
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="7Gb-T6-jtA"/>
@@ -80,22 +80,27 @@
                             <constraint firstItem="u2M-vq-JkW" firstAttribute="top" secondItem="pWZ-ml-BOp" secondAttribute="bottom" constant="8" id="DdQ-Vf-Qb1"/>
                             <constraint firstItem="pWZ-ml-BOp" firstAttribute="leading" secondItem="787-p0-C2y" secondAttribute="leading" constant="16" id="FuV-d0-jLm"/>
                             <constraint firstItem="u2M-vq-JkW" firstAttribute="leading" secondItem="787-p0-C2y" secondAttribute="leading" constant="16" id="TQy-sb-Vz6"/>
+                            <constraint firstItem="5cM-bB-N0x" firstAttribute="top" secondItem="u2M-vq-JkW" secondAttribute="bottom" constant="8" id="enS-Jf-3lU"/>
                             <constraint firstAttribute="trailing" secondItem="NmC-qr-Nki" secondAttribute="trailing" constant="16" id="hRh-89-9h4"/>
                             <constraint firstItem="wwP-dW-ENm" firstAttribute="leading" secondItem="787-p0-C2y" secondAttribute="leading" id="nan-Ty-7Ci"/>
-                            <constraint firstItem="5cM-bB-N0x" firstAttribute="leading" secondItem="u2M-vq-JkW" secondAttribute="trailing" constant="8" id="pxg-yB-62X"/>
                             <constraint firstAttribute="bottom" secondItem="wwP-dW-ENm" secondAttribute="bottom" id="rfy-tV-wSC"/>
                             <constraint firstAttribute="trailing" secondItem="wwP-dW-ENm" secondAttribute="trailing" id="rgj-1S-n0M"/>
                             <constraint firstItem="5cM-bB-N0x" firstAttribute="baseline" secondItem="u2M-vq-JkW" secondAttribute="baseline" id="s1q-Fd-33m"/>
                             <constraint firstItem="u2M-vq-JkW" firstAttribute="top" secondItem="pWZ-ml-BOp" secondAttribute="bottom" constant="8" id="tuy-0z-rAt"/>
                             <constraint firstItem="pWZ-ml-BOp" firstAttribute="top" secondItem="787-p0-C2y" secondAttribute="top" constant="64" id="uYo-SY-lYg"/>
                             <constraint firstItem="wwP-dW-ENm" firstAttribute="top" secondItem="5cM-bB-N0x" secondAttribute="bottom" constant="16" id="w1c-7B-cU4"/>
+                            <constraint firstItem="5cM-bB-N0x" firstAttribute="leading" secondItem="u2M-vq-JkW" secondAttribute="leading" id="ya4-sc-O8x"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="DYS-c7-mlI"/>
+                                <exclude reference="s1q-Fd-33m"/>
                             </mask>
                         </variation>
                     </view>
+                    <connections>
+                        <outlet property="daysAheadSegmentedControl" destination="5cM-bB-N0x" id="vuC-IU-AOp"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7nC-rK-aus" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -106,7 +111,7 @@
             <objects>
                 <tableViewController id="m4h-qf-iwV" customClass="TasksTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="gd2-cn-ZNn">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="454"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="423"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
