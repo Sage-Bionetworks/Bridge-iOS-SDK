@@ -408,7 +408,15 @@ NSString *kAPIPrefix = @"webservices";
   NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
     NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
-        NSDictionary * responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+        id responseObject = nil;
+        if (data.length) {
+            responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+            if (!responseObject) {
+                // maybe it was an html error page
+                responseObject = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+            }
+        }
+        
         if (error)
         {
             [self handleError:error task:task retryObject:localRetryObject];
