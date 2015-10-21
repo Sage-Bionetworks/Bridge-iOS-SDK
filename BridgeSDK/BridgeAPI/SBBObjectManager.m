@@ -663,11 +663,11 @@
                 id subObject = [self objectFromBridgeJSON:subJson];
                 if (subObject == nil) {
 #if DEBUG
-                    NSLog(@"Unable to create object from json, leaving as json object:\n%@", subJson);
+                    NSLog(@"Unable to create Bridge object from json, skipping:\n%@", subJson);
 #endif
-                    return subJson;
+                } else {
+                    [list addObject:subObject];
                 }
-                [list addObject:subObject];
             } else {
                 [list addObject:subJson];
             }
