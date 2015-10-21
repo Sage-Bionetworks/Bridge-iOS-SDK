@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14F27" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="15A284" minimumToolsVersion="Xcode 4.3">
     <entity name="Activity" representedClassName="SBBActivity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="labelDetail" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="survey" optional="YES" attributeType="Transformable" syncable="YES">
@@ -254,7 +255,7 @@
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Activity" positionX="-9" positionY="90" width="128" height="135"/>
+        <element name="Activity" positionX="-9" positionY="90" width="128" height="150"/>
         <element name="BooleanConstraints" positionX="0" positionY="108" width="128" height="45"/>
         <element name="BridgeObject" positionX="-54" positionY="-9" width="128" height="60"/>
         <element name="DateConstraints" positionX="18" positionY="126" width="128" height="90"/>
