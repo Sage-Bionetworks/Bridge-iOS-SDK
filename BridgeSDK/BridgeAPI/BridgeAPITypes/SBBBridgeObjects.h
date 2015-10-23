@@ -23,7 +23,7 @@
 #import "SBBSurveyResponse.h"
 #import "SBBSurveyResponseReference.h"
 #import "SBBSurveyRule.h"
-#import "SBBTask.h"
+#import "SBBScheduledActivity.h"
 #import "SBBTaskReference.h"
 #import "SBBTimeConstraints.h"
 #import "SBBUploadRequest.h"

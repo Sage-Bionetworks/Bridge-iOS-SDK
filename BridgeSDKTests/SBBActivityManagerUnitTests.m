@@ -1,5 +1,5 @@
 //
-//  SBBTaskManagerUnitTests.m
+//  SBBActivityManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 5/6/15.
@@ -7,14 +7,14 @@
 //
 
 #import "SBBBridgeAPIUnitTestCase.h"
-#import "SBBTaskManagerInternal.h"
+#import "SBBActivityManagerInternal.h"
 #import "SBBBridgeObjects.h"
 
-@interface SBBTaskManagerUnitTests : SBBBridgeAPIUnitTestCase
+@interface SBBActivityManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @end
 
-@implementation SBBTaskManagerUnitTests
+@implementation SBBActivityManagerUnitTests
 
 - (void)setUp {
     [super setUp];
@@ -26,11 +26,11 @@
     [super tearDown];
 }
 
-- (void)testGetTasksAsOf {
+- (void)testGetScheduledActivitiesAsOf {
     NSArray *tasks =
     @[
       @{
-          @"type": @"Task",
+          @"type": @"ScheduledActivity",
           @"guid": @"task-1-guid",
           @"activity": @{
                   @"activityType": @"survey",
@@ -50,7 +50,7 @@
           @"status": @"available"
           },
       @{
-          @"type": @"Task",
+          @"type": @"ScheduledActivity",
           @"guid": @"task-1-guid",
           @"activity": @{
                   @"activityType": @"task",
@@ -73,20 +73,20 @@
                                   @"total": @(tasks.count)
                                   };
     [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:kSBBTaskAPI andMethod:@"GET"];
-    id<SBBTaskManagerProtocol> tMan = SBBComponent(SBBTaskManager);
+    id<SBBActivityManagerProtocol> tMan = SBBComponent(SBBActivityManager);
     
-    [tMan getTasksForDaysAhead:0 withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
+    [tMan getScheduledActivitiesForDaysAhead:0 withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
         XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], @"Converted incoming json to SBBResourceList");
         NSArray *tasks = tasksRList.items;
         XCTAssert([tasks isKindOfClass:[NSArray class]], @"Converted items to NSArray");
         XCTAssert(tasks.count, @"Converted items to non-empty NSArray");
         if (tasks.count) {
-            SBBTask *task0 = tasks[0];
-            XCTAssert([task0 isKindOfClass:[SBBTask class]], @"Converted items to NSArray of SBBTask objects");
+            SBBScheduledActivity *task0 = tasks[0];
+            XCTAssert([task0 isKindOfClass:[SBBScheduledActivity class]], @"Converted items to NSArray of SBBScheduledActivity objects");
             SBBActivity *activity0 = task0.activity;
             XCTAssert([activity0 isKindOfClass:[SBBActivity class]], @"Converted 'activity' json to an SBBActivity object");
             XCTAssert([activity0.survey isKindOfClass:[SBBSurveyReference class]], @"Converted 'survey' json to SBBSurveyReference object");
-            SBBTask *task1 = tasks[1];
+            SBBScheduledActivity *task1 = tasks[1];
             SBBActivity *activity1 = task1.activity;
             XCTAssert([activity1 isKindOfClass:[SBBActivity class]], @"Activity of second task is also an SBBActivity object");
             XCTAssert([activity1.activityType isEqualToString:@"task"], @"Put tasks into array in correct order");

@@ -1,5 +1,8 @@
 //
-//  SBBTask.m
+//  SBBActivityManagerInternal.h
+//  BridgeSDK
+//
+//  Created by Erin Mounts on 7/24/15.
 //
 //	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
@@ -27,12 +30,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBTask.h"
+#import "SBBActivityManager.h"
 
-@implementation SBBTask
-
-#pragma mark Abstract method overrides
-
-// Custom logic goes here.
-
-@end
+/* CONSTANTS */
+extern NSString * const kSBBTaskAPI;

@@ -1,7 +1,7 @@
 //
 //  SBBTask.h
 //
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -26,9 +26,37 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBTask.h instead.
+//
 
-#import "_SBBTask.h"
+#import <Foundation/Foundation.h>
+#import "SBBBridgeObject.h"
 
-@interface SBBTask : _SBBTask <_SBBTask>
-// Custom logic goes here.
+#import "SBBActivity.h"
+
+@protocol _SBBScheduledActivity
+
+@end
+
+@interface _SBBScheduledActivity : SBBBridgeObject
+
+@property (nonatomic, strong) SBBActivity* activity;
+
+@property (nonatomic, strong) NSDate* expiresOn;
+
+@property (nonatomic, strong) NSDate* finishedOn;
+
+@property (nonatomic, strong) NSString* guid;
+
+@property (nonatomic, strong) NSNumber* persistent;
+
+@property (nonatomic, assign) BOOL persistentValue;
+
+@property (nonatomic, strong) NSDate* scheduledOn;
+
+@property (nonatomic, strong) NSDate* startedOn;
+
+@property (nonatomic, strong) NSString* status;
+
 @end

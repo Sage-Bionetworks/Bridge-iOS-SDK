@@ -30,14 +30,14 @@
 // Make changes to SBBTask.h instead.
 //
 
-#import "_SBBTask.h"
+#import "_SBBScheduledActivity.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBTask()
+@interface _SBBScheduledActivity()
 
 @end
 
-@implementation _SBBTask
+@implementation _SBBScheduledActivity
 
 - (id)init
 {

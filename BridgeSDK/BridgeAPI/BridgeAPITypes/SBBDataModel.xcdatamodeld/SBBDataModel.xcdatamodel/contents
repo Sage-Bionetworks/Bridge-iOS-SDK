@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="15A284" minimumToolsVersion="Xcode 4.3">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15A284" minimumToolsVersion="Xcode 4.3">
     <entity name="Activity" representedClassName="SBBActivity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -103,6 +103,21 @@
                 <entry key="attributeValueClassName" value="NSArray"/>
             </userInfo>
         </attribute>
+    </entity>
+    <entity name="ScheduledActivity" representedClassName="SBBScheduledActivity" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="activity" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="SBBActivity"/>
+                <entry key="importHeaderForClass" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="expiresOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="finishedOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="persistent" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="scheduledOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="startedOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="StringConstraints" representedClassName="SBBStringConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxLength" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -208,21 +223,6 @@
         <attribute name="skipTo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="Transformable" syncable="YES"/>
     </entity>
-    <entity name="Task" representedClassName="SBBTask" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="activity" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="SBBActivity"/>
-                <entry key="importHeaderForClass" value="1"/>
-            </userInfo>
-        </attribute>
-        <attribute name="expiresOn" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="finishedOn" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="persistent" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="scheduledOn" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="startedOn" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
     <entity name="TaskReference" representedClassName="SBBTaskReference" parentEntity="BridgeObject" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -255,37 +255,37 @@
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Activity" positionX="-9" positionY="90" width="128" height="150"/>
-        <element name="BooleanConstraints" positionX="0" positionY="108" width="128" height="45"/>
-        <element name="BridgeObject" positionX="-54" positionY="-9" width="128" height="60"/>
-        <element name="DateConstraints" positionX="18" positionY="126" width="128" height="90"/>
-        <element name="DateTimeConstraints" positionX="36" positionY="135" width="128" height="90"/>
-        <element name="DecimalConstraints" positionX="-9" positionY="99" width="128" height="105"/>
-        <element name="DurationConstraints" positionX="-9" positionY="81" width="128" height="58"/>
-        <element name="IdentifierHolder" positionX="-27" positionY="72" width="128" height="60"/>
-        <element name="Image" positionX="9" positionY="117" width="128" height="90"/>
-        <element name="IntegerConstraints" positionX="-18" positionY="90" width="128" height="103"/>
-        <element name="MultiValueConstraints" positionX="0" positionY="90" width="128" height="88"/>
-        <element name="ResourceList" positionX="-9" positionY="90" width="128" height="73"/>
-        <element name="Schedule" positionX="-9" positionY="81" width="128" height="225"/>
-        <element name="StringConstraints" positionX="-27" positionY="81" width="128" height="90"/>
-        <element name="Survey" positionX="-36" positionY="27" width="128" height="165"/>
-        <element name="SurveyAnswer" positionX="-9" positionY="99" width="128" height="120"/>
-        <element name="SurveyConstraints" positionX="0" positionY="108" width="128" height="73"/>
-        <element name="SurveyElement" positionX="-9" positionY="99" width="128" height="103"/>
-        <element name="SurveyInfoScreen" positionX="0" positionY="108" width="128" height="75"/>
-        <element name="SurveyQuestion" positionX="-18" positionY="81" width="128" height="75"/>
-        <element name="SurveyQuestionOption" positionX="9" positionY="99" width="128" height="105"/>
-        <element name="SurveyReference" positionX="0" positionY="126" width="128" height="90"/>
-        <element name="SurveyResponse" positionX="-18" positionY="81" width="128" height="135"/>
-        <element name="SurveyResponseReference" positionX="9" positionY="135" width="128" height="75"/>
-        <element name="SurveyRule" positionX="18" positionY="108" width="128" height="90"/>
-        <element name="Task" positionX="-9" positionY="81" width="128" height="165"/>
-        <element name="TaskReference" positionX="-9" positionY="117" width="128" height="60"/>
-        <element name="TimeConstraints" positionX="9" positionY="117" width="128" height="45"/>
-        <element name="UploadRequest" positionX="9" positionY="117" width="128" height="105"/>
-        <element name="UploadSession" positionX="0" positionY="108" width="128" height="90"/>
-        <element name="UserProfile" positionX="-63" positionY="-18" width="128" height="105"/>
-        <element name="UserSessionInfo" positionX="18" positionY="144" width="128" height="165"/>
+        <element name="Activity" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="BridgeObject" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="DateConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="DateTimeConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="DecimalConstraints" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="DurationConstraints" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="IdentifierHolder" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="Image" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="IntegerConstraints" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="MultiValueConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="ResourceList" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="StringConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="Survey" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="SurveyAnswer" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="SurveyElement" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="SurveyQuestion" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="SurveyQuestionOption" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="SurveyReference" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="SurveyResponse" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="SurveyResponseReference" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="SurveyRule" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="TaskReference" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="TimeConstraints" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="UploadRequest" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="165"/>
     </elements>
 </model>

@@ -12,7 +12,7 @@
 
 #define TASKS_ADMIN_API @"/v3/scheduleplans"
 
-@interface SBBTaskManagerIntegrationTests : SBBBridgeAPIIntegrationTestCase
+@interface SBBActivityManagerIntegrationTests : SBBBridgeAPIIntegrationTestCase
 
 @property (nonatomic, strong) NSString *ardUserEmail;
 @property (nonatomic, strong) NSString *ardUserUsername;
@@ -29,7 +29,7 @@
 
 @end
 
-@implementation SBBTaskManagerIntegrationTests
+@implementation SBBActivityManagerIntegrationTests
 
 - (void)setUp {
     [super setUp];
@@ -133,15 +133,15 @@
     XCTestExpectation *expectTasks = [self expectationWithDescription:@"got tasks"];
     
     NSInteger daysAhead = arc4random_uniform(5);
-    [SBBComponent(SBBTaskManager) getTasksForDaysAhead:daysAhead withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
         if (error) {
             NSLog(@"Error getting tasks:\n%@", error);
         }
         XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], "Server returned a resource list");
         XCTAssert(tasksRList.totalValue == daysAhead + 1, "Server returned a list with one item per day requested");
         if (tasksRList.items.count) {
-            SBBTask *task = tasksRList.items[0];
-            XCTAssert([task isKindOfClass:[SBBTask class]], "Server returned a list of Task objects");
+            SBBScheduledActivity *task = tasksRList.items[0];
+            XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], "Server returned a list of ScheduledActivity objects");
         }
         
         [expectTasks fulfill];
