@@ -44,6 +44,7 @@ extern const unsigned char BridgeSDKVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <BridgeSDK/PublicHeader.h>
   
+#import <BridgeSDK/SBBActivityManager.h>
 #import <BridgeSDK/SBBAuthManager.h>
 #import <BridgeSDK/SBBBridgeNetworkManager.h>
 #import <BridgeSDK/SBBComponent.h>
@@ -54,7 +55,6 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBNetworkManager.h>
 #import <BridgeSDK/SBBScheduleManager.h>
 #import <BridgeSDK/SBBSurveyManager.h>
-#import <BridgeSDK/SBBActivityManager.h>
 #import <BridgeSDK/SBBUploadManager.h>
 #import <BridgeSDK/SBBErrors.h>
 #import <BridgeSDK/SBBBridgeObjects.h>

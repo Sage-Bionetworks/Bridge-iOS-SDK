@@ -129,8 +129,8 @@
     [super tearDown];
 }
 
-- (void)testGetTasks {
-    XCTestExpectation *expectTasks = [self expectationWithDescription:@"got tasks"];
+- (void)testGetScheduledActivities {
+    XCTestExpectation *expectTasks = [self expectationWithDescription:@"got scheduled activities"];
     
     NSInteger daysAhead = arc4random_uniform(5);
     [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
