@@ -1,5 +1,5 @@
 //
-//  SBBTaskManagerInternal.h
+//  SBBActivityManagerInternal.h
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 7/24/15.
@@ -30,7 +30,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBTaskManager.h"
+#import "SBBActivityManager.h"
 
 /* CONSTANTS */
-extern NSString * const kSBBTaskAPI;
+extern NSString * const kSBBActivityAPI;

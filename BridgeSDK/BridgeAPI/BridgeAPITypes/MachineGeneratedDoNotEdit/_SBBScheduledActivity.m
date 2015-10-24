@@ -1,5 +1,5 @@
 //
-//  SBBTask.m
+//  SBBScheduledActivity.m
 //
 //	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
@@ -27,17 +27,17 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBTask.h instead.
+// Make changes to SBBScheduledActivity.h instead.
 //
 
-#import "_SBBTask.h"
+#import "_SBBScheduledActivity.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBTask()
+@interface _SBBScheduledActivity()
 
 @end
 
-@implementation _SBBTask
+@implementation _SBBScheduledActivity
 
 - (id)init
 {

@@ -30,7 +30,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBTaskManagerInternal.h"
+#import "SBBActivityManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
@@ -38,15 +38,15 @@
 #import "NSDate+SBBAdditions.h"
 #import "BridgeSDKInternal.h"
 
-#define TASK_API GLOBAL_API_PREFIX @"/tasks"
+#define ACTIVITY_API GLOBAL_API_PREFIX @"/activities"
 
-NSString * const kSBBTaskAPI =       TASK_API;
+NSString * const kSBBActivityAPI =       ACTIVITY_API;
 
-@implementation SBBTaskManager
+@implementation SBBActivityManager
 
 + (instancetype)defaultComponent
 {
-    static SBBTaskManager *shared;
+    static SBBActivityManager *shared;
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -56,12 +56,12 @@ NSString * const kSBBTaskAPI =       TASK_API;
     return shared;
 }
 
-- (NSURLSessionDataTask *)getTasksForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBTaskManagerGetCompletionBlock)completion
+- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     
-    return [self.networkManager get:kSBBTaskAPI headers:headers parameters:@{@"daysAhead": @(daysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(daysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         SBBResourceList *tasks = [self.objectManager objectFromBridgeJSON:responseObject];
         if (completion) {
             completion(tasks, error);
@@ -69,29 +69,29 @@ NSString * const kSBBTaskAPI =       TASK_API;
     }];
 }
 
-- (NSURLSessionDataTask *)startTask:(SBBTask *)task asOf:(NSDate *)startDate withCompletion:(SBBTaskManagerUpdateCompletionBlock)completion
+- (NSURLSessionDataTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
-    task.startedOn = startDate;
-    return [self updateTasks:@[task] withCompletion:completion];
+    scheduledActivity.startedOn = startDate;
+    return [self updateScheduledActivities:@[scheduledActivity] withCompletion:completion];
 }
 
-- (NSURLSessionDataTask *)finishTask:(SBBTask *)task asOf:(NSDate *)finishDate withCompletion:(SBBTaskManagerUpdateCompletionBlock)completion
+- (NSURLSessionDataTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
-    task.finishedOn = finishDate;
-    return [self updateTasks:@[task] withCompletion:completion];
+    scheduledActivity.finishedOn = finishDate;
+    return [self updateScheduledActivities:@[scheduledActivity] withCompletion:completion];
 }
 
-- (NSURLSessionDataTask *)deleteTask:(SBBTask *)task withCompletion:(SBBTaskManagerUpdateCompletionBlock)completion
+- (NSURLSessionDataTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
-    return [self finishTask:task asOf:[NSDate date] withCompletion:completion];
+    return [self finishScheduledActivity:scheduledActivity asOf:[NSDate date] withCompletion:completion];
 }
 
-- (NSURLSessionDataTask *)updateTasks:(NSArray *)tasks withCompletion:(SBBTaskManagerUpdateCompletionBlock)completion
+- (NSURLSessionDataTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
-    id jsonTasks = [self.objectManager bridgeJSONFromObject:tasks];
+    id jsonTasks = [self.objectManager bridgeJSONFromObject:scheduledActivities];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    return [self.networkManager post:kSBBTaskAPI headers:headers parameters:jsonTasks completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:kSBBActivityAPI headers:headers parameters:jsonTasks completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
 #if DEBUG
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
         NSLog(@"Update tasks HTTP response code: %ld", (long)httpResponse.statusCode);

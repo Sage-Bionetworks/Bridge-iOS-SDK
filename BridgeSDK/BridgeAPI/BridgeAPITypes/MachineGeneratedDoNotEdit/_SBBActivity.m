@@ -60,6 +60,8 @@
 
         self.activityType = [dictionary objectForKey:@"activityType"];
 
+        self.guid = [dictionary objectForKey:@"guid"];
+
         self.label = [dictionary objectForKey:@"label"];
 
         self.labelDetail = [dictionary objectForKey:@"labelDetail"];
@@ -80,6 +82,8 @@
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
     [dict setObjectIfNotNil:self.activityType forKey:@"activityType"];
+
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.label forKey:@"label"];
 

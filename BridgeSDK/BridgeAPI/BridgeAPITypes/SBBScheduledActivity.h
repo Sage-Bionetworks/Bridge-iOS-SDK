@@ -1,5 +1,5 @@
 //
-//  SBBTask.h
+//  SBBScheduledActivity.h
 //
 //	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
@@ -27,8 +27,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBTask.h"
+#import "_SBBScheduledActivity.h"
 
-@interface SBBTask : _SBBTask <_SBBTask>
+@interface SBBScheduledActivity : _SBBScheduledActivity <_SBBScheduledActivity>
 // Custom logic goes here.
 @end

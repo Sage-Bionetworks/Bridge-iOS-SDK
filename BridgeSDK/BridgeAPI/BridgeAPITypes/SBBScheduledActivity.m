@@ -27,9 +27,9 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBTask.h"
+#import "SBBScheduledActivity.h"
 
-@implementation SBBTask
+@implementation SBBScheduledActivity
 
 #pragma mark Abstract method overrides
 

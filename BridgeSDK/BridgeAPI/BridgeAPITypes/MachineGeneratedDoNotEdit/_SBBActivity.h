@@ -45,6 +45,8 @@
 
 @property (nonatomic, strong) NSString* activityType;
 
+@property (nonatomic, strong) NSString* guid;
+
 @property (nonatomic, strong) NSString* label;
 
 @property (nonatomic, strong) NSString* labelDetail;

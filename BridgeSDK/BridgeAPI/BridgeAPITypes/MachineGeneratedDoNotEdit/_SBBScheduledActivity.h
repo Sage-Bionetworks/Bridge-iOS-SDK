@@ -1,5 +1,5 @@
 //
-//  SBBTask.h
+//  SBBScheduledActivity.h
 //
 //	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBTask.h instead.
+// Make changes to SBBScheduledActivity.h instead.
 //
 
 #import <Foundation/Foundation.h>
@@ -35,11 +35,11 @@
 
 #import "SBBActivity.h"
 
-@protocol _SBBTask
+@protocol _SBBScheduledActivity
 
 @end
 
-@interface _SBBTask : SBBBridgeObject
+@interface _SBBScheduledActivity : SBBBridgeObject
 
 @property (nonatomic, strong) SBBActivity* activity;
 
