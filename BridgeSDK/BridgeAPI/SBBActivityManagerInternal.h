@@ -33,4 +33,4 @@
 #import "SBBActivityManager.h"
 
 /* CONSTANTS */
-extern NSString * const kSBBTaskAPI;
+extern NSString * const kSBBActivityAPI;

@@ -138,7 +138,8 @@
             NSLog(@"Error getting tasks:\n%@", error);
         }
         XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], "Server returned a resource list");
-        XCTAssert(tasksRList.totalValue == daysAhead + 1, "Server returned a list with one item per day requested");
+        XCTAssert(tasksRList.totalValue == daysAhead + 1, "Server returned a list claiming to have one item per day requested");
+        XCTAssert(tasksRList.items.count == daysAhead + 1, "Server returned a list that actually contains one item per day requested");
         if (tasksRList.items.count) {
             SBBScheduledActivity *task = tasksRList.items[0];
             XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], "Server returned a list of ScheduledActivity objects");

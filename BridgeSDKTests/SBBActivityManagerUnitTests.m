@@ -72,7 +72,7 @@
                                   @"items": tasks,
                                   @"total": @(tasks.count)
                                   };
-    [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:kSBBTaskAPI andMethod:@"GET"];
+    [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:kSBBActivityAPI andMethod:@"GET"];
     id<SBBActivityManagerProtocol> tMan = SBBComponent(SBBActivityManager);
     
     [tMan getScheduledActivitiesForDaysAhead:0 withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
