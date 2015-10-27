@@ -91,4 +91,49 @@
     }];
 }
 
+- (void)testWithdrawConsent {
+    // we need our own auth manager instance (with its own delegate) so we don't eff with the global test user
+    SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
+    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
+    aMan.authDelegate = delegate;
+    SBBConsentManager *cMan = [SBBConsentManager managerWithAuthManager:aMan networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
+    XCTestExpectation *expectWithdrew = [self expectationWithDescription:@"consent withdrawn"];
+    
+    __block NSString *consentedEmail = nil;
+    [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+        if (!error) {
+            consentedEmail = emailAddress;
+            [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                if (error && error.code != kSBBServerPreconditionNotMet) {
+                    NSLog(@"Error signing in consented user %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
+                    [expectWithdrew fulfill];
+                } else {
+                    [cMan withdrawConsentWithReason:nil completion:^(id responseObject, NSError *error) {
+                        if (error) {
+                            NSLog(@"Error withdrawing consent:\n%@\nResponse: %@", error, responseObject);
+                        }
+                        XCTAssert(!error, @"Successfully withdrew consent");
+                        [expectWithdrew fulfill];
+                    }];
+                }
+            }];
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout withdrawing consent: %@", error);
+        }
+    }];
+    
+    // clean up the test user we just created (no need to wait for it to finish, nothing else depends on it)
+    [self deleteUser:consentedEmail completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (!error) {
+            NSLog(@"Deleted consented test account %@", consentedEmail);
+        } else {
+            NSLog(@"Failed to delete consented test account %@\n\nError:%@\nResponse:%@", consentedEmail, error, responseObject);
+        }
+    }];
+}
+
 @end

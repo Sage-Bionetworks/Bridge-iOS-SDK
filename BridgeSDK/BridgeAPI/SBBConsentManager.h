@@ -86,7 +86,18 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask*)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion;
+- (NSURLSessionDataTask *)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion;
+
+/*!
+ *  Withdraw the user's consent signature previously submitted. This has the effect of withdrawing them from the
+ *  study altogether.
+ *
+ *  @param reason A freeform text string entered by the participant describing their reasons for withdrawing from the study.
+ *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
+ *
+ *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion;
 
 @end
 

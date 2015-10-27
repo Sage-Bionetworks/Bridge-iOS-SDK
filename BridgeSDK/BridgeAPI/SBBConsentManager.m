@@ -39,6 +39,7 @@
 #define CONSENT_API GLOBAL_API_PREFIX @"/consents/signature"
 
 NSString * const kSBBConsentAPI = CONSENT_API;
+NSString * const kSBBConsentWithdrawAPI = CONSENT_API  @"/withdraw";
 
 NSString * const kSBBKeyName = @"name";
 NSString * const kSBBKeyBirthdate = @"birthdate";
@@ -101,7 +102,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
   }];
 }
 
-- (NSURLSessionDataTask*)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion
+- (NSURLSessionDataTask *)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
@@ -130,6 +131,23 @@ NSString * const kSBBMimeTypePng = @"image/png";
       completion(name, birthdate, image, error);
     }
   }];
+}
+
+- (NSURLSessionDataTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+
+    NSDictionary *parameters = reason.length ? @{@"reason": reason} : nil;
+    return [self.networkManager post:kSBBConsentWithdrawAPI
+                             headers:headers
+                          parameters:parameters
+                          completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                              if (completion) {
+                                  completion(responseObject, error);
+                              }
+                          }];
+
 }
 
 @end
