@@ -61,6 +61,16 @@
 	self.published = [NSNumber numberWithBool:value_];
 }
 
+- (double)schemaRevisionValue
+{
+	return [self.schemaRevision doubleValue];
+}
+
+- (void)setSchemaRevisionValue:(double)value_
+{
+	self.schemaRevision = [NSNumber numberWithDouble:value_];
+}
+
 - (double)versionValue
 {
 	return [self.version doubleValue];
@@ -92,6 +102,8 @@
 
         self.published = [dictionary objectForKey:@"published"];
 
+        self.schemaRevision = [dictionary objectForKey:@"schemaRevision"];
+
         self.version = [dictionary objectForKey:@"version"];
 
 	}
@@ -116,6 +128,8 @@
     [dict setObjectIfNotNil:self.name forKey:@"name"];
 
     [dict setObjectIfNotNil:self.published forKey:@"published"];
+
+    [dict setObjectIfNotNil:self.schemaRevision forKey:@"schemaRevision"];
 
     [dict setObjectIfNotNil:self.version forKey:@"version"];
 
