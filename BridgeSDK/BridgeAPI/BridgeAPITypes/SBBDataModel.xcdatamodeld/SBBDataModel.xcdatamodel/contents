@@ -136,6 +136,7 @@
         <attribute name="modifiedOn" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="published" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="schemaRevision" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="version" optional="YES" attributeType="Double" defaultValueString="0" syncable="YES"/>
     </entity>
     <entity name="SurveyAnswer" representedClassName="SBBSurveyAnswer" parentEntity="BridgeObject" syncable="YES">
@@ -268,8 +269,9 @@
         <element name="MultiValueConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="ResourceList" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="165"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="Survey" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="Survey" positionX="0" positionY="0" width="128" height="180"/>
         <element name="SurveyAnswer" positionX="0" positionY="0" width="128" height="120"/>
         <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="75"/>
         <element name="SurveyElement" positionX="0" positionY="0" width="128" height="105"/>
@@ -280,7 +282,6 @@
         <element name="SurveyResponse" positionX="0" positionY="0" width="128" height="135"/>
         <element name="SurveyResponseReference" positionX="0" positionY="0" width="128" height="75"/>
         <element name="SurveyRule" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="165"/>
         <element name="TaskReference" positionX="0" positionY="0" width="128" height="60"/>
         <element name="TimeConstraints" positionX="0" positionY="0" width="128" height="45"/>
         <element name="UploadRequest" positionX="0" positionY="0" width="128" height="105"/>
