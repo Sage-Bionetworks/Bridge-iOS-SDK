@@ -55,6 +55,10 @@
 
 @property (nonatomic, assign) BOOL publishedValue;
 
+@property (nonatomic, strong) NSNumber* schemaRevision;
+
+@property (nonatomic, assign) double schemaRevisionValue;
+
 @property (nonatomic, strong) NSNumber* version;
 
 @property (nonatomic, assign) double versionValue;
