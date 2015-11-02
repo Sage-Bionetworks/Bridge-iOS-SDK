@@ -34,6 +34,7 @@
 
 /* CONSTANTS */
 extern NSString* const kSBBConsentAPI;
+extern NSString* const kSBBConsentWithdrawAPI;
 
 extern NSString* const kSBBKeyName;
 extern NSString* const kSBBKeyBirthdate;
