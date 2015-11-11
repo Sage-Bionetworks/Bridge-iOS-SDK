@@ -719,11 +719,11 @@
 			children = (
 				80314E8D1B56FF4700D029D3 /* SBBBridgeAPIIntegrationTestCase.h */,
 				80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */,
+				80B7868B1B5BF8350029EAE6 /* SBBActivityManagerIntegrationTests.m */,
 				80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */,
 				80B786811B5AB1DC0029EAE6 /* SBBConsentManagerIntegrationTests.m */,
 				80B786851B5BF7860029EAE6 /* SBBScheduleManagerIntegrationTests.m */,
 				80B786871B5BF79C0029EAE6 /* SBBSurveyManagerIntegrationTests.m */,
-				80B7868B1B5BF8350029EAE6 /* SBBActivityManagerIntegrationTests.m */,
 				80B786891B5BF7AF0029EAE6 /* SBBUploadManagerIntegrationTests.m */,
 				80B786831B5BF71D0029EAE6 /* SBBUserManagerIntegrationTests.m */,
 				807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */,

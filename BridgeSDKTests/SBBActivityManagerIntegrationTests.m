@@ -129,13 +129,11 @@
     [super tearDown];
 }
 
-- (void)testGetScheduledActivities {
-    XCTestExpectation *expectTasks = [self expectationWithDescription:@"got scheduled activities"];
-    
-    NSInteger daysAhead = arc4random_uniform(5);
+- (void)tryGetScheduledActivitiesForDaysAhead:(NSInteger)daysAhead expectTasks:(XCTestExpectation *)expectTasks timeZoneString:(NSString *)tzStr
+{
     [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
         if (error) {
-            NSLog(@"Error getting tasks:\n%@", error);
+            NSLog(@"Error getting tasks for %@:\n%@", tzStr, error);
         }
         XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], "Server returned a resource list");
         XCTAssert(tasksRList.totalValue == daysAhead + 1, "Server returned a list claiming to have one item per day requested");
@@ -150,9 +148,53 @@
     
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
-            NSLog(@"Time out error attempting to get tasks: %@", error);
+            NSLog(@"Time out error attempting to get tasks for %@: %@", tzStr, error);
         }
     }];
+}
+
+- (void)testGetScheduledActivitiesPST {
+    NSTimeZone *originalTZ = [NSTimeZone systemTimeZone];
+    
+    NSInteger daysAhead = arc4random_uniform(5);
+    
+    [NSTimeZone setDefaultTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:-(3600*8)]];
+    [NSTimeZone resetSystemTimeZone];
+    XCTestExpectation *expectTasksPST = [self expectationWithDescription:@"got scheduled activities for PST"];
+    [self tryGetScheduledActivitiesForDaysAhead:daysAhead expectTasks:expectTasksPST timeZoneString:[[NSTimeZone defaultTimeZone] name]];
+    
+    [NSTimeZone setDefaultTimeZone:originalTZ];
+    [NSTimeZone resetSystemTimeZone];
+}
+
+- (void)testGetScheduledActivitiesGMT
+{
+    NSTimeZone *originalTZ = [NSTimeZone systemTimeZone];
+    
+    NSInteger daysAhead = arc4random_uniform(5);
+    
+    [NSTimeZone setDefaultTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    [NSTimeZone resetSystemTimeZone];
+    XCTestExpectation *expectTasksGMT = [self expectationWithDescription:@"got scheduled activities for GMT"];
+    [self tryGetScheduledActivitiesForDaysAhead:daysAhead expectTasks:expectTasksGMT timeZoneString:[[NSTimeZone defaultTimeZone] name]];
+    
+    [NSTimeZone setDefaultTimeZone:originalTZ];
+    [NSTimeZone resetSystemTimeZone];
+}
+
+- (void)testGetScheduledActivitiesHK
+{
+    NSTimeZone *originalTZ = [NSTimeZone systemTimeZone];
+    
+    NSInteger daysAhead = arc4random_uniform(5);
+    
+    [NSTimeZone setDefaultTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:(3600*8)]];
+    [NSTimeZone resetSystemTimeZone];
+    XCTestExpectation *expectTasksHK = [self expectationWithDescription:@"got scheduled activities for HK"];
+    [self tryGetScheduledActivitiesForDaysAhead:daysAhead expectTasks:expectTasksHK timeZoneString:[[NSTimeZone defaultTimeZone] name]];
+    
+    [NSTimeZone setDefaultTimeZone:originalTZ];
+    [NSTimeZone resetSystemTimeZone];
 }
 
 - (void)createTestSchedule:(NSDictionary *)schedule completionHandler:(SBBNetworkManagerCompletionBlock)completion
