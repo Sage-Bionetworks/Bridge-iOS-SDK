@@ -23,6 +23,7 @@
 @property (nonatomic, strong) NSDictionary *schedule;
 @property (nonatomic, strong) NSString *scheduleJSON;
 @property (nonatomic, strong) NSString *scheduleGuid;
+@property (nonatomic, strong) NSString *activityGuid;
 
 - (void)createTestSchedule:(NSDictionary *)schedule completionHandler:(SBBNetworkManagerCompletionBlock)completion;
 - (void)deleteSchedule:(NSString *)guid completionHandler:(SBBNetworkManagerCompletionBlock)completion;
@@ -67,7 +68,7 @@
     }];
     
     // 2. Create a test schedule.
-    _scheduleJSON = @"{\"type\":\"SchedulePlan\",\"label\":\"Sample Schedule\",\"strategy\":{\"schedule\":{\"scheduleType\":\"recurring\",\"interval\":\"P1D\",\"expires\":\"P1D\",\"times\":[\"23:59\"],\"activities\":[{\"label\":\"Sample Task\",\"labelDetail\":\"10 minutes\",\"activityType\":\"task\",\"task\":{\"identifier\":\"sample-task-id\"}}]},\"type\":\"SimpleScheduleStrategy\"}}";
+    _scheduleJSON = @"{\"type\":\"SchedulePlan\",\"label\":\"Sample Schedule\",\"strategy\":{\"schedule\":{\"scheduleType\":\"recurring\",\"interval\":\"P1D\",\"expires\":\"P1D\",\"times\":[\"23:59\"],\"activities\":[{\"type\":\"Activity\",\"label\":\"Sample Task\",\"labelDetail\":\"10 minutes\",\"activityType\":\"task\",\"task\":{\"identifier\":\"task:AAA\"}}]},\"type\":\"SimpleScheduleStrategy\"}}";
     _schedule = [NSJSONSerialization JSONObjectWithData:[_scheduleJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
     XCTestExpectation *expectSchedule = [self expectationWithDescription:@"test schedule created"];
     [self createTestSchedule:_schedule completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
@@ -84,6 +85,26 @@
             NSLog(@"Time out error trying to create test schedule:\n%@", error);
         }
     }];
+    
+    // 3. Read the test schedule back in so we can get the activity guid(s).
+    XCTestExpectation *expectScheduleRead = [self expectationWithDescription:@"test schedule read back in"];
+    if (_scheduleGuid.length) {
+        [self readSchedule:_scheduleGuid completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            if (!error) {
+                NSLog(@"Read test schedule %@", _scheduleGuid);
+                _activityGuid = [[[[responseObject objectForKey:@"strategy"] objectForKey:@"schedule"] objectForKey:@"activities"][0] objectForKey:@"guid"];
+            } else {
+                NSLog(@"Failed to read test schedule %@\n\nError:%@\nResponse:%@", _scheduleGuid, error, responseObject);
+            }
+            [expectScheduleRead fulfill];
+        }];
+    }
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Timeout error attempting to read test schedule %@", _scheduleGuid);
+        }
+    }];
 }
 
 - (void)tearDown {
@@ -96,6 +117,7 @@
             if (!error) {
                 NSLog(@"Deleted test schedule %@", _scheduleGuid);
                 _scheduleGuid = nil;
+                _activityGuid = nil;
             } else {
                 NSLog(@"Failed to delete test schedule %@\n\nError:%@\nResponse:%@", _scheduleGuid, error, responseObject);
             }
@@ -136,12 +158,17 @@
             NSLog(@"Error getting tasks for %@:\n%@", tzStr, error);
         }
         XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], "Server returned a resource list");
-        XCTAssert(tasksRList.totalValue == daysAhead + 1, "Server returned a list claiming to have one item per day requested");
-        XCTAssert(tasksRList.items.count == daysAhead + 1, "Server returned a list that actually contains one item per day requested");
         if (tasksRList.items.count) {
             SBBScheduledActivity *task = tasksRList.items[0];
             XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], "Server returned a list of ScheduledActivity objects");
         }
+        NSInteger countMyActivities = 0;
+        for (SBBScheduledActivity *task in tasksRList.items) {
+            if ([task.activity.guid isEqualToString:_activityGuid]) {
+                countMyActivities++;
+            }
+        }
+        XCTAssert(countMyActivities == daysAhead + 1, "Server returned a list that actually contains one item from test schedule per day requested");
         
         [expectTasks fulfill];
     }];
@@ -212,5 +239,15 @@
     [_aMan addAuthHeaderToHeaders:headers];
     [SBBComponent(SBBNetworkManager) delete:deleteSchedule headers:headers parameters:nil completion:completion];
 }
+
+- (void)readSchedule:(NSString *)guid completionHandler:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSString *readScheduleFormat = TASKS_ADMIN_API @"/%@";
+    NSString *readSchedule = [NSString stringWithFormat:readScheduleFormat, guid];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [_aMan addAuthHeaderToHeaders:headers];
+    [SBBComponent(SBBNetworkManager) get:readSchedule headers:headers parameters:nil completion:completion];
+}
+
 
 @end
