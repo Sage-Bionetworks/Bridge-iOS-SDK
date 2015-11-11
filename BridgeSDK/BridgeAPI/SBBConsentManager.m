@@ -138,7 +138,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
 
-    NSDictionary *parameters = reason.length ? @{@"reason": reason} : nil;
+    NSDictionary *parameters = reason.length ? @{@"reason": reason} : @{};
     return [self.networkManager post:kSBBConsentWithdrawAPI
                              headers:headers
                           parameters:parameters

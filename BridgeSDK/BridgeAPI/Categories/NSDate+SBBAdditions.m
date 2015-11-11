@@ -78,7 +78,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         formatter = [[NSDateFormatter alloc] init];
-        [formatter setDateFormat:@"ZZZZZ"];
+        [formatter setDateFormat:@"xxx"]; // ZZZZZ gives 'Z' for GMT-0, xxx gives '+00:00' but otherwise identical
         NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         [formatter setLocale:enUSPOSIXLocale];
     });

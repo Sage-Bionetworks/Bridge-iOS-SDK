@@ -121,6 +121,8 @@ NSString *kAPIPrefix = @"webservices";
 @property (nonatomic, strong) NSMutableDictionary *uploadCompletionHandlers;
 @property (nonatomic, strong) NSMutableDictionary *downloadCompletionHandlers;
 
+@property (nonatomic, strong) NSMutableCharacterSet *URLQueryKeysAndValuesAllowedCharacterSet;
+
 @end
 
 @implementation SBBNetworkManager
@@ -229,6 +231,16 @@ NSString *kAPIPrefix = @"webservices";
         }
     }
     return self;
+}
+
+- (NSCharacterSet *)URLQueryKeysAndValuesAllowedCharacterSet
+{
+    if (!_URLQueryKeysAndValuesAllowedCharacterSet) {
+        _URLQueryKeysAndValuesAllowedCharacterSet = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
+        [_URLQueryKeysAndValuesAllowedCharacterSet removeCharactersInString:@"&+=?"];
+    }
+
+    return _URLQueryKeysAndValuesAllowedCharacterSet;
 }
 
 - (NSURLSession *)mainSession
@@ -482,8 +494,8 @@ NSString *kAPIPrefix = @"webservices";
     
     if (valueString) {
       NSString *qParam = [NSString stringWithFormat:@"%@=%@",
-                          [param stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]],
-                          [valueString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]]];
+                          [param stringByAddingPercentEncodingWithAllowedCharacters:self.URLQueryKeysAndValuesAllowedCharacterSet],
+                          [valueString stringByAddingPercentEncodingWithAllowedCharacters:self.URLQueryKeysAndValuesAllowedCharacterSet]];
       [queryParams addObject:qParam];
     }
   }
