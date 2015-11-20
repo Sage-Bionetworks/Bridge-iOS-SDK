@@ -39,14 +39,23 @@
 {
     NSError * retError;
     if (!internetConnected) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBInternetNotConnected userInfo:@{NSLocalizedDescriptionKey: @"Internet Not Connected", SBB_ORIGINAL_ERROR_KEY: urlError}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBInternetNotConnected
+                                   userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Internet Not Connected",
+                                                                                           @"Error Description: Internet not connected"),
+                                              SBB_ORIGINAL_ERROR_KEY: urlError}];
     }
     else if (!isServerReachable) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerNotReachable userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Not Reachable",SBB_ORIGINAL_ERROR_KEY: urlError}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerNotReachable
+                                   userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Backend Server Not Reachable",
+                                                                                           @"Error Description: Server not reachable"),
+                                              SBB_ORIGINAL_ERROR_KEY: urlError}];
     }
     else
     {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBUnknownError userInfo:@{NSLocalizedDescriptionKey: @"Unknown Network Error",SBB_ORIGINAL_ERROR_KEY: urlError}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBUnknownError
+                                   userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Unknown Network Error",
+                                                                                           @"Error Description: Unknown network error"),
+                                              SBB_ORIGINAL_ERROR_KEY: urlError}];
     }
     return retError;
 }
@@ -77,51 +86,74 @@
     }
     else if (statusCode == 412)
     {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerPreconditionNotMet userInfo:@{NSLocalizedDescriptionKey: @"Client not consented", SBB_ORIGINAL_ERROR_KEY: foundationObject}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerPreconditionNotMet
+                                   userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Client not consented",
+                                                                                           @"Error Description: Client not consented"),
+                                              SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (NSLocationInRange(statusCode, NSMakeRange(400, 99))) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Client Error: %@. Please contact customer support.", @(statusCode)],  SBB_ORIGINAL_ERROR_KEY: foundationObject}];
+        NSString *localizedFormat = NSLocalizedString(@"Client Error: %@. Please contact customer support.",
+                                                      @"Error Description: Unknown client app error");
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode
+                                   userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:localizedFormat, @(statusCode)],
+                                              SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (statusCode == 503) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerUnderMaintenance userInfo:@{NSLocalizedDescriptionKey: @"Backend Server Under Maintenance.", SBB_ORIGINAL_ERROR_KEY: foundationObject}];
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerUnderMaintenance
+                                   userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Backend Server Under Maintenance.",
+                                                                                           @"Error Description: Backend Server Under Maintenance"),
+                                              SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     else if (NSLocationInRange(statusCode, NSMakeRange(500, 99))) {
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Backend Server Error: %@. Please contact customer support.", @(statusCode)], SBB_ORIGINAL_ERROR_KEY: foundationObject}];
+        NSString *localizedFormat = NSLocalizedString(@"Backend Server Error: %@. Please contact customer support.",
+                                                      @"Error Description: Unknown server error");
+        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:statusCode
+                                   userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:localizedFormat, @(statusCode)],
+                                              SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
     return retError;
 }
 
 + (NSError *)SBBNoCredentialsError
 {
-  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBNoCredentialsAvailable userInfo:@{NSLocalizedDescriptionKey: @"No user login credentials available. Please sign in."}];
+  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBNoCredentialsAvailable
+                         userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"No user login credentials available. Please sign in.",
+                                                                                 @"Error Description: missing login credentials")}];
 }
 
 + (NSError *)SBBNotAuthenticatedError
 {
-  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerNotAuthenticated userInfo:@{NSLocalizedDescriptionKey: @"Server says: not authenticated. Please authenticate."}];
+  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBServerNotAuthenticated
+                         userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Server says: not authenticated. Please authenticate.",
+                                                                                 @"Error Description: not authenticated")}];
 }
 
 + (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url
 {
-  NSString *desc = [NSString stringWithFormat:@"Not a valid file URL:\n%@", url];
-  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBNotAFileURL userInfo:@{NSLocalizedDescriptionKey: desc}];
+  NSString *localizedFormat = NSLocalizedString(@"Not a valid file URL:\n%@", @"Error Description: not a valid url");
+  NSString *desc = [NSString stringWithFormat:localizedFormat, url];
+  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBNotAFileURL
+                         userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
 + (NSError *)generateSBBTempFileErrorForURL:(NSURL *)url
 {
-  NSString *desc = [NSString stringWithFormat:@"Error copying file at URL to temp file:\n%@", url];
+  NSString *localizedFormat = NSLocalizedString(@"Error copying file at URL to temp file:\n%@", @"Error Description: error copying file");
+  NSString *desc = [NSString stringWithFormat:localizedFormat, url];
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
 + (NSError *)generateSBBTempFileReadErrorForURL:(NSURL *)url
 {
-  NSString *desc = [NSString stringWithFormat:@"Error reading temp file for original file URL:\n%@", url];
+  NSString *localizedFormat = NSLocalizedString(@"Error reading temp file for original file URL:\n%@", @"Error Description: error reading temp file");
+  NSString *desc = [NSString stringWithFormat:localizedFormat, url];
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
 + (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass
 {
-  NSString *desc = [NSString stringWithFormat:@"Object '%@' is of class %@, expected class %@", object, NSStringFromClass([object class]), NSStringFromClass(expectedClass)];
+  NSString *localizedFormat = NSLocalizedString(@"Object '%1$@' is of class %2$@, expected class %3$@", @"Error Description");
+  NSString *desc = [NSString stringWithFormat:localizedFormat, object, NSStringFromClass([object class]), NSStringFromClass(expectedClass)];
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBObjectNotExpectedClass userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
