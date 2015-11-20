@@ -75,7 +75,7 @@
 
 - (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(APCNetworkRetryObject *)retryObject
 {
-    if (retryObject && retryObject.retryBlock && error.code == kSBBServerNotAuthenticated && [_authManager isAuthenticated])
+    if (retryObject && retryObject.retryBlock && error.code == SBBErrorCodeServerNotAuthenticated && [_authManager isAuthenticated])
     {
 #if DEBUG
         NSLog(@"Bridge API call returned status code 401; attempting to refresh session token");
@@ -85,7 +85,7 @@
         [_authManager ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
             // ignore 412 Not Consented on signIn when auto-renewing the session token; some Bridge endpoints still work when not consented,
             // and those that don't will themselves return a 412 status code
-            BOOL relevantError = (error && error.code != kSBBServerPreconditionNotMet);
+            BOOL relevantError = (error && error.code != SBBErrorCodeServerPreconditionNotMet);
             if (relevantError) {
 #if DEBUG
                 NSLog(@"Session token auto-refresh failed:\n%@", error);
