@@ -53,12 +53,8 @@ typedef NS_ENUM(NSInteger, SBBErrorCode)
     SBBErrorCodeTempFileReadError = -1103
 };
 
-/**
- * This enum is deprecated. Use <SBBErrorCode> instead which is formatted for compliance with Swift 2.0 enums.
- * @deprecated v3.0.6
- */
-__attribute__((deprecated("use SBBErrorCode")))
-typedef NS_ENUM(NSInteger, SBBErrorCodes)
+
+typedef NS_ENUM(NSInteger, SBBErrorCodes) /** DEPRECATED */
 {
     kSBBUnknownError = -1,
     kSBBInternetNotConnected = -1000,
@@ -75,6 +71,11 @@ typedef NS_ENUM(NSInteger, SBBErrorCodes)
     kSBBObjectNotExpectedClass = -1101,
     kSBBTempFileError = -1102,
     kSBBTempFileReadError = -1103
-};
+}
+/**
+ * This enum is deprecated. Use <SBBErrorCode> instead which is formatted for compliance with Swift 2.0 enums.
+ * @deprecated v3.0.6
+ */
+__attribute__((deprecated("use SBBErrorCode")));
 
 

@@ -40,7 +40,7 @@
         if (!error) {
             unconsentedEmail = emailAddress;
             [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-                if (error && error.code != kSBBServerPreconditionNotMet) {
+                if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
                 } else {
@@ -104,7 +104,7 @@
         if (!error) {
             consentedEmail = emailAddress;
             [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-                if (error && error.code != kSBBServerPreconditionNotMet) {
+                if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in consented user %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
                     [expectWithdrew fulfill];
                 } else {

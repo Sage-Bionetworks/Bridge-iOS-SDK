@@ -90,7 +90,7 @@
         if (!error) {
             unconsentedEmail = emailAddress;
             [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-                XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == kSBBServerPreconditionNotMet, @"Valid credentials, no consent test");
+                XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet, @"Valid credentials, no consent test");
                 [aMan clearKeychainStore];
                 [expect412Unconsented fulfill];
             }];
