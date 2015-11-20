@@ -52,7 +52,7 @@
                                     @"authenticated":@YES};
   [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
   [aMan signInWithUsername:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == kSBBServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
+    XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
     XCTAssert([delegate.sessionToken isEqualToString:uuid], @"Delegate received sessionToken");
   }];
 }
@@ -75,7 +75,7 @@
   
   // first try it with no saved credentials
   [aMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    XCTAssert(error.code == kSBBNoCredentialsAvailable, @"Correct error when no credentials available");
+    XCTAssert(error.code == SBBErrorCodeNoCredentialsAvailable, @"Correct error when no credentials available");
     XCTAssert(delegate.sessionToken == nil, @"Did not attempt to call signIn endpoint without credentials");
   }];
   
