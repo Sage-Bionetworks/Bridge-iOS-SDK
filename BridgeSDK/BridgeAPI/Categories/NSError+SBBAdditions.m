@@ -160,7 +160,8 @@
 
 + (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass
 {
-  NSString *localizedFormat = NSLocalizedString(@"Object '%1$@' is of class %2$@, expected class %3$@", @"Error Description");
+  NSString *localizedFormat = NSLocalizedString(@"Object '%1$@' is of class %2$@, expected class %3$@",
+                                                @"Error Description: Object is not of expected class. object description=$1, actual class=$2, expected class=$3");
   NSString *desc = [NSString stringWithFormat:localizedFormat, object, NSStringFromClass([object class]), NSStringFromClass(expectedClass)];
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeObjectNotExpectedClass userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
