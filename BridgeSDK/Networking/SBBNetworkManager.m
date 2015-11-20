@@ -514,7 +514,7 @@ NSString *kAPIPrefix = @"webservices";
     NSString *osName = [currentDevice systemName];
     NSString *osVersion = [currentDevice systemVersion];
     
-    return [NSString stringWithFormat:@"%@/%@ (%@; %@ %@) BridgeSDK/%0.0f", appName, appVersion, deviceModel, osName, osVersion, BridgeSDKVersionNumber];
+    return [NSString stringWithFormat:@"%@/%@ (%@; %@/%@) BridgeSDK/%0.0f", appName, appVersion, deviceModel, osName, osVersion, BridgeSDKVersionNumber];
 }
 
 - (NSString *)acceptLanguageHeader
