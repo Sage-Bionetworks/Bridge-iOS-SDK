@@ -87,11 +87,7 @@
     }
     else if (statusCode == 410)
     {
-        NSString *localizedDescription = NSLocalizedStringWithDefaultValue(@"SBB_ERROR_UNSUPPORTED_APP_VERSION", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Your version of this app is no longer supported. Please visit the app store to update your app.",
-                                                           @"Error Description: App requires upgrade");
-        retError = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeUnsupportedAppVersion
-                                   userInfo:@{NSLocalizedDescriptionKey: localizedDescription,
-                                              SBB_ORIGINAL_ERROR_KEY: foundationObject}];
+        retError = [self SBBUnsupportedAppVersionErrorWithObject:foundationObject];
     }
     else if (statusCode == 412)
     {
@@ -135,6 +131,31 @@
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeServerNotAuthenticated
                          userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NOT_AUTHENTICATED", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Server says: not authenticated. Please authenticate.",
                                                                                  @"Error Description: not authenticated")}];
+}
+
++ (NSError *)SBBUnsupportedAppVersionError
+{
+    return [self SBBUnsupportedAppVersionErrorWithObject:nil];
+}
+
++ (NSError *)SBBUnsupportedAppVersionErrorWithObject:(id _Nullable)foundationObject
+{
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSString *appName = [[[NSBundle mainBundle] localizedInfoDictionary]
+                         objectForKey:@"CFBundleDisplayName"] ?:
+    [mainBundle objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+    NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    
+    NSString *localizedFormat = NSLocalizedStringWithDefaultValue(@"SBB_ERROR_UNSUPPORTED_APP_VERSION", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Version %1$@ of %2$@ is no longer supported. Please visit the app store to update your app.", @"Error Description: App {version} of {app name} requires upgrade");
+    
+    userInfo[NSLocalizedDescriptionKey] = [NSString stringWithFormat:localizedFormat, appVersion, appName];
+    if (foundationObject != nil) {
+        userInfo[SBB_ORIGINAL_ERROR_KEY] = foundationObject;
+    }
+    
+    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeUnsupportedAppVersion userInfo:userInfo];
 }
 
 + (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url

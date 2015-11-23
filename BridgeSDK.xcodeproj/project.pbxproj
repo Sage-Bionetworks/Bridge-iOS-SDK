@@ -269,6 +269,9 @@
 		80F88E541AF991B10090D462 /* _SBBScheduledActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F88E521AF991B10090D462 /* _SBBScheduledActivity.m */; };
 		D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */; };
 		D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38021A2B144000E7CF1E /* sample-signature.png */; };
+		FF757D5A1C0429DA0075AEF6 /* NSBundle+SSBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SSBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF757D5B1C0429DA0075AEF6 /* NSBundle+SSBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SSBAdditions.m */; };
+		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -554,6 +557,9 @@
 		D48FAA211A2E5C6C00D50D1C /* SBBConsentManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBConsentManagerInternal.h; sourceTree = "<group>"; };
 		D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentManagerUnitTests.m; sourceTree = "<group>"; };
 		D4FA38021A2B144000E7CF1E /* sample-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sample-signature.png"; sourceTree = "<group>"; };
+		FF757D581C0429DA0075AEF6 /* NSBundle+SSBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SSBAdditions.h"; sourceTree = "<group>"; };
+		FF757D591C0429DA0075AEF6 /* NSBundle+SSBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SSBAdditions.m"; sourceTree = "<group>"; };
+		FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundleSBBAdditionsTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -669,6 +675,8 @@
 		8017AF6B19DA0359001AF9BA /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				FF757D581C0429DA0075AEF6 /* NSBundle+SSBAdditions.h */,
+				FF757D591C0429DA0075AEF6 /* NSBundle+SSBAdditions.m */,
 				8017AF6C19DA0359001AF9BA /* NSError+SBBAdditions.h */,
 				8017AF6D19DA0359001AF9BA /* NSError+SBBAdditions.m */,
 				8017AF6E19DA0359001AF9BA /* UIDevice+Hardware.h */,
@@ -797,6 +805,7 @@
 			children = (
 				8026D6A119EC49E1008942B0 /* SBBBridgeAPIUnitTestCase.h */,
 				8026D69A19EC3F4A008942B0 /* SBBBridgeAPIUnitTestCase.m */,
+				FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */,
 				8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */,
 				D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */,
 				8017AF6719D9D909001AF9BA /* SBBObjectManagerTests.m */,
@@ -1067,6 +1076,7 @@
 				807AE2E81B62E8C3002588BB /* _SBBSurveyReference.h in Headers */,
 				8026D67219E76579008942B0 /* SBBSurveyAnswer.h in Headers */,
 				8053B6331A00357400A2E6C4 /* SBBResourceList.h in Headers */,
+				FF757D5A1C0429DA0075AEF6 /* NSBundle+SSBAdditions.h in Headers */,
 				8026D68A19E888DB008942B0 /* SBBUploadSession.h in Headers */,
 				80F7C35119E5DC0D00574800 /* SBBSurveyQuestion.h in Headers */,
 				80855F7119BE27ED006601C7 /* SBBErrors.h in Headers */,
@@ -1388,6 +1398,7 @@
 				800E794019ED744000EEE612 /* _SBBIntegerConstraints.m in Sources */,
 				800E795619ED74A600EEE612 /* SBBDateConstraints.m in Sources */,
 				8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */,
+				FF757D5B1C0429DA0075AEF6 /* NSBundle+SSBAdditions.m in Sources */,
 				8026BD1E19C883FC0077F3EB /* BridgeSDK.m in Sources */,
 				800E796819ED74B600EEE612 /* SBBStringConstraints.m in Sources */,
 				80104A5D19D4CD9E001F2573 /* SBBUserProfile.m in Sources */,
@@ -1468,6 +1479,7 @@
 				80E60DAB19FB0D7E0053D166 /* SBBScheduleManagerUnitTests.m in Sources */,
 				8026D69D19EC4025008942B0 /* SBBUserManagerUnitTests.m in Sources */,
 				8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObject.m in Sources */,
+				FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */,
 				8026D6A319EC531F008942B0 /* SBBAuthManagerUnitTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

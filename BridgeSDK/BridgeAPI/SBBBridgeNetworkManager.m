@@ -34,6 +34,7 @@
 #import "SBBNetworkManagerInternal.h"
 #import "SBBAuthManagerInternal.h"
 #import "SBBErrors.h"
+#import "NSError+SBBAdditions.h"
 
 @interface SBBBridgeNetworkManager ()
 
@@ -73,6 +74,24 @@
     return self;
 }
 
+- (NSURLSessionDataTask *) doDataTask: (NSString*) method
+                            URLString: (NSString*)URLString
+                              headers: (NSDictionary *)headers
+                           parameters:(NSDictionary *)parameters
+                           completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    // If we have already tried to call services and the unsupported app exception code was returned
+    // then do not try again. Just return the error.
+    if (self.isUnsupportedAppVersion) {
+        if (completion) {
+            completion(nil, nil, [NSError SBBUnsupportedAppVersionError]);
+        }
+        return nil;
+    }
+    
+    return [super doDataTask:method URLString:URLString headers:headers parameters:parameters completion:completion];
+}
+
 - (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(APCNetworkRetryObject *)retryObject
 {
     if (retryObject && retryObject.retryBlock && error.code == SBBErrorCodeServerNotAuthenticated && [_authManager isAuthenticated])
@@ -90,6 +109,7 @@
 #if DEBUG
                 NSLog(@"Session token auto-refresh failed:\n%@", error);
 #endif
+                [self checkForAndHandleUnsupportedAppVersionHTTPError:error];
                 [super handleHTTPError:error task:task response:responseObject retryObject:retryObject];
             } else {
 #if DEBUG
@@ -102,7 +122,44 @@
             }
         }];
     } else {
+        [self checkForAndHandleUnsupportedAppVersionHTTPError:error];
         [super handleHTTPError:error task:task response:responseObject retryObject:retryObject];
+    }
+}
+
+- (void)checkForAndHandleUnsupportedAppVersionHTTPError:(NSError *)error
+{
+    // Set flag that blocks attempting further retries once this error has been received.
+    // All future attempts to access services will fail.
+    if (error.code == SBBErrorCodeUnsupportedAppVersion && !self.isUnsupportedAppVersion)
+    {
+        // Set flag that this exception has already been thrown by the server
+        _unsupportedAppVersion = YES;
+        
+        // Look to see if the app delegate handles this error or if this SDK should do so.
+        // Note: check conforms to protocol to ensure that the app delegate is intentionally
+        // implementing 
+        id appDelegate = [[UIApplication sharedApplication] delegate];
+        if (![appDelegate conformsToProtocol:@protocol(SSBBridgeAppDelegate)] ||
+            ![appDelegate respondsToSelector:@selector(handleUnsupportedAppVersionError:bridgeNetworkManager:)] ||
+            ![appDelegate handleUnsupportedAppVersionError:error bridgeNetworkManager:self])
+        {
+            // Show default alert with a button tap to take the user to the app store to update
+            NSString *localizedTitle = NSLocalizedStringWithDefaultValue(@"SBB_ALERT_TITLE_UNSUPPORTED_APP", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Unsupported App Version", @"Alert title: Unsupported App Version");
+            NSString *localizedDismiss = NSLocalizedStringWithDefaultValue(@"SBB_ALERT_DISMISS_BUTTON", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Dismiss", @"Alert button: dismiss");
+            NSString *localizedAppStore = NSLocalizedStringWithDefaultValue(@"SBB_ALERT_APPSTORE_BUTTON", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"App Store", @"Alert button: App Store");
+            
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:localizedTitle message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *dismiss = [UIAlertAction actionWithTitle:localizedDismiss style:UIAlertActionStyleDefault handler:^(UIAlertAction *__unused action) {
+            }];
+            [alertController addAction:dismiss];
+            UIAlertAction *appStore = [UIAlertAction actionWithTitle:localizedAppStore style:UIAlertActionStyleCancel handler:^(UIAlertAction * __unused action) {
+                [[UIApplication sharedApplication] openURL:[[NSBundle mainBundle] appStoreLinkURL]];
+            }];
+            [alertController addAction:appStore];
+            
+            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alertController animated:YES completion:nil];
+        }
     }
 }
 
