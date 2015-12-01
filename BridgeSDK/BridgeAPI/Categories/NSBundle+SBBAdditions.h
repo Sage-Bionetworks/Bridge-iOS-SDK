@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface NSBundle (SSBAdditions)
+@interface NSBundle (SBBAdditions)
 
 - (NSURL * _Nonnull)appStoreLinkURL;
 

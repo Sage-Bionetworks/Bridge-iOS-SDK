@@ -140,9 +140,9 @@
         // Note: check conforms to protocol to ensure that the app delegate is intentionally
         // implementing 
         id appDelegate = [[UIApplication sharedApplication] delegate];
-        if (![appDelegate conformsToProtocol:@protocol(SSBBridgeAppDelegate)] ||
-            ![appDelegate respondsToSelector:@selector(handleUnsupportedAppVersionError:bridgeNetworkManager:)] ||
-            ![appDelegate handleUnsupportedAppVersionError:error bridgeNetworkManager:self])
+        if (![appDelegate conformsToProtocol:@protocol(SBBBridgeAppDelegate)] ||
+            ![appDelegate respondsToSelector:@selector(handleUnsupportedAppVersionError:networkManager:)] ||
+            ![appDelegate handleUnsupportedAppVersionError:error networkManager:self])
         {
             // Show default alert with a button tap to take the user to the app store to update
             NSString *localizedTitle = NSLocalizedStringWithDefaultValue(@"SBB_ALERT_TITLE_UNSUPPORTED_APP", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Unsupported App Version", @"Alert title: Unsupported App Version");

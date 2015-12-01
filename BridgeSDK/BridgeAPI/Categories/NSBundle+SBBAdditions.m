@@ -6,9 +6,9 @@
 //  Copyright © 2015 Sage Bionetworks. All rights reserved.
 //
 
-#import "NSBundle+SSBAdditions.h"
+#import "NSBundle+SBBAdditions.h"
 
-@implementation NSBundle (SSBAdditions)
+@implementation NSBundle (SBBAdditions)
 
 - (NSURL * _Nonnull)appStoreLinkURL
 {
