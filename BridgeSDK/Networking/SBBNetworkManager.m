@@ -283,22 +283,22 @@ NSString *kAPIPrefix = @"webservices";
 /*********************************************************************************/
 - (NSURLSessionDataTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self doDataTask:@"GET" retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
+  return [self doDataTask:@"GET" URLString:URLString headers:headers parameters:parameters completion:completion];
 }
 
 - (NSURLSessionDataTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self doDataTask:@"PUT" retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
+  return [self doDataTask:@"PUT" URLString:URLString headers:headers parameters:parameters completion:completion];
 }
 
 - (NSURLSessionDataTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self doDataTask:@"POST" retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
+  return [self doDataTask:@"POST" URLString:URLString headers:headers parameters:parameters completion:completion];
 }
 
 - (NSURLSessionDataTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self doDataTask:@"DELETE" retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
+  return [self doDataTask:@"DELETE" URLString:URLString headers:headers parameters:parameters completion:completion];
 }
 
 // in case this class is used from C++, because delete is a keyword in that language (see header)
@@ -401,6 +401,14 @@ NSString *kAPIPrefix = @"webservices";
 - (NSDictionary *)headersPreparedForRetry:(NSDictionary *)headers
 {
     return headers;
+}
+
+- (NSURLSessionDataTask *) doDataTask:(NSString*) method
+                            URLString:(NSString*)URLString
+                              headers:(NSDictionary *)headers
+                           parameters:(NSDictionary *)parameters
+                           completion:(SBBNetworkManagerCompletionBlock)completion {
+    return [self doDataTask:method retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
 }
 
 - (NSURLSessionDataTask *) doDataTask: (NSString*) method

@@ -373,7 +373,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     if (!uploadRequest || !uploadRequest.contentLength || !uploadRequest.contentType || !uploadRequest.contentMd5) {
         NSLog(@"Failed to retrieve upload request headers for temp file %@", downloadTask.taskDescription);
         NSString *desc = [NSString stringWithFormat:@"Error retrieving upload request headers for temp file URL:\n%@", downloadTask.taskDescription];
-        error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
+        error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
         [self completeUploadOfFile:downloadTask.taskDescription withError:error];
         return;
     }
@@ -426,7 +426,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
             // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
             // (along with all 4xx and 5xx of course)
             NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
-            NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:kSBBS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
+            NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
             [self completeUploadOfFile:uploadTask.taskDescription withError:s3Error];
             return;
         }

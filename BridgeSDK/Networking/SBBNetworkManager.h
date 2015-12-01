@@ -29,6 +29,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "SBBComponent.h"
 
 /*!
@@ -234,4 +235,12 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
 - (BOOL) isInternetConnected;
 - (BOOL) isServerReachable;
 
+//@protected
+- (NSURLSessionDataTask *) doDataTask:(NSString*) method
+                            URLString:(NSString*)URLString
+                              headers:(NSDictionary *)headers
+                           parameters:(NSDictionary *)parameters
+                           completion:(SBBNetworkManagerCompletionBlock)completion;
 @end
+
+
