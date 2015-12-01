@@ -213,24 +213,6 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
 @end
 
 
-/**
- * If the app delegate conforms to this protocol then the methods included will be called as appropriate.
- */
-@protocol SBBBridgeAppDelegate <UIApplicationDelegate>
-
-@optional
-/**
- * Method called when the Bridge services return an error code that this version of the app is no longer supported.
- * If not implemented or returns @NO then the BridgeNetworkManager should handle the error with a general message.
- * This method will only be called once per app launch.
- *
- * @return @YES if the error has been handled by the delegate.
- */
-- (BOOL)handleUnsupportedAppVersionError:(NSError*)error networkManager:(id <SBBNetworkManagerProtocol>)networkManager;
-
-@end
-
-
 /*!
  This class handles HTTP networking with the Bridge REST API.
  */
