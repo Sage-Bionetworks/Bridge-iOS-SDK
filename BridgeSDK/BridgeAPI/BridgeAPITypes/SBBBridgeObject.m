@@ -49,4 +49,9 @@
   return self;
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat: @"<%@ %@> %@", NSStringFromClass([self class]), @([self hash]), self.dictionaryRepresentation];
+}
+
 @end
