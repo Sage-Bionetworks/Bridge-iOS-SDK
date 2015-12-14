@@ -329,11 +329,15 @@
 {
     id converted = nil;
     
-    if (targetClass == [NSArray class] && [json isKindOfClass:[NSArray class]]) {
+    if ((targetClass == [NSArray class] || targetClass == [NSSet class]) && [json isKindOfClass:[NSArray class]]) {
         // try converting to an array of bridge objects, and use that if so (otherwise just throw it in as-is)
         NSArray *objectArray = [self objectFromBridgeJSON:json];
         if (objectArray) {
-            converted = objectArray;
+            if (targetClass == [NSArray class]) {
+                converted = objectArray;
+            } else {
+                converted = [NSSet setWithArray:objectArray];
+            }
         } else {
             converted = json;
         }
@@ -719,7 +723,8 @@
     
     Class objectClass = [object class];
     id bridgeJSON = nil;
-    if ([objectClass isSubclassOfClass:[NSArray class]]) {
+    if ([objectClass isSubclassOfClass:[NSArray class]] ||
+        [objectClass isSubclassOfClass:[NSSet class]]) {
         bridgeJSON = [NSMutableArray array];
         for (id subObject in object) {
             id json = [self bridgeJSONFromObject:subObject];

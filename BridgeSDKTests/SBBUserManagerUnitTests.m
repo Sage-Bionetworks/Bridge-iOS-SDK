@@ -27,21 +27,37 @@
 
 - (void)testGetUserProfileWithCompletion
 {
-  NSDictionary *userProfile =
-  @{
-    @"type": @"UserProfile",
-    @"firstName": @"First",
-    @"lastName": @"Last",
-    @"username": @"1337p4t13nt",
-    @"email": @"email@fake.tld"
-    };
-  [self.mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
-  SBBObjectManager *oMan = [SBBObjectManager objectManager];
-  SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
-  [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
-  [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
-    XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
-  }];
+    NSDictionary *userProfile =
+    @{
+      @"type": @"UserProfile",
+      @"firstName": @"First",
+      @"lastName": @"Last",
+      @"username": @"1337p4t13nt",
+      @"email": @"email@fake.tld"
+      };
+    [self.mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
+    SBBObjectManager *oMan = [SBBObjectManager objectManager];
+    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+    [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
+    [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
+        XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
+    }];
+}
+
+- (void)testGetDataGroupsWithCompletion
+{
+    NSDictionary *dataGroups =
+    @{
+      @"type": @"DataGroups",
+      @"dataGroups": @[@"group1", @"group2", @"group3"]
+      };
+    [self.mockURLSession setJson:dataGroups andResponseCode:200 forEndpoint:kSBBUserDataGroupsAPI andMethod:@"GET"];
+    SBBObjectManager *oMan = [SBBObjectManager objectManager];
+    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+    [oMan setupMappingForType:@"DataGroups" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"dataGroups": @"jsonArrayField"}];
+    [uMan getDataGroupsWithCompletion:^(id dataGroups, NSError *error) {
+        XCTAssert([dataGroups isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
+    }];
 }
 
 @end
