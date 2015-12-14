@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15A284" minimumToolsVersion="Xcode 4.3">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15B42" minimumToolsVersion="Xcode 4.3">
     <entity name="Activity" representedClassName="SBBActivity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -29,6 +29,13 @@
         <attribute name="type" attributeType="String" syncable="YES">
             <userInfo>
                 <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+    </entity>
+    <entity name="DataGroups" representedClassName="SBBDataGroups" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="dataGroups" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSSet&lt;NSString *&gt; *"/>
             </userInfo>
         </attribute>
     </entity>
@@ -259,6 +266,7 @@
         <element name="Activity" positionX="0" positionY="0" width="128" height="150"/>
         <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
         <element name="BridgeObject" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="DataGroups" positionX="0" positionY="90" width="128" height="60"/>
         <element name="DateConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="DateTimeConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="DecimalConstraints" positionX="0" positionY="0" width="128" height="105"/>

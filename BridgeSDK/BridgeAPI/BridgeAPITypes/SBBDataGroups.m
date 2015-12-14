@@ -1,8 +1,5 @@
 //
-//  SBBUserManagerInternal.h
-//  BridgeSDK
-//
-//  Created by Erin Mounts on 7/23/15.
+//  SBBDataGroups.m
 //
 //	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
@@ -30,14 +27,12 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBUserManager.h"
+#import "SBBDataGroups.h"
 
-/* CONSTANTS */
-extern NSString * const kSBBUserProfileAPI;
-extern NSString * const kSBBUserExternalIdAPI;
-extern NSString * const kSBBUserDataSharingAPI;
-extern NSString * const kSBBUserDataEmailDataAPI;
-extern NSString * const kSBBUserDataGroupsAPI;
+@implementation SBBDataGroups
 
-extern NSString * const kSBBUserDataSharingScopeKey;
-extern NSString * const kSBBUserDataSharingScopeStrings[];
+#pragma mark Abstract method overrides
+
+// Custom logic goes here.
+
+@end

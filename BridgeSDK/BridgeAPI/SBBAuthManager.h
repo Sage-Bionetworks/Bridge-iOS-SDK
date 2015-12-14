@@ -35,7 +35,7 @@
 #import "SBBNetworkManager.h"
 
 /// Global study identifier, specific to each app. Must be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy: class method.
-extern NSString *gSBBAppStudy;
+extern  NSString * _Nonnull gSBBAppStudy;
 
 @protocol SBBAuthManagerProtocol;
 
@@ -67,7 +67,7 @@ extern NSString *gSBBAppStudy;
  *
  *  @return The session token, or nil.
  */
-- (NSString *)sessionTokenForAuthManager:(id<SBBAuthManagerProtocol>)authManager;
+- (nullable NSString *)sessionTokenForAuthManager:(nonnull id<SBBAuthManagerProtocol>)authManager;
 
 /*!
  *  The auth manager will call this delegate method when it obtains a new session token, so that the delegate
@@ -78,7 +78,7 @@ extern NSString *gSBBAppStudy;
  *  @param authManager The auth manager instance making the delegate request.
  *  @param sessionToken The session token just obtained by the auth manager.
  */
-- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken;
+- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken;
 
 @optional
 
@@ -92,7 +92,7 @@ extern NSString *gSBBAppStudy;
  *  @param authManager The auth manager instance making the delegate request.
  *  @param sessionToken The session token just obtained by the auth manager.
  */
-- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken forUsername:(NSString *)username andPassword:(NSString *)password;
+- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken forUsername:(nullable NSString *)username andPassword:(nullable NSString *)password;
 
 /*!
  *  This delegate method should return the username for the user account last signed up for or signed in to,
@@ -104,7 +104,7 @@ extern NSString *gSBBAppStudy;
  *
  *  @return The username, or nil.
  */
-- (NSString *)usernameForAuthManager:(id<SBBAuthManagerProtocol>)authManager;
+- (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
 
 /*!
  *  This delegate method should return the password for the user account last signed up for or signed in to,
@@ -116,7 +116,7 @@ extern NSString *gSBBAppStudy;
  *
  *  @return The password, or nil.
  */
-- (NSString *)passwordForAuthManager:(id<SBBAuthManagerProtocol>)authManager;
+- (nullable NSString *)passwordForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
 
 @end
 
@@ -131,17 +131,30 @@ extern NSString *gSBBAppStudy;
 @property (nonatomic, weak) id<SBBAuthManagerDelegateProtocol> authDelegate;
 
 /*!
- * Sign up for an account with an email address, userName, and password. An email will be sent to the
- * specified email address containing a link to verify that this is indeed that person's email. The
- * userName and password won't be valid for signing in until the email has been verified.
+ * Sign up for an account with an email address, userName, password, and an optional list of data group tags. 
+ * An email will be sent to the specified email address containing a link to verify that this is indeed that
+ * person's email. The userName and password won't be valid for signing in until the email has been verified.
  *
  * @param email The email address to be associated with the account.
  * @param username The username to use for the account.
  * @param password The password to use for the account.
- * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
+ * @param dataGroups An array of dataGroup tags to assign to the user at signup. Optional.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
  * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Sign up for an account with an email address, userName, and password. This is a convenience method
+ * that calls signUpWithEmail:username:password:dataGroups:completion: with dataGroups set to nil.
+ *
+ * @param email The email address to be associated with the account.
+ * @param username The username to use for the account.
+ * @param password The password to use for the account.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (nonnull NSURLSessionDataTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  Request Bridge to re-send the email verification link to the specified email address.
@@ -154,7 +167,7 @@ extern NSString *gSBBAppStudy;
  
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)resendEmailVerification:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)resendEmailVerification:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Sign in to an existing account with a userName and password.
@@ -164,7 +177,7 @@ extern NSString *gSBBAppStudy;
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you've mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of id<SBBObjectManagerProtocol> if you've set one up).
  * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Sign out of the user's Bridge account.
@@ -172,7 +185,7 @@ extern NSString *gSBBAppStudy;
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
  * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)signOutWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)signOutWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Call this at app launch to ensure the user is logged in to their account (if any).
@@ -181,7 +194,7 @@ extern NSString *gSBBAppStudy;
  *
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
  */
-- (void)ensureSignedInWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
+- (void)ensureSignedInWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  Request that the password be reset for the account associated with the given email address. An email will be sent
@@ -192,7 +205,7 @@ extern NSString *gSBBAppStudy;
  
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)requestPasswordResetForEmail:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)requestPasswordResetForEmail:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  Reset the password for this user's account.
@@ -203,14 +216,14 @@ extern NSString *gSBBAppStudy;
  
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)resetPasswordToNewPassword:(nonnull NSString *)password resetToken:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  *  This method is used by other API manager components to inject the session token header for authentication.
  *
  *  @param headers A mutable dictionary containing HTTP header key-value (string) pairs, to which to add the auth header.
  */
-- (void)addAuthHeaderToHeaders:(NSMutableDictionary *)headers;
+- (void)addAuthHeaderToHeaders:(nonnull NSMutableDictionary *)headers;
 
 @end
 
@@ -230,7 +243,7 @@ extern NSString *gSBBAppStudy;
  *
  * @return The default (shared) SBBAuthManager component.
  */
-+ (instancetype)defaultComponent;
++ (nonnull instancetype)defaultComponent;
 
 /*!
  * Return an SBBAuthManager component configured for the specified environment, appURLPrefix, and baseURLPath
@@ -243,7 +256,7 @@ extern NSString *gSBBAppStudy;
  * @param baseURLPath The URL path to prefix with the app server prefix and environment string (e.g. @"sagebridge.org")
  * @return An SBBAuthManager component configured for an environment, appURLPrefix, and baseURLPath.
  */
-+ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath;
++ (nonnull instancetype)authManagerForEnvironment:(SBBEnvironment)environment study:(nonnull NSString *)study baseURLPath:(nonnull NSString *)baseURLPath;
 
 /*!
  * Return an SBBAuthManager component configured for the specified baseURL with a default network manager.
@@ -253,7 +266,7 @@ extern NSString *gSBBAppStudy;
  * @param baseURL The baseURL to use.
  * @return An SBBAuthManager component configured with a specific network manager.
  */
-+ (instancetype)authManagerWithBaseURL:(NSString *)baseURL;
++ (nonnull instancetype)authManagerWithBaseURL:(nonnull NSString *)baseURL;
 
 /*!
  * Return an SBBAuthManager component configured with the specified network manager.
@@ -263,6 +276,6 @@ extern NSString *gSBBAppStudy;
  * @param networkManager The SBBNetworkManager to use.
  * @return An SBBAuthManager component configured with a specific network manager.
  */
-+ (instancetype)authManagerWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager;
++ (nonnull instancetype)authManagerWithNetworkManager:(nonnull id<SBBNetworkManagerProtocol>)networkManager;
 
 @end

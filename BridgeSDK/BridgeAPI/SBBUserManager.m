@@ -36,6 +36,7 @@
 #import "SBBObjectManager.h"
 #import "BridgeSDKInternal.h"
 #import "NSDate+SBBAdditions.h"
+#import "SBBDataGroups.h"
 
 #define USER_API GLOBAL_API_PREFIX @"/users/self"
 
@@ -43,6 +44,7 @@ NSString * const kSBBUserProfileAPI =       USER_API;
 NSString * const kSBBUserExternalIdAPI =    USER_API @"/externalId";
 NSString * const kSBBUserDataSharingAPI =   USER_API @"/dataSharing";
 NSString * const kSBBUserDataEmailDataAPI = USER_API @"/emailData";
+NSString * const kSBBUserDataGroupsAPI =    USER_API @"/dataGroups";
 
 NSString * const kSBBUserDataSharingScopeKey = @"scope";
 NSString* const kSBBUserDataSharingScopeStrings[] = {
@@ -65,7 +67,7 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
   return shared;
 }
 
-- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetCompletionBlock)completion
+- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
@@ -135,6 +137,82 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
     return [self.networkManager post:kSBBUserDataSharingAPI headers:headers parameters:parameters completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (completion) {
             completion(responseObject, error);
+        }
+    }];
+}
+
+- (NSURLSessionDataTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    return [self.networkManager get:kSBBUserDataGroupsAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        id dataGroups = [self.objectManager objectFromBridgeJSON:responseObject];
+        if (completion) {
+            completion(dataGroups, error);
+        }
+    }];
+}
+
+- (NSURLSessionDataTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion
+{
+    id jsonGroups = [self.objectManager bridgeJSONFromObject:dataGroups];
+    if (!jsonGroups) {
+        NSLog(@"Unable to create Bridge JSON DataGroups object from %@", dataGroups);
+        return nil;
+    }
+    
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    return [self.networkManager post:kSBBUserDataGroupsAPI headers:headers parameters:jsonGroups completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
+}
+
+- (void)addToDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBUserManagerCompletionBlock)completion
+{
+    [self getDataGroupsWithCompletion:^(id oldDataGroups, NSError *error) {
+        if (error) {
+            NSLog(@"Error retrieving current data groups from Bridge:\n%@", error);
+            if (completion) {
+                completion(nil, error);
+            }
+        } else {
+            SBBDataGroups *newDataGroups = oldDataGroups;
+            if (![newDataGroups isKindOfClass:[SBBDataGroups class]]) {
+                // use a clean object manager with no mappings to retrieve the SBBDataGroups object from the
+                // returned object, if it's been mapped
+                newDataGroups = [[SBBObjectManager objectManager] objectFromBridgeJSON:[self.objectManager bridgeJSONFromObject:dataGroups]];
+            }
+            
+            newDataGroups.dataGroups = [newDataGroups.dataGroups setByAddingObjectsFromArray:dataGroups];
+            [self updateDataGroupsWithGroups:newDataGroups completion:completion];
+        }
+    }];
+}
+
+- (void)removeFromDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBUserManagerCompletionBlock)completion
+{
+    [self getDataGroupsWithCompletion:^(id oldDataGroups, NSError *error) {
+        if (error) {
+            NSLog(@"Error retrieving current data groups from Bridge:\n%@", error);
+            if (completion) {
+                completion(nil, error);
+            }
+        } else {
+            SBBDataGroups *newDataGroups = oldDataGroups;
+            if (![newDataGroups isKindOfClass:[SBBDataGroups class]]) {
+                // use a clean object manager with no mappings to retrieve the SBBDataGroups object from the
+                // returned object, if it's been mapped
+                newDataGroups = [[SBBObjectManager objectManager] objectFromBridgeJSON:[self.objectManager bridgeJSONFromObject:dataGroups]];
+            }
+            
+            NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+                return ![dataGroups containsObject:evaluatedObject];
+            }];
+            newDataGroups.dataGroups = [newDataGroups.dataGroups filteredSetUsingPredicate:predicate];
+            [self updateDataGroupsWithGroups:newDataGroups completion:completion];
         }
     }];
 }

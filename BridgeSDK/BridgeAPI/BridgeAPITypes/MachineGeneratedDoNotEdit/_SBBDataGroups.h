@@ -1,10 +1,7 @@
 //
-//  SBBUserManagerInternal.h
-//  BridgeSDK
+//  SBBDataGroups.h
 //
-//  Created by Erin Mounts on 7/23/15.
-//
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -29,15 +26,19 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBDataGroups.h instead.
+//
 
-#import "SBBUserManager.h"
+#import <Foundation/Foundation.h>
+#import "SBBBridgeObject.h"
 
-/* CONSTANTS */
-extern NSString * const kSBBUserProfileAPI;
-extern NSString * const kSBBUserExternalIdAPI;
-extern NSString * const kSBBUserDataSharingAPI;
-extern NSString * const kSBBUserDataEmailDataAPI;
-extern NSString * const kSBBUserDataGroupsAPI;
+@protocol _SBBDataGroups
 
-extern NSString * const kSBBUserDataSharingScopeKey;
-extern NSString * const kSBBUserDataSharingScopeStrings[];
+@end
+
+@interface _SBBDataGroups : SBBBridgeObject
+
+@property (nonatomic, strong) NSSet<NSString *> * dataGroups;
+
+@end

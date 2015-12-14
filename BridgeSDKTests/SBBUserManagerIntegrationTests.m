@@ -126,4 +126,168 @@
     }];
 }
 
+- (void)testGetDataGroups {
+    XCTestExpectation *expectGotGroups = [self expectationWithDescription:@"Retrieved data groups"];
+    [SBBComponent(SBBUserManager) getDataGroupsWithCompletion:^(id dataGroups, NSError *error) {
+        if (error) {
+            NSLog(@"Error getting data groups:\n%@", error);
+        }
+        XCTAssert(!error && [dataGroups isKindOfClass:[SBBDataGroups class]], @"Retrieved data groups");
+        [expectGotGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout getting data groups: %@", error);
+        }
+    }];
+}
+
+- (void)testUpdateDataGroups {
+    XCTestExpectation *expectUpdatedGroups = [self expectationWithDescription:@"Updated data groups"];
+    
+    SBBDataGroups *groups = [SBBDataGroups new];
+    groups.dataGroups = [NSSet setWithArray:@[@"group1", @"group2", @"group3"]];
+    
+    [SBBComponent(SBBUserManager) updateDataGroupsWithGroups:groups completion:^(id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"Error updating data groups:\n%@\nResponse: %@", error, responseObject);
+        }
+        XCTAssert(!error, @"Updated data groups");
+        [expectUpdatedGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout updating data groups: %@", error);
+        }
+    }];
+    
+    XCTestExpectation *expectGotGroups = [self expectationWithDescription:@"Retrieved updated data groups"];
+    [SBBComponent(SBBUserManager) getDataGroupsWithCompletion:^(id dataGroups, NSError *error) {
+        if (error) {
+            NSLog(@"Error getting data groups:\n%@", error);
+        }
+        XCTAssert(!error && [dataGroups isKindOfClass:[SBBDataGroups class]], @"Retrieved updated data groups");
+        XCTAssert([((SBBDataGroups *)dataGroups).dataGroups isEqual:groups.dataGroups], @"Verified data groups updated as requested");
+        [expectGotGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout getting updated data groups: %@", error);
+        }
+    }];
+}
+
+- (void)testAddToDataGroups
+{
+    XCTestExpectation *expectUpdatedGroups = [self expectationWithDescription:@"Updated data groups"];
+    
+    SBBDataGroups *groups = [SBBDataGroups new];
+    groups.dataGroups = [NSSet setWithArray:@[@"group1", @"group2", @"group3"]];
+    
+    [SBBComponent(SBBUserManager) updateDataGroupsWithGroups:groups completion:^(id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"Error updating data groups:\n%@\nResponse: %@", error, responseObject);
+        }
+        XCTAssert(!error, @"Updated data groups");
+        [expectUpdatedGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout updating data groups: %@", error);
+        }
+    }];
+    
+    XCTestExpectation *expectAddedToGroups = [self expectationWithDescription:@"Added to data groups"];
+    NSArray *newGroups = @[@"group4", @"group5"];
+    [SBBComponent(SBBUserManager) addToDataGroups:newGroups completion:^(id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"Error adding to data groups %@:\n%@\nResponse: %@", newGroups, error, responseObject);
+        }
+        XCTAssert(!error, @"Added to data groups");
+        [expectAddedToGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout adding to data groups: %@", error);
+        }
+    }];
+
+    XCTestExpectation *expectGotGroups = [self expectationWithDescription:@"Retrieved data groups"];
+    [SBBComponent(SBBUserManager) getDataGroupsWithCompletion:^(id dataGroups, NSError *error) {
+        if (error) {
+            NSLog(@"Error getting data groups:\n%@", error);
+        }
+        XCTAssert(!error && [dataGroups isKindOfClass:[SBBDataGroups class]], @"Retrieved data groups");
+        NSArray *combined = @[@"group1", @"group2", @"group3", @"group4", @"group5"];
+        XCTAssert([[dataGroups dataGroups] isEqual:[NSSet setWithArray:combined]], @"Data groups added as expected");
+        [expectGotGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout getting data groups: %@", error);
+        }
+    }];
+}
+
+- (void)testRemoveFromDataGroups
+{
+    XCTestExpectation *expectUpdatedGroups = [self expectationWithDescription:@"Updated data groups"];
+    
+    SBBDataGroups *groups = [SBBDataGroups new];
+    groups.dataGroups = [NSSet setWithArray:@[@"group1", @"group2", @"group3"]];
+    
+    [SBBComponent(SBBUserManager) updateDataGroupsWithGroups:groups completion:^(id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"Error updating data groups:\n%@\nResponse: %@", error, responseObject);
+        }
+        XCTAssert(!error, @"Updated data groups");
+        [expectUpdatedGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout updating data groups: %@", error);
+        }
+    }];
+    
+    XCTestExpectation *expectRemovedFromGroups = [self expectationWithDescription:@"Removed from data groups"];
+    NSArray *oldGroups = @[@"group1", @"group3"];
+    [SBBComponent(SBBUserManager) removeFromDataGroups:oldGroups completion:^(id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"Error removing from data groups %@:\n%@\nResponse: %@", oldGroups, error, responseObject);
+        }
+        XCTAssert(!error, @"Removed from data groups");
+        [expectRemovedFromGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout removing from data groups: %@", error);
+        }
+    }];
+    
+    XCTestExpectation *expectGotGroups = [self expectationWithDescription:@"Retrieved data groups"];
+    [SBBComponent(SBBUserManager) getDataGroupsWithCompletion:^(id dataGroups, NSError *error) {
+        if (error) {
+            NSLog(@"Error getting data groups:\n%@", error);
+        }
+        XCTAssert(!error && [dataGroups isKindOfClass:[SBBDataGroups class]], @"Retrieved data groups");
+        NSArray *afterRemoval = @[@"group2"];
+        XCTAssert([[dataGroups dataGroups] isEqual:[NSSet setWithArray:afterRemoval]], @"Data groups removed as expected");
+        [expectGotGroups fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout getting data groups: %@", error);
+        }
+    }];
+}
+
 @end

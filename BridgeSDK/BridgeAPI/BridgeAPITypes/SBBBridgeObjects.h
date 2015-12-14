@@ -1,6 +1,7 @@
 #import "SBBActivity.h"
 #import "SBBBooleanConstraints.h"
 #import "SBBBridgeObject.h"
+#import "SBBDataGroups.h"
 #import "SBBDateConstraints.h"
 #import "SBBDateTimeConstraints.h"
 #import "SBBDecimalConstraints.h"

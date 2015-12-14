@@ -52,7 +52,15 @@ typedef NS_ENUM(NSInteger, SBBUserDataSharingScope) {
  @param userProfile By default, an SBBUserProfile object, unless the UserProfile type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:
  @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBUserManagerGetCompletionBlock)(id userProfile, NSError *error);
+typedef void (^SBBUserManagerGetProfileCompletionBlock)(id userProfile, NSError *error);
+
+/*!
+ Completion block called when retrieving data groups from the API.
+ 
+ @param dataGroups By default, an SBBDataGroups object, unless the DataGroups type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:
+ @param error      An error that occurred during execution of the method for which this is a completion block, or nil.
+ */
+typedef void (^SBBUserManagerGetGroupsCompletionBlock)(id dataGroups, NSError *error);
 
 /*!
  Completion block called when making other calls to the users API.
@@ -71,11 +79,11 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
 /*!
  *  Fetch the UserProfile from the Bridge API.
  *
- *  @param completion An SBBUserManagerGetCompletionBlock to be called upon completion.
+ *  @param completion An SBBUserManagerGetProfileCompletionBlock to be called upon completion.
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetCompletionBlock)completion;
+- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion;
 
 /*!
  *  Update the UserProfile to the Bridge API.
@@ -124,6 +132,41 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
 - (NSURLSessionDataTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion;
+
+/*!
+ Fetch the data groups to which this user belongs from the Bridge API.
+ 
+ @param completion An SBBUserManagerGetGroupsCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion;
+
+/*!
+ Update the user's dataGroups to the Bridge API.
+ 
+ @param dataGroups A client object representing the dataGroups as they should be updated.
+ @param completion An SBBUserManagerCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion;
+
+/*!
+ Add the user to the specified data groups (tags).
+ 
+ @param dataGroups  The data groups to which to add the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, adds the specified groups to the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user's existing dataGroups, that error will be passed to the completion handler. If an attempt is made to add a user to one or more data groups that haven't first been defined in the study, the Bridge API will respond with 400 (Bad Request) with an error message detailing the problem in the body of the response.
+ @param completion An SBBUserManagerCompletionBlock to be called upon completion.
+ */
+- (void)addToDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBUserManagerCompletionBlock)completion;
+
+/*!
+ Remove the user from the specified data groups (tags).
+ 
+ @param dataGroups  The data groups from which to remove the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, removes the specified groups from the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user's existing dataGroups, that error will be passed to the completion handler. If the fetch succeeds but the user is not a member of one or more of these data groups, whether because they haven't been added or because they don't exist in the study, this method will complete without updating the user's dataGroups and without an error.
+ @param completion An SBBUserManagerCompletionBlock to be called upon completion.
+ */
+- (void)removeFromDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBUserManagerCompletionBlock)completion;
 
 @end
 
