@@ -1,10 +1,7 @@
 //
-//  SBBConsentManagerInternal.h
-//  BridgeSDK
+//  SBBConsentStatus.h
 //
-//  Created by Dwayne Jeng on 12/2/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,13 +27,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBConsentManager.h"
+#import "_SBBConsentStatus.h"
 
-/* CONSTANTS */
-extern NSString* const kSBBConsentAPI;
-extern NSString* const kSBBConsentWithdrawAPI;
-extern NSString* const kSBBConsentSubpopulationsAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsWithdrawAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsEmailAPIFormat;
-
-extern NSString* const kSBBMimeTypePng;
+@interface SBBConsentStatus : _SBBConsentStatus <_SBBConsentStatus>
+// Custom logic goes here.
+@end

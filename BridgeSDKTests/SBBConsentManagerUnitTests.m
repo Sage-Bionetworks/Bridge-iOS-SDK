@@ -9,6 +9,12 @@
 #import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBConsentManagerInternal.h"
 
+static NSString * const kSBBKeyName = @"name";
+static NSString * const kSBBKeyBirthdate = @"birthdate";
+static NSString * const kSBBKeyImageData = @"imageData";
+static NSString * const kSBBKeyImageMimeType = @"imageMimeType";
+static NSString * const kSBBKeyAPIObjectType = @"type";
+
 @interface SBBConsentManagerUnitTests : SBBBridgeAPIUnitTestCase
 
 @end
@@ -27,8 +33,9 @@
 
 - (void)testRetrieve {
   // construct consent manager with mock response
-  NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01"};
-  [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:kSBBConsentAPI andMethod:@"GET"];
+  NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01", kSBBKeyAPIObjectType:@"ConsentSignature"};
+  NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, gSBBAppStudy];
+  [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
   SBBConsentManager* consentMan = (SBBConsentManager *)SBBComponent(SBBConsentManager);
 
   // execute and validate
@@ -48,8 +55,9 @@
 
   // construct consent manager with mock response
   NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01",
-    kSBBKeyImageData:imageBase64String, kSBBKeyImageMimeType:kSBBMimeTypePng};
-  [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:kSBBConsentAPI andMethod:@"GET"];
+    kSBBKeyImageData:imageBase64String, kSBBKeyImageMimeType:kSBBMimeTypePng, kSBBKeyAPIObjectType:@"ConsentSignature"};
+  NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, gSBBAppStudy];
+  [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
   id<SBBConsentManagerProtocol> consentMan = SBBComponent(SBBConsentManager);
 
   // execute and validate
@@ -63,5 +71,50 @@
     XCTAssert([signatureImage size].width > 0, @"consent signature image has positive width");
   }];
 }
+
+- (void)testGet {
+    // construct consent manager with mock response
+    NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01", kSBBKeyAPIObjectType:@"ConsentSignature"};
+    NSString *testSubpopGuid = @"ABC123turtleturtleturtle";
+    NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, testSubpopGuid];
+    [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    SBBConsentManager* consentMan = (SBBConsentManager *)SBBComponent(SBBConsentManager);
+    
+    // execute and validate
+    [consentMan getConsentSignatureForSubpopulation:testSubpopGuid completion:^(id consentSignature, NSError *error) {
+        XCTAssert([@"Eggplant McTester" isEqualToString:[consentSignature name]], @"consent signature has name");
+        XCTAssert([@"1970-01-01" isEqualToString:[consentSignature birthdate]], @"consent signature has birthdate");
+        XCTAssertNil([consentSignature signatureImage], @"consent signature has no image");
+    }];
+}
+
+- (void)testGetWithImage {
+    // test signature image
+    NSString* imagePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"sample-signature" ofType:@"png"];
+    NSData* imageData = [NSData dataWithContentsOfFile:imagePath];
+    NSString* imageBase64String = [imageData base64EncodedStringWithOptions:kNilOptions];
+
+    // construct consent manager with mock response
+    NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01",
+                                   kSBBKeyImageData:imageBase64String, kSBBKeyImageMimeType:kSBBMimeTypePng, kSBBKeyAPIObjectType:@"ConsentSignature"};
+    NSString *testSubpopGuid = @"ABC123turtleturtleturtle";
+    NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, testSubpopGuid];
+    [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    SBBConsentManager* consentMan = (SBBConsentManager *)SBBComponent(SBBConsentManager);
+    
+    // execute and validate
+    [consentMan getConsentSignatureForSubpopulation:testSubpopGuid completion:^(id consentSignature, NSError *error) {
+        XCTAssert([@"Eggplant McTester" isEqualToString:[consentSignature name]], @"consent signature has name");
+        XCTAssert([@"1970-01-01" isEqualToString:[consentSignature birthdate]], @"consent signature has birthdate");
+        UIImage *signatureImage = [consentSignature signatureImage];
+        
+        // we validate the image simply by validating that it exists and has a positive height and width
+        XCTAssertNotNil(signatureImage, @"consent signature image exists");
+        XCTAssert([signatureImage size].height > 0, @"consent signature image has positive height");
+        XCTAssert([signatureImage size].width > 0, @"consent signature image has positive width");
+    }];
+}
+
+
 
 @end

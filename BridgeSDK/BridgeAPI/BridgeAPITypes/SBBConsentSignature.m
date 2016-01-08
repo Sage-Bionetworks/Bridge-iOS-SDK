@@ -1,10 +1,7 @@
 //
-//  SBBConsentManagerInternal.h
-//  BridgeSDK
+//  SBBConsentSignature.m
 //
-//  Created by Dwayne Jeng on 12/2/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,13 +27,51 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBConsentManager.h"
+#import <UIKit/UIKit.h>
+#import "SBBConsentSignature.h"
+#import "SBBConsentManagerInternal.h"
 
-/* CONSTANTS */
-extern NSString* const kSBBConsentAPI;
-extern NSString* const kSBBConsentWithdrawAPI;
-extern NSString* const kSBBConsentSubpopulationsAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsWithdrawAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsEmailAPIFormat;
+@interface SBBConsentSignature () {
+    UIImage *__image;
+}
 
-extern NSString* const kSBBMimeTypePng;
+@end
+
+@implementation SBBConsentSignature
+
+#pragma mark Abstract method overrides
+
+// Custom logic goes here.
+
+- (UIImage *)signatureImage
+{
+    if (!__image && self.imageData) {
+        NSData* imageData = [[NSData alloc] initWithBase64EncodedString:self.imageData
+                                                                options:kNilOptions];
+        __image = [[UIImage alloc] initWithData:imageData];
+    }
+
+    return __image;
+}
+
+- (void)setImageData:(NSString *)imageData
+{
+    [super setImageData:imageData];
+    __image = nil;
+}
+
+- (void)setSignatureImage:(UIImage *)image
+{
+    NSString *imageBase64String = nil;
+    NSString *imageMimeType = nil;
+    if (image != nil) {
+        NSData* imageData = UIImagePNGRepresentation(image);
+        imageBase64String = [imageData base64EncodedStringWithOptions:kNilOptions];
+        imageMimeType = kSBBMimeTypePng;
+    }
+    self.imageData = imageBase64String;
+    self.imageMimeType = imageMimeType;
+    __image = image;
+}
+
+@end

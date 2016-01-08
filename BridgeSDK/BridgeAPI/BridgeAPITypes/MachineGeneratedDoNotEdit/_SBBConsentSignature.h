@@ -1,10 +1,7 @@
 //
-//  SBBConsentManagerInternal.h
-//  BridgeSDK
+//  SBBConsentSignature.h
 //
-//  Created by Dwayne Jeng on 12/2/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -29,14 +26,27 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBConsentSignature.h instead.
+//
 
-#import "SBBConsentManager.h"
+#import <Foundation/Foundation.h>
+#import "SBBBridgeObject.h"
 
-/* CONSTANTS */
-extern NSString* const kSBBConsentAPI;
-extern NSString* const kSBBConsentWithdrawAPI;
-extern NSString* const kSBBConsentSubpopulationsAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsWithdrawAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsEmailAPIFormat;
+@protocol _SBBConsentSignature
 
-extern NSString* const kSBBMimeTypePng;
+@end
+
+@interface _SBBConsentSignature : SBBBridgeObject
+
+@property (nonatomic, strong) NSString* birthdate;
+
+@property (nonatomic, strong) NSString* imageData;
+
+@property (nonatomic, strong) NSString* imageMimeType;
+
+@property (nonatomic, strong) NSString* name;
+
+@property (nonatomic, strong) NSString* scope;
+
+@end

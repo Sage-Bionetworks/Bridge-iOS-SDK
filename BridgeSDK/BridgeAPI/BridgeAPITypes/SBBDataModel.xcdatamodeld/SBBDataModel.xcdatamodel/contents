@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15B42" minimumToolsVersion="Xcode 4.3">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15C50" minimumToolsVersion="Xcode 4.3">
     <entity name="Activity" representedClassName="SBBActivity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -31,6 +31,20 @@
                 <entry key="mogenerator.readonly" value="YES"/>
             </userInfo>
         </attribute>
+    </entity>
+    <entity name="ConsentSignature" representedClassName="SBBConsentSignature" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="birthdate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageMimeType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="scope" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ConsentStatus" representedClassName="SBBConsentStatus" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="consented" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="required" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="signedMostRecentConsent" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="subpopulationGuid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="DataGroups" representedClassName="SBBDataGroups" parentEntity="BridgeObject" syncable="YES">
         <attribute name="dataGroups" optional="YES" attributeType="Transformable" syncable="YES">
@@ -255,17 +269,37 @@
     <entity name="UserSessionInfo" representedClassName="SBBUserSessionInfo" parentEntity="BridgeObject" syncable="YES">
         <attribute name="authenticated" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="consented" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="consentStatuses" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSDictionary&lt;NSString *, SBBConsentStatus *&gt;*"/>
+            </userInfo>
+        </attribute>
+        <attribute name="dataGroups" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;*"/>
+            </userInfo>
+        </attribute>
         <attribute name="dataSharing" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="environment" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="roles" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;*"/>
+            </userInfo>
+        </attribute>
         <attribute name="sessionToken" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sharingScope" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="signedMostRecentConsent" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBConsentStatus.h"/>
+        </userInfo>
     </entity>
     <elements>
         <element name="Activity" positionX="0" positionY="0" width="128" height="150"/>
         <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
         <element name="BridgeObject" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="ConsentSignature" positionX="9" positionY="99" width="128" height="120"/>
+        <element name="ConsentStatus" positionX="0" positionY="90" width="128" height="120"/>
         <element name="DataGroups" positionX="0" positionY="90" width="128" height="60"/>
         <element name="DateConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="DateTimeConstraints" positionX="0" positionY="0" width="128" height="90"/>
@@ -295,6 +329,6 @@
         <element name="UploadRequest" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
-        <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="210"/>
     </elements>
 </model>
