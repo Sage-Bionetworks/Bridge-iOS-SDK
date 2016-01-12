@@ -98,13 +98,13 @@
             }
             [expectScheduleRead fulfill];
         }];
+        
+        [self waitForExpectationsWithTimeout:5.0 handler:^(NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"Timeout error attempting to read test schedule %@", _scheduleGuid);
+            }
+        }];
     }
-    
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"Timeout error attempting to read test schedule %@", _scheduleGuid);
-        }
-    }];
 }
 
 - (void)tearDown {
