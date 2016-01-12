@@ -1,10 +1,7 @@
 //
-//  SBBConsentManagerInternal.h
-//  BridgeSDK
+//  SBBConsentStatus.h
 //
-//  Created by Dwayne Jeng on 12/2/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -29,14 +26,33 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBConsentStatus.h instead.
+//
 
-#import "SBBConsentManager.h"
+#import <Foundation/Foundation.h>
+#import "SBBBridgeObject.h"
 
-/* CONSTANTS */
-extern NSString* const kSBBConsentAPI;
-extern NSString* const kSBBConsentWithdrawAPI;
-extern NSString* const kSBBConsentSubpopulationsAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsWithdrawAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsEmailAPIFormat;
+@protocol _SBBConsentStatus
 
-extern NSString* const kSBBMimeTypePng;
+@end
+
+@interface _SBBConsentStatus : SBBBridgeObject
+
+@property (nonatomic, strong) NSNumber* consented;
+
+@property (nonatomic, assign) BOOL consentedValue;
+
+@property (nonatomic, strong) NSString* name;
+
+@property (nonatomic, strong) NSNumber* required;
+
+@property (nonatomic, assign) BOOL requiredValue;
+
+@property (nonatomic, strong) NSNumber* signedMostRecentConsent;
+
+@property (nonatomic, assign) BOOL signedMostRecentConsentValue;
+
+@property (nonatomic, strong) NSString* subpopulationGuid;
+
+@end

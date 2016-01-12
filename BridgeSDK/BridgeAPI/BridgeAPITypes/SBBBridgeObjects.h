@@ -1,6 +1,8 @@
 #import "SBBActivity.h"
 #import "SBBBooleanConstraints.h"
 #import "SBBBridgeObject.h"
+#import "SBBConsentSignature.h"
+#import "SBBConsentStatus.h"
 #import "SBBDataGroups.h"
 #import "SBBDateConstraints.h"
 #import "SBBDateTimeConstraints.h"

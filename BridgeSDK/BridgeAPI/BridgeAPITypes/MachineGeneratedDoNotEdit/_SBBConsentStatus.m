@@ -1,5 +1,5 @@
 //
-//  SBBUserSessionInfo.m
+//  SBBConsentStatus.m
 //
 //	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
@@ -27,17 +27,17 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBUserSessionInfo.h instead.
+// Make changes to SBBConsentStatus.h instead.
 //
 
-#import "_SBBUserSessionInfo.h"
+#import "_SBBConsentStatus.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBUserSessionInfo()
+@interface _SBBConsentStatus()
 
 @end
 
-@implementation _SBBUserSessionInfo
+@implementation _SBBConsentStatus
 
 - (id)init
 {
@@ -51,16 +51,6 @@
 
 #pragma mark Scalar values
 
-- (BOOL)authenticatedValue
-{
-	return [self.authenticated boolValue];
-}
-
-- (void)setAuthenticatedValue:(BOOL)value_
-{
-	self.authenticated = [NSNumber numberWithBool:value_];
-}
-
 - (BOOL)consentedValue
 {
 	return [self.consented boolValue];
@@ -71,14 +61,14 @@
 	self.consented = [NSNumber numberWithBool:value_];
 }
 
-- (BOOL)dataSharingValue
+- (BOOL)requiredValue
 {
-	return [self.dataSharing boolValue];
+	return [self.required boolValue];
 }
 
-- (void)setDataSharingValue:(BOOL)value_
+- (void)setRequiredValue:(BOOL)value_
 {
-	self.dataSharing = [NSNumber numberWithBool:value_];
+	self.required = [NSNumber numberWithBool:value_];
 }
 
 - (BOOL)signedMostRecentConsentValue
@@ -98,27 +88,15 @@
 	if((self = [super initWithDictionaryRepresentation:dictionary]))
 	{
 
-        self.authenticated = [dictionary objectForKey:@"authenticated"];
-
-        self.consentStatuses = [dictionary objectForKey:@"consentStatuses"];
-
         self.consented = [dictionary objectForKey:@"consented"];
 
-        self.dataGroups = [dictionary objectForKey:@"dataGroups"];
+        self.name = [dictionary objectForKey:@"name"];
 
-        self.dataSharing = [dictionary objectForKey:@"dataSharing"];
-
-        self.environment = [dictionary objectForKey:@"environment"];
-
-        self.roles = [dictionary objectForKey:@"roles"];
-
-        self.sessionToken = [dictionary objectForKey:@"sessionToken"];
-
-        self.sharingScope = [dictionary objectForKey:@"sharingScope"];
+        self.required = [dictionary objectForKey:@"required"];
 
         self.signedMostRecentConsent = [dictionary objectForKey:@"signedMostRecentConsent"];
 
-        self.username = [dictionary objectForKey:@"username"];
+        self.subpopulationGuid = [dictionary objectForKey:@"subpopulationGuid"];
 
 	}
 
@@ -129,27 +107,15 @@
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-    [dict setObjectIfNotNil:self.authenticated forKey:@"authenticated"];
-
-    [dict setObjectIfNotNil:self.consentStatuses forKey:@"consentStatuses"];
-
     [dict setObjectIfNotNil:self.consented forKey:@"consented"];
 
-    [dict setObjectIfNotNil:self.dataGroups forKey:@"dataGroups"];
+    [dict setObjectIfNotNil:self.name forKey:@"name"];
 
-    [dict setObjectIfNotNil:self.dataSharing forKey:@"dataSharing"];
-
-    [dict setObjectIfNotNil:self.environment forKey:@"environment"];
-
-    [dict setObjectIfNotNil:self.roles forKey:@"roles"];
-
-    [dict setObjectIfNotNil:self.sessionToken forKey:@"sessionToken"];
-
-    [dict setObjectIfNotNil:self.sharingScope forKey:@"sharingScope"];
+    [dict setObjectIfNotNil:self.required forKey:@"required"];
 
     [dict setObjectIfNotNil:self.signedMostRecentConsent forKey:@"signedMostRecentConsent"];
 
-    [dict setObjectIfNotNil:self.username forKey:@"username"];
+    [dict setObjectIfNotNil:self.subpopulationGuid forKey:@"subpopulationGuid"];
 
 	return dict;
 }

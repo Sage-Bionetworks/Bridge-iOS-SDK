@@ -35,111 +35,134 @@
 #import "SBBAuthManager.h"
 #import "SBBUserManagerInternal.h"
 #import "BridgeSDKInternal.h"
+#import "SBBConsentSignature.h"
+#import "SBBUserSessionInfo.h"
+#import "SBBObjectManager.h"
 
 #define CONSENT_API GLOBAL_API_PREFIX @"/consents/signature"
+#define CONSENT_SUBPOPULATIONS_API_FORMAT GLOBAL_API_PREFIX @"/subpopulations/%@/consents/signature"
 
+// deprecated APIs
 NSString * const kSBBConsentAPI = CONSENT_API;
 NSString * const kSBBConsentWithdrawAPI = CONSENT_API  @"/withdraw";
 
-NSString * const kSBBKeyName = @"name";
-NSString * const kSBBKeyBirthdate = @"birthdate";
-NSString * const kSBBKeyImageData = @"imageData";
-NSString * const kSBBKeyImageMimeType = @"imageMimeType";
+// use these instead
+NSString * const kSBBConsentSubpopulationsAPIFormat = CONSENT_SUBPOPULATIONS_API_FORMAT;
+NSString * const kSBBConsentSubpopulationsWithdrawAPIFormat = CONSENT_SUBPOPULATIONS_API_FORMAT @"/withdraw";
+NSString * const kSBBConsentSubpopulationsEmailAPIFormat = CONSENT_SUBPOPULATIONS_API_FORMAT @"/email";
+
 NSString * const kSBBMimeTypePng = @"image/png";
 
 @implementation SBBConsentManager
 
 + (instancetype)defaultComponent
 {
-  static SBBConsentManager *shared;
-  
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    shared = [self instanceWithRegisteredDependencies];
-  });
-  
-  return shared;
+    static SBBConsentManager *shared;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = [self instanceWithRegisteredDependencies];
+    });
+    
+    return shared;
 }
 
 - (NSURLSessionDataTask *)consentSignature:(NSString *)name
                                  birthdate:(NSDate *)date
                             signatureImage:(UIImage*)signatureImage
-                              dataSharing:(SBBUserDataSharingScope)scope
+                               dataSharing:(SBBUserDataSharingScope)scope
                                 completion:(SBBConsentManagerCompletionBlock)completion
 {
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  static NSDateFormatter *birthdateFormatter = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    birthdateFormatter = [[NSDateFormatter alloc] init];
-    [birthdateFormatter setDateFormat:@"yyyy-MM-dd"];
-    NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    [birthdateFormatter setLocale:enUSPOSIXLocale];
-  });
-  
-  NSString *birthdate = [birthdateFormatter stringFromDate:date];
-  NSMutableDictionary *ResearchConsent = [NSMutableDictionary dictionary];
-  [ResearchConsent setObject:name forKey:kSBBKeyName];
-  [ResearchConsent setObject:birthdate forKey:kSBBKeyBirthdate];
+    return [self consentSignature:name forSubpopulationGuid:gSBBAppStudy birthdate:date signatureImage:signatureImage dataSharing:scope completion:completion];
+}
 
-  // Add signature image, if it's specified
-  if (signatureImage != nil) {
-    NSData* imageData = UIImagePNGRepresentation(signatureImage);
-    NSString* imageBase64String = [imageData base64EncodedStringWithOptions:kNilOptions];
-    [ResearchConsent setObject:imageBase64String forKey:kSBBKeyImageData];
-    [ResearchConsent setObject:kSBBMimeTypePng forKey:kSBBKeyImageMimeType];
-  }
+- (NSURLSessionDataTask *)consentSignature:(NSString *)name
+                      forSubpopulationGuid:(NSString *)subpopGuid
+                                 birthdate:(NSDate *)date
+                            signatureImage:(UIImage*)signatureImage
+                               dataSharing:(SBBUserDataSharingScope)scope
+                                completion:(SBBConsentManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    SBBConsentSignature *consentSignature = [SBBConsentSignature new];
+    static NSDateFormatter *birthdateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        birthdateFormatter = [[NSDateFormatter alloc] init];
+        [birthdateFormatter setDateFormat:@"yyyy-MM-dd"];
+        NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [birthdateFormatter setLocale:enUSPOSIXLocale];
+    });
     
-  // Add sharing scope
-  [ResearchConsent setObject:kSBBUserDataSharingScopeStrings[scope] forKey:kSBBUserDataSharingScopeKey];
-
-  return [self.networkManager post:kSBBConsentAPI headers:headers parameters:ResearchConsent
-      completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-    if (completion) {
-      completion(responseObject, error);
-    }
-  }];
+    consentSignature.birthdate = [birthdateFormatter stringFromDate:date];
+    consentSignature.name = name;
+    [consentSignature setSignatureImage:signatureImage];
+    consentSignature.scope = kSBBUserDataSharingScopeStrings[scope];
+    
+    // convert to json object
+    NSDictionary *researchConsent = [self.objectManager bridgeJSONFromObject:consentSignature];
+    
+    NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, subpopGuid];
+    return [self.networkManager post:endpoint headers:headers parameters:researchConsent
+                          completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                              if (completion) {
+                                  completion(responseObject, error);
+                              }
+                          }];
 }
 
 - (NSURLSessionDataTask *)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion
 {
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBConsentAPI headers:headers parameters:nil
-      completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
-    NSString* name = nil;
-    NSString* birthdate = nil;
-    UIImage* image = nil;
+    return [self getConsentSignatureForSubpopulation:gSBBAppStudy completion:^(id consentSignature, NSError *error) {
+        NSString* name = nil;
+        NSString* birthdate = nil;
+        UIImage* image = nil;
+        
+        // parse consent signature dictionary, if we have one
+        if ([consentSignature isKindOfClass:[SBBConsentSignature class]]) {
+            SBBConsentSignature *cSig = consentSignature;
+            name = cSig.name;
+            birthdate = cSig.birthdate;
+            image = [cSig signatureImage];
+        }
+        
+        // call the completion call back
+        if (completion != nil) {
+            completion(name, birthdate, image, error);
+        }
+    }];
+}
 
-    // parse consent signature dictionary, if we have one
-    if ([responseObject isKindOfClass:[NSDictionary class]]) {
-      NSDictionary* responseDict = responseObject;
-      name = responseDict[kSBBKeyName];
-      birthdate = responseDict[kSBBKeyBirthdate];
-
-      // create signature image, if we have one
-      if (responseDict[kSBBKeyImageData] != nil) {
-        NSData* imageData = [[NSData alloc] initWithBase64EncodedString:responseDict[kSBBKeyImageData]
-          options:kNilOptions];
-        image = [[UIImage alloc] initWithData:imageData];
-      }
-    }
-
-    // call the completion call back
-    if (completion != nil) {
-      completion(name, birthdate, image, error);
-    }
-  }];
+- (NSURLSessionDataTask *)getConsentSignatureForSubpopulation:(NSString *)subpopGuid completion:(SBBConsentManagerGetCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    
+    NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, subpopGuid];
+    return [self.networkManager get:endpoint headers:headers parameters:nil
+                         completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
+                             // call the completion call back
+                             if (completion != nil) {
+                                 id consentSignature = [self.objectManager objectFromBridgeJSON:responseObject];
+                                completion(consentSignature, error);
+                             }
+                         }];
 }
 
 - (NSURLSessionDataTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
 {
+    return [self withdrawConsentForSubpopulation:gSBBAppStudy withReason:reason completion:completion];
+}
+
+- (NSURLSessionDataTask *)withdrawConsentForSubpopulation:(NSString *)subpopGuid withReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
+{
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-
+    
     NSDictionary *parameters = reason.length ? @{@"reason": reason} : @{};
-    return [self.networkManager post:kSBBConsentWithdrawAPI
+    NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsWithdrawAPIFormat, subpopGuid];
+    return [self.networkManager post:endpoint
                              headers:headers
                           parameters:parameters
                           completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
@@ -147,7 +170,24 @@ NSString * const kSBBMimeTypePng = @"image/png";
                                   completion(responseObject, error);
                               }
                           }];
+    
+}
 
+- (NSURLSessionDataTask *)emailConsentForSubpopulation:(NSString *)subpopGuid completion:(SBBConsentManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    
+    NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsEmailAPIFormat, subpopGuid];
+    return [self.networkManager post:endpoint
+                             headers:headers
+                          parameters:nil
+                          completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                              if (completion) {
+                                  completion(responseObject, error);
+                              }
+                          }];
+    
 }
 
 @end

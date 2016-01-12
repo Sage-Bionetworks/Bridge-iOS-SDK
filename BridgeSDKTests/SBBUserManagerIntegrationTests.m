@@ -147,7 +147,7 @@
     XCTestExpectation *expectUpdatedGroups = [self expectationWithDescription:@"Updated data groups"];
     
     SBBDataGroups *groups = [SBBDataGroups new];
-    groups.dataGroups = [NSSet setWithArray:@[@"group1", @"group2", @"group3"]];
+    groups.dataGroups = [NSSet setWithArray:@[@"sdk-int-1", @"sdk-int-2"]];
     
     [SBBComponent(SBBUserManager) updateDataGroupsWithGroups:groups completion:^(id responseObject, NSError *error) {
         if (error) {
@@ -185,7 +185,7 @@
     XCTestExpectation *expectUpdatedGroups = [self expectationWithDescription:@"Updated data groups"];
     
     SBBDataGroups *groups = [SBBDataGroups new];
-    groups.dataGroups = [NSSet setWithArray:@[@"group1", @"group2", @"group3"]];
+    groups.dataGroups = [NSSet setWithArray:@[@"sdk-int-1"]];
     
     [SBBComponent(SBBUserManager) updateDataGroupsWithGroups:groups completion:^(id responseObject, NSError *error) {
         if (error) {
@@ -202,7 +202,7 @@
     }];
     
     XCTestExpectation *expectAddedToGroups = [self expectationWithDescription:@"Added to data groups"];
-    NSArray *newGroups = @[@"group4", @"group5"];
+    NSArray *newGroups = @[@"sdk-int-2"];
     [SBBComponent(SBBUserManager) addToDataGroups:newGroups completion:^(id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error adding to data groups %@:\n%@\nResponse: %@", newGroups, error, responseObject);
@@ -223,7 +223,7 @@
             NSLog(@"Error getting data groups:\n%@", error);
         }
         XCTAssert(!error && [dataGroups isKindOfClass:[SBBDataGroups class]], @"Retrieved data groups");
-        NSArray *combined = @[@"group1", @"group2", @"group3", @"group4", @"group5"];
+        NSArray *combined = @[@"sdk-int-1", @"sdk-int-2"];
         XCTAssert([[dataGroups dataGroups] isEqual:[NSSet setWithArray:combined]], @"Data groups added as expected");
         [expectGotGroups fulfill];
     }];
@@ -240,7 +240,7 @@
     XCTestExpectation *expectUpdatedGroups = [self expectationWithDescription:@"Updated data groups"];
     
     SBBDataGroups *groups = [SBBDataGroups new];
-    groups.dataGroups = [NSSet setWithArray:@[@"group1", @"group2", @"group3"]];
+    groups.dataGroups = [NSSet setWithArray:@[@"sdk-int-1", @"sdk-int-2"]];
     
     [SBBComponent(SBBUserManager) updateDataGroupsWithGroups:groups completion:^(id responseObject, NSError *error) {
         if (error) {
@@ -257,7 +257,7 @@
     }];
     
     XCTestExpectation *expectRemovedFromGroups = [self expectationWithDescription:@"Removed from data groups"];
-    NSArray *oldGroups = @[@"group1", @"group3"];
+    NSArray *oldGroups = @[@"sdk-int-1"];
     [SBBComponent(SBBUserManager) removeFromDataGroups:oldGroups completion:^(id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error removing from data groups %@:\n%@\nResponse: %@", oldGroups, error, responseObject);
@@ -278,7 +278,7 @@
             NSLog(@"Error getting data groups:\n%@", error);
         }
         XCTAssert(!error && [dataGroups isKindOfClass:[SBBDataGroups class]], @"Retrieved data groups");
-        NSArray *afterRemoval = @[@"group2"];
+        NSArray *afterRemoval = @[@"sdk-int-2"];
         XCTAssert([[dataGroups dataGroups] isEqual:[NSSet setWithArray:afterRemoval]], @"Data groups removed as expected");
         [expectGotGroups fulfill];
     }];

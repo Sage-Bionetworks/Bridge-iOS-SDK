@@ -24,7 +24,7 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     if (!gSBBAppStudy) {
-        gSBBAppStudy = @"api";
+        gSBBAppStudy = @"ios-sdk-int-tests";
     }
     _mockURLSession = [MockURLSession new];
     SBBBridgeNetworkManager *bridgeNetMan = (SBBBridgeNetworkManager *)SBBComponent(SBBBridgeNetworkManager);

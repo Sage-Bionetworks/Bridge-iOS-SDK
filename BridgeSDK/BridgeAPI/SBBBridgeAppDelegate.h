@@ -30,10 +30,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <UIKit/UIKit.h>
-
-#ifndef SBBBridgeAppDelegate_h
-#define SBBBridgeAppDelegate_h
+#import <BridgeSDK/SBBNetworkManager.h>
 
 /**
  * If the app delegate conforms to this protocol then the methods included will be called as appropriate.
@@ -43,13 +40,25 @@
 @optional
 /**
  * Method called when the Bridge services return an error code that this version of the app is no longer supported.
- * If not implemented or returns @NO then the BridgeNetworkManager should handle the error with a general message.
+ * If not implemented or returns @NO then the BridgeNetworkManager will handle the error with a general message.
+ * In any case it will also pass the error through to the completion handler of the call that triggered the error.
  * This method will only be called once per app launch.
  *
  * @return @YES if the error has been handled by the delegate.
  */
-- (BOOL)handleUnsupportedAppVersionError:(NSError*)error networkManager:(id)networkManager;
+- (BOOL)handleUnsupportedAppVersionError:(NSError*)error networkManager:(id<SBBNetworkManagerProtocol>)networkManager;
+
+@optional
+/**
+ * Method called when the Bridge services return an error code that the user has not consented.
+ * If not implemented or returns @NO then the BridgeNetworkManager will just log the error to the console.
+ * In any case it will also pass the error through to the completion handler of the call that triggered the error.
+ *
+ * The sessionInfo object will be of type SBBUserSessionInfo unless the UserSessionInfo type has been mapped in
+ * SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:.
+ *
+ * @return @YES if the error has been handled by the delegate.
+ */
+- (BOOL)handleUserNotConsentedError:(NSError*)error sessionInfo:(id)sessionInfo networkManager:(id<SBBNetworkManagerProtocol>)networkManager;
 
 @end
-
-#endif /* SBBBridgeAppDelegate_h */

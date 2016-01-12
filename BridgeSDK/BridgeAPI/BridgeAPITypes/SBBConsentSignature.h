@@ -1,10 +1,7 @@
 //
-//  SBBConsentManagerInternal.h
-//  BridgeSDK
+//  SBBConsentSignature.h
 //
-//  Created by Dwayne Jeng on 12/2/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,13 +27,29 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBConsentManager.h"
+#import "_SBBConsentSignature.h"
 
-/* CONSTANTS */
-extern NSString* const kSBBConsentAPI;
-extern NSString* const kSBBConsentWithdrawAPI;
-extern NSString* const kSBBConsentSubpopulationsAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsWithdrawAPIFormat;
-extern NSString* const kSBBConsentSubpopulationsEmailAPIFormat;
+@interface SBBConsentSignature : _SBBConsentSignature <_SBBConsentSignature>
+// Custom logic goes here.
 
-extern NSString* const kSBBMimeTypePng;
+/*!
+ Create a UIImage object from the imageData if it exists.
+ 
+ This isn't a property so as to prevent the automatic Bridge object marshaling from attempting to
+ include it in the JSON.
+ 
+ @return The created UIImage object, or nil if no imageData.
+ */
+- (nullable UIImage *)signatureImage;
+
+/*!
+ Set (or clear) the imageData and imageMimeType fields from a UIImage object.
+ 
+ This isn't a property so as to prevent the automatic Bridge object marshaling from attempting to
+ include it in the JSON.
+
+ @param image The consent signature image object.
+ */
+- (void)setSignatureImage:(nullable UIImage *)image;
+
+@end

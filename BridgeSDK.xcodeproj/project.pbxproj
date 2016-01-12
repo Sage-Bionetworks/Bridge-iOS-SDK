@@ -216,6 +216,14 @@
 		80855F7319BE27ED006601C7 /* SBBNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F6C19BE27ED006601C7 /* SBBNetworkManager.m */; };
 		80855F7D19BE41C9006601C7 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F7B19BE41C9006601C7 /* Reachability.h */; };
 		80855F7E19BE41C9006601C7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F7C19BE41C9006601C7 /* Reachability.m */; };
+		80BA3D8F1C3F19A100AA70FB /* _SBBConsentSignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BA3D8B1C3F19A100AA70FB /* _SBBConsentSignature.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80BA3D901C3F19A100AA70FB /* _SBBConsentSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BA3D8C1C3F19A100AA70FB /* _SBBConsentSignature.m */; };
+		80BA3D911C3F19A100AA70FB /* _SBBConsentStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BA3D8D1C3F19A100AA70FB /* _SBBConsentStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80BA3D921C3F19A100AA70FB /* _SBBConsentStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BA3D8E1C3F19A100AA70FB /* _SBBConsentStatus.m */; };
+		80BA3D971C3F19D400AA70FB /* SBBConsentSignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BA3D931C3F19D400AA70FB /* SBBConsentSignature.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80BA3D981C3F19D400AA70FB /* SBBConsentSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BA3D941C3F19D400AA70FB /* SBBConsentSignature.m */; };
+		80BA3D991C3F19D400AA70FB /* SBBConsentStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BA3D951C3F19D400AA70FB /* SBBConsentStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80BA3D9A1C3F19D400AA70FB /* SBBConsentStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BA3D961C3F19D400AA70FB /* SBBConsentStatus.m */; };
 		80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BB09F619C2234100E419A1 /* SBBAuthManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80BB09F919C2234100E419A1 /* SBBAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BB09F719C2234100E419A1 /* SBBAuthManager.m */; };
 		80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */; };
@@ -494,6 +502,14 @@
 		80B786871B5BF79C0029EAE6 /* SBBSurveyManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBSurveyManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBSurveyManagerIntegrationTests.m; sourceTree = "<group>"; };
 		80B786891B5BF7AF0029EAE6 /* SBBUploadManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBUploadManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBUploadManagerIntegrationTests.m; sourceTree = "<group>"; };
 		80B7868B1B5BF8350029EAE6 /* SBBActivityManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBActivityManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBActivityManagerIntegrationTests.m; sourceTree = "<group>"; };
+		80BA3D8B1C3F19A100AA70FB /* _SBBConsentSignature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBConsentSignature.h; sourceTree = "<group>"; };
+		80BA3D8C1C3F19A100AA70FB /* _SBBConsentSignature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBConsentSignature.m; sourceTree = "<group>"; };
+		80BA3D8D1C3F19A100AA70FB /* _SBBConsentStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBConsentStatus.h; sourceTree = "<group>"; };
+		80BA3D8E1C3F19A100AA70FB /* _SBBConsentStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBConsentStatus.m; sourceTree = "<group>"; };
+		80BA3D931C3F19D400AA70FB /* SBBConsentSignature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBConsentSignature.h; sourceTree = "<group>"; };
+		80BA3D941C3F19D400AA70FB /* SBBConsentSignature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentSignature.m; sourceTree = "<group>"; };
+		80BA3D951C3F19D400AA70FB /* SBBConsentStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBConsentStatus.h; sourceTree = "<group>"; };
+		80BA3D961C3F19D400AA70FB /* SBBConsentStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentStatus.m; sourceTree = "<group>"; };
 		80BB09F619C2234100E419A1 /* SBBAuthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBAuthManager.h; sourceTree = "<group>"; };
 		80BB09F719C2234100E419A1 /* SBBAuthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBAuthManager.m; sourceTree = "<group>"; };
 		80C3D07419DCA03C00DEA044 /* BridgeSDK.hdoc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BridgeSDK.hdoc; path = BridgeSDK/BridgeSDK.hdoc; sourceTree = "<group>"; };
@@ -620,6 +636,10 @@
 				800E794A19ED748900EEE612 /* SBBBooleanConstraints.m */,
 				80104A5F19D4CDC4001F2573 /* SBBBridgeObject.h */,
 				80104A6019D4CDC4001F2573 /* SBBBridgeObject.m */,
+				80BA3D931C3F19D400AA70FB /* SBBConsentSignature.h */,
+				80BA3D941C3F19D400AA70FB /* SBBConsentSignature.m */,
+				80BA3D951C3F19D400AA70FB /* SBBConsentStatus.h */,
+				80BA3D961C3F19D400AA70FB /* SBBConsentStatus.m */,
 				80C87F0B1C18E61000FE8A63 /* SBBDataGroups.h */,
 				80C87F0C1C18E61000FE8A63 /* SBBDataGroups.m */,
 				800E794D19ED74A600EEE612 /* SBBDateConstraints.h */,
@@ -962,6 +982,10 @@
 				800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */,
 				80F7C32E19E5DC0D00574800 /* _SBBBridgeObject.h */,
 				80F7C32F19E5DC0D00574800 /* _SBBBridgeObject.m */,
+				80BA3D8B1C3F19A100AA70FB /* _SBBConsentSignature.h */,
+				80BA3D8C1C3F19A100AA70FB /* _SBBConsentSignature.m */,
+				80BA3D8D1C3F19A100AA70FB /* _SBBConsentStatus.h */,
+				80BA3D8E1C3F19A100AA70FB /* _SBBConsentStatus.m */,
 				80C87F071C18E55A00FE8A63 /* _SBBDataGroups.h */,
 				80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */,
 				800E792519ED740F00EEE612 /* _SBBDateConstraints.h */,
@@ -1063,6 +1087,7 @@
 				807AE2FA1B62E98C002588BB /* SBBSurveyResponseReference.h in Headers */,
 				807AE2D51B61AE76002588BB /* SBBUserManagerInternal.h in Headers */,
 				800E793319ED740F00EEE612 /* _SBBDurationConstraints.h in Headers */,
+				80BA3D8F1C3F19A100AA70FB /* _SBBConsentSignature.h in Headers */,
 				80C87F0D1C18E61000FE8A63 /* SBBDataGroups.h in Headers */,
 				80E819681A83E89E00513919 /* _SBBSurveyElement.h in Headers */,
 				8026BD2619C8948E0077F3EB /* SBBComponent.h in Headers */,
@@ -1081,6 +1106,7 @@
 				8026BD1119C7532D0077F3EB /* UICKeyChainStore.h in Headers */,
 				800E795B19ED74A600EEE612 /* SBBDurationConstraints.h in Headers */,
 				80104A4219D1F817001F2573 /* SBBConsentManager.h in Headers */,
+				80BA3D991C3F19D400AA70FB /* SBBConsentStatus.h in Headers */,
 				8017AF7019DA0359001AF9BA /* NSError+SBBAdditions.h in Headers */,
 				8017AF7619DA038D001AF9BA /* NSDate+SBBAdditions.h in Headers */,
 				60F1E4161A420E96009B380E /* _SBBActivity.h in Headers */,
@@ -1088,6 +1114,7 @@
 				800E797319ED7BB500EEE612 /* _SBBSurveyRule.h in Headers */,
 				80F7C34F19E5DC0D00574800 /* SBBSurveyConstraints.h in Headers */,
 				800E795919ED74A600EEE612 /* SBBDecimalConstraints.h in Headers */,
+				80BA3D911C3F19A100AA70FB /* _SBBConsentStatus.h in Headers */,
 				80C87F091C18E55A00FE8A63 /* _SBBDataGroups.h in Headers */,
 				807AE2FE1B62E98C002588BB /* SBBUserSessionInfo.h in Headers */,
 				807AE2E81B62E8C3002588BB /* _SBBSurveyReference.h in Headers */,
@@ -1121,6 +1148,7 @@
 				800E792219ED73FD00EEE612 /* _SBBBooleanConstraints.h in Headers */,
 				8026D68219E87CF6008942B0 /* NSData+SBBAdditions.h in Headers */,
 				80F7C34319E5DC0D00574800 /* _SBBSurvey.h in Headers */,
+				80BA3D971C3F19D400AA70FB /* SBBConsentSignature.h in Headers */,
 				60B635431B14F5C800C4DA63 /* SBBNetworkManagerInternal.h in Headers */,
 				807AE2FC1B62E98C002588BB /* SBBTaskReference.h in Headers */,
 				8026D66E19E7655C008942B0 /* _SBBSurveyResponse.h in Headers */,
@@ -1412,8 +1440,10 @@
 				8026D67B19E77518008942B0 /* SBBUploadManager.m in Sources */,
 				80E819761A83E8EB00513919 /* SBBSurveyElement.m in Sources */,
 				80E60DA519FAD5860053D166 /* SBBSchedule.m in Sources */,
+				80BA3D981C3F19D400AA70FB /* SBBConsentSignature.m in Sources */,
 				80F7C34819E5DC0D00574800 /* _SBBSurveyQuestion.m in Sources */,
 				800E794019ED744000EEE612 /* _SBBIntegerConstraints.m in Sources */,
+				80BA3D9A1C3F19D400AA70FB /* SBBConsentStatus.m in Sources */,
 				800E795619ED74A600EEE612 /* SBBDateConstraints.m in Sources */,
 				8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */,
 				FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */,
@@ -1455,6 +1485,7 @@
 				80104A6719D4CFE6001F2573 /* SBBObjectManager.m in Sources */,
 				8026D66F19E7655C008942B0 /* _SBBSurveyResponse.m in Sources */,
 				80F7C34E19E5DC0D00574800 /* SBBSurvey.m in Sources */,
+				80BA3D921C3F19A100AA70FB /* _SBBConsentStatus.m in Sources */,
 				807AE2ED1B62E8C3002588BB /* _SBBTaskReference.m in Sources */,
 				8026BD2319C892E40077F3EB /* SBBComponentManager.m in Sources */,
 				800E797819ED7BCB00EEE612 /* SBBSurveyRule.m in Sources */,
@@ -1479,6 +1510,7 @@
 				606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */,
 				800E794819ED744000EEE612 /* _SBBTimeConstraints.m in Sources */,
 				80F7C34619E5DC0D00574800 /* _SBBSurveyConstraints.m in Sources */,
+				80BA3D901C3F19A100AA70FB /* _SBBConsentSignature.m in Sources */,
 				60F1E4171A420E96009B380E /* _SBBActivity.m in Sources */,
 				800E794419ED744000EEE612 /* _SBBStringConstraints.m in Sources */,
 			);
@@ -1629,7 +1661,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1670,7 +1702,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1698,7 +1730,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 6;
+				DYLIB_CURRENT_VERSION = 7;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = BridgeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1717,7 +1749,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 6;
+				DYLIB_CURRENT_VERSION = 7;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = BridgeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

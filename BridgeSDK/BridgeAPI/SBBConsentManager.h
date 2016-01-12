@@ -44,7 +44,7 @@
 typedef void (^SBBConsentManagerCompletionBlock)(id responseObject, NSError *error);
 
 /*!
- Completion block for retrieveConsentSignature.
+ Completion block for retrieveConsentSignatureWithCompletion:.
 
  @param name           The user's name.
  @param birthdate      The user's birthday in the format "YYYY-MM-DD".
@@ -56,6 +56,15 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
     NSError* error);
 
 /*!
+ Completion block for getConsentSignatureWithCompletion:.
+ 
+ @param consentSignature If no error, by default this will be an SBBConsentSignature object, unless the ConsentSignature type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:. If the error code is SBBErrorCodeServerPreconditionNotMet, indicating a required consent has not been signed, by default this will be a SBBUserSessionInfo object, unless the UserSessionInfo type has been mapped to something else. For any other error code this will be nil.
+ @param error            An error that occurred during execution of the method for which this is a completion block, or
+ nil.
+ */
+typedef void (^SBBConsentManagerGetCompletionBlock)(id consentSignature, NSError *error);
+
+/*!
  This protocol defines the interface to the SBBConsentManager's non-constructor, non-initializer methods. The interface is
  abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.
  */
@@ -63,6 +72,8 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
 
 /*!
  *  Submit the user's "signature" and birthdate to indicate consent to participate in this research project.
+ *
+ *  @deprecated use consentSignature:forSubpopulationGuid:birthdate:signatureImage:dataSharing:completion: instead.
  *
  *  @param name       The user's name.
  *  @param date       The user's birthday in the format "YYYY-MM-DD".
@@ -72,32 +83,88 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)consentSignature:(NSString *)name
-                                 birthdate:(NSDate *)date
-                            signatureImage:(UIImage*)signatureImage
-                              dataSharing:(SBBUserDataSharingScope)scope
-                                completion:(SBBConsentManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)consentSignature:(nonnull NSString *)name
+                                 birthdate:(nonnull NSDate *)date
+                            signatureImage:(nullable UIImage*)signatureImage
+                               dataSharing:(SBBUserDataSharingScope)scope
+                                completion:(nullable SBBConsentManagerCompletionBlock)completion __deprecated;
+
+/*!
+ *  Submit the user's "signature" and birthdate to indicate consent to participate in this research project.
+ *
+ *  @param name       The user's name.
+ *  @param subpopGuid The GUID of the subpopulation for which the consent is being signed.
+ *  @param date       The user's birthday in the format "YYYY-MM-DD".
+ *  @param signatureImage  Image file of the user's signature. Should be less than 10kb. Optional, can be nil.
+ *  @param scope      The scope of data sharing to which the user has consented.
+ *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
+ *
+ *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (nonnull NSURLSessionDataTask *)consentSignature:(nonnull NSString *)name
+                      forSubpopulationGuid:(nonnull NSString *)subpopGuid
+                                 birthdate:(nonnull NSDate *)date
+                            signatureImage:(nullable UIImage*)signatureImage
+                               dataSharing:(SBBUserDataSharingScope)scope
+                                completion:(nullable SBBConsentManagerCompletionBlock)completion;
 
 /*!
  *  Retrieve the user's consent signature as previously submitted. If the user has not submitted a consent signature,
  *  this method throws an Entity Not Found error.
  *
+ *  @deprecated use getConsentSignatureWithCompletion:notConsented: instead.
+ *
  *  @param completion An SBBConsentManagerRetrieveCompletionBlock to be called upon completion.
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)retrieveConsentSignatureWithCompletion:(nullable SBBConsentManagerRetrieveCompletionBlock)completion __deprecated;
+
+/*!
+ Get the user's consent signature as previously submitted. If the user has not submitted a required consent
+ signature, the SBBBridgeAppDelegate method handleUserNotConsentedError:sessionInfo:networkManager: will be
+ called if it has been implemented in the app delegate, just before calling the completion handler.
+ 
+ @param subpopGuid The GUID of the subpopulation for which the consent signature is being fetched.
+ @param completion An SBBConsentManagerGetCompletionBlock to be called upon completion. See the documentation of that block type for details on what is passed to it under various circumstances.
+ 
+ @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (nonnull NSURLSessionDataTask *)getConsentSignatureForSubpopulation:(nonnull NSString *)subpopGuid completion:(nullable SBBConsentManagerGetCompletionBlock)completion;
 
 /*!
  *  Withdraw the user's consent signature previously submitted. This has the effect of withdrawing them from the
  *  study altogether.
  *
- *  @param reason A freeform text string entered by the participant describing their reasons for withdrawing from the study.
+ *  @deprecated Use withdrawConsentForSubpopulation:withReason: instead.
+ *
+ *  @param reason A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  *
  *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)withdrawConsentWithReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion __deprecated;
+
+/*!
+ Withdraw the user's consent signature previously submitted for a specific subpopulation.
+ 
+ @param subpopGuid The GUID of the subpopulation for which the consent signature is being withdrawn.
+ @param reason     A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.
+ @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (nonnull NSURLSessionDataTask *)withdrawConsentForSubpopulation:(nonnull NSString *)subpopGuid withReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion;
+
+/*!
+ Email (again) the consent document signed by the user when consenting as a member of a particular subpopulation.
+ 
+ @param subpopGuid The GUID of the subpopulation for which the consent document is to be emailed.
+ @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ */
+- (nonnull NSURLSessionDataTask *)emailConsentForSubpopulation:(nonnull NSString *)subpopGuid completion:(nullable SBBConsentManagerCompletionBlock)completion;
 
 @end
 

@@ -18,7 +18,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [BridgeSDK setupWithStudy:@"api"];
+    [BridgeSDK setupWithStudy:@"ios-sdk-int-tests"];
     return YES;
 }
 

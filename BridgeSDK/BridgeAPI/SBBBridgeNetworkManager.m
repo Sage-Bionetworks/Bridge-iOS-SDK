@@ -123,6 +123,7 @@
         }];
     } else {
         [self checkForAndHandleUnsupportedAppVersionHTTPError:error];
+        [self checkForAndHandleServerPreconditionNotMetHTTPError:error task:task responseObject:responseObject retryObject:retryObject];
         [super handleHTTPError:error task:task response:responseObject retryObject:retryObject];
     }
 }
@@ -138,7 +139,7 @@
         
         // Look to see if the app delegate handles this error or if this SDK should do so.
         // Note: check conforms to protocol to ensure that the app delegate is intentionally
-        // implementing 
+        // implementing this method and not coincidentally using the same method signature for something else.
         id appDelegate = [[UIApplication sharedApplication] delegate];
         if (![appDelegate conformsToProtocol:@protocol(SBBBridgeAppDelegate)] ||
             ![appDelegate respondsToSelector:@selector(handleUnsupportedAppVersionError:networkManager:)] ||
@@ -159,6 +160,26 @@
             [alertController addAction:appStore];
             
             [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alertController animated:YES completion:nil];
+        }
+    }
+}
+
+- (void)checkForAndHandleServerPreconditionNotMetHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task responseObject:(id)responseObject retryObject:(APCNetworkRetryObject *)retryObject
+{
+    if (error.code == SBBErrorCodeServerPreconditionNotMet)
+    {
+        // Look to see if the app delegate handles this error.
+        // Note: check conforms to protocol to ensure that the app delegate is intentionally
+        // implementing this method and not coincidentally using the same method signature for something else.
+        id appDelegate = [[UIApplication sharedApplication] delegate];
+        if (![appDelegate conformsToProtocol:@protocol(SBBBridgeAppDelegate)] ||
+            ![appDelegate respondsToSelector:@selector(handleUserNotConsentedError:sessionInfo:networkManager:)] ||
+            ![appDelegate handleUserNotConsentedError:error sessionInfo:responseObject networkManager:self])
+        {
+#if DEBUG
+            // Log the error to the console
+            NSLog(@"User Not Consented error not handled by app delegate:\n%@", error);
+#endif
         }
     }
 }

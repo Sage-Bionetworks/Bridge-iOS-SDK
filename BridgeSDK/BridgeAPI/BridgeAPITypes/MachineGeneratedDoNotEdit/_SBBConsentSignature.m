@@ -1,5 +1,5 @@
 //
-//  SBBUserSessionInfo.h
+//  SBBConsentSignature.m
 //
 //	Copyright (c) 2014, 2015 Sage Bionetworks
 //	All rights reserved.
@@ -27,48 +27,77 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBUserSessionInfo.h instead.
+// Make changes to SBBConsentSignature.h instead.
 //
 
-#import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import "_SBBConsentSignature.h"
+#import "NSDate+SBBAdditions.h"
 
-#import "SBBConsentStatus.h"
-
-@protocol _SBBUserSessionInfo
+@interface _SBBConsentSignature()
 
 @end
 
-@interface _SBBUserSessionInfo : SBBBridgeObject
+@implementation _SBBConsentSignature
 
-@property (nonatomic, strong) NSNumber* authenticated;
+- (id)init
+{
+	if((self = [super init]))
+	{
 
-@property (nonatomic, assign) BOOL authenticatedValue;
+	}
 
-@property (nonatomic, strong) NSDictionary<NSString *, SBBConsentStatus *>* consentStatuses;
+	return self;
+}
 
-@property (nonatomic, strong) NSNumber* consented;
+#pragma mark Scalar values
 
-@property (nonatomic, assign) BOOL consentedValue;
+#pragma mark Dictionary representation
 
-@property (nonatomic, strong) NSArray<NSString *>* dataGroups;
+- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+{
+	if((self = [super initWithDictionaryRepresentation:dictionary]))
+	{
 
-@property (nonatomic, strong) NSNumber* dataSharing;
+        self.birthdate = [dictionary objectForKey:@"birthdate"];
 
-@property (nonatomic, assign) BOOL dataSharingValue;
+        self.imageData = [dictionary objectForKey:@"imageData"];
 
-@property (nonatomic, strong) NSString* environment;
+        self.imageMimeType = [dictionary objectForKey:@"imageMimeType"];
 
-@property (nonatomic, strong) NSArray<NSString *>* roles;
+        self.name = [dictionary objectForKey:@"name"];
 
-@property (nonatomic, strong) NSString* sessionToken;
+        self.scope = [dictionary objectForKey:@"scope"];
 
-@property (nonatomic, strong) NSString* sharingScope;
+	}
 
-@property (nonatomic, strong) NSNumber* signedMostRecentConsent;
+	return self;
+}
 
-@property (nonatomic, assign) BOOL signedMostRecentConsentValue;
+- (NSDictionary *)dictionaryRepresentation
+{
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
 
-@property (nonatomic, strong) NSString* username;
+    [dict setObjectIfNotNil:self.birthdate forKey:@"birthdate"];
+
+    [dict setObjectIfNotNil:self.imageData forKey:@"imageData"];
+
+    [dict setObjectIfNotNil:self.imageMimeType forKey:@"imageMimeType"];
+
+    [dict setObjectIfNotNil:self.name forKey:@"name"];
+
+    [dict setObjectIfNotNil:self.scope forKey:@"scope"];
+
+	return dict;
+}
+
+- (void)awakeFromDictionaryRepresentationInit
+{
+	if(self.sourceDictionaryRepresentation == nil)
+		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
+
+	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Direct access
 
 @end
