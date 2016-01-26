@@ -41,7 +41,7 @@
  @param responseObject The JSON object returned in the HTTP response.
  @param error          An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBConsentManagerCompletionBlock)(id responseObject, NSError *error);
+typedef void (^SBBConsentManagerCompletionBlock)(id _Nullable responseObject, NSError* _Nullable error);
 
 /*!
  Completion block for retrieveConsentSignatureWithCompletion:.
@@ -52,8 +52,8 @@ typedef void (^SBBConsentManagerCompletionBlock)(id responseObject, NSError *err
  @param error          An error that occurred during execution of the method for which this is a completion block, or
      nil.
  */
-typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSString* birthdate, UIImage* signatureImage,
-    NSError* error);
+typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* _Nonnull name, NSString* _Nonnull birthdate, UIImage* _Nonnull signatureImage,
+    NSError* _Nullable error);
 
 /*!
  Completion block for getConsentSignatureWithCompletion:.
@@ -62,7 +62,7 @@ typedef void (^SBBConsentManagerRetrieveCompletionBlock)(NSString* name, NSStrin
  @param error            An error that occurred during execution of the method for which this is a completion block, or
  nil.
  */
-typedef void (^SBBConsentManagerGetCompletionBlock)(id consentSignature, NSError *error);
+typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignature, NSError * _Nullable error);
 
 /*!
  This protocol defines the interface to the SBBConsentManager's non-constructor, non-initializer methods. The interface is
