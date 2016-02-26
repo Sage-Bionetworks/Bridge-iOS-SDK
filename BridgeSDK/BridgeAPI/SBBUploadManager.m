@@ -181,10 +181,8 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 
 - (SBBUploadManagerCompletionBlock)completionBlockForFile:(NSString *)file
 {
-    @synchronized(self) {
-        SBBUploadCompletionWrapper *wrapper = [_uploadCompletionHandlers objectForKey:file];
-        return wrapper.completion;
-    }
+    SBBUploadCompletionWrapper *wrapper = [_uploadCompletionHandlers objectForKey:file];
+    return wrapper.completion;
 }
 
 - (void)setCompletionBlock:(SBBUploadManagerCompletionBlock)completion forFile:(NSString *)file
@@ -194,16 +192,12 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
         return;
     }
     SBBUploadCompletionWrapper *wrapper = [[SBBUploadCompletionWrapper alloc] initWithBlock:completion];
-    @synchronized(self) {
-        [_uploadCompletionHandlers setObject:wrapper forKey:file];
-    }
+    [_uploadCompletionHandlers setObject:wrapper forKey:file];
 }
 
 - (void)removeCompletionBlockForFile:(NSString *)file
 {
-    @synchronized(self) {
-        [_uploadCompletionHandlers removeObjectForKey:file];
-    }
+    [_uploadCompletionHandlers removeObjectForKey:file];
 }
 
 - (void)setUploadRequestJSON:(id)json forFile:(NSString *)fileURLString
@@ -283,7 +277,9 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
         }
         return;
     }
-    [self setCompletionBlock:completion forFile:[tempFileURL path]];
+    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+        [self setCompletionBlock:completion forFile:[tempFileURL path]];
+    }];
     
     if (!_cleanObjectManager) {
         _cleanObjectManager = [SBBObjectManager objectManager];
@@ -345,9 +341,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     }
     
     // clear everything out
-    @synchronized(self) {
-        [_uploadCompletionHandlers removeAllObjects];
-    }
+    [_uploadCompletionHandlers removeAllObjects];
     [defaults removeObjectForKey:kUploadRequestsKey];
     [defaults removeObjectForKey:kUploadSessionsKey];
     [defaults removeObjectForKey:kUploadFilesKey];
@@ -463,8 +457,9 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
                 NSLog(@"Successfully called upload complete for upload ID %@, check status at %@", uploadSession.id, uploadStatusUrlString);
             }
 #endif
-            
-            [self completeUploadOfFile:uploadTask.taskDescription withError:error];
+            [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+                [self completeUploadOfFile:uploadTask.taskDescription withError:error];
+            }];
         }];
     } else if ([task isKindOfClass:[NSURLSessionDownloadTask class]]) {
         if (!error && [task.response isKindOfClass:[NSHTTPURLResponse class]]) {
