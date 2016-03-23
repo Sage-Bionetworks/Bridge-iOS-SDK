@@ -202,6 +202,11 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 
 - (void)setUploadRequestJSON:(id)json forFile:(NSString *)fileURLString
 {
+    if (!fileURLString) {
+        NSLog(@"Aborting setting json on nil fileURLString");
+        return;
+    }
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     NSMutableDictionary *uploadRequests = [[defaults dictionaryForKey:kUploadRequestsKey] mutableCopy];
