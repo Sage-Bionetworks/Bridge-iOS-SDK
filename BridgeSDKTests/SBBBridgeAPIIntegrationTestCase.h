@@ -11,17 +11,15 @@
 
 #define TEST_STUDY @"api"
 
-typedef void (^SBBBridgeAPIIntegrationTestCaseCreateCompletionBlock)(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error);
+typedef void (^SBBBridgeAPIIntegrationTestCaseCreateCompletionBlock)(NSString *emailAddress, NSString *password, id responseObject, NSError *error);
 typedef void (^SBBBridgeAPIIntegrationTestCaseCreateSubpopCompletionBlock)(NSString *subpopGuid, id responseObject, NSError *error);
 
 @interface SBBBridgeAPIIntegrationTestCase : XCTestCase
 
 @property (nonatomic, strong) NSString *testUserEmail;
-@property (nonatomic, strong) NSString *testUserUsername;
 @property (nonatomic, strong) NSString *testUserPassword;
 
 @property (nonatomic, strong) NSString *devUserEmail;
-@property (nonatomic, strong) NSString *devUserUsername;
 @property (nonatomic, strong) NSString *devUserPassword;
 
 @property (nonatomic, strong) id testSignInResponseObject;

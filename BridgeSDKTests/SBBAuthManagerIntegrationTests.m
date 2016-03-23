@@ -86,10 +86,10 @@
     XCTestExpectation *expect412Unconsented = [self expectationWithDescription:@"signIn returns a 412 status code for unconsented user"];
     
     __block NSString *unconsentedEmail = nil;
-    [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             unconsentedEmail = emailAddress;
-            [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet, @"Valid credentials, no consent test");
                 [aMan clearKeychainStore];
                 [expect412Unconsented fulfill];
@@ -114,14 +114,13 @@
     
     XCTestExpectation *expectSignedIn = [self expectationWithDescription:@"consented test user signed in"];
     __block NSString *consentedEmail = nil;
-    [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             consentedEmail = emailAddress;
-            [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 XCTAssert(!error
                           && [responseObject[@"type"] isEqualToString:@"UserSessionInfo"]
-                          && [responseObject[@"sessionToken"] length] > 0
-                          && [responseObject[@"username"] isEqualToString:username],
+                          && [responseObject[@"sessionToken"] length] > 0,
                           @"Successful sign-in of consented user");
                 if (error) {
                     NSLog(@"Error signing in with consented user %@:\n%@\nResponse: %@", emailAddress, error, responseObject);

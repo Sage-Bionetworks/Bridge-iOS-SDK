@@ -48,7 +48,6 @@
     profile.firstName = @"Test";
     profile.lastName = @"User";
     profile.email = self.testUserEmail;
-    profile.username = self.testUserUsername;
     
     [SBBComponent(SBBUserManager) updateUserProfileWithProfile:profile completion:^(id responseObject, NSError *error) {
         if (error) {
@@ -91,7 +90,7 @@
             NSLog(@"Error changing data sharing scope:\n%@\nResponse: %@", error, responseObject);
             [expectChangedSharing fulfill];
         } else {
-            [SBBComponent(SBBAuthManager) signInWithUsername:self.testUserUsername password:self.testUserPassword completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [SBBComponent(SBBAuthManager) signInWithUsername:self.testUserEmail password:self.testUserPassword completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to get user session info after changing data sharing scope:\n%@\nResponse: %@", error, responseObject);
                 }
