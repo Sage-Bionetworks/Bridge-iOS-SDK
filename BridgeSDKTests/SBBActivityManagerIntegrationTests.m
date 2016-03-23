@@ -42,7 +42,7 @@
     _aManDelegate = [SBBTestAuthManagerDelegate new];
     _aMan.authDelegate = _aManDelegate;
     XCTestExpectation *expectARDUser = [self expectationWithDescription:@"Created user with all roles"];
-    [self createTestUserConsented:NO roles:@[@"admin", @"researcher", @"developer"] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:NO roles:@[@"admin", @"researcher", @"developer"] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error creating all-roles test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
             if (![error.domain isEqualToString:@"com.apple.XCTestErrorDomain"] || error.code != 0) {
@@ -50,9 +50,8 @@
             }
         } else {
             _ardUserEmail = emailAddress;
-            _ardUserUsername = username;
             _ardUserPassword = password;
-            [_aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [_aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to all-roles test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 }

@@ -113,8 +113,10 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 
 - (NSURL *)tempUploadDirURL
 {
-    NSURL *uploadDir = nil;
+    NSURL *appSupportDir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] firstObject];
+    NSString *bundleName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
     NSString *tempUploadDirName = [NSTemporaryDirectory() stringByAppendingPathComponent:@"SBBUploadManager"];
+    NSURL *uploadDir = [[appSupportDir URLByAppendingPathComponent:bundleName] URLByAppendingPathComponent:tempUploadDirName];
     NSError *error;
     if ([[NSFileManager defaultManager] createDirectoryAtPath:tempUploadDirName withIntermediateDirectories:YES attributes:nil error:&error]) {
         uploadDir = [NSURL fileURLWithPath:tempUploadDirName];

@@ -26,23 +26,20 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
 
 @implementation SBBBridgeAPIIntegrationTestCase
 
-+ (void)initialize
-{
+- (void)setUp {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // set up a separate auth manager for admin, and just use the default base network manager, not the Bridge one
         gAdminAuthManager = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
         gAdminAuthDelegate = [TestAdminAuthDelegate new];
         gAdminAuthManager.authDelegate = gAdminAuthDelegate;
- 
+        
         // ditto for dev
         gDevAuthManager = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
         gDevAuthDelegate = [TestAdminAuthDelegate new];
         gDevAuthManager.authDelegate = gDevAuthDelegate;
-});
-}
+    });
 
-- (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     if (!gAdminAuthManager.isAuthenticated) {
@@ -62,7 +59,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
             [expectAdminSignin fulfill];
         }];
         
-        [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
             if (error) {
                 NSLog(@"Time out error trying to log in to admin account:\n%@", error);
             }
@@ -72,7 +69,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
     // create & sign in a dev user
     XCTestExpectation *expectDevCreated = [self expectationWithDescription:@"dev user created"];
     
-    [self createTestUserConsented:YES roles:@[@"developer"] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:YES roles:@[@"developer"] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error creating dev user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
             if (![error.domain isEqualToString:@"com.apple.XCTestErrorDomain"] || error.code != 0) {
@@ -80,9 +77,8 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
             }
         } else {
             _devUserEmail = emailAddress;
-            _devUserUsername = username;
             _devUserPassword = password;
-            [gDevAuthManager signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [gDevAuthManager signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to dev user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 }
@@ -92,7 +88,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         }
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error trying to create and sign in to test account:\n%@", error);
         }
@@ -101,7 +97,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
     // create & sign in a test user
     XCTestExpectation *expectTestCreated = [self expectationWithDescription:@"test user created"];
     
-    [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error creating test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
             if (![error.domain isEqualToString:@"com.apple.XCTestErrorDomain"] || error.code != 0) {
@@ -109,9 +105,8 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
             }
         } else {
             _testUserEmail = emailAddress;
-            _testUserUsername = username;
             _testUserPassword = password;
-            [SBBComponent(SBBAuthManager) signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [SBBComponent(SBBAuthManager) signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 }
@@ -121,7 +116,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         }
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error trying to create and sign in to test account:\n%@", error);
         }
@@ -140,7 +135,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         [expectTestDeleted fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error attempting to delete test user account %@: %@", _testUserEmail, error);
         }
@@ -152,7 +147,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         [expectDevSignedOut fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error attempting to sign out from dev user account %@: %@", _devUserEmail, error);
         }
@@ -168,7 +163,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         [expectDevDeleted fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error attempting to delete dev user account %@: %@", _devUserEmail, error);
         }
@@ -185,13 +180,10 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
     NSString *emailFormat = @"bridge-testing+test%@@sagebase.org";
     NSString *unique = [[NSProcessInfo processInfo] globallyUniqueString];
     __block NSString *emailAddress = [NSString stringWithFormat:emailFormat, unique];
-    NSString *usernameFormat = @"iOSIntegrationTestUser%@";
-    NSString *username = [NSString stringWithFormat:usernameFormat, unique];
     NSString *password = @"123456";
     NSDictionary *signUpObject =
     @{
       @"email": emailAddress,
-      @"username": username,
       @"password": password,
       @"consent": [NSNumber numberWithBool:consented],
       @"roles": roles,
@@ -210,7 +202,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         }
         
         if (completion) {
-            completion(emailAddress, username, password, responseObject, error);
+            completion(emailAddress, password, responseObject, error);
         }
     }];
 }

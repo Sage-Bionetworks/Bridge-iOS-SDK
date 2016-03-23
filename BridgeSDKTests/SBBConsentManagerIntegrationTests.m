@@ -103,13 +103,13 @@
     XCTestExpectation *expectSigned = [self expectationWithDescription:@"consent signature recorded"];
     
     __block NSString *unconsentedEmail = nil;
-    [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error creating unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
             [expectSigned fulfill];
         } else {
             unconsentedEmail = emailAddress;
-            [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
@@ -158,34 +158,46 @@
     NSString *signname = @"Eggplant McTester";
     NSDate *birthdate = [NSDate dateWithTimeIntervalSinceNow:-(30 * 365.25 * 86400)];
     
-    [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error creating unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
             [expectSigned fulfill];
         } else {
             unconsentedEmail = emailAddress;
             NSArray *dataGroups = @[@"sdk-int-1", @"sdk-int-2"];
-            [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
                 } else {
-                    [uMan addToDataGroups:dataGroups completion:^(id responseObject, NSError *error) {
-                        if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
-                            NSLog(@"Error adding user %@ to groups %@:\n%@\nResponse: %@", unconsentedEmail, dataGroups, error, responseObject);
-                            [expectSigned fulfill];
-                        } else {
-                            [cMan consentSignature:signname forSubpopulationGuid:self.testSubpopRequiredGuid birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id responseObject, NSError *error) {
-                                if (error) {
-                                    NSLog(@"Error recording subpop consent signature:\n%@\nResponse: %@", error, responseObject);
-                                } else {
-                                    consentSigned = YES;
-                                }
-                                XCTAssert(!error, @"Successfully recorded subpop consent signature");
+                    // sign default (required) consent first
+                    {
+                        [cMan consentSignature:signname forSubpopulationGuid:gSBBAppStudy birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+                            if (error) {
+                                NSLog(@"Error recording default consent signature:\n%@\nResponse: %@", error, responseObject);
                                 [expectSigned fulfill];
-                            }];
-                        }
-                    }];
+                            } else {
+                                // add to subpopulation that has its own required consent
+                                [uMan addToDataGroups:dataGroups completion:^(id responseObject, NSError *error) {
+                                    if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
+                                        NSLog(@"Error adding user %@ to groups %@:\n%@\nResponse: %@", unconsentedEmail, dataGroups, error, responseObject);
+                                        [expectSigned fulfill];
+                                    } else {
+                                        // sign subpopulation consent
+                                        [cMan consentSignature:signname forSubpopulationGuid:self.testSubpopRequiredGuid birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id responseObject, NSError *error) {
+                                            if (error) {
+                                                NSLog(@"Error recording subpop consent signature:\n%@\nResponse: %@", error, responseObject);
+                                            } else {
+                                                consentSigned = YES;
+                                            }
+                                            XCTAssert(!error, @"Successfully recorded subpop consent signature");
+                                            [expectSigned fulfill];
+                                        }];
+                                    }
+                                }];
+                            }
+                        }];
+                    }
                 }
             }];
         }
@@ -262,10 +274,10 @@
     XCTestExpectation *expectWithdrew = [self expectationWithDescription:@"consent withdrawn"];
     
     __block NSString *consentedEmail = nil;
-    [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *username, NSString *password, id responseObject, NSError *error) {
+    [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             consentedEmail = emailAddress;
-            [aMan signInWithUsername:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in consented user %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
                     [expectWithdrew fulfill];
