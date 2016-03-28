@@ -1,7 +1,30 @@
 //
 //  SBBActivity.m
 //
-//  $Id$
+//	Copyright (c) 2014-2016 Sage Bionetworks
+//	All rights reserved.
+//
+//	Redistribution and use in source and binary forms, with or without
+//	modification, are permitted provided that the following conditions are met:
+//	    * Redistributions of source code must retain the above copyright
+//	      notice, this list of conditions and the following disclaimer.
+//	    * Redistributions in binary form must reproduce the above copyright
+//	      notice, this list of conditions and the following disclaimer in the
+//	      documentation and/or other materials provided with the distribution.
+//	    * Neither the name of Sage Bionetworks nor the names of BridgeSDk's
+//		  contributors may be used to endorse or promote products derived from
+//		  this software without specific prior written permission.
+//
+//	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
+//	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to SBBActivity.h instead.
@@ -10,8 +33,6 @@
 #import "_SBBActivity.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
-
-#import "SBBGuidCreatedOnVersionHolder.h"
 
 @interface _SBBActivity()
 
@@ -22,13 +43,17 @@
 
 @property (nonatomic, strong) NSString* activityType;
 
+@property (nonatomic, strong) NSString* guid;
+
 @property (nonatomic, strong) NSString* label;
 
-@property (nonatomic, strong) NSString* ref;
+@property (nonatomic, strong) NSString* labelDetail;
 
-@property (nonatomic, strong, readwrite) NSManagedObject *survey;
+@property (nonatomic, strong) SBBSurveyReference* survey;
 
-- (void) setSurvey: (NSManagedObject *) survey_ settingInverse: (BOOL) setInverse;
+@property (nonatomic, strong) SBBSurveyResponseReference* surveyResponse;
+
+@property (nonatomic, strong) SBBTaskReference* task;
 
 @end
 
@@ -54,17 +79,17 @@
 
     self.activityType = [dictionary objectForKey:@"activityType"];
 
+    self.guid = [dictionary objectForKey:@"guid"];
+
     self.label = [dictionary objectForKey:@"label"];
 
-    self.ref = [dictionary objectForKey:@"ref"];
+    self.labelDetail = [dictionary objectForKey:@"labelDetail"];
 
-        NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
-    if(surveyDict != nil)
-    {
-        SBBGuidCreatedOnVersionHolder *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
-        self.survey = surveyObj;
+    self.survey = [dictionary objectForKey:@"survey"];
 
-    }
+    self.surveyResponse = [dictionary objectForKey:@"surveyResponse"];
+
+    self.task = [dictionary objectForKey:@"task"];
 
 }
 
@@ -74,11 +99,17 @@
 
     [dict setObjectIfNotNil:self.activityType forKey:@"activityType"];
 
+    [dict setObjectIfNotNil:self.guid forKey:@"guid"];
+
     [dict setObjectIfNotNil:self.label forKey:@"label"];
 
-    [dict setObjectIfNotNil:self.ref forKey:@"ref"];
+    [dict setObjectIfNotNil:self.labelDetail forKey:@"labelDetail"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
+    [dict setObjectIfNotNil:self.survey forKey:@"survey"];
+
+    [dict setObjectIfNotNil:self.surveyResponse forKey:@"surveyResponse"];
+
+    [dict setObjectIfNotNil:self.task forKey:@"task"];
 
 	return dict;
 }
@@ -87,8 +118,6 @@
 {
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
-
-	[self.survey awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -107,16 +136,18 @@
 
         self.activityType = managedObject.activityType;
 
+        self.guid = managedObject.guid;
+
         self.label = managedObject.label;
 
-        self.ref = managedObject.ref;
+        self.labelDetail = managedObject.labelDetail;
 
-            NSManagedObject *surveyManagedObj = managedObject.survey;
-        SBBGuidCreatedOnVersionHolder *surveyObj = [[SBBGuidCreatedOnVersionHolder alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(surveyObj != nil)
-        {
-          self.survey = surveyObj;
-        }
+        self.survey = managedObject.survey;
+
+        self.surveyResponse = managedObject.surveyResponse;
+
+        self.task = managedObject.task;
+
     }
 
     return self;
@@ -137,40 +168,24 @@
 {
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
-    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.activityType = self.activityType;
 
+    managedObject.guid = self.guid;
+
     managedObject.label = self.label;
 
-    managedObject.ref = self.ref;
+    managedObject.labelDetail = self.labelDetail;
 
-    [cacheContext deleteObject:managedObject.survey];
-    NSManagedObject *relMo = [self.survey saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject setSurvey:relMo];
+    managedObject.survey = self.survey;
+
+    managedObject.surveyResponse = self.surveyResponse;
+
+    managedObject.task = self.task;
 
     // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access
-
-- (void) setSurvey: (SBBGuidCreatedOnVersionHolder*) survey_ settingInverse: (BOOL) setInverse
-{
-
-    _survey = survey_;
-
-}
-
-- (void) setSurvey: (SBBGuidCreatedOnVersionHolder*) survey_
-{
-    [self setSurvey: survey_ settingInverse: YES];
-}
-
-- (SBBGuidCreatedOnVersionHolder*) survey
-{
-    return _survey;
-}
-
-@synthesize survey = _survey;
 
 @end

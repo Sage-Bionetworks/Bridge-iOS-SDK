@@ -40,8 +40,11 @@
 + (NSError *)generateSBBErrorForStatusCode:(NSInteger)statusCode;
 + (NSError *)SBBNoCredentialsError;
 + (NSError *)SBBNotAuthenticatedError;
++ (NSError *)SBBUnsupportedAppVersionError;
 + (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url;
 + (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass;
++ (NSError *)generateSBBTempFileErrorForURL:(NSURL *)url;
++ (NSError *)generateSBBTempFileReadErrorForURL:(NSURL *)url;
 
 /*********************************************************************************/
 #pragma mark - Error handlers

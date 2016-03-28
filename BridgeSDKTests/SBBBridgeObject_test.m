@@ -21,7 +21,7 @@
     if ([className hasPrefix:@"SBB"]) {
       // set default type string (the property is read-only so we have to use the back door)
       NSDictionary *dict = @{@"type": [className substringFromIndex:3]};
-      self = [super initWithDictionaryRepresentation:dict objectManager:SBBComponent(SBBObjectManager)];
+      self = [super initWithDictionaryRepresentation:dict];
     }
   }
   

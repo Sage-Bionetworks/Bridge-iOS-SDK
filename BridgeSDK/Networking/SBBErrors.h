@@ -34,7 +34,27 @@
 #define SBB_ERROR_DOMAIN @"org.sagebase.error_domain"
 #define SBB_ORIGINAL_ERROR_KEY @"SBBOriginalErrorKey"
 
-typedef NS_ENUM(NSInteger, SBBErrorCodes)
+typedef NS_ENUM(NSInteger, SBBErrorCode)
+{
+    SBBErrorCodeUnknownError = -1,
+    SBBErrorCodeInternetNotConnected = -1000,
+    SBBErrorCodeServerNotReachable = -1001,
+    SBBErrorCodeServerUnderMaintenance = -1002,
+    SBBErrorCodeServerNotAuthenticated = -1003,
+    SBBErrorCodeServerPreconditionNotMet = -1004,
+    SBBErrorCodeNoCredentialsAvailable = -1005,
+    SBBErrorCodeUnsupportedAppVersion = -1006,
+    
+    SBBErrorCodeS3UploadErrorResponse = -1020,
+    
+    SBBErrorCodeNotAFileURL = -1100,
+    SBBErrorCodeObjectNotExpectedClass = -1101,
+    SBBErrorCodeTempFileError = -1102,
+    SBBErrorCodeTempFileReadError = -1103
+};
+
+
+typedef NS_ENUM(NSInteger, SBBErrorCodes) /** DEPRECATED */
 {
     kSBBUnknownError = -1,
     kSBBInternetNotConnected = -1000,
@@ -43,9 +63,19 @@ typedef NS_ENUM(NSInteger, SBBErrorCodes)
     kSBBServerNotAuthenticated = -1003,
     kSBBServerPreconditionNotMet = -1004,
     kSBBNoCredentialsAvailable = -1005,
+    kSBBUnsupportedAppVersion = -1006,
     
     kSBBS3UploadErrorResponse = -1020,
   
     kSBBNotAFileURL = -1100,
-    kSBBObjectNotExpectedClass = -1101
-};
+    kSBBObjectNotExpectedClass = -1101,
+    kSBBTempFileError = -1102,
+    kSBBTempFileReadError = -1103
+}
+/**
+ * This enum is deprecated. Use <SBBErrorCode> instead which is formatted for compliance with Swift 2.0 enums.
+ * @deprecated v3.0.6
+ */
+__attribute__((deprecated("use SBBErrorCode")));
+
+

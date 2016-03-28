@@ -7,8 +7,15 @@
 //
 
 #import "SBBObjectManagerInternal.h"
+#import "ModelObject.h"
 
 @interface ModelObject ()
+
+@property (nonatomic, weak) id<SBBObjectManagerProtocol> creatingObjectManager;
+
+- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager;
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager;
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 // This method MUST be called on the queue of the MOC in which managedObject exists.
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager;

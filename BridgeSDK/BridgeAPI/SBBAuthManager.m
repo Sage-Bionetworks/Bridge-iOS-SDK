@@ -3,7 +3,31 @@
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 9/11/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//
+//	Copyright (c) 2014, Sage Bionetworks
+//	All rights reserved.
+//
+//	Redistribution and use in source and binary forms, with or without
+//	modification, are permitted provided that the following conditions are met:
+//	    * Redistributions of source code must retain the above copyright
+//	      notice, this list of conditions and the following disclaimer.
+//	    * Redistributions in binary form must reproduce the above copyright
+//	      notice, this list of conditions and the following disclaimer in the
+//	      documentation and/or other materials provided with the distribution.
+//	    * Neither the name of Sage Bionetworks nor the names of BridgeSDk's
+//		  contributors may be used to endorse or promote products derived from
+//		  this software without specific prior written permission.
+//
+//	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
+//	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
 #import "SBBAuthManager.h"
@@ -11,6 +35,16 @@
 #import "UICKeyChainStore.h"
 #import "NSError+SBBAdditions.h"
 #import "SBBComponentManager.h"
+#import "BridgeSDKInternal.h"
+
+#define AUTH_API GLOBAL_API_PREFIX @"/auth"
+
+NSString * const kSBBAuthSignUpAPI =       AUTH_API @"/signUp";
+NSString * const kSBBAuthResendAPI =       AUTH_API @"/resendEmailVerification";
+NSString * const kSBBAuthSignInAPI =       AUTH_API @"/signIn";
+NSString * const kSBBAuthSignOutAPI =      AUTH_API @"/signOut";
+NSString * const kSBBAuthRequestResetAPI = AUTH_API @"/requestResetPassword";
+NSString * const kSBBAuthResetAPI =        AUTH_API @"/resetPassword";
 
 NSString *gSBBAppStudy = nil;
 
@@ -79,8 +113,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 @interface SBBAuthManager()
 
-@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
 @property (nonatomic, strong) NSString *sessionToken;
+@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
 
 + (void)resetAuthKeychain;
 
@@ -147,8 +181,14 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 + (NSString *)bundleSeedID {
     static NSString *_bundleSeedID = nil;
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    // This is always called in the non-concurrent keychain queue, so the dispatch_once
+    // construct isn't necessary to ensure it doesn't happen in two threads simultaneously;
+    // also apparently it can fail under rare circumstances (???), so we'll handle it this
+    // way instead so the app can at least potentially recover the next time it tries.
+    // Apps that use an auth delegate to get and store credentials (which currently is
+    // all of them) should only call this on first run, once, and it really doesn't matter
+    // if it fails because it won't be used.
+    if (!_bundleSeedID) {
         NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
                                (__bridge id)(kSecClassGenericPassword), kSecClass,
                                @"bundleSeedID", kSecAttrAccount,
@@ -164,20 +204,30 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             NSArray *components = [accessGroup componentsSeparatedByString:@"."];
             _bundleSeedID = [[components objectEnumerator] nextObject];
         }
-        CFRelease(result);
-    });
+        if (result) {
+            CFRelease(result);
+        }
+    }
     
     return _bundleSeedID;
 }
 
 + (NSString *)sdkKeychainAccessGroup
 {
-    return [NSString stringWithFormat:@"%@.org.sagebase.Bridge", [self bundleSeedID]];
+    NSString *bundleSeedID = [self bundleSeedID];
+    if (!bundleSeedID) {
+        return nil;
+    }
+    return [NSString stringWithFormat:@"%@.org.sagebase.Bridge", bundleSeedID];
 }
 
 + (UICKeyChainStore *)sdkKeychainStore
 {
-    return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:self.sdkKeychainAccessGroup];
+    NSString *accessGroup = self.sdkKeychainAccessGroup;
+    if (!accessGroup) {
+        return nil;
+    }
+    return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:accessGroup];
 }
 
 - (void)setupForEnvironment
@@ -225,27 +275,42 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }
 }
 
+- (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password dataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSMutableDictionary *params = [@{@"study":gSBBAppStudy, @"email":email, @"username":username, @"password":password, @"type":@"SignUp"} mutableCopy];
+    if (dataGroups) {
+        [params setObject:dataGroups forKey:@"dataGroups"];
+    }
+    return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:params completion:completion];
+}
+
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/signUp" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"username":username, @"password":password, @"type":@"SignUp"} completion:completion];
+    return [self signUpWithEmail:email username:username password:password dataGroups:nil completion:completion];
 }
 
 - (NSURLSessionDataTask *)resendEmailVerification:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/resendEmailVerification" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
+    return [_networkManager post:kSBBAuthResendAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
 }
 
 - (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/signIn" headers:nil parameters:@{@"study":gSBBAppStudy, @"username":username, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"username":username, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Save session token in the keychain
         // ??? Save credentials in the keychain?
         NSString *sessionToken = responseObject[@"sessionToken"];
         if (sessionToken.length) {
             if (_authDelegate) {
-                [_authDelegate authManager:self didGetSessionToken:sessionToken];
+                if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forUsername:andPassword:)]) {
+                    [_authDelegate authManager:self didGetSessionToken:sessionToken forUsername:username andPassword:password];
+                } else {
+                    [_authDelegate authManager:self didGetSessionToken:sessionToken];
+                }
             } else {
-                _sessionToken = sessionToken;
+                dispatchSyncToAuthQueue(^{
+                    _sessionToken = sessionToken;
+                });
                 dispatchSyncToKeychainQueue(^{
                     UICKeyChainStore *store = [self.class sdkKeychainStore];
                     [store setString:_sessionToken forKey:self.sessionTokenKey];
@@ -267,10 +332,18 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self addAuthHeaderToHeaders:headers];
-    return [_networkManager get:@"/api/v1/auth/signOut" headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [_networkManager post:kSBBAuthSignOutAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Remove the session token (and credentials?) from the keychain
         // ??? Do we want to not do this in case of error?
-        if (!_authDelegate) {
+        if (_authDelegate) {
+            if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forUsername:andPassword:)] &&
+                [_authDelegate respondsToSelector:@selector(usernameForAuthManager:)] &&
+                [_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
+                [_authDelegate authManager:self didGetSessionToken:nil forUsername:nil andPassword:nil];
+            } else {
+                [_authDelegate authManager:self didGetSessionToken:nil];
+            }
+        } else {
             dispatchSyncToKeychainQueue(^{
                 UICKeyChainStore *store = [self.class sdkKeychainStore];
                 [store removeItemForKey:self.sessionTokenKey];
@@ -280,7 +353,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             });
             // clear the in-memory copy of the session token, too
             dispatchSyncToAuthQueue(^{
-                self.sessionToken = nil;
+                _sessionToken = nil;
             });
         }
         
@@ -344,12 +417,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)requestPasswordResetForEmail:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/requestResetPassword" headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
+    return [_networkManager post:kSBBAuthRequestResetAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
 }
 
 - (NSURLSessionDataTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:@"/api/v1/auth/resetPassword" headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
+    return [_networkManager post:kSBBAuthResetAPI headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
 }
 
 #pragma mark Internal helper methods
@@ -435,6 +508,44 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         [store removeAllItems];
         [store synchronize];
     });
+}
+
+// used internally for unit testing
+- (void)setSessionToken:(NSString *)sessionToken
+{
+    if (sessionToken.length) {
+        if (_authDelegate) {
+            [_authDelegate authManager:self didGetSessionToken:sessionToken];
+        } else {
+            dispatchSyncToAuthQueue(^{
+                _sessionToken = sessionToken;
+            });
+            dispatchSyncToKeychainQueue(^{
+                UICKeyChainStore *store = [self.class sdkKeychainStore];
+                [store setString:_sessionToken forKey:self.sessionTokenKey];
+                
+                [store synchronize];
+            });
+        }
+    }
+}
+
+// used by SBBBridgeNetworkManager to auto-reauth when session tokens expire
+- (void)clearSessionToken
+{
+    if (_authDelegate) {
+        [_authDelegate authManager:self didGetSessionToken:nil];
+    } else {
+        dispatchSyncToAuthQueue(^{
+            _sessionToken = nil;
+        });
+        dispatchSyncToKeychainQueue(^{
+            UICKeyChainStore *store = [self.class sdkKeychainStore];
+            [store setString:nil forKey:self.sessionTokenKey];
+            
+            [store synchronize];
+        });
+    }
 }
 
 @end

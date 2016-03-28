@@ -3,7 +3,31 @@
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/9/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//
+//	Copyright (c) 2014-2015, Sage Bionetworks
+//	All rights reserved.
+//
+//	Redistribution and use in source and binary forms, with or without
+//	modification, are permitted provided that the following conditions are met:
+//	    * Redistributions of source code must retain the above copyright
+//	      notice, this list of conditions and the following disclaimer.
+//	    * Redistributions in binary form must reproduce the above copyright
+//	      notice, this list of conditions and the following disclaimer in the
+//	      documentation and/or other materials provided with the distribution.
+//	    * Neither the name of Sage Bionetworks nor the names of BridgeSDk's
+//		  contributors may be used to endorse or promote products derived from
+//		  this software without specific prior written permission.
+//
+//	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
+//	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
 #import <Foundation/Foundation.h>
@@ -91,29 +115,6 @@ typedef void (^SBBSurveyManagerEditResponseCompletionBlock)(id responseObject, N
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
 - (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey withResponseIdentifier:(NSString *)identifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion;
-
-/*!
- Submit a set of answers to a survey by the survey's activityRef (href).
- 
- @param surveyAnswers An NSArray of survey answer objects for the questions answered.
- @param ref           The href identifying the survey being answered, obtained e.g. from the Schedules or Activities API. If the ref ends with "/published" this call will fail; it must refer to a specific version.
- @param completion    An SBBSurveyManagerSubmitAnswersCompletionBlock to be called upon completion. The identifierHolder passed in contains an identifier assigned by the server to the survey response created by submitting these answers.
- 
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
- */
-- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion;
-
-/*!
- Submit a set of answers to a survey by the survey's activityRef (href), and specify an identifier for the SurveyResponse object to create as a result.
- 
- @param surveyAnswers An NSArray of survey answer objects for the questions answered.
- @param ref           The href identifying the survey being answered, obtained e.g. from the Schedules or Activities API. If the ref ends with "/published" this call will fail; it must refer to a specific version.
- @param identifier    An identifier to use for the SurveyResponse created as a result of submitting these answers. If nil, this behaves the same as calling submitAnswers:toSurveyByRef:completion:.
- @param completion    An SBBSurveyManagerSubmitAnswersCompletionBlock to be called upon completion. The identifierHolder passed in contains the identifier of the survey response created by submitting these answers, which will match what you sent in the identifier parameter (unless you sent nil).
- 
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
- */
-- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByRef:(NSString *)ref withResponseIdentifier:(NSString *)identifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion;
 
 /*!
  Submit a set of answers to a survey by the survey's guid and version number.

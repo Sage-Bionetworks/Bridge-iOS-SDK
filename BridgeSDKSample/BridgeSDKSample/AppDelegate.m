@@ -32,7 +32,16 @@
 #import "SignUpSignInViewController.h"
 #import <BridgeSDK/BridgeSDK.h>
 
-@interface AppDelegate ()
+// Note: We're storing the raw session token and login credentials in NSUserDefaults for expedience and simplicity.
+// A real app should keep them somewhere secure, like the keychain, or at least encrypted. Or just not implement
+// an Auth Manager delegate, and let the SDK handle securely storing them. The only reason we implement one here
+// is so we can simulate the session token expiring by setting it to a garbage value; the built-in SBBAuthManager
+// doesn't provide a public API to any of this information.
+static NSString *kSessionTokenKey = @"BridgeSDKSampleSessionToken";
+static NSString *kUsernameKey = @"BridgeSDKSampleUsername";
+static NSString *kPasswordKey = @"BridgeSDKSamplePassword";
+
+@interface AppDelegate () <SBBAuthManagerDelegateProtocol>
 
 @end
 
@@ -41,17 +50,18 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Bridge developers: To run this sample app against your own local copy of the Bridge server, un-comment the
     // following code and replace "<server>" with your Bridge server (ex: "https://localhost:9000" or
-    // "http://192.168.2.1:9000"). Also be sure to change the setupWithAppPrefix call below to match your network
+    // "http://192.168.2.1:9000"). Also be sure to change the setupWithStudy call below to match your network
     // manager.
     //SBBNetworkManager* networkMan = [SBBNetworkManager networkManagerForEnvironment:SBBEnvironmentCustom
     //    appURLPrefix:@"" baseURLPath:@"http://192.168.55.1:9000"];
     //[SBBComponentManager registerComponent:networkMan forClass:[SBBNetworkManager class]];
 
-    // To run this sample app in your study, change this study identifier to the one assigned to your study.
+    // To run this sample app in your study, change this identifier to the one assigned to your study.
     // Leave it set to @"api" to run in the generic test study.
     [BridgeSDK setupWithStudy:@"api"];
-    
-    [SBBComponent(SBBAuthManager) ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    id<SBBAuthManagerProtocol> authMan = SBBComponent(SBBAuthManager);
+    authMan.authDelegate = self;
+    [authMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (error.code == kSBBNoCredentialsAvailable)
         {
             self.loggedIn = NO;
@@ -65,8 +75,53 @@
 
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler {
     if ([identifier isEqualToString:kBackgroundSessionIdentifier]) {
-        [SBBComponent(SBBNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
+        [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
     }
+}
+
+#pragma mark - SBBAuthManagerDelegateProtocol
+
+- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken
+{
+    // ***** REALLY BAD IDEA. DEMO ONLY. DON'T EVER DO THIS IN A REAL APP. *****
+    if (sessionToken) {
+        [[NSUserDefaults standardUserDefaults] setObject:sessionToken forKey:kSessionTokenKey];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kSessionTokenKey];
+    }
+}
+
+- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken forUsername:(NSString *)username andPassword:(NSString *)password
+{
+    [self authManager:authManager didGetSessionToken:sessionToken];
+    
+    if (username) {
+        [[NSUserDefaults standardUserDefaults] setObject:username forKey:kUsernameKey];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUsernameKey];
+    }
+    
+    // ***** REALLY BAD IDEA. DEMO ONLY. DON'T EVER DO THIS IN A REAL APP. *****
+    if (password) {
+        [[NSUserDefaults standardUserDefaults] setObject:password forKey:kPasswordKey];
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPasswordKey];
+    }
+}
+
+- (NSString *)sessionTokenForAuthManager:(id<SBBAuthManagerProtocol>)authManager
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:kSessionTokenKey];
+}
+
+- (NSString *)usernameForAuthManager:(id<SBBAuthManagerProtocol>)authManager
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:kUsernameKey];
+}
+
+- (NSString *)passwordForAuthManager:(id<SBBAuthManagerProtocol>)authManager
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:kPasswordKey];
 }
 
 @end

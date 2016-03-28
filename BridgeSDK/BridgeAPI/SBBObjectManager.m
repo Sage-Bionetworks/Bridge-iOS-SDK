@@ -3,12 +3,36 @@
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 9/25/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//
+//	Copyright (c) 2014, Sage Bionetworks
+//	All rights reserved.
+//
+//	Redistribution and use in source and binary forms, with or without
+//	modification, are permitted provided that the following conditions are met:
+//	    * Redistributions of source code must retain the above copyright
+//	      notice, this list of conditions and the following disclaimer.
+//	    * Redistributions in binary form must reproduce the above copyright
+//	      notice, this list of conditions and the following disclaimer in the
+//	      documentation and/or other materials provided with the distribution.
+//	    * Neither the name of Sage Bionetworks nor the names of BridgeSDk's
+//		  contributors may be used to endorse or promote products derived from
+//		  this software without specific prior written permission.
+//
+//	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
+//	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
 #import "SBBObjectManager.h"
 #import "SBBObjectManagerInternal.h"
-#import "ModelObject.h"
+#import "ModelObjectInternal.h"
 #import "SBBComponentManager.h"
 #import "NSDate+SBBAdditions.h"
 #import <objc/runtime.h>
@@ -332,11 +356,15 @@
 {
     id converted = nil;
     
-    if (targetClass == [NSArray class] && [json isKindOfClass:[NSArray class]]) {
+    if ((targetClass == [NSArray class] || targetClass == [NSSet class]) && [json isKindOfClass:[NSArray class]]) {
         // try converting to an array of bridge objects, and use that if so (otherwise just throw it in as-is)
         NSArray *objectArray = [self objectFromBridgeJSON:json];
         if (objectArray) {
-            converted = objectArray;
+            if (targetClass == [NSArray class]) {
+                converted = objectArray;
+            } else {
+                converted = [NSSet setWithArray:objectArray];
+            }
         } else {
             converted = json;
         }
@@ -667,11 +695,11 @@
                 id subObject = [self objectFromBridgeJSON:subJson];
                 if (subObject == nil) {
 #if DEBUG
-                    NSLog(@"Unable to create object from json, leaving as json object:\n%@", subJson);
+                    NSLog(@"Unable to create Bridge object from json, skipping:\n%@", subJson);
 #endif
-                    return subJson;
+                } else {
+                    [list addObject:subObject];
                 }
-                [list addObject:subObject];
             } else {
                 [list addObject:subJson];
             }
@@ -740,7 +768,8 @@
     
     Class objectClass = [object class];
     id bridgeJSON = nil;
-    if ([objectClass isSubclassOfClass:[NSArray class]]) {
+    if ([objectClass isSubclassOfClass:[NSArray class]] ||
+        [objectClass isSubclassOfClass:[NSSet class]]) {
         bridgeJSON = [NSMutableArray array];
         for (id subObject in object) {
             id json = [self bridgeJSONFromObject:subObject];

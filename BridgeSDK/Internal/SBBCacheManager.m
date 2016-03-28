@@ -447,7 +447,6 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
                 // rebuild the SQLite db
                 if ([self resetCache]) {
                     NSLog(@"Corrupt SQLite db deleted and rebuilt");
-                    //          [LifestreamComponent(ObservationManager) logAnnotation:@"Corrupt SQLite db deleted and rebuilt"];
                 }
             } else {
                 // If we get an error, the change wasn't saved anyway. This way, at least

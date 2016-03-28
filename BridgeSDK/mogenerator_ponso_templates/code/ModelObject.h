@@ -44,9 +44,9 @@
 */
 - (BOOL)writeToFile:(NSString *)filePath;
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager;
-- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager;
-- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
+- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary;
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary;
+- (NSDictionary *)dictionaryRepresentation;
 
 - (void)awakeFromDictionaryRepresentationInit;
 

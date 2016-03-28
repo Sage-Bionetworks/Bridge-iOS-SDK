@@ -7,8 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		60CAA6F51AFABA8B00DE3305 /* Tasks.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 60CAA6F41AFABA8B00DE3305 /* Tasks.storyboard */; };
+		60CAA7001AFAD4EB00DE3305 /* TasksTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60CAA6FF1AFAD4EB00DE3305 /* TasksTableViewController.m */; };
+		60CAA7031AFAD50F00DE3305 /* TaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60CAA7021AFAD50F00DE3305 /* TaskViewController.m */; };
+		60CAA70D1AFD2DE900DE3305 /* TasksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60CAA70C1AFD2DE900DE3305 /* TasksViewController.m */; };
 		60F1E4291A424E6E009B380E /* ActivitiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E4281A424E6E009B380E /* ActivitiesTableViewController.m */; };
 		60F1E4301A425D8F009B380E /* ActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E42F1A425D8F009B380E /* ActivityViewController.m */; };
+		8009F9E41ACB461700698B50 /* Consent.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8009F9E21ACB461700698B50 /* Consent.storyboard */; };
+		8009F9EE1ACB47C400698B50 /* ConsentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8009F9ED1ACB47C400698B50 /* ConsentViewController.m */; };
 		800E798F19EDE25600EEE612 /* SurveyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 800E798E19EDE25600EEE612 /* SurveyViewController.m */; };
 		800E79AB19F1987F00EEE612 /* cat.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 800E79AA19F1987F00EEE612 /* cat.jpg */; };
 		800E79B219F1B1FE00EEE612 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 80855FAB19BFAA36006601C7 /* Main.storyboard */; };
@@ -66,6 +72,20 @@
 			remoteGlobalIDString = 80855F9719BFAA36006601C7;
 			remoteInfo = BridgeSDKSample;
 		};
+		80C5F1971B66C4D700011B49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80855FC419BFAA55006601C7 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 807AE2871B603309002588BB;
+			remoteInfo = BridgeSDKIntegration;
+		};
+		80C5F1991B66C4D700011B49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80855FC419BFAA55006601C7 /* BridgeSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 807AE29F1B60330C002588BB;
+			remoteInfo = BridgeSDKIntegrationTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -83,10 +103,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		60CAA6F41AFABA8B00DE3305 /* Tasks.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Tasks.storyboard; sourceTree = "<group>"; };
+		60CAA6FE1AFAD4EB00DE3305 /* TasksTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasksTableViewController.h; sourceTree = "<group>"; };
+		60CAA6FF1AFAD4EB00DE3305 /* TasksTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasksTableViewController.m; sourceTree = "<group>"; };
+		60CAA7011AFAD50F00DE3305 /* TaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskViewController.h; sourceTree = "<group>"; };
+		60CAA7021AFAD50F00DE3305 /* TaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskViewController.m; sourceTree = "<group>"; };
+		60CAA70B1AFD2DE900DE3305 /* TasksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TasksViewController.h; sourceTree = "<group>"; };
+		60CAA70C1AFD2DE900DE3305 /* TasksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TasksViewController.m; sourceTree = "<group>"; };
 		60F1E4271A424E6E009B380E /* ActivitiesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivitiesTableViewController.h; sourceTree = "<group>"; };
 		60F1E4281A424E6E009B380E /* ActivitiesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivitiesTableViewController.m; sourceTree = "<group>"; };
 		60F1E42E1A425D8F009B380E /* ActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ActivityViewController.h; sourceTree = "<group>"; };
 		60F1E42F1A425D8F009B380E /* ActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ActivityViewController.m; sourceTree = "<group>"; };
+		8009F9E31ACB461700698B50 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Consent.storyboard; sourceTree = "<group>"; };
+		8009F9EC1ACB47C400698B50 /* ConsentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsentViewController.h; sourceTree = "<group>"; };
+		8009F9ED1ACB47C400698B50 /* ConsentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsentViewController.m; sourceTree = "<group>"; };
 		800E798B19EDE22300EEE612 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Survey.storyboard; sourceTree = "<group>"; };
 		800E798D19EDE25600EEE612 /* SurveyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SurveyViewController.h; sourceTree = "<group>"; };
 		800E798E19EDE25600EEE612 /* SurveyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SurveyViewController.m; sourceTree = "<group>"; };
@@ -142,6 +172,8 @@
 			children = (
 				800E79A519F18DB200EEE612 /* BridgeSDK.framework */,
 				800E79A719F18DB200EEE612 /* BridgeSDKTests.xctest */,
+				80C5F1981B66C4D700011B49 /* BridgeSDKIntegration.app */,
+				80C5F19A1B66C4D700011B49 /* BridgeSDKIntegrationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -175,18 +207,28 @@
 				80855FAB19BFAA36006601C7 /* Main.storyboard */,
 				80A7318319C9D3F8007FE828 /* SignUpSignIn.storyboard */,
 				809BE5B319DB4A9E00A8E72F /* UserProfile.storyboard */,
+				8009F9E21ACB461700698B50 /* Consent.storyboard */,
 				800E798A19EDE22300EEE612 /* Survey.storyboard */,
 				8053B61F19FEF2D900A2E6C4 /* Schedule.storyboard */,
+				60CAA6F41AFABA8B00DE3305 /* Tasks.storyboard */,
 				80A7318719C9D61E007FE828 /* SignUpSignInViewController.h */,
 				80A7318819C9D61E007FE828 /* SignUpSignInViewController.m */,
 				809BE5AD19DB49C500A8E72F /* UserProfileViewController.h */,
 				809BE5AE19DB49C500A8E72F /* UserProfileViewController.m */,
+				8009F9EC1ACB47C400698B50 /* ConsentViewController.h */,
+				8009F9ED1ACB47C400698B50 /* ConsentViewController.m */,
 				800E798D19EDE25600EEE612 /* SurveyViewController.h */,
 				800E798E19EDE25600EEE612 /* SurveyViewController.m */,
 				8053B62619FEF30D00A2E6C4 /* ScheduleViewController.h */,
 				8053B62719FEF30D00A2E6C4 /* ScheduleViewController.m */,
 				8053B62919FEF69900A2E6C4 /* SchedulesTableViewController.h */,
 				8053B62A19FEF69900A2E6C4 /* SchedulesTableViewController.m */,
+				60CAA70B1AFD2DE900DE3305 /* TasksViewController.h */,
+				60CAA70C1AFD2DE900DE3305 /* TasksViewController.m */,
+				60CAA6FE1AFAD4EB00DE3305 /* TasksTableViewController.h */,
+				60CAA6FF1AFAD4EB00DE3305 /* TasksTableViewController.m */,
+				60CAA7011AFAD50F00DE3305 /* TaskViewController.h */,
+				60CAA7021AFAD50F00DE3305 /* TaskViewController.m */,
 				60F1E4271A424E6E009B380E /* ActivitiesTableViewController.h */,
 				60F1E4281A424E6E009B380E /* ActivitiesTableViewController.m */,
 				60F1E42E1A425D8F009B380E /* ActivityViewController.h */,
@@ -325,6 +367,20 @@
 			remoteRef = 800E79A619F18DB200EEE612 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		80C5F1981B66C4D700011B49 /* BridgeSDKIntegration.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = BridgeSDKIntegration.app;
+			remoteRef = 80C5F1971B66C4D700011B49 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		80C5F19A1B66C4D700011B49 /* BridgeSDKIntegrationTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = BridgeSDKIntegrationTests.xctest;
+			remoteRef = 80C5F1991B66C4D700011B49 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -336,10 +392,12 @@
 				8053B62119FEF2D900A2E6C4 /* Schedule.storyboard in Resources */,
 				800E79B219F1B1FE00EEE612 /* Main.storyboard in Resources */,
 				800E79B319F1B1FE00EEE612 /* SignUpSignIn.storyboard in Resources */,
+				8009F9E41ACB461700698B50 /* Consent.storyboard in Resources */,
 				800E79B419F1B1FE00EEE612 /* UserProfile.storyboard in Resources */,
 				800E79B519F1B1FE00EEE612 /* Survey.storyboard in Resources */,
 				800E79AB19F1987F00EEE612 /* cat.jpg in Resources */,
 				80855FAF19BFAA36006601C7 /* Images.xcassets in Resources */,
+				60CAA6F51AFABA8B00DE3305 /* Tasks.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,6 +417,9 @@
 			files = (
 				808822881A01993A003E78BF /* SchedulesTableViewController.m in Sources */,
 				F5AF857C19F970700007296A /* ViewController.m in Sources */,
+				8009F9EE1ACB47C400698B50 /* ConsentViewController.m in Sources */,
+				60CAA70D1AFD2DE900DE3305 /* TasksViewController.m in Sources */,
+				60CAA7031AFAD50F00DE3305 /* TaskViewController.m in Sources */,
 				80A7318919C9D61E007FE828 /* SignUpSignInViewController.m in Sources */,
 				F5AF857F19F9708A0007296A /* AppDelegate.m in Sources */,
 				60F1E4291A424E6E009B380E /* ActivitiesTableViewController.m in Sources */,
@@ -366,6 +427,7 @@
 				800E798F19EDE25600EEE612 /* SurveyViewController.m in Sources */,
 				8053B62819FEF30D00A2E6C4 /* ScheduleViewController.m in Sources */,
 				809BE5AF19DB49C500A8E72F /* UserProfileViewController.m in Sources */,
+				60CAA7001AFAD4EB00DE3305 /* TasksTableViewController.m in Sources */,
 				60F1E4301A425D8F009B380E /* ActivityViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,6 +461,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		8009F9E21ACB461700698B50 /* Consent.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8009F9E31ACB461700698B50 /* Base */,
+			);
+			name = Consent.storyboard;
+			sourceTree = "<group>";
+		};
 		800E798A19EDE22300EEE612 /* Survey.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -527,10 +597,12 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = BridgeSDKSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -541,10 +613,12 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = BridgeSDKSample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};

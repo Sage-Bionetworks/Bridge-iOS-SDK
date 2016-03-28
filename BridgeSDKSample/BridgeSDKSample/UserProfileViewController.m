@@ -3,13 +3,35 @@
 //  BridgeSDKSample
 //
 //  Created by Erin Mounts on 9/30/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//
+//	Copyright (c) 2014, Sage Bionetworks
+//	All rights reserved.
+//
+//	Redistribution and use in source and binary forms, with or without
+//	modification, are permitted provided that the following conditions are met:
+//	    * Redistributions of source code must retain the above copyright
+//	      notice, this list of conditions and the following disclaimer.
+//	    * Redistributions in binary form must reproduce the above copyright
+//	      notice, this list of conditions and the following disclaimer in the
+//	      documentation and/or other materials provided with the distribution.
+//	    * Neither the name of Sage Bionetworks nor the names of BridgeSDk's
+//		  contributors may be used to endorse or promote products derived from
+//		  this software without specific prior written permission.
+//
+//	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
+//	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
 #import "UserProfileViewController.h"
 @import BridgeSDK;
-
-static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
 
 // Add support for custom fields in SBBUserProfile. Custom fields must be of type NSString *
 // and must be configured in the Bridge study before use.
@@ -38,7 +60,7 @@ static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
 
 @end
 
-@interface UserProfileViewController ()<UIPickerViewDataSource, UIPickerViewDelegate>
+@interface UserProfileViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *emailAddressTextField;
 @property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
@@ -46,14 +68,11 @@ static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
 @property (weak, nonatomic) IBOutlet UITextField *lastNameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *phoneTextField;
 @property (weak, nonatomic) IBOutlet UISwitch *canRecontactSwitch;
-@property (weak, nonatomic) IBOutlet UIImageView *signatureImageView;
-@property (weak, nonatomic) IBOutlet UIPickerView *scopePickerView;
+@property (weak, nonatomic) IBOutlet UITextField *externalIDTextField;
 
 - (IBAction)didTouchLoadButton:(id)sender;
 - (IBAction)didTouchUpdateButton:(id)sender;
-
-- (IBAction)didTouchGiveButton:(id)sender;
-- (IBAction)didTouchChangeButton:(id)sender;
+- (IBAction)didTouchSetButton:(id)sender;
 
 @end
 
@@ -62,8 +81,6 @@ static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    NSInteger scope = [[NSUserDefaults standardUserDefaults] integerForKey:kSBBConsentSharingScopeKey];
-    [_scopePickerView selectRow:scope inComponent:0 animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -94,7 +111,7 @@ static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
 }
 
 - (IBAction)didTouchLoadButton:(id)sender {
-    [SBBComponent(SBBProfileManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
+    [SBBComponent(SBBUserManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         if (userProfile) {
             SBBUserProfile *profile = userProfile;
             [self updateWithProfile:profile];
@@ -113,80 +130,18 @@ static NSString *kSBBConsentSharingScopeKey = @"SBBConsentSharingScope";
     profile.phone = _phoneTextField.text;
     profile.can_be_recontacted = [[NSNumber numberWithBool:_canRecontactSwitch.on] stringValue];
     
-    [SBBComponent(SBBProfileManager) updateUserProfileWithProfile:profile completion:^(id responseObject, NSError *error) {
+    [SBBComponent(SBBUserManager) updateUserProfileWithProfile:profile completion:^(id responseObject, NSError *error) {
         NSLog(@"%@", responseObject);
         NSLog(@"Error: %@", error);
     }];
     
 }
 
-- (IBAction)didTouchGiveButton:(id)sender {
-    // Load sample signature from bundle and send it to the server.
-    NSString* imagePath = [[NSBundle bundleForClass:[self class]] pathForResource:@"sample-signature" ofType:@"png"];
-    NSData* imageData = [NSData dataWithContentsOfFile:imagePath];
-    UIImage* image = [[UIImage alloc] initWithData:imageData];
-    
-    NSInteger scope = [_scopePickerView selectedRowInComponent:0];
-    
-    // call server
-    [SBBComponent(SBBConsentManager) consentSignature:@"::name::"
-                                            birthdate:[NSDate dateWithTimeIntervalSinceNow:-946684800.0]
-                                       signatureImage:image
-                                          dataSharing:scope
-                                           completion:^(id responseObject, NSError *error) {
-                                               NSLog(@"%@", responseObject);
-                                               NSLog(@"Error: %@", error);
-                                               if (!error) {
-                                                   [[NSUserDefaults standardUserDefaults] setInteger:scope forKey:kSBBConsentSharingScopeKey];
-                                               }
-                                           }];
-}
-
-- (IBAction)didTouchGetButton:(id)sender {
-    [SBBComponent(SBBConsentManager) retrieveConsentSignatureWithCompletion:^(NSString* name, NSString* birthdate,
-                                                                              UIImage* signatureImage, NSError* error) {
-        if (signatureImage != nil) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                _signatureImageView.image = signatureImage;
-            });
-        }
-        NSLog(@"Name: %@", name);
-        NSLog(@"Birthdate: %@", birthdate);
-        NSLog(@"HasSignatureImage: %@", signatureImage != nil ? @"true" : @"false");
-        NSLog(@"Error: %@", error);
-    }];
-}
-
-- (IBAction)didTouchChangeButton:(id)sender {
-    NSInteger scope = [_scopePickerView selectedRowInComponent:0];
-    [SBBComponent(SBBConsentManager) dataSharing:scope completion:^(id responseObject, NSError *error) {
+- (IBAction)didTouchSetButton:(id)sender {
+    [SBBComponent(SBBUserManager) addExternalIdentifier:_externalIDTextField.text completion:^(id responseObject, NSError *error) {
         NSLog(@"%@", responseObject);
         NSLog(@"Error: %@", error);
     }];
-}
-
-#pragma mark - UIPickerViewDataSource
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return 3;
-}
-
-#pragma mark - UIPickerViewDelegate
-
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    static NSString *sharingScopes[] = {
-        @"None",
-        @"This study only",
-        @"All qualified researchers"
-    };
-    return sharingScopes[row];
 }
 
 @end

@@ -34,6 +34,7 @@
 #import "UserProfileViewController.h"
 #import "SurveyViewController.h"
 #import "SchedulesTableViewController.h"
+#import "TasksTableViewController.h"
 #import <BridgeSDK/BridgeSDK.h>
 
 @interface ViewController () <UIActionSheetDelegate>
@@ -70,10 +71,13 @@
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:NSLocalizedString(@"Sign Up/Sign In", @"Sign Up/Sign In"),
                                   NSLocalizedString(@"Sign Out", @"Sign Out"),
-                                  NSLocalizedString(@"Profile & Consent", @"Profile & Consent"),
+                                  NSLocalizedString(@"Simulate Expired Session", @"Simulate Expired Session"),
+                                  NSLocalizedString(@"Profile", @"Profile"),
+                                  NSLocalizedString(@"Consent", @"Consent"),
                                   NSLocalizedString(@"Survey", @"Survey"),
                                   NSLocalizedString(@"Upload", @"Upload"),
                                   NSLocalizedString(@"Schedule", @"Schedule"),
+                                  NSLocalizedString(@"Tasks", @"Tasks"),
                                   nil];
     [actionSheet showFromBarButtonItem:self.moreBarButtonItem animated:YES];
 }
@@ -82,10 +86,13 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
   asCancel = -1,
   asSignUpSignIn,
   asSignOut,
-  asProfileConsent,
+  asExpireSession,
+  asProfile,
+  asConsent,
   asSurvey,
   asUpload,
-  asSchedule
+  asSchedule,
+  asTasks
 };
 
 #pragma mark - Action sheet delegate methods
@@ -119,9 +126,29 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
         }
             break;
             
-        case asProfileConsent:
+        case asExpireSession:
+        {
+            // give it a bogus session token so the Bridge API will return "401 not auth" from the next call
+            // to any endpoint requiring auth, e.g. profile, schedules, surveys, etc.
+            id<SBBAuthManagerProtocol> authMan = SBBComponent(SBBAuthManager);
+            [authMan.authDelegate authManager:authMan didGetSessionToken:@"notAValidSessionToken"];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self didTouchMoreBarButtonitem:nil];
+            });
+        }
+            break;
+            
+        case asProfile:
         {
             UIStoryboard *ups = [UIStoryboard storyboardWithName:@"UserProfile" bundle:nil];
+            UserProfileViewController *upvc = [ups instantiateInitialViewController];
+            [self.navigationController pushViewController:upvc animated:YES];
+        }
+            break;
+            
+        case asConsent:
+        {
+            UIStoryboard *ups = [UIStoryboard storyboardWithName:@"Consent" bundle:nil];
             UserProfileViewController *upvc = [ups instantiateInitialViewController];
             [self.navigationController pushViewController:upvc animated:YES];
         }
@@ -148,14 +175,21 @@ typedef NS_ENUM(NSInteger, _ActionButtons) {
         }
             break;
             
-      case asSchedule:
-      {
-        UIStoryboard *ss = [UIStoryboard storyboardWithName:@"Schedule" bundle:nil];
-        SchedulesTableViewController *stvc = [ss instantiateInitialViewController];
-        [self.navigationController pushViewController:stvc animated:YES];
-      }
-        break;
-        
+        case asSchedule:
+        {
+            UIStoryboard *ss = [UIStoryboard storyboardWithName:@"Schedule" bundle:nil];
+            SchedulesTableViewController *stvc = [ss instantiateInitialViewController];
+            [self.navigationController pushViewController:stvc animated:YES];
+        }
+            break;
+            
+        case asTasks:
+        {
+            UIStoryboard *ss = [UIStoryboard storyboardWithName:@"Tasks" bundle:nil];
+            TasksTableViewController *ttvc = [ss instantiateInitialViewController];
+            [self.navigationController pushViewController:ttvc animated:YES];
+        }
+            break;
         default:
             break;
     }

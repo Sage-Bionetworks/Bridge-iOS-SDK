@@ -1,7 +1,30 @@
 //
 //  SBBSurvey.m
 //
-//  $Id$
+//	Copyright (c) 2014-2016 Sage Bionetworks
+//	All rights reserved.
+//
+//	Redistribution and use in source and binary forms, with or without
+//	modification, are permitted provided that the following conditions are met:
+//	    * Redistributions of source code must retain the above copyright
+//	      notice, this list of conditions and the following disclaimer.
+//	    * Redistributions in binary form must reproduce the above copyright
+//	      notice, this list of conditions and the following disclaimer in the
+//	      documentation and/or other materials provided with the distribution.
+//	    * Neither the name of Sage Bionetworks nor the names of BridgeSDk's
+//		  contributors may be used to endorse or promote products derived from
+//		  this software without specific prior written permission.
+//
+//	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
+//	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to SBBSurvey.h instead.
@@ -37,6 +60,10 @@
 @property (nonatomic, strong) NSNumber* published;
 
 @property (nonatomic, assign) BOOL publishedValue;
+
+@property (nonatomic, strong) NSNumber* schemaRevision;
+
+@property (nonatomic, assign) double schemaRevisionValue;
 
 @property (nonatomic, strong) NSNumber* version;
 
@@ -83,6 +110,16 @@
 	self.published = [NSNumber numberWithBool:value_];
 }
 
+- (double)schemaRevisionValue
+{
+	return [self.schemaRevision doubleValue];
+}
+
+- (void)setSchemaRevisionValue:(double)value_
+{
+	self.schemaRevision = [NSNumber numberWithDouble:value_];
+}
+
 - (double)versionValue
 {
 	return [self.version doubleValue];
@@ -110,6 +147,8 @@
     self.name = [dictionary objectForKey:@"name"];
 
     self.published = [dictionary objectForKey:@"published"];
+
+    self.schemaRevision = [dictionary objectForKey:@"schemaRevision"];
 
     self.version = [dictionary objectForKey:@"version"];
 
@@ -146,6 +185,8 @@
     [dict setObjectIfNotNil:self.name forKey:@"name"];
 
     [dict setObjectIfNotNil:self.published forKey:@"published"];
+
+    [dict setObjectIfNotNil:self.schemaRevision forKey:@"schemaRevision"];
 
     [dict setObjectIfNotNil:self.version forKey:@"version"];
 
@@ -203,6 +244,8 @@
 
         self.published = managedObject.published;
 
+        self.schemaRevision = managedObject.schemaRevision;
+
         self.version = managedObject.version;
 
 		for(NSManagedObject *elementsManagedObj in managedObject.elements)
@@ -248,6 +291,8 @@
     managedObject.name = self.name;
 
     managedObject.published = self.published;
+
+    managedObject.schemaRevision = self.schemaRevision;
 
     managedObject.version = self.version;
 

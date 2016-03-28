@@ -121,19 +121,35 @@
     return YES;
 }
 
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+{
+    return [self initWithDictionaryRepresentation:dictionary objectManager:SBBComponent(SBBObjectManager)];
+}
+
 - (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     if((self = [super init]))
     {
+        self.creatingObjectManager = objectManager;
         [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
     }
     
     return self;
 }
 
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary
+{
+    [self updateWithDictionaryRepresentation:dictionary objectManager:self.creatingObjectManager ?: SBBComponent(SBBObjectManager)];
+}
+
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     self.sourceDictionaryRepresentation = dictionary;
+}
+
+- (NSDictionary *)dictionaryRepresentation
+{
+    return [self dictionaryRepresentationFromObjectManager:self.creatingObjectManager ?: SBBComponent(SBBObjectManager)];
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -213,7 +229,7 @@
 - (id)copyWithZone:(NSZone *)zone
 {
     // Note: ModelObject is not autoreleased because we are in copy method.
-    id<SBBObjectManagerProtocol> oMan = SBBComponent(SBBObjectManager);
+    id<SBBObjectManagerProtocol> oMan = self.creatingObjectManager ?: SBBComponent(SBBObjectManager);
     ModelObject *copy = [[[self class] alloc] initWithDictionaryRepresentation:[self dictionaryRepresentationFromObjectManager:oMan] objectManager:oMan];
     [copy awakeFromDictionaryRepresentationInit];
     

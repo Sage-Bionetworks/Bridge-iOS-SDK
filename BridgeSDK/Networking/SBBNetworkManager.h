@@ -29,6 +29,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "SBBComponent.h"
 
 /*!
@@ -85,6 +86,13 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
 @property (nonatomic) SBBEnvironment environment;
 
 @property (nonatomic, weak) id<NSURLSessionDataDelegate, NSURLSessionDownloadDelegate> backgroundTransferDelegate;
+
+/*!
+ This property tells the network manager whether it should send cookies with its requests.
+ 
+ For network managers communicating with Bridge servers, this should be set to NO. Otherwise defaults to YES.
+ */
+@property (nonatomic, assign) BOOL sendCookies;
 
 #pragma mark - Basic HTTP Methods
 
@@ -227,4 +235,12 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
 - (BOOL) isInternetConnected;
 - (BOOL) isServerReachable;
 
+//@protected
+- (NSURLSessionDataTask *) doDataTask:(NSString*) method
+                            URLString:(NSString*)URLString
+                              headers:(NSDictionary *)headers
+                           parameters:(NSDictionary *)parameters
+                           completion:(SBBNetworkManagerCompletionBlock)completion;
 @end
+
+

@@ -1,7 +1,30 @@
 //
 //  SBBSchedule.m
 //
-//  $Id$
+//	Copyright (c) 2014-2016 Sage Bionetworks
+//	All rights reserved.
+//
+//	Redistribution and use in source and binary forms, with or without
+//	modification, are permitted provided that the following conditions are met:
+//	    * Redistributions of source code must retain the above copyright
+//	      notice, this list of conditions and the following disclaimer.
+//	    * Redistributions in binary form must reproduce the above copyright
+//	      notice, this list of conditions and the following disclaimer in the
+//	      documentation and/or other materials provided with the distribution.
+//	    * Neither the name of Sage Bionetworks nor the names of BridgeSDk's
+//		  contributors may be used to endorse or promote products derived from
+//		  this software without specific prior written permission.
+//
+//	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
+//	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
 // Make changes to SBBSchedule.h instead.
@@ -21,21 +44,29 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (Schedule)
 
-@property (nonatomic, strong) NSString* activityRef;
-
-@property (nonatomic, strong) NSString* activityType;
-
 @property (nonatomic, strong) NSString* cronTrigger;
+
+@property (nonatomic, strong) NSString* delay;
 
 @property (nonatomic, strong) NSDate* endsOn;
 
+@property (nonatomic, strong) NSString* eventId;
+
 @property (nonatomic, strong) NSString* expires;
 
+@property (nonatomic, strong) NSString* interval;
+
 @property (nonatomic, strong) NSString* label;
+
+@property (nonatomic, strong) NSNumber* persistent;
+
+@property (nonatomic, assign) BOOL persistentValue;
 
 @property (nonatomic, strong) NSString* scheduleType;
 
 @property (nonatomic, strong) NSDate* startsOn;
+
+@property (nonatomic, strong) NSArray* times;
 
 @property (nonatomic, strong, readonly) NSArray *activities;
 
@@ -68,27 +99,43 @@
 
 #pragma mark Scalar values
 
+- (BOOL)persistentValue
+{
+	return [self.persistent boolValue];
+}
+
+- (void)setPersistentValue:(BOOL)value_
+{
+	self.persistent = [NSNumber numberWithBool:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.activityRef = [dictionary objectForKey:@"activityRef"];
-
-    self.activityType = [dictionary objectForKey:@"activityType"];
-
     self.cronTrigger = [dictionary objectForKey:@"cronTrigger"];
+
+    self.delay = [dictionary objectForKey:@"delay"];
 
     self.endsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endsOn"]];
 
+    self.eventId = [dictionary objectForKey:@"eventId"];
+
     self.expires = [dictionary objectForKey:@"expires"];
 
+    self.interval = [dictionary objectForKey:@"interval"];
+
     self.label = [dictionary objectForKey:@"label"];
+
+    self.persistent = [dictionary objectForKey:@"persistent"];
 
     self.scheduleType = [dictionary objectForKey:@"scheduleType"];
 
     self.startsOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startsOn"]];
+
+    self.times = [dictionary objectForKey:@"times"];
 
     for(id objectRepresentationForDict in [dictionary objectForKey:@"activities"])
     {
@@ -103,21 +150,27 @@
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
-    [dict setObjectIfNotNil:self.activityRef forKey:@"activityRef"];
-
-    [dict setObjectIfNotNil:self.activityType forKey:@"activityType"];
-
     [dict setObjectIfNotNil:self.cronTrigger forKey:@"cronTrigger"];
+
+    [dict setObjectIfNotNil:self.delay forKey:@"delay"];
 
     [dict setObjectIfNotNil:[self.endsOn ISO8601String] forKey:@"endsOn"];
 
+    [dict setObjectIfNotNil:self.eventId forKey:@"eventId"];
+
     [dict setObjectIfNotNil:self.expires forKey:@"expires"];
 
+    [dict setObjectIfNotNil:self.interval forKey:@"interval"];
+
     [dict setObjectIfNotNil:self.label forKey:@"label"];
+
+    [dict setObjectIfNotNil:self.persistent forKey:@"persistent"];
 
     [dict setObjectIfNotNil:self.scheduleType forKey:@"scheduleType"];
 
     [dict setObjectIfNotNil:[self.startsOn ISO8601String] forKey:@"startsOn"];
+
+    [dict setObjectIfNotNil:self.times forKey:@"times"];
 
     if([self.activities count] > 0)
 	{
@@ -159,21 +212,27 @@
 
     if (self == [super init]) {
 
-        self.activityRef = managedObject.activityRef;
-
-        self.activityType = managedObject.activityType;
-
         self.cronTrigger = managedObject.cronTrigger;
+
+        self.delay = managedObject.delay;
 
         self.endsOn = managedObject.endsOn;
 
+        self.eventId = managedObject.eventId;
+
         self.expires = managedObject.expires;
 
+        self.interval = managedObject.interval;
+
         self.label = managedObject.label;
+
+        self.persistent = managedObject.persistent;
 
         self.scheduleType = managedObject.scheduleType;
 
         self.startsOn = managedObject.startsOn;
+
+        self.times = managedObject.times;
 
 		for(NSManagedObject *activitiesManagedObj in managedObject.activities)
 		{
@@ -205,21 +264,27 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.activityRef = self.activityRef;
-
-    managedObject.activityType = self.activityType;
-
     managedObject.cronTrigger = self.cronTrigger;
+
+    managedObject.delay = self.delay;
 
     managedObject.endsOn = self.endsOn;
 
+    managedObject.eventId = self.eventId;
+
     managedObject.expires = self.expires;
 
+    managedObject.interval = self.interval;
+
     managedObject.label = self.label;
+
+    managedObject.persistent = self.persistent;
 
     managedObject.scheduleType = self.scheduleType;
 
     managedObject.startsOn = self.startsOn;
+
+    managedObject.times = self.times;
 
     if([self.activities count] > 0) {
         [managedObject removeActivitiesObjects];
