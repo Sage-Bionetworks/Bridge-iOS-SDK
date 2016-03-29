@@ -201,10 +201,8 @@
 		8026D69219E892B5008942B0 /* SBBUploadRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026D69019E892B5008942B0 /* SBBUploadRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8026D69319E892B5008942B0 /* SBBUploadRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D69119E892B5008942B0 /* SBBUploadRequest.m */; };
 		8026D69B19EC3F4A008942B0 /* SBBBridgeAPIUnitTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D69A19EC3F4A008942B0 /* SBBBridgeAPIUnitTestCase.m */; };
-		8026D69D19EC4025008942B0 /* SBBUserManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D69C19EC4025008942B0 /* SBBUserManagerUnitTests.m */; };
 		8026D69F19EC465B008942B0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8026D69E19EC465B008942B0 /* libz.dylib */; };
 		8026D6A019EC46E3008942B0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8026D69E19EC465B008942B0 /* libz.dylib */; };
-		8026D6A319EC531F008942B0 /* SBBAuthManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */; };
 		8026D6A519EC56E8008942B0 /* SBBSurveyManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A419EC56E8008942B0 /* SBBSurveyManagerUnitTests.m */; };
 		804545891A1E78EA001D41D4 /* RNCryptor+Namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */; };
 		8045458D1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch in Headers */ = {isa = PBXBuildFile; fileRef = 8045458C1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch */; };
@@ -1779,20 +1777,16 @@
 				8026D69B19EC3F4A008942B0 /* SBBBridgeAPIUnitTestCase.m in Sources */,
 				8026D6A519EC56E8008942B0 /* SBBSurveyManagerUnitTests.m in Sources */,
 				80E60DAB19FB0D7E0053D166 /* SBBScheduleManagerUnitTests.m in Sources */,
-				8026D69D19EC4025008942B0 /* SBBUserManagerUnitTests.m in Sources */,
 				8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObjects.m in Sources */,
 				FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */,
-				8026D6A319EC531F008942B0 /* SBBAuthManagerUnitTests.m in Sources */,
 				602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */,
 				60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */,
 				60FF57371A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m in Sources */,
 				60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */,
-				8026D69D19EC4025008942B0 /* SBBUserManagerUnitTests.m in Sources */,
 				60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */,
 				60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */,
 				8017AF6419D9C3AF001AF9BA /* SBBTestBridgeObjects.m in Sources */,
 				60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */,
-				8026D6A319EC531F008942B0 /* SBBAuthManagerUnitTests.m in Sources */,
 				60FF57351A0AFEA500CE2373 /* _SBBBridgeObject_test.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
