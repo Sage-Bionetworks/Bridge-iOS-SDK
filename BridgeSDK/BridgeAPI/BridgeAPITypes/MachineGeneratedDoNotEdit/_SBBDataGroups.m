@@ -41,7 +41,7 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (DataGroups)
 
-@property (nonatomic, strong) NSSet<NSString *> * dataGroups;
+@property (nonatomic, strong) NSSet<NSString *>* dataGroups;
 
 @end
 
@@ -65,7 +65,7 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.dataGroups = [dictionary objectForKey:@"dataGroups"];
+    self.dataGroups = [NSSet setWithArray:[dictionary objectForKey:@"dataGroups"]];
 
 }
 
@@ -73,7 +73,8 @@
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
-    [dict setObjectIfNotNil:self.dataGroups forKey:@"dataGroups"];
+    NSSortDescriptor *desc = [NSSortDescriptor sortDescriptorWithKey:@"" ascending:YES];
+    [dict setObjectIfNotNil:[self.dataGroups sortedArrayUsingDescriptors:@[desc]] forKey:@"dataGroups"];
 
 	return dict;
 }

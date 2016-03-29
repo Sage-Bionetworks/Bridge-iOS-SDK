@@ -223,12 +223,16 @@ static NSString *dynamicGetterIMP(id self, SEL _cmd)
 <$if Attribute.isReadonly$>
     <$if Attribute.hasDateAttributeType$>
     _<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$elseif Attribute.hasSetAttributeType$>
+    _<$Attribute.name$> = [NSSet setWithArray:[dictionary objectForKey:@"<$Attribute.name$>"]];
     <$else$>
     _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
     <$endif$>
 <$else$>
     <$if Attribute.hasDateAttributeType$>
     self.<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$elseif Attribute.hasSetAttributeType$>
+    self.<$Attribute.name$> = [NSSet setWithArray:[dictionary objectForKey:@"<$Attribute.name$>"]];
     <$else$>
     self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
     <$endif$>
@@ -284,10 +288,12 @@ static NSString *dynamicGetterIMP(id self, SEL _cmd)
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>
     <$if Attribute.hasDateAttributeType$>
     [dict setObjectIfNotNil:[self.<$Attribute.name$> ISO8601String] forKey:@"<$Attribute.name$>"];
+    <$elseif Attribute.hasSetAttributeType$>
+    NSSortDescriptor *desc = [NSSortDescriptor sortDescriptorWithKey:@"" ascending:YES];
+    [dict setObjectIfNotNil:[self.<$Attribute.name$> sortedArrayUsingDescriptors:@[desc]] forKey:@"<$Attribute.name$>"];
     <$else$>
     [dict setObjectIfNotNil:self.<$Attribute.name$> forKey:@"<$Attribute.name$>"];
-    <$endif$>
-	<$endif$><$endif$><$endforeach do$>
+    <$endif$><$endif$><$endif$><$endforeach do$>
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
     <$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0)
 	{

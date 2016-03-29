@@ -1,5 +1,5 @@
 //
-//  SBBCacheManagerTests.m
+//  SBBCacheManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 1/5/15.
@@ -14,14 +14,14 @@
 #import "SBBTestAuthManagerDelegate.h"
 #import "SBBObjectManagerInternal.h"
 
-@interface SBBCacheManagerTests : XCTestCase
+@interface SBBCacheManagerUnitTests : XCTestCase
 
 @property (nonatomic, strong) SBBCacheManager *cacheManager;
 @property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
 
 @end
 
-@implementation SBBCacheManagerTests
+@implementation SBBCacheManagerUnitTests
 
 - (void)setUp {
     [super setUp];

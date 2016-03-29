@@ -1,5 +1,5 @@
 //
-//  SBBObjectManagerTests.m
+//  SBBObjectManagerUnitTests.m
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 9/29/14.
@@ -16,7 +16,7 @@
 #import "SBBTestAuthManagerDelegate.h"
 #import "SBBObjectManagerInternal.h"
 
-@interface SBBObjectManagerTests : XCTestCase
+@interface SBBObjectManagerUnitTests : XCTestCase
 
 @property (nonatomic, strong) NSDictionary *jsonForTests;
 @property (nonatomic, strong) NSDictionary *mappingForObject;
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation SBBObjectManagerTests
+@implementation SBBObjectManagerUnitTests
 
 - (void)setUp {
     [super setUp];

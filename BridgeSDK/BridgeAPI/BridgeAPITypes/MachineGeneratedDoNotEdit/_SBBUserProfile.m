@@ -150,7 +150,7 @@ static NSString *dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSArray *)originalProperties
 {
-    NSMutableArray *props = [@[@"__end_of_properties__"] mutableCopy];
+    NSMutableArray *props = [@[@"email", @"firstName", @"lastName", @"type", @"username", @"__end_of_properties__"] mutableCopy];
     [props removeLastObject];
 
     return props;

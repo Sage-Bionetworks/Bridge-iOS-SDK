@@ -39,6 +39,6 @@
 
 @interface _SBBDataGroups : SBBBridgeObject
 
-@property (nonatomic, strong) NSSet<NSString *> * dataGroups;
+@property (nonatomic, strong) NSSet<NSString *>* dataGroups;
 
 @end

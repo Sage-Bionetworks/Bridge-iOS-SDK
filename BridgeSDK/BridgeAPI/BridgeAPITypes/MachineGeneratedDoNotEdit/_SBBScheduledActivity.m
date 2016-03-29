@@ -34,14 +34,14 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBActivity.h"
+
 @interface _SBBScheduledActivity()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (ScheduledActivity)
-
-@property (nonatomic, strong) SBBActivity* activity;
 
 @property (nonatomic, strong) NSDate* expiresOn;
 
@@ -58,6 +58,10 @@
 @property (nonatomic, strong) NSDate* startedOn;
 
 @property (nonatomic, strong) NSString* status;
+
+@property (nonatomic, strong, readwrite) NSManagedObject *activity;
+
+- (void) setActivity: (NSManagedObject *) activity_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -91,8 +95,6 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.activity = [dictionary objectForKey:@"activity"];
-
     self.expiresOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"expiresOn"]];
 
     self.finishedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"finishedOn"]];
@@ -107,13 +109,19 @@
 
     self.status = [dictionary objectForKey:@"status"];
 
+        NSDictionary *activityDict = [dictionary objectForKey:@"activity"];
+    if(activityDict != nil)
+    {
+        SBBActivity *activityObj = [objectManager objectFromBridgeJSON:activityDict];
+        self.activity = activityObj;
+
+    }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
-
-    [dict setObjectIfNotNil:self.activity forKey:@"activity"];
 
     [dict setObjectIfNotNil:[self.expiresOn ISO8601String] forKey:@"expiresOn"];
 
@@ -129,6 +137,8 @@
 
     [dict setObjectIfNotNil:self.status forKey:@"status"];
 
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.activity] forKey:@"activity"];
+
 	return dict;
 }
 
@@ -136,6 +146,8 @@
 {
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
+
+	[self.activity awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -152,8 +164,6 @@
 
     if (self == [super init]) {
 
-        self.activity = managedObject.activity;
-
         self.expiresOn = managedObject.expiresOn;
 
         self.finishedOn = managedObject.finishedOn;
@@ -168,6 +178,12 @@
 
         self.status = managedObject.status;
 
+            NSManagedObject *activityManagedObj = managedObject.activity;
+        SBBActivity *activityObj = [[SBBActivity alloc] initWithManagedObject:activityManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(activityObj != nil)
+        {
+          self.activity = activityObj;
+        }
     }
 
     return self;
@@ -188,8 +204,7 @@
 {
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
-
-    managedObject.activity = self.activity;
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.expiresOn = self.expiresOn;
 
@@ -205,9 +220,32 @@
 
     managedObject.status = self.status;
 
+    [cacheContext deleteObject:managedObject.activity];
+    NSManagedObject *relMo = [self.activity saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setActivity:relMo];
+
     // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access
+
+- (void) setActivity: (SBBActivity*) activity_ settingInverse: (BOOL) setInverse
+{
+
+    _activity = activity_;
+
+}
+
+- (void) setActivity: (SBBActivity*) activity_
+{
+    [self setActivity: activity_ settingInverse: YES];
+}
+
+- (SBBActivity*) activity
+{
+    return _activity;
+}
+
+@synthesize activity = _activity;
 
 @end
