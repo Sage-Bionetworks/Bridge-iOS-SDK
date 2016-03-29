@@ -128,7 +128,7 @@ extern  NSString * _Nonnull gSBBAppStudy;
  */
 @protocol SBBAuthManagerProtocol <NSObject>
 
-@property (nonatomic, weak) id<SBBAuthManagerDelegateProtocol> authDelegate;
+@property (nonatomic, weak) id<SBBAuthManagerDelegateProtocol> _Nullable authDelegate;
 
 /*!
  * Sign up for an account with an email address, userName, password, and an optional list of data group tags. 

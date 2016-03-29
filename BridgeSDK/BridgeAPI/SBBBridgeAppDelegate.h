@@ -32,6 +32,8 @@
 
 #import <BridgeSDK/SBBNetworkManager.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  * If the app delegate conforms to this protocol then the methods included will be called as appropriate.
  */
@@ -46,7 +48,7 @@
  *
  * @return @YES if the error has been handled by the delegate.
  */
-- (BOOL)handleUnsupportedAppVersionError:(NSError*)error networkManager:(id<SBBNetworkManagerProtocol>)networkManager;
+- (BOOL)handleUnsupportedAppVersionError:(NSError *)error networkManager:(id<SBBNetworkManagerProtocol> _Nullable)networkManager;
 
 @optional
 /**
@@ -59,6 +61,8 @@
  *
  * @return @YES if the error has been handled by the delegate.
  */
-- (BOOL)handleUserNotConsentedError:(NSError*)error sessionInfo:(id)sessionInfo networkManager:(id<SBBNetworkManagerProtocol>)networkManager;
+- (BOOL)handleUserNotConsentedError:(NSError*)error sessionInfo:(id)sessionInfo networkManager:(id<SBBNetworkManagerProtocol> _Nullable)networkManager;
 
 @end
+
+NS_ASSUME_NONNULL_END
