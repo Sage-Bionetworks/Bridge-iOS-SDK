@@ -221,8 +221,8 @@
     managedObject.status = self.status;
 
     [cacheContext deleteObject:managedObject.activity];
-    NSManagedObject *relMo = [self.activity saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject setActivity:relMo];
+    NSManagedObject *relMoActivity = [self.activity saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setActivity:relMoActivity];
 
     // Calling code will handle saving these changes to cacheContext.
 }

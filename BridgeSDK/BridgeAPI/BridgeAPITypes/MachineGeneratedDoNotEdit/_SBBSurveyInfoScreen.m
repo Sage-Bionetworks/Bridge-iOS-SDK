@@ -149,8 +149,8 @@
     managedObject.title = self.title;
 
     [cacheContext deleteObject:managedObject.image];
-    NSManagedObject *relMo = [self.image saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject setImage:relMo];
+    NSManagedObject *relMoImage = [self.image saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setImage:relMoImage];
 
     // Calling code will handle saving these changes to cacheContext.
 }

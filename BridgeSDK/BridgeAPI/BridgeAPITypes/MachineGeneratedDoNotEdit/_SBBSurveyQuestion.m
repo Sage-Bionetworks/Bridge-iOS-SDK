@@ -149,8 +149,8 @@
     managedObject.uiHint = self.uiHint;
 
     [cacheContext deleteObject:managedObject.constraints];
-    NSManagedObject *relMo = [self.constraints saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject setConstraints:relMo];
+    NSManagedObject *relMoConstraints = [self.constraints saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setConstraints:relMoConstraints];
 
     // Calling code will handle saving these changes to cacheContext.
 }

@@ -421,8 +421,8 @@
 	}
 
     [cacheContext deleteObject:managedObject.bridgeSubObjectField];
-    NSManagedObject *relMo = [self.bridgeSubObjectField saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject setBridgeSubObjectField:relMo];
+    NSManagedObject *relMoBridgeSubObjectField = [self.bridgeSubObjectField saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setBridgeSubObjectField:relMoBridgeSubObjectField];
 
     // Calling code will handle saving these changes to cacheContext.
 }

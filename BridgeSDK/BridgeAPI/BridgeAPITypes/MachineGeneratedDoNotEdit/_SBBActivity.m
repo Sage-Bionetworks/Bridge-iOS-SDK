@@ -34,6 +34,10 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBSurveyReference.h"
+#import "SBBSurveyResponseReference.h"
+#import "SBBTaskReference.h"
+
 @interface _SBBActivity()
 
 @end
@@ -49,11 +53,17 @@
 
 @property (nonatomic, strong) NSString* labelDetail;
 
-@property (nonatomic, strong) SBBSurveyReference* survey;
+@property (nonatomic, strong, readwrite) NSManagedObject *survey;
 
-@property (nonatomic, strong) SBBSurveyResponseReference* surveyResponse;
+@property (nonatomic, strong, readwrite) NSManagedObject *surveyResponse;
 
-@property (nonatomic, strong) SBBTaskReference* task;
+@property (nonatomic, strong, readwrite) NSManagedObject *task;
+
+- (void) setSurvey: (NSManagedObject *) survey_ settingInverse: (BOOL) setInverse;
+
+- (void) setSurveyResponse: (NSManagedObject *) surveyResponse_ settingInverse: (BOOL) setInverse;
+
+- (void) setTask: (NSManagedObject *) task_ settingInverse: (BOOL) setInverse;
 
 @end
 
@@ -85,11 +95,27 @@
 
     self.labelDetail = [dictionary objectForKey:@"labelDetail"];
 
-    self.survey = [dictionary objectForKey:@"survey"];
+        NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
+    if(surveyDict != nil)
+    {
+        SBBSurveyReference *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
+        self.survey = surveyObj;
 
-    self.surveyResponse = [dictionary objectForKey:@"surveyResponse"];
+    }
+        NSDictionary *surveyResponseDict = [dictionary objectForKey:@"surveyResponse"];
+    if(surveyResponseDict != nil)
+    {
+        SBBSurveyResponseReference *surveyResponseObj = [objectManager objectFromBridgeJSON:surveyResponseDict];
+        self.surveyResponse = surveyResponseObj;
 
-    self.task = [dictionary objectForKey:@"task"];
+    }
+        NSDictionary *taskDict = [dictionary objectForKey:@"task"];
+    if(taskDict != nil)
+    {
+        SBBTaskReference *taskObj = [objectManager objectFromBridgeJSON:taskDict];
+        self.task = taskObj;
+
+    }
 
 }
 
@@ -105,11 +131,11 @@
 
     [dict setObjectIfNotNil:self.labelDetail forKey:@"labelDetail"];
 
-    [dict setObjectIfNotNil:self.survey forKey:@"survey"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
-    [dict setObjectIfNotNil:self.surveyResponse forKey:@"surveyResponse"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.surveyResponse] forKey:@"surveyResponse"];
 
-    [dict setObjectIfNotNil:self.task forKey:@"task"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
 
 	return dict;
 }
@@ -118,6 +144,10 @@
 {
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
+
+	[self.task awakeFromDictionaryRepresentationInit];
+	[self.survey awakeFromDictionaryRepresentationInit];
+	[self.surveyResponse awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -142,12 +172,24 @@
 
         self.labelDetail = managedObject.labelDetail;
 
-        self.survey = managedObject.survey;
-
-        self.surveyResponse = managedObject.surveyResponse;
-
-        self.task = managedObject.task;
-
+            NSManagedObject *surveyManagedObj = managedObject.survey;
+        SBBSurveyReference *surveyObj = [[SBBSurveyReference alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(surveyObj != nil)
+        {
+          self.survey = surveyObj;
+        }
+            NSManagedObject *surveyResponseManagedObj = managedObject.surveyResponse;
+        SBBSurveyResponseReference *surveyResponseObj = [[SBBSurveyResponseReference alloc] initWithManagedObject:surveyResponseManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(surveyResponseObj != nil)
+        {
+          self.surveyResponse = surveyResponseObj;
+        }
+            NSManagedObject *taskManagedObj = managedObject.task;
+        SBBTaskReference *taskObj = [[SBBTaskReference alloc] initWithManagedObject:taskManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(taskObj != nil)
+        {
+          self.task = taskObj;
+        }
     }
 
     return self;
@@ -168,6 +210,7 @@
 {
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.activityType = self.activityType;
 
@@ -177,15 +220,74 @@
 
     managedObject.labelDetail = self.labelDetail;
 
-    managedObject.survey = self.survey;
+    [cacheContext deleteObject:managedObject.survey];
+    NSManagedObject *relMoSurvey = [self.survey saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setSurvey:relMoSurvey];
 
-    managedObject.surveyResponse = self.surveyResponse;
+    [cacheContext deleteObject:managedObject.surveyResponse];
+    NSManagedObject *relMoSurveyResponse = [self.surveyResponse saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setSurveyResponse:relMoSurveyResponse];
 
-    managedObject.task = self.task;
+    [cacheContext deleteObject:managedObject.task];
+    NSManagedObject *relMoTask = [self.task saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject setTask:relMoTask];
 
     // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access
+
+- (void) setSurvey: (SBBSurveyReference*) survey_ settingInverse: (BOOL) setInverse
+{
+
+    _survey = survey_;
+
+}
+
+- (void) setSurvey: (SBBSurveyReference*) survey_
+{
+    [self setSurvey: survey_ settingInverse: YES];
+}
+
+- (SBBSurveyReference*) survey
+{
+    return _survey;
+}
+
+- (void) setSurveyResponse: (SBBSurveyResponseReference*) surveyResponse_ settingInverse: (BOOL) setInverse
+{
+
+    _surveyResponse = surveyResponse_;
+
+}
+
+- (void) setSurveyResponse: (SBBSurveyResponseReference*) surveyResponse_
+{
+    [self setSurveyResponse: surveyResponse_ settingInverse: YES];
+}
+
+- (SBBSurveyResponseReference*) surveyResponse
+{
+    return _surveyResponse;
+}
+
+- (void) setTask: (SBBTaskReference*) task_ settingInverse: (BOOL) setInverse
+{
+
+    _task = task_;
+
+}
+
+- (void) setTask: (SBBTaskReference*) task_
+{
+    [self setTask: task_ settingInverse: YES];
+}
+
+- (SBBTaskReference*) task
+{
+    return _task;
+}
+
+@synthesize survey = _survey;@synthesize surveyResponse = _surveyResponse;@synthesize task = _task;
 
 @end

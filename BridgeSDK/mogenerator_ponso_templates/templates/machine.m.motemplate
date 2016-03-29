@@ -490,8 +490,8 @@ static NSString *dynamicGetterIMP(id self, SEL _cmd)
 	<$else$>
     <$if ! Relationship.isTransient $><$if Relationship.destinationEntity.userInfo.entityIDKeyPath$>
     <$else$>[cacheContext deleteObject:managedObject.<$Relationship.name$>];
-    NSManagedObject *relMo = [self.<$Relationship.name$> saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-    [managedObject set<$Relationship.name.initialCapitalString$>:relMo];
+    NSManagedObject *relMo<$Relationship.name.initialCapitalString$> = [self.<$Relationship.name$> saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    [managedObject set<$Relationship.name.initialCapitalString$>:relMo<$Relationship.name.initialCapitalString$>];
 	<$endif$><$endif$>
 	<$endif$>
     <$endif$>
