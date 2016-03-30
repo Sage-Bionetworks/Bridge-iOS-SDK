@@ -304,7 +304,9 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     uploadRequest.contentMd5 = [fileData contentMD5];
     // don't use the shared SBBObjectManager--we want to use only SDK default objects for types
     NSDictionary *uploadRequestJSON = [_cleanObjectManager bridgeJSONFromObject:uploadRequest];
-    [self setUploadRequestJSON:uploadRequestJSON forFile:[tempFileURL path]];
+    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+        [self setUploadRequestJSON:uploadRequestJSON forFile:[tempFileURL path]];
+    }];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     [self.networkManager downloadFileFromURLString:kSBBUploadAPI method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:nil taskCompletion:nil];
