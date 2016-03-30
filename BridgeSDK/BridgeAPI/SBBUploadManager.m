@@ -115,13 +115,10 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 {
     NSURL *appSupportDir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] firstObject];
     NSString *bundleName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
-    NSString *tempUploadDirName = [NSTemporaryDirectory() stringByAppendingPathComponent:@"SBBUploadManager"];
-    NSURL *uploadDir = [[appSupportDir URLByAppendingPathComponent:bundleName] URLByAppendingPathComponent:tempUploadDirName];
+    NSURL *uploadDir = [[appSupportDir URLByAppendingPathComponent:bundleName] URLByAppendingPathComponent:@"SBBUploadManager"];
     NSError *error;
-    if ([[NSFileManager defaultManager] createDirectoryAtPath:tempUploadDirName withIntermediateDirectories:YES attributes:nil error:&error]) {
-        uploadDir = [NSURL fileURLWithPath:tempUploadDirName];
-    } else {
-        NSLog(@"Error attempting to create tempUploadDir at path %@:\n%@", tempUploadDirName, error);
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:uploadDir withIntermediateDirectories:YES attributes:nil error:&error]) {
+        NSLog(@"Error attempting to create uploadDir at path %@:\n%@", uploadDir.absoluteURL, error);
     }
     
     return uploadDir;
@@ -307,7 +304,9 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     uploadRequest.contentMd5 = [fileData contentMD5];
     // don't use the shared SBBObjectManager--we want to use only SDK default objects for types
     NSDictionary *uploadRequestJSON = [_cleanObjectManager bridgeJSONFromObject:uploadRequest];
-    [self setUploadRequestJSON:uploadRequestJSON forFile:[tempFileURL path]];
+    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+        [self setUploadRequestJSON:uploadRequestJSON forFile:[tempFileURL path]];
+    }];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     [self.networkManager downloadFileFromURLString:kSBBUploadAPI method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:nil taskCompletion:nil];
