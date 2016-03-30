@@ -204,19 +204,23 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 
 - (void)setUploadRequestJSON:(id)json forFile:(NSString *)fileURLString
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    NSMutableDictionary *uploadRequests = [[defaults dictionaryForKey:kUploadRequestsKey] mutableCopy];
-    if (!uploadRequests) {
-        uploadRequests = [NSMutableDictionary dictionary];
-    }
-    if (json) {
-        [uploadRequests setObject:json forKey:fileURLString];
-    } else {
-        [uploadRequests removeObjectForKey:fileURLString];
-    }
-    [defaults setObject:uploadRequests forKey:kUploadRequestsKey];
-    [defaults synchronize];
+    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        NSMutableDictionary *uploadRequests = [[defaults dictionaryForKey:kUploadRequestsKey] mutableCopy];
+        if (!uploadRequests) {
+            uploadRequests = [NSMutableDictionary dictionary];
+        }
+        if (json) {
+            [uploadRequests setObject:json forKey:fileURLString];
+        } else {
+            [uploadRequests removeObjectForKey:fileURLString];
+        }
+        [defaults setObject:uploadRequests forKey:kUploadRequestsKey];
+        [defaults synchronize];
+        
+    }];
 }
 
 - (SBBUploadRequest *)uploadRequestForFile:(NSString *)fileURLString
