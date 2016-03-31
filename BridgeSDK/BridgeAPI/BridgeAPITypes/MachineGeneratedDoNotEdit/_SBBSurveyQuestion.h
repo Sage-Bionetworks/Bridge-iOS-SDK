@@ -33,8 +33,6 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyElement.h"
 
-#import "SBBSurveyConstraints.h"
-
 @class SBBSurveyConstraints;
 
 @protocol _SBBSurveyQuestion

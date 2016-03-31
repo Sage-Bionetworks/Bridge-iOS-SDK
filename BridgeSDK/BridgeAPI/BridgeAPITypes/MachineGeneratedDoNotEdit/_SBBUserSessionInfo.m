@@ -34,7 +34,10 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBConsentStatus.h"
+
 @interface _SBBUserSessionInfo()
+@property (nonatomic, strong, readwrite) NSArray *consentStatuses;
 
 @end
 
@@ -44,8 +47,6 @@
 @property (nonatomic, strong) NSNumber* authenticated;
 
 @property (nonatomic, assign) BOOL authenticatedValue;
-
-@property (nonatomic, strong) NSDictionary<NSString *, SBBConsentStatus *>* consentStatuses;
 
 @property (nonatomic, strong) NSNumber* consented;
 
@@ -70,6 +71,14 @@
 @property (nonatomic, assign) BOOL signedMostRecentConsentValue;
 
 @property (nonatomic, strong) NSString* username;
+
+@property (nonatomic, strong, readonly) NSArray *consentStatuses;
+
+- (void)addConsentStatusesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)addConsentStatusesObject:(NSManagedObject *)value_;
+- (void)removeConsentStatusesObjects;
+- (void)removeConsentStatusesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
+- (void)removeConsentStatusesObject:(NSManagedObject *)value_;
 
 @end
 
@@ -135,8 +144,6 @@
 
     self.authenticated = [dictionary objectForKey:@"authenticated"];
 
-    self.consentStatuses = [dictionary objectForKey:@"consentStatuses"];
-
     self.consented = [dictionary objectForKey:@"consented"];
 
     self.dataGroups = [dictionary objectForKey:@"dataGroups"];
@@ -155,6 +162,13 @@
 
     self.username = [dictionary objectForKey:@"username"];
 
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"consentStatuses"])
+    {
+        SBBConsentStatus *consentStatusesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+
+        [self addConsentStatusesObject:consentStatusesObj];
+    }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -162,8 +176,6 @@
   NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
 
     [dict setObjectIfNotNil:self.authenticated forKey:@"authenticated"];
-
-    [dict setObjectIfNotNil:self.consentStatuses forKey:@"consentStatuses"];
 
     [dict setObjectIfNotNil:self.consented forKey:@"consented"];
 
@@ -183,6 +195,18 @@
 
     [dict setObjectIfNotNil:self.username forKey:@"username"];
 
+    if([self.consentStatuses count] > 0)
+	{
+
+		NSMutableArray *consentStatusesRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.consentStatuses count]];
+		for(SBBConsentStatus *obj in self.consentStatuses)
+		{
+			[consentStatusesRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+		}
+		[dict setObjectIfNotNil:consentStatusesRepresentationsForDictionary forKey:@"consentStatuses"];
+
+	}
+
 	return dict;
 }
 
@@ -190,6 +214,11 @@
 {
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
+
+	for(SBBConsentStatus *consentStatusesObj in self.consentStatuses)
+	{
+		[consentStatusesObj awakeFromDictionaryRepresentationInit];
+	}
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -207,8 +236,6 @@
     if (self == [super init]) {
 
         self.authenticated = managedObject.authenticated;
-
-        self.consentStatuses = managedObject.consentStatuses;
 
         self.consented = managedObject.consented;
 
@@ -228,6 +255,14 @@
 
         self.username = managedObject.username;
 
+		for(NSManagedObject *consentStatusesManagedObj in managedObject.consentStatuses)
+		{
+            SBBConsentStatus *consentStatusesObj = [[SBBConsentStatus alloc] initWithManagedObject:consentStatusesManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if(consentStatusesObj != nil)
+            {
+                [self addConsentStatusesObject:consentStatusesObj];
+            }
+		}
     }
 
     return self;
@@ -248,10 +283,9 @@
 {
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.authenticated = self.authenticated;
-
-    managedObject.consentStatuses = self.consentStatuses;
 
     managedObject.consented = self.consented;
 
@@ -271,9 +305,94 @@
 
     managedObject.username = self.username;
 
+    if([self.consentStatuses count] > 0) {
+        for (SBBConsentStatus *obj in self.consentStatuses) {
+            // see if a managed object for obj is already in the relationship
+            BOOL alreadyInRelationship = NO;
+            __block NSManagedObject *relMo = nil;
+            NSString *keyPath = @"subpopulationGuid";
+            NSString *objectId = obj.subpopulationGuid;
+            while ([objectId isKindOfClass:[NSArray class]]) {
+                objectId = ((NSArray *)objectId).firstObject;
+            }
+
+            for (NSManagedObject *mo in managedObject.consentStatuses) {
+                if ([[mo valueForKeyPath:keyPath] isEqualToString:objectId]) {
+                    relMo = mo;
+                    alreadyInRelationship = YES;
+                    break;
+                }
+            }
+
+            // if not, check if one exists but just isn't in the relationship yet
+            if (!relMo) {
+                NSEntityDescription *relEntity = [NSEntityDescription entityForName:@"ConsentStatus" inManagedObjectContext:cacheContext];
+                NSFetchRequest *request = [[NSFetchRequest alloc] init];
+                [request setEntity:relEntity];
+
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
+                [request setPredicate:predicate];
+
+                NSError *error;
+                NSArray *objects = [cacheContext executeFetchRequest:request error:&error];
+                if (objects.count) {
+                    relMo = [objects firstObject];
+                }
+            }
+
+            // if still not, create one
+            if (!relMo) {
+                relMo = [NSEntityDescription insertNewObjectForEntityForName:@"ConsentStatus" inManagedObjectContext:cacheContext];
+            }
+
+            // update it from obj
+            [obj updateManagedObject:relMo withObjectManager:objectManager cacheManager:cacheManager];
+
+            // add to relationship if not already in it
+            if (!alreadyInRelationship) {
+                [managedObject addConsentStatusesObject:relMo];
+            }
+        }
+	}
+
     // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access
+
+- (void)addConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse
+{
+    if(self.consentStatuses == nil)
+	{
+
+		self.consentStatuses = [NSMutableArray array];
+
+	}
+
+	[(NSMutableArray *)self.consentStatuses addObject:value_];
+
+}
+- (void)addConsentStatusesObject:(SBBConsentStatus*)value_
+{
+    [self addConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: YES];
+}
+
+- (void)removeConsentStatusesObjects
+{
+
+	self.consentStatuses = [NSMutableArray array];
+
+}
+
+- (void)removeConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse
+{
+
+    [(NSMutableArray *)self.consentStatuses removeObject:value_];
+}
+
+- (void)removeConsentStatusesObject:(SBBConsentStatus*)value_
+{
+    [self removeConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: YES];
+}
 
 @end

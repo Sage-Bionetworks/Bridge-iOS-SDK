@@ -33,8 +33,6 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-#import "SBBImage.h"
-
 @class SBBImage;
 
 @protocol _SBBSurveyQuestionOption

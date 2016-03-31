@@ -46,7 +46,7 @@
         [expectAddedOptionalSubpop fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout creating test subpopulations: %@", error);
         }
@@ -84,7 +84,7 @@
     }
     
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout deleting test subpopulations: %@", error);
         }
@@ -203,7 +203,7 @@
         }
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout registering subpop consent signature: %@", error);
         }
@@ -229,7 +229,7 @@
             [expectReceived fulfill];
         }];
         
-        [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
             if (error) {
                 NSLog(@"Timeout getting subpop consent signature: %@", error);
             }
@@ -258,7 +258,7 @@
         [expectRetrieved fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout retrieving consent signature: %@", error);
         }
@@ -294,7 +294,7 @@
         }
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout withdrawing consent: %@", error);
         }

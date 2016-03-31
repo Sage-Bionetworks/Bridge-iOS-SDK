@@ -33,8 +33,6 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyElement.h"
 
-#import "SBBImage.h"
-
 @class SBBImage;
 
 @protocol _SBBSurveyInfoScreen

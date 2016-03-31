@@ -33,8 +33,6 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-#import "SBBSurvey.h"
-
 @class SBBSurveyAnswer;
 @class SBBSurvey;
 

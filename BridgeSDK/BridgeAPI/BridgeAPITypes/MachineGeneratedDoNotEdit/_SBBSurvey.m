@@ -297,11 +297,53 @@
     managedObject.version = self.version;
 
     if([self.elements count] > 0) {
-        [managedObject removeElementsObjects];
-		for(SBBSurveyElement *obj in self.elements) {
-            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject addElementsObject:relMo];
-		}
+        for (SBBSurveyElement *obj in self.elements) {
+            // see if a managed object for obj is already in the relationship
+            BOOL alreadyInRelationship = NO;
+            __block NSManagedObject *relMo = nil;
+            NSString *keyPath = @"guid";
+            NSString *objectId = obj.guid;
+            while ([objectId isKindOfClass:[NSArray class]]) {
+                objectId = ((NSArray *)objectId).firstObject;
+            }
+
+            for (NSManagedObject *mo in managedObject.elements) {
+                if ([[mo valueForKeyPath:keyPath] isEqualToString:objectId]) {
+                    relMo = mo;
+                    alreadyInRelationship = YES;
+                    break;
+                }
+            }
+
+            // if not, check if one exists but just isn't in the relationship yet
+            if (!relMo) {
+                NSEntityDescription *relEntity = [NSEntityDescription entityForName:@"SurveyElement" inManagedObjectContext:cacheContext];
+                NSFetchRequest *request = [[NSFetchRequest alloc] init];
+                [request setEntity:relEntity];
+
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
+                [request setPredicate:predicate];
+
+                NSError *error;
+                NSArray *objects = [cacheContext executeFetchRequest:request error:&error];
+                if (objects.count) {
+                    relMo = [objects firstObject];
+                }
+            }
+
+            // if still not, create one
+            if (!relMo) {
+                relMo = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyElement" inManagedObjectContext:cacheContext];
+            }
+
+            // update it from obj
+            [obj updateManagedObject:relMo withObjectManager:objectManager cacheManager:cacheManager];
+
+            // add to relationship if not already in it
+            if (!alreadyInRelationship) {
+                [managedObject addElementsObject:relMo];
+            }
+        }
 	}
 
     // Calling code will handle saving these changes to cacheContext.
