@@ -166,7 +166,7 @@ static void dynamicSetterIMP(id self, SEL _cmd, id value)
     }
 }
 
-static NSString *dynamicGetterIMP(id self, SEL _cmd)
+static id dynamicGetterIMP(id self, SEL _cmd)
 {
     objc_property_t property = [[self class] propertyFromSelector:_cmd];
     return [[self customFields] objectForKey:nameForProperty(property)];
@@ -205,6 +205,26 @@ static NSString *dynamicGetterIMP(id self, SEL _cmd)
     }
     
     return [super resolveInstanceMethod:sel];
+}
+
+- (NSString *)typeEncodingForPropertyName:(NSString *)propertyName
+{
+    objc_property_t theProperty = class_getProperty([self class], [propertyName UTF8String]);
+    if (theProperty == NULL) {
+        return nil;
+    }
+
+    const char *propertyAttrs = property_getAttributes(theProperty);
+    NSString *propertyAttributes = [NSString stringWithCString:propertyAttrs encoding:NSUTF8StringEncoding];
+    NSArray *attributeList = [propertyAttributes componentsSeparatedByString:@","];
+    NSString *typeEncoding = [attributeList[0] substringFromIndex:1];
+
+    return typeEncoding;
+}
+
+- (BOOL)typeIsNSString:(NSString *)propertyName
+{
+    return [[self typeEncodingForPropertyName:propertyName] isEqualToString:@"@\"NSString\""];
 }
 
 - (NSArray *)originalProperties
@@ -268,10 +288,14 @@ static NSString *dynamicGetterIMP(id self, SEL _cmd)
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.originalProperties];
     NSArray *customProperties = [dictionary.allKeys filteredArrayUsingPredicate:pred];
     for (NSString *propertyName in customProperties) {
-        // assuming custom properties are not readonly, and why would they be, after all?
-        // ...also assume they are not something like NSDates that have to be handled funkily
-        // ...and that they are not using custom setter names
-        NSString *value = [dictionary objectForKey:propertyName];
+        // Assuming custom properties are not readonly, and why would they be, after all?
+        // ...also assume they are JSON types (NSString, NSNumber, NSNull, NSArray<JSON-types>, NSDictionary<JSON-types>)
+        // ...and that they are not using custom setter names.
+        id value = [dictionary objectForKey:propertyName];
+        if (![self typeIsNSString:propertyName]) {
+            // Custom properties are always serialized as JSON NSStrings.
+            value = [NSJSONSerialization JSONObjectWithData:[value dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        }
         NSString *camelizedProp = [[[propertyName substringToIndex:1] uppercaseString] stringByAppendingString:[propertyName substringFromIndex:1]];
         NSString *setterName = [NSString stringWithFormat:@"set%@:", camelizedProp];
         SEL setter = NSSelectorFromString(setterName);
@@ -318,7 +342,16 @@ static NSString *dynamicGetterIMP(id self, SEL _cmd)
 
     <$if userInfo.isExtendable$>
     // add in the custom fields
-    [dict addEntriesFromDictionary:[self customFields]];
+    NSDictionary *customFields = [self customFields];
+    for (NSString *propertyName in [customFields allKeys]) {
+        id value = customFields[propertyName];
+        if (![self typeIsNSString:propertyName]) {
+            // Custom properties are always serialized as JSON NSStrings.
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value options:0 error:nil];
+            value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+        [dict setValue:value forKey:propertyName];
+    }
     <$endif$>
 
 	return dict;

@@ -194,7 +194,9 @@
 
 - (void) handleSBBError
 {
+#if DEBUG
     NSLog(@"SBB ERROR GENERATED: %@", self);
+#endif
 }
 
 @end

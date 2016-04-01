@@ -180,7 +180,9 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     
     NSEntityDescription *entity = [self.managedObjectModel.entitiesByName objectForKey:type];
     if (!entity) {
+#if DEBUG
         NSLog(@"Unknown type '%@' attempting to fetch cached object from Bridge JSON:\n%@", type, json);
+#endif
         return nil;
     }
     
@@ -190,9 +192,22 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
         return nil;
     }
     
-    NSString *key = [json valueForKeyPath:keyPath];
+    NSString *key = @"";
+    NSString *syntheticKeyComponentPaths = entity.userInfo[@"syntheticKeyComponentPaths"];
+    if (syntheticKeyComponentPaths) {
+        NSArray *paths = [syntheticKeyComponentPaths componentsSeparatedByString:@","];
+        for (NSString *path in paths) {
+            NSString *value = [json valueForKeyPath:path];
+            key = [key stringByAppendingString:value];
+        }
+    } else {
+        key = [json valueForKeyPath:keyPath];
+    }
+    
     if (!key.length) {
+#if DEBUG
         NSLog(@"Attempt to fetch cached object of type '%@' from Bridge JSON failed; JSON contains no value at the specified key path %@:\n%@", type, keyPath, json);
+#endif
         return nil;
     }
     

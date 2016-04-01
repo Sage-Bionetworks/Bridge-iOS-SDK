@@ -279,6 +279,10 @@
 		80C87F0A1C18E55A00FE8A63 /* _SBBDataGroups.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */; };
 		80C87F0D1C18E61000FE8A63 /* SBBDataGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C87F0B1C18E61000FE8A63 /* SBBDataGroups.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80C87F0E1C18E61000FE8A63 /* SBBDataGroups.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C87F0C1C18E61000FE8A63 /* SBBDataGroups.m */; };
+		80D517311CADCA08002D2C06 /* SBBUserManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D69C19EC4025008942B0 /* SBBUserManagerUnitTests.m */; };
+		80D517321CADCA16002D2C06 /* SBBAuthManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */; };
+		80D517351CADD0A8002D2C06 /* NSObject+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D517331CADD0A8002D2C06 /* NSObject+SBBAdditions.h */; };
+		80D517361CADD0A8002D2C06 /* NSObject+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D517341CADD0A8002D2C06 /* NSObject+SBBAdditions.m */; };
 		80DB6BA01BACB06F0062D1EF /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; };
 		80DB6BA41BACB27C0062D1EF /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; };
 		80DB6BA51BACB27C0062D1EF /* BridgeSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -641,6 +645,8 @@
 		80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBDataGroups.m; sourceTree = "<group>"; };
 		80C87F0B1C18E61000FE8A63 /* SBBDataGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDataGroups.h; sourceTree = "<group>"; };
 		80C87F0C1C18E61000FE8A63 /* SBBDataGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBDataGroups.m; sourceTree = "<group>"; };
+		80D517331CADD0A8002D2C06 /* NSObject+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBBAdditions.h"; sourceTree = "<group>"; };
+		80D517341CADD0A8002D2C06 /* NSObject+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBBAdditions.m"; sourceTree = "<group>"; };
 		80E09AD619F8525C00EB5F0B /* hdocExcludes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = hdocExcludes.txt; path = BridgeSDK/hdocExcludes.txt; sourceTree = "<group>"; };
 		80E60D9D19FAD56C0053D166 /* _SBBSchedule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSchedule.h; sourceTree = "<group>"; };
 		80E60D9E19FAD56C0053D166 /* _SBBSchedule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBSchedule.m; sourceTree = "<group>"; };
@@ -845,6 +851,8 @@
 				8017AF7519DA038D001AF9BA /* NSDate+SBBAdditions.m */,
 				8026D68019E87CF6008942B0 /* NSData+SBBAdditions.h */,
 				8026D68119E87CF6008942B0 /* NSData+SBBAdditions.m */,
+				80D517331CADD0A8002D2C06 /* NSObject+SBBAdditions.h */,
+				80D517341CADD0A8002D2C06 /* NSObject+SBBAdditions.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1312,6 +1320,7 @@
 				80E8196A1A83E89E00513919 /* _SBBSurveyInfoScreen.h in Headers */,
 				8026BD2219C892E40077F3EB /* SBBComponentManager.h in Headers */,
 				60F1E4071A393746009B380E /* SBBSurveyAnswerInternal.h in Headers */,
+				80D517351CADD0A8002D2C06 /* NSObject+SBBAdditions.h in Headers */,
 				800E792219ED73FD00EEE612 /* _SBBBooleanConstraints.h in Headers */,
 				8026D68219E87CF6008942B0 /* NSData+SBBAdditions.h in Headers */,
 				80F7C34319E5DC0D00574800 /* _SBBSurvey.h in Headers */,
@@ -1688,6 +1697,7 @@
 				800E794019ED744000EEE612 /* _SBBIntegerConstraints.m in Sources */,
 				80BA3D9A1C3F19D400AA70FB /* SBBConsentStatus.m in Sources */,
 				800E795619ED74A600EEE612 /* SBBDateConstraints.m in Sources */,
+				80D517361CADD0A8002D2C06 /* NSObject+SBBAdditions.m in Sources */,
 				8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */,
 				FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */,
 				8026BD1E19C883FC0077F3EB /* BridgeSDK.m in Sources */,
@@ -1767,6 +1777,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80D517311CADCA08002D2C06 /* SBBUserManagerUnitTests.m in Sources */,
+				80D517321CADCA16002D2C06 /* SBBAuthManagerUnitTests.m in Sources */,
 				80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */,
 				602EEE631A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m in Sources */,
 				80104A4A19D3631E001F2573 /* MockNetworkManager.m in Sources */,
