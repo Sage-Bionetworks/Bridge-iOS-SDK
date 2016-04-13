@@ -34,6 +34,9 @@
 
 @interface NSDate (SBBAdditions)
 
++ (NSDateFormatter *)ISO8601formatter;
++ (NSDateFormatter *)ISO8601DateOnlyformatter;
+
 + (instancetype)dateWithISO8601String:(NSString *)iso8601string;
 
 - (NSString *)ISO8601String;
