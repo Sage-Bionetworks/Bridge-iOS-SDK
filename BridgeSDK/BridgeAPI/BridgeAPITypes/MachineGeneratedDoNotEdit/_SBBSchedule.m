@@ -44,44 +44,41 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (Schedule)
 
-@property (nonatomic, strong) NSString* cronTrigger;
+@property (nullable, nonatomic, retain) NSString* cronTrigger;
 
-@property (nonatomic, strong) NSString* delay;
+@property (nullable, nonatomic, retain) NSString* delay;
 
-@property (nonatomic, strong) NSDate* endsOn;
+@property (nullable, nonatomic, retain) NSDate* endsOn;
 
-@property (nonatomic, strong) NSString* eventId;
+@property (nullable, nonatomic, retain) NSString* eventId;
 
-@property (nonatomic, strong) NSString* expires;
+@property (nullable, nonatomic, retain) NSString* expires;
 
-@property (nonatomic, strong) NSString* interval;
+@property (nullable, nonatomic, retain) NSString* interval;
 
-@property (nonatomic, strong) NSString* label;
+@property (nullable, nonatomic, retain) NSString* label;
 
-@property (nonatomic, strong) NSNumber* persistent;
+@property (nullable, nonatomic, retain) NSNumber* persistent;
 
-@property (nonatomic, assign) BOOL persistentValue;
+@property (nullable, nonatomic, retain) NSString* scheduleType;
 
-@property (nonatomic, strong) NSString* scheduleType;
+@property (nullable, nonatomic, retain) NSDate* startsOn;
 
-@property (nonatomic, strong) NSDate* startsOn;
+@property (nullable, nonatomic, retain) NSArray* times;
 
-@property (nonatomic, strong) NSArray* times;
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *activities;
 
-@property (nonatomic, strong, readonly) NSArray *activities;
-
-- (void)addActivitiesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)addActivitiesObject:(NSManagedObject *)value_;
-- (void)removeActivitiesObjects;
-- (void)removeActivitiesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)removeActivitiesObject:(NSManagedObject *)value_;
+- (void)addActivitiesObject:(NSManagedObject *)value;
+- (void)removeActivitiesObject:(NSManagedObject *)value;
+- (void)addActivities:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)removeActivities:(NSOrderedSet<NSManagedObject *> *)values;
 
 - (void)insertObject:(NSManagedObject *)value inActivitiesAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromActivitiesAtIndex:(NSUInteger)idx;
-- (void)insertActivities:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)insertActivities:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeActivitiesAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInActivitiesAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
-- (void)replaceActivitiesAtIndexes:(NSIndexSet *)indexes withActivities:(NSArray *)values;
+- (void)replaceActivitiesAtIndexes:(NSIndexSet *)indexes withActivities:(NSArray<NSManagedObject *> *)values;
 
 @end
 
@@ -148,7 +145,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.cronTrigger forKey:@"cronTrigger"];
 
@@ -184,7 +181,7 @@
 
 	}
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -210,7 +207,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.cronTrigger = managedObject.cronTrigger;
 
@@ -236,7 +233,8 @@
 
 		for(NSManagedObject *activitiesManagedObj in managedObject.activities)
 		{
-            SBBActivity *activitiesObj = [[SBBActivity alloc] initWithManagedObject:activitiesManagedObj objectManager:objectManager cacheManager:cacheManager];
+            Class objectClass = [SBBObjectManager bridgeClassFromType:activitiesManagedObj.entity.name];
+            SBBActivity *activitiesObj = [[objectClass alloc] initWithManagedObject:activitiesManagedObj objectManager:objectManager cacheManager:cacheManager];
             if(activitiesObj != nil)
             {
                 [self addActivitiesObject:activitiesObj];
@@ -248,7 +246,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Schedule" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -264,35 +262,63 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.cronTrigger = self.cronTrigger;
+    managedObject.cronTrigger = ((id)self.cronTrigger == [NSNull null]) ? nil : self.cronTrigger;
 
-    managedObject.delay = self.delay;
+    managedObject.delay = ((id)self.delay == [NSNull null]) ? nil : self.delay;
 
-    managedObject.endsOn = self.endsOn;
+    managedObject.endsOn = ((id)self.endsOn == [NSNull null]) ? nil : self.endsOn;
 
-    managedObject.eventId = self.eventId;
+    managedObject.eventId = ((id)self.eventId == [NSNull null]) ? nil : self.eventId;
 
-    managedObject.expires = self.expires;
+    managedObject.expires = ((id)self.expires == [NSNull null]) ? nil : self.expires;
 
-    managedObject.interval = self.interval;
+    managedObject.interval = ((id)self.interval == [NSNull null]) ? nil : self.interval;
 
-    managedObject.label = self.label;
+    managedObject.label = ((id)self.label == [NSNull null]) ? nil : self.label;
 
-    managedObject.persistent = self.persistent;
+    managedObject.persistent = ((id)self.persistent == [NSNull null]) ? nil : self.persistent;
 
-    managedObject.scheduleType = self.scheduleType;
+    managedObject.scheduleType = ((id)self.scheduleType == [NSNull null]) ? nil : self.scheduleType;
 
-    managedObject.startsOn = self.startsOn;
+    managedObject.startsOn = ((id)self.startsOn == [NSNull null]) ? nil : self.startsOn;
 
-    managedObject.times = self.times;
+    managedObject.times = ((id)self.times == [NSNull null]) ? nil : self.times;
 
+    // first make a copy of the existing relationship collection, to iterate through while mutating original
+    id activitiesCopy = managedObject.activities;
+
+    // now remove all items from the existing relationship
+    NSMutableOrderedSet *activitiesSet = [managedObject.activities mutableCopy];
+    [activitiesSet removeAllObjects];
+    managedObject.activities = activitiesSet;
+
+    // now put the "new" items, if any, into the relationship
     if([self.activities count] > 0) {
-        [managedObject removeActivitiesObjects];
 		for(SBBActivity *obj in self.activities) {
-            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject addActivitiesObject:relMo];
-		}
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            }
+            NSMutableOrderedSet *activitiesSet = [managedObject mutableOrderedSetValueForKey:@"activities"];
+            [activitiesSet addObject:relMo];
+            managedObject.activities = activitiesSet;
+
+        }
 	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in activitiesCopy) {
+        if (![relMo valueForKey:@"schedule"]) {
+           [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    activitiesCopy = nil;
 
     // Calling code will handle saving these changes to cacheContext.
 }

@@ -1,5 +1,5 @@
 //
-//  SBBDateTimeConstraints.m
+//  SBBTestBridgeCacheableSubObject.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,29 +27,23 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBDateTimeConstraints.h instead.
+// Make changes to SBBTestBridgeCacheableSubObject.h instead.
 //
 
-#import "_SBBDateTimeConstraints.h"
+#import "_SBBTestBridgeCacheableSubObject.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBDateTimeConstraints()
+@interface _SBBTestBridgeCacheableSubObject()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (DateTimeConstraints)
-
-@property (nullable, nonatomic, retain) NSNumber* allowFuture;
-
-@property (nullable, nonatomic, retain) NSDate* earliestValue;
-
-@property (nullable, nonatomic, retain) NSDate* latestValue;
+@interface NSManagedObject (TestBridgeCacheableSubObject)
 
 @end
 
-@implementation _SBBDateTimeConstraints
+@implementation _SBBTestBridgeCacheableSubObject
 
 - (instancetype)init
 {
@@ -63,39 +57,17 @@
 
 #pragma mark Scalar values
 
-- (BOOL)allowFutureValue
-{
-	return [self.allowFuture boolValue];
-}
-
-- (void)setAllowFutureValue:(BOOL)value_
-{
-	self.allowFuture = [NSNumber numberWithBool:value_];
-}
-
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.allowFuture = [dictionary objectForKey:@"allowFuture"];
-
-    self.earliestValue = [NSDate dateWithISO8601String:[dictionary objectForKey:@"earliestValue"]];
-
-    self.latestValue = [NSDate dateWithISO8601String:[dictionary objectForKey:@"latestValue"]];
-
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
-
-    [dict setObjectIfNotNil:self.allowFuture forKey:@"allowFuture"];
-
-    [dict setObjectIfNotNil:[self.earliestValue ISO8601String] forKey:@"earliestValue"];
-
-    [dict setObjectIfNotNil:[self.latestValue ISO8601String] forKey:@"latestValue"];
 
 	return [dict copy];
 }
@@ -112,19 +84,13 @@
 
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
 {
-    return [NSEntityDescription entityForName:@"DateTimeConstraints" inManagedObjectContext:context];
+    return [NSEntityDescription entityForName:@"TestBridgeCacheableSubObject" inManagedObjectContext:context];
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
     if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
-
-        self.allowFuture = managedObject.allowFuture;
-
-        self.earliestValue = managedObject.earliestValue;
-
-        self.latestValue = managedObject.latestValue;
 
     }
 
@@ -134,7 +100,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"DateTimeConstraints" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"TestBridgeCacheableSubObject" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -146,12 +112,6 @@
 {
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
-
-    managedObject.allowFuture = ((id)self.allowFuture == [NSNull null]) ? nil : self.allowFuture;
-
-    managedObject.earliestValue = ((id)self.earliestValue == [NSNull null]) ? nil : self.earliestValue;
-
-    managedObject.latestValue = ((id)self.latestValue == [NSNull null]) ? nil : self.latestValue;
 
     // Calling code will handle saving these changes to cacheContext.
 }

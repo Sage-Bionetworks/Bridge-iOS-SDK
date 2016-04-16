@@ -43,11 +43,9 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyInfoScreen)
 
-@property (nonatomic, strong) NSString* title;
+@property (nullable, nonatomic, retain) NSString* title;
 
-@property (nonatomic, strong, readwrite) NSManagedObject *image;
-
-- (void) setImage: (NSManagedObject *) image_ settingInverse: (BOOL) setInverse;
+@property (nullable, nonatomic, retain) NSManagedObject *image;
 
 @end
 
@@ -85,13 +83,13 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.title forKey:@"title"];
 
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.image] forKey:@"image"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -114,12 +112,13 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.title = managedObject.title;
 
             NSManagedObject *imageManagedObj = managedObject.image;
-        SBBImage *imageObj = [[SBBImage alloc] initWithManagedObject:imageManagedObj objectManager:objectManager cacheManager:cacheManager];
+        Class imageClass = [SBBObjectManager bridgeClassFromType:imageManagedObj.entity.name];
+        SBBImage *imageObj = [[imageClass alloc] initWithManagedObject:imageManagedObj objectManager:objectManager cacheManager:cacheManager];
         if(imageObj != nil)
         {
           self.image = imageObj;
@@ -130,7 +129,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyInfoScreen" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -146,10 +145,14 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.title = self.title;
+    managedObject.title = ((id)self.title == [NSNull null]) ? nil : self.title;
 
-    [cacheContext deleteObject:managedObject.image];
-    NSManagedObject *relMoImage = [self.image saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    // destination entity Image is not directly cacheable, so delete it and create the replacement
+    if (managedObject.image) {
+        [cacheContext deleteObject:managedObject.image];
+    }
+    NSManagedObject *relMoImage = [self.image createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
     [managedObject setImage:relMoImage];
 
     // Calling code will handle saving these changes to cacheContext.

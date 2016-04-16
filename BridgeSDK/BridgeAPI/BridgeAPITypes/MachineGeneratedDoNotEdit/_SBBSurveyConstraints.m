@@ -44,22 +44,23 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyConstraints)
 
-@property (nonatomic, strong) NSString* dataType;
+@property (nullable, nonatomic, retain) NSString* dataType;
 
-@property (nonatomic, strong, readonly) NSArray *rules;
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *rules;
 
-- (void)addRulesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)addRulesObject:(NSManagedObject *)value_;
-- (void)removeRulesObjects;
-- (void)removeRulesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)removeRulesObject:(NSManagedObject *)value_;
+@property (nullable, nonatomic, retain) NSManagedObject *surveyQuestion;
+
+- (void)addRulesObject:(NSManagedObject *)value;
+- (void)removeRulesObject:(NSManagedObject *)value;
+- (void)addRules:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)removeRules:(NSOrderedSet<NSManagedObject *> *)values;
 
 - (void)insertObject:(NSManagedObject *)value inRulesAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromRulesAtIndex:(NSUInteger)idx;
-- (void)insertRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)insertRules:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeRulesAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
-- (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
+- (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray<NSManagedObject *> *)values;
 
 @end
 
@@ -96,7 +97,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.dataType forKey:@"dataType"];
 
@@ -112,7 +113,7 @@
 
 	}
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -138,13 +139,14 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.dataType = managedObject.dataType;
 
 		for(NSManagedObject *rulesManagedObj in managedObject.rules)
 		{
-            SBBSurveyRule *rulesObj = [[SBBSurveyRule alloc] initWithManagedObject:rulesManagedObj objectManager:objectManager cacheManager:cacheManager];
+            Class objectClass = [SBBObjectManager bridgeClassFromType:rulesManagedObj.entity.name];
+            SBBSurveyRule *rulesObj = [[objectClass alloc] initWithManagedObject:rulesManagedObj objectManager:objectManager cacheManager:cacheManager];
             if(rulesObj != nil)
             {
                 [self addRulesObject:rulesObj];
@@ -156,7 +158,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyConstraints" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -172,15 +174,43 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.dataType = self.dataType;
+    managedObject.dataType = ((id)self.dataType == [NSNull null]) ? nil : self.dataType;
 
+    // first make a copy of the existing relationship collection, to iterate through while mutating original
+    id rulesCopy = managedObject.rules;
+
+    // now remove all items from the existing relationship
+    NSMutableOrderedSet *rulesSet = [managedObject.rules mutableCopy];
+    [rulesSet removeAllObjects];
+    managedObject.rules = rulesSet;
+
+    // now put the "new" items, if any, into the relationship
     if([self.rules count] > 0) {
-        [managedObject removeRulesObjects];
 		for(SBBSurveyRule *obj in self.rules) {
-            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject addRulesObject:relMo];
-		}
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            }
+            NSMutableOrderedSet *rulesSet = [managedObject mutableOrderedSetValueForKey:@"rules"];
+            [rulesSet addObject:relMo];
+            managedObject.rules = rulesSet;
+
+        }
 	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in rulesCopy) {
+        if (![relMo valueForKey:@"surveyConstraints"]) {
+           [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    rulesCopy = nil;
 
     // Calling code will handle saving these changes to cacheContext.
 }

@@ -41,13 +41,15 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyElement)
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, retain) NSString* guid;
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, retain) NSString* identifier;
 
-@property (nonatomic, strong) NSString* prompt;
+@property (nullable, nonatomic, retain) NSString* prompt;
 
-@property (nonatomic, strong) NSString* promptDetail;
+@property (nullable, nonatomic, retain) NSString* promptDetail;
+
+@property (nullable, nonatomic, retain) NSManagedObject *survey;
 
 @end
 
@@ -83,7 +85,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
@@ -93,7 +95,7 @@
 
     [dict setObjectIfNotNil:self.promptDetail forKey:@"promptDetail"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -114,7 +116,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.guid = managedObject.guid;
 
@@ -130,7 +132,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyElement" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -145,13 +147,13 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.guid = self.guid;
+    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
 
-    managedObject.identifier = self.identifier;
+    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
 
-    managedObject.prompt = self.prompt;
+    managedObject.prompt = ((id)self.prompt == [NSNull null]) ? nil : self.prompt;
 
-    managedObject.promptDetail = self.promptDetail;
+    managedObject.promptDetail = ((id)self.promptDetail == [NSNull null]) ? nil : self.promptDetail;
 
     // Calling code will handle saving these changes to cacheContext.
 }

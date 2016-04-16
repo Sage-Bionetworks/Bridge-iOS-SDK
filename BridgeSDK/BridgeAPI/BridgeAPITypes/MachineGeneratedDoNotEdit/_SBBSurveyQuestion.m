@@ -43,11 +43,9 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyQuestion)
 
-@property (nonatomic, strong) NSString* uiHint;
+@property (nullable, nonatomic, retain) NSString* uiHint;
 
-@property (nonatomic, strong, readwrite) NSManagedObject *constraints;
-
-- (void) setConstraints: (NSManagedObject *) constraints_ settingInverse: (BOOL) setInverse;
+@property (nullable, nonatomic, retain) NSManagedObject *constraints;
 
 @end
 
@@ -85,13 +83,13 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
 
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.constraints] forKey:@"constraints"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -114,12 +112,13 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.uiHint = managedObject.uiHint;
 
             NSManagedObject *constraintsManagedObj = managedObject.constraints;
-        SBBSurveyConstraints *constraintsObj = [[SBBSurveyConstraints alloc] initWithManagedObject:constraintsManagedObj objectManager:objectManager cacheManager:cacheManager];
+        Class constraintsClass = [SBBObjectManager bridgeClassFromType:constraintsManagedObj.entity.name];
+        SBBSurveyConstraints *constraintsObj = [[constraintsClass alloc] initWithManagedObject:constraintsManagedObj objectManager:objectManager cacheManager:cacheManager];
         if(constraintsObj != nil)
         {
           self.constraints = constraintsObj;
@@ -130,7 +129,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyQuestion" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -146,10 +145,14 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.uiHint = self.uiHint;
+    managedObject.uiHint = ((id)self.uiHint == [NSNull null]) ? nil : self.uiHint;
 
-    [cacheContext deleteObject:managedObject.constraints];
-    NSManagedObject *relMoConstraints = [self.constraints saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    // destination entity SurveyConstraints is not directly cacheable, so delete it and create the replacement
+    if (managedObject.constraints) {
+        [cacheContext deleteObject:managedObject.constraints];
+    }
+    NSManagedObject *relMoConstraints = [self.constraints createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
     [managedObject setConstraints:relMoConstraints];
 
     // Calling code will handle saving these changes to cacheContext.

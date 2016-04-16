@@ -1,7 +1,8 @@
 //
-//  _SBBUserProfile.h
+//  NSManagedObject+SBBAdditions.h
+//  BridgeSDK
 //
-//	Copyright (c) 2014-2016 Sage Bionetworks
+//	Copyright (c) 2016, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -26,23 +27,10 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBUserProfile.h instead.
-//
 
-#import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+@import CoreData;
+@import Foundation;
 
-@protocol _SBBUserProfile
-
-@end
-
-@interface _SBBUserProfile : SBBBridgeObject
-
-@property (nonatomic, strong) NSString* email;
-
-@property (nonatomic, strong) NSString* firstName;
-
-@property (nonatomic, strong) NSString* lastName;
+@interface NSManagedObject (SBBAdditions)
 
 @end

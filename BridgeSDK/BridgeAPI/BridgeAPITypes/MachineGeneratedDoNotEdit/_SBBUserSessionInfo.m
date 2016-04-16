@@ -44,41 +44,33 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (UserSessionInfo)
 
-@property (nonatomic, strong) NSNumber* authenticated;
+@property (nullable, nonatomic, retain) NSNumber* authenticated;
 
-@property (nonatomic, assign) BOOL authenticatedValue;
+@property (nullable, nonatomic, retain) NSNumber* consented;
 
-@property (nonatomic, strong) NSNumber* consented;
+@property (nullable, nonatomic, retain) NSArray<NSString *>* dataGroups;
 
-@property (nonatomic, assign) BOOL consentedValue;
+@property (nullable, nonatomic, retain) NSNumber* dataSharing;
 
-@property (nonatomic, strong) NSArray<NSString *>* dataGroups;
+@property (nullable, nonatomic, retain) NSString* environment;
 
-@property (nonatomic, strong) NSNumber* dataSharing;
+@property (nullable, nonatomic, retain) NSArray<NSString *>* roles;
 
-@property (nonatomic, assign) BOOL dataSharingValue;
+@property (nullable, nonatomic, retain) NSString* sessionToken;
 
-@property (nonatomic, strong) NSString* environment;
+@property (nullable, nonatomic, retain) NSString* sharingScope;
 
-@property (nonatomic, strong) NSArray<NSString *>* roles;
+@property (nullable, nonatomic, retain) NSNumber* signedMostRecentConsent;
 
-@property (nonatomic, strong) NSString* sessionToken;
+@property (nullable, nonatomic, retain) NSString* username;
 
-@property (nonatomic, strong) NSString* sharingScope;
+@property (nullable, nonatomic, retain) NSSet<NSManagedObject *> *consentStatuses;
 
-@property (nonatomic, strong) NSNumber* signedMostRecentConsent;
+- (void)addConsentStatusesObject:(NSManagedObject *)value;
+- (void)removeConsentStatusesObject:(NSManagedObject *)value;
 
-@property (nonatomic, assign) BOOL signedMostRecentConsentValue;
-
-@property (nonatomic, strong) NSString* username;
-
-@property (nonatomic, strong, readonly) NSArray *consentStatuses;
-
-- (void)addConsentStatusesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)addConsentStatusesObject:(NSManagedObject *)value_;
-- (void)removeConsentStatusesObjects;
-- (void)removeConsentStatusesObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)removeConsentStatusesObject:(NSManagedObject *)value_;
+- (void)addConsentStatuses:(NSSet<NSManagedObject *> *)values;
+- (void)removeConsentStatuses:(NSSet<NSManagedObject *> *)values;
 
 @end
 
@@ -173,7 +165,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.authenticated forKey:@"authenticated"];
 
@@ -207,7 +199,7 @@
 
 	}
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -233,7 +225,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.authenticated = managedObject.authenticated;
 
@@ -257,7 +249,8 @@
 
 		for(NSManagedObject *consentStatusesManagedObj in managedObject.consentStatuses)
 		{
-            SBBConsentStatus *consentStatusesObj = [[SBBConsentStatus alloc] initWithManagedObject:consentStatusesManagedObj objectManager:objectManager cacheManager:cacheManager];
+            Class objectClass = [SBBObjectManager bridgeClassFromType:consentStatusesManagedObj.entity.name];
+            SBBConsentStatus *consentStatusesObj = [[objectClass alloc] initWithManagedObject:consentStatusesManagedObj objectManager:objectManager cacheManager:cacheManager];
             if(consentStatusesObj != nil)
             {
                 [self addConsentStatusesObject:consentStatusesObj];
@@ -269,7 +262,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UserSessionInfo" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -285,75 +278,59 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.authenticated = self.authenticated;
+    managedObject.authenticated = ((id)self.authenticated == [NSNull null]) ? nil : self.authenticated;
 
-    managedObject.consented = self.consented;
+    managedObject.consented = ((id)self.consented == [NSNull null]) ? nil : self.consented;
 
-    managedObject.dataGroups = self.dataGroups;
+    managedObject.dataGroups = ((id)self.dataGroups == [NSNull null]) ? nil : self.dataGroups;
 
-    managedObject.dataSharing = self.dataSharing;
+    managedObject.dataSharing = ((id)self.dataSharing == [NSNull null]) ? nil : self.dataSharing;
 
-    managedObject.environment = self.environment;
+    managedObject.environment = ((id)self.environment == [NSNull null]) ? nil : self.environment;
 
-    managedObject.roles = self.roles;
+    managedObject.roles = ((id)self.roles == [NSNull null]) ? nil : self.roles;
 
-    managedObject.sessionToken = self.sessionToken;
+    managedObject.sessionToken = ((id)self.sessionToken == [NSNull null]) ? nil : self.sessionToken;
 
-    managedObject.sharingScope = self.sharingScope;
+    managedObject.sharingScope = ((id)self.sharingScope == [NSNull null]) ? nil : self.sharingScope;
 
-    managedObject.signedMostRecentConsent = self.signedMostRecentConsent;
+    managedObject.signedMostRecentConsent = ((id)self.signedMostRecentConsent == [NSNull null]) ? nil : self.signedMostRecentConsent;
 
-    managedObject.username = self.username;
+    managedObject.username = ((id)self.username == [NSNull null]) ? nil : self.username;
 
+    // first make a copy of the existing relationship collection, to iterate through while mutating original
+    id consentStatusesCopy = managedObject.consentStatuses;
+
+    // now remove all items from the existing relationship
+    NSMutableSet *consentStatusesSet = [managedObject.consentStatuses mutableCopy];
+    [consentStatusesSet removeAllObjects];
+    managedObject.consentStatuses = consentStatusesSet;
+
+    // now put the "new" items, if any, into the relationship
     if([self.consentStatuses count] > 0) {
-        for (SBBConsentStatus *obj in self.consentStatuses) {
-            // see if a managed object for obj is already in the relationship
-            BOOL alreadyInRelationship = NO;
-            __block NSManagedObject *relMo = nil;
-            NSString *keyPath = @"subpopulationGuid";
-            NSString *objectId = obj.subpopulationGuid;
-            while ([objectId isKindOfClass:[NSArray class]]) {
-                objectId = ((NSArray *)objectId).firstObject;
+		for(SBBConsentStatus *obj in self.consentStatuses) {
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
+            [managedObject addConsentStatusesObject:relMo];
 
-            for (NSManagedObject *mo in managedObject.consentStatuses) {
-                if ([[mo valueForKeyPath:keyPath] isEqualToString:objectId]) {
-                    relMo = mo;
-                    alreadyInRelationship = YES;
-                    break;
-                }
-            }
-
-            // if not, check if one exists but just isn't in the relationship yet
-            if (!relMo) {
-                NSEntityDescription *relEntity = [NSEntityDescription entityForName:@"ConsentStatus" inManagedObjectContext:cacheContext];
-                NSFetchRequest *request = [[NSFetchRequest alloc] init];
-                [request setEntity:relEntity];
-
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
-                [request setPredicate:predicate];
-
-                NSError *error;
-                NSArray *objects = [cacheContext executeFetchRequest:request error:&error];
-                if (objects.count) {
-                    relMo = [objects firstObject];
-                }
-            }
-
-            // if still not, create one
-            if (!relMo) {
-                relMo = [NSEntityDescription insertNewObjectForEntityForName:@"ConsentStatus" inManagedObjectContext:cacheContext];
-            }
-
-            // update it from obj
-            [obj updateManagedObject:relMo withObjectManager:objectManager cacheManager:cacheManager];
-
-            // add to relationship if not already in it
-            if (!alreadyInRelationship) {
-                [managedObject addConsentStatusesObject:relMo];
-            }
         }
 	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in consentStatusesCopy) {
+        if (![relMo valueForKey:@"userSessionInfo"]) {
+           [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    consentStatusesCopy = nil;
 
     // Calling code will handle saving these changes to cacheContext.
 }

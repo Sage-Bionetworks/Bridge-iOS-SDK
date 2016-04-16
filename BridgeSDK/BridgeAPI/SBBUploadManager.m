@@ -437,7 +437,11 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
         // tell the API we done did it
         SBBUploadSession *uploadSession = [self uploadSessionForFile:uploadTask.taskDescription];
         [self setUploadSessionJSON:nil forFile:uploadTask.taskDescription];
-        NSString *ref = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, uploadSession.id];
+        NSString *uploadId = uploadSession.id;
+        if (!uploadId.length) {
+            NSAssert(uploadId, @"uploadId is nil");
+        }
+        NSString *ref = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, uploadId];
         NSMutableDictionary *headers = [NSMutableDictionary dictionary];
         [self.authManager addAuthHeaderToHeaders:headers];
         [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {

@@ -41,15 +41,11 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (MultiValueConstraints)
 
-@property (nonatomic, strong) NSNumber* allowMultiple;
+@property (nullable, nonatomic, retain) NSNumber* allowMultiple;
 
-@property (nonatomic, assign) BOOL allowMultipleValue;
+@property (nullable, nonatomic, retain) NSNumber* allowOther;
 
-@property (nonatomic, strong) NSNumber* allowOther;
-
-@property (nonatomic, assign) BOOL allowOtherValue;
-
-@property (nonatomic, strong) NSArray* enumeration;
+@property (nullable, nonatomic, retain) NSArray* enumeration;
 
 @end
 
@@ -103,7 +99,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.allowMultiple forKey:@"allowMultiple"];
 
@@ -111,7 +107,7 @@
 
     [dict setObjectIfNotNil:self.enumeration forKey:@"enumeration"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -132,7 +128,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.allowMultiple = managedObject.allowMultiple;
 
@@ -146,7 +142,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"MultiValueConstraints" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -161,11 +157,11 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.allowMultiple = self.allowMultiple;
+    managedObject.allowMultiple = ((id)self.allowMultiple == [NSNull null]) ? nil : self.allowMultiple;
 
-    managedObject.allowOther = self.allowOther;
+    managedObject.allowOther = ((id)self.allowOther == [NSNull null]) ? nil : self.allowOther;
 
-    managedObject.enumeration = self.enumeration;
+    managedObject.enumeration = ((id)self.enumeration == [NSNull null]) ? nil : self.enumeration;
 
     // Calling code will handle saving these changes to cacheContext.
 }

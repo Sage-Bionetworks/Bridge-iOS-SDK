@@ -41,13 +41,11 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (DateConstraints)
 
-@property (nonatomic, strong) NSNumber* allowFuture;
+@property (nullable, nonatomic, retain) NSNumber* allowFuture;
 
-@property (nonatomic, assign) BOOL allowFutureValue;
+@property (nullable, nonatomic, retain) NSDate* earliestValue;
 
-@property (nonatomic, strong) NSDate* earliestValue;
-
-@property (nonatomic, strong) NSDate* latestValue;
+@property (nullable, nonatomic, retain) NSDate* latestValue;
 
 @end
 
@@ -91,7 +89,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.allowFuture forKey:@"allowFuture"];
 
@@ -99,7 +97,7 @@
 
     [dict setObjectIfNotNil:[self.latestValue ISO8601String] forKey:@"latestValue"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -120,7 +118,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.allowFuture = managedObject.allowFuture;
 
@@ -134,7 +132,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"DateConstraints" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -149,11 +147,11 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.allowFuture = self.allowFuture;
+    managedObject.allowFuture = ((id)self.allowFuture == [NSNull null]) ? nil : self.allowFuture;
 
-    managedObject.earliestValue = self.earliestValue;
+    managedObject.earliestValue = ((id)self.earliestValue == [NSNull null]) ? nil : self.earliestValue;
 
-    managedObject.latestValue = self.latestValue;
+    managedObject.latestValue = ((id)self.latestValue == [NSNull null]) ? nil : self.latestValue;
 
     // Calling code will handle saving these changes to cacheContext.
 }

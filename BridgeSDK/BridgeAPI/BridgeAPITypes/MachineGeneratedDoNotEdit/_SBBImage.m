@@ -41,15 +41,15 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (Image)
 
-@property (nonatomic, strong) NSNumber* height;
+@property (nullable, nonatomic, retain) NSNumber* height;
 
-@property (nonatomic, assign) double heightValue;
+@property (nullable, nonatomic, retain) NSString* source;
 
-@property (nonatomic, strong) NSString* source;
+@property (nullable, nonatomic, retain) NSNumber* width;
 
-@property (nonatomic, strong) NSNumber* width;
+@property (nullable, nonatomic, retain) NSManagedObject *surveyInfoScreen;
 
-@property (nonatomic, assign) double widthValue;
+@property (nullable, nonatomic, retain) NSManagedObject *surveyQuestionOption;
 
 @end
 
@@ -103,7 +103,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.height forKey:@"height"];
 
@@ -111,7 +111,7 @@
 
     [dict setObjectIfNotNil:self.width forKey:@"width"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -132,7 +132,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.height = managedObject.height;
 
@@ -146,7 +146,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Image" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -161,11 +161,11 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.height = self.height;
+    managedObject.height = ((id)self.height == [NSNull null]) ? nil : self.height;
 
-    managedObject.source = self.source;
+    managedObject.source = ((id)self.source == [NSNull null]) ? nil : self.source;
 
-    managedObject.width = self.width;
+    managedObject.width = ((id)self.width == [NSNull null]) ? nil : self.width;
 
     // Calling code will handle saving these changes to cacheContext.
 }

@@ -41,15 +41,13 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (UploadRequest)
 
-@property (nonatomic, strong) NSNumber* contentLength;
+@property (nullable, nonatomic, retain) NSNumber* contentLength;
 
-@property (nonatomic, assign) int64_t contentLengthValue;
+@property (nullable, nonatomic, retain) NSString* contentMd5;
 
-@property (nonatomic, strong) NSString* contentMd5;
+@property (nullable, nonatomic, retain) NSString* contentType;
 
-@property (nonatomic, strong) NSString* contentType;
-
-@property (nonatomic, strong) NSString* name;
+@property (nullable, nonatomic, retain) NSString* name;
 
 @end
 
@@ -95,7 +93,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.contentLength forKey:@"contentLength"];
 
@@ -105,7 +103,7 @@
 
     [dict setObjectIfNotNil:self.name forKey:@"name"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -126,7 +124,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.contentLength = managedObject.contentLength;
 
@@ -142,7 +140,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UploadRequest" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -157,13 +155,13 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.contentLength = self.contentLength;
+    managedObject.contentLength = ((id)self.contentLength == [NSNull null]) ? nil : self.contentLength;
 
-    managedObject.contentMd5 = self.contentMd5;
+    managedObject.contentMd5 = ((id)self.contentMd5 == [NSNull null]) ? nil : self.contentMd5;
 
-    managedObject.contentType = self.contentType;
+    managedObject.contentType = ((id)self.contentType == [NSNull null]) ? nil : self.contentType;
 
-    managedObject.name = self.name;
+    managedObject.name = ((id)self.name == [NSNull null]) ? nil : self.name;
 
     // Calling code will handle saving these changes to cacheContext.
 }

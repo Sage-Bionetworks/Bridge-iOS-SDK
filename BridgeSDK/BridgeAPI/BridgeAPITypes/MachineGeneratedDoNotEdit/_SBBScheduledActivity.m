@@ -43,25 +43,21 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (ScheduledActivity)
 
-@property (nonatomic, strong) NSDate* expiresOn;
+@property (nullable, nonatomic, retain) NSDate* expiresOn;
 
-@property (nonatomic, strong) NSDate* finishedOn;
+@property (nullable, nonatomic, retain) NSDate* finishedOn;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, retain) NSString* guid;
 
-@property (nonatomic, strong) NSNumber* persistent;
+@property (nullable, nonatomic, retain) NSNumber* persistent;
 
-@property (nonatomic, assign) BOOL persistentValue;
+@property (nullable, nonatomic, retain) NSDate* scheduledOn;
 
-@property (nonatomic, strong) NSDate* scheduledOn;
+@property (nullable, nonatomic, retain) NSDate* startedOn;
 
-@property (nonatomic, strong) NSDate* startedOn;
+@property (nullable, nonatomic, retain) NSString* status;
 
-@property (nonatomic, strong) NSString* status;
-
-@property (nonatomic, strong, readwrite) NSManagedObject *activity;
-
-- (void) setActivity: (NSManagedObject *) activity_ settingInverse: (BOOL) setInverse;
+@property (nullable, nonatomic, retain) NSManagedObject *activity;
 
 @end
 
@@ -121,7 +117,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:[self.expiresOn ISO8601String] forKey:@"expiresOn"];
 
@@ -139,7 +135,7 @@
 
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.activity] forKey:@"activity"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -162,7 +158,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.expiresOn = managedObject.expiresOn;
 
@@ -179,7 +175,8 @@
         self.status = managedObject.status;
 
             NSManagedObject *activityManagedObj = managedObject.activity;
-        SBBActivity *activityObj = [[SBBActivity alloc] initWithManagedObject:activityManagedObj objectManager:objectManager cacheManager:cacheManager];
+        Class activityClass = [SBBObjectManager bridgeClassFromType:activityManagedObj.entity.name];
+        SBBActivity *activityObj = [[activityClass alloc] initWithManagedObject:activityManagedObj objectManager:objectManager cacheManager:cacheManager];
         if(activityObj != nil)
         {
           self.activity = activityObj;
@@ -190,7 +187,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ScheduledActivity" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -206,22 +203,26 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.expiresOn = self.expiresOn;
+    managedObject.expiresOn = ((id)self.expiresOn == [NSNull null]) ? nil : self.expiresOn;
 
-    managedObject.finishedOn = self.finishedOn;
+    managedObject.finishedOn = ((id)self.finishedOn == [NSNull null]) ? nil : self.finishedOn;
 
-    managedObject.guid = self.guid;
+    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
 
-    managedObject.persistent = self.persistent;
+    managedObject.persistent = ((id)self.persistent == [NSNull null]) ? nil : self.persistent;
 
-    managedObject.scheduledOn = self.scheduledOn;
+    managedObject.scheduledOn = ((id)self.scheduledOn == [NSNull null]) ? nil : self.scheduledOn;
 
-    managedObject.startedOn = self.startedOn;
+    managedObject.startedOn = ((id)self.startedOn == [NSNull null]) ? nil : self.startedOn;
 
-    managedObject.status = self.status;
+    managedObject.status = ((id)self.status == [NSNull null]) ? nil : self.status;
 
-    [cacheContext deleteObject:managedObject.activity];
-    NSManagedObject *relMoActivity = [self.activity saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    // destination entity Activity is not directly cacheable, so delete it and create the replacement
+    if (managedObject.activity) {
+        [cacheContext deleteObject:managedObject.activity];
+    }
+    NSManagedObject *relMoActivity = [self.activity createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
     [managedObject setActivity:relMoActivity];
 
     // Calling code will handle saving these changes to cacheContext.

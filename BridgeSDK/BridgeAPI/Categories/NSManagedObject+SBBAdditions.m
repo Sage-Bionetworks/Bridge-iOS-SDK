@@ -28,9 +28,9 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "NSObject+SBBAdditions.h"
+#import "NSManagedObject+SBBAdditions.h"
 
-@implementation NSObject (SBBAdditions)
+@implementation NSManagedObject (SBBAdditions)
 
 #pragma mark key-value coding
 
@@ -43,15 +43,8 @@
         NSString *bareKey = [key substringToIndex:startSubscript.location];
         NSString *indexString = [key substringWithRange:NSMakeRange(startSubscript.location + 1, key.length - startSubscript.location - 2)];
         id containerObject = [self valueForKey:bareKey];
-        if ([containerObject isKindOfClass:[NSArray class]] ||
-            [containerObject isKindOfClass:[NSOrderedSet class]]) {
-            NSUInteger index = [indexString integerValue];
-            if (index >= [containerObject count]) {
-                // not an unknown key, just an unused index--return nil, i.e. not found,
-                // rather than raising an exception
-                return nil;
-            }
-            result = containerObject[index];
+        if ([containerObject isKindOfClass:[NSOrderedSet class]]) {
+            result = containerObject[[indexString integerValue]];
         } else if ([containerObject isKindOfClass:[NSDictionary class]]) {
             result = containerObject[indexString];
         }

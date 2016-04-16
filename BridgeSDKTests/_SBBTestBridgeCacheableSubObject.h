@@ -1,5 +1,5 @@
 //
-//  _SBBUserProfile.h
+//  _SBBTestBridgeCacheableSubObject.h
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,22 +27,16 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBUserProfile.h instead.
+// Make changes to SBBTestBridgeCacheableSubObject.h instead.
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import "SBBTestBridgeSubObject.h"
 
-@protocol _SBBUserProfile
+@protocol _SBBTestBridgeCacheableSubObject
 
 @end
 
-@interface _SBBUserProfile : SBBBridgeObject
-
-@property (nonatomic, strong) NSString* email;
-
-@property (nonatomic, strong) NSString* firstName;
-
-@property (nonatomic, strong) NSString* lastName;
+@interface _SBBTestBridgeCacheableSubObject : SBBTestBridgeSubObject
 
 @end

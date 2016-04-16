@@ -35,6 +35,7 @@
 
 @class SBBBridgeObject_test;
 @class SBBTestBridgeSubObject;
+@class SBBTestBridgeSubObject;
 
 @protocol _SBBTestBridgeObject
 
@@ -86,6 +87,8 @@
 
 @property (nonatomic, strong, readonly) NSArray *bridgeObjectArrayField;
 
+@property (nonatomic, strong, readonly) NSArray *bridgeObjectSetField;
+
 @property (nonatomic, strong, readwrite) SBBTestBridgeSubObject *bridgeSubObjectField;
 
 - (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse;
@@ -100,6 +103,12 @@
 - (void)removeBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInBridgeObjectArrayFieldAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject_test*)value;
 - (void)replaceBridgeObjectArrayFieldAtIndexes:(NSIndexSet *)indexes withBridgeObjectArrayField:(NSArray *)values;
+
+- (void)addBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_ settingInverse: (BOOL) setInverse;
+- (void)addBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_;
+- (void)removeBridgeObjectSetFieldObjects;
+- (void)removeBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_;
 
 - (void) setBridgeSubObjectField: (SBBTestBridgeSubObject*) bridgeSubObjectField_ settingInverse: (BOOL) setInverse;
 

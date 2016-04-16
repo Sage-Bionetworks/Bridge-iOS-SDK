@@ -43,13 +43,11 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (UserProfile)
 
-@property (nonatomic, strong) NSString* email;
+@property (nullable, nonatomic, retain) NSString* email;
 
-@property (nonatomic, strong) NSString* firstName;
+@property (nullable, nonatomic, retain) NSString* firstName;
 
-@property (nonatomic, strong) NSString* lastName;
-
-@property (nonatomic, strong) NSString* username;
+@property (nullable, nonatomic, retain) NSString* lastName;
 
 @end
 
@@ -170,7 +168,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSArray *)originalProperties
 {
-    NSMutableArray *props = [@[@"email", @"firstName", @"lastName", @"type", @"username", @"__end_of_properties__"] mutableCopy];
+    NSMutableArray *props = [@[@"email", @"firstName", @"lastName", @"type", @"__end_of_properties__"] mutableCopy];
     [props removeLastObject];
 
     return props;
@@ -185,8 +183,6 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     self.firstName = [dictionary objectForKey:@"firstName"];
 
     self.lastName = [dictionary objectForKey:@"lastName"];
-
-    self.username = [dictionary objectForKey:@"username"];
 
     // now update from the custom fields
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.originalProperties];
@@ -212,15 +208,13 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.email forKey:@"email"];
 
     [dict setObjectIfNotNil:self.firstName forKey:@"firstName"];
 
     [dict setObjectIfNotNil:self.lastName forKey:@"lastName"];
-
-    [dict setObjectIfNotNil:self.username forKey:@"username"];
 
     // add in the custom fields
     NSDictionary *customFields = [self customFields];
@@ -234,7 +228,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
         [dict setValue:value forKey:propertyName];
     }
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -255,7 +249,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.email = managedObject.email;
 
@@ -263,15 +257,13 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
         self.lastName = managedObject.lastName;
 
-        self.username = managedObject.username;
-
     }
 
     return self;
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UserProfile" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -286,13 +278,11 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.email = self.email;
+    managedObject.email = ((id)self.email == [NSNull null]) ? nil : self.email;
 
-    managedObject.firstName = self.firstName;
+    managedObject.firstName = ((id)self.firstName == [NSNull null]) ? nil : self.firstName;
 
-    managedObject.lastName = self.lastName;
-
-    managedObject.username = self.username;
+    managedObject.lastName = ((id)self.lastName == [NSNull null]) ? nil : self.lastName;
 
     // Calling code will handle saving these changes to cacheContext.
 }

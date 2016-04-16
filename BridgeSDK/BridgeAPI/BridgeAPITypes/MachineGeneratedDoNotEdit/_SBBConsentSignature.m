@@ -41,15 +41,15 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (ConsentSignature)
 
-@property (nonatomic, strong) NSString* birthdate;
+@property (nullable, nonatomic, retain) NSString* birthdate;
 
-@property (nonatomic, strong) NSString* imageData;
+@property (nullable, nonatomic, retain) NSString* imageData;
 
-@property (nonatomic, strong) NSString* imageMimeType;
+@property (nullable, nonatomic, retain) NSString* imageMimeType;
 
-@property (nonatomic, strong) NSString* name;
+@property (nullable, nonatomic, retain) NSString* name;
 
-@property (nonatomic, strong) NSString* scope;
+@property (nullable, nonatomic, retain) NSString* scope;
 
 @end
 
@@ -87,7 +87,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.birthdate forKey:@"birthdate"];
 
@@ -99,7 +99,7 @@
 
     [dict setObjectIfNotNil:self.scope forKey:@"scope"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -120,7 +120,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.birthdate = managedObject.birthdate;
 
@@ -138,7 +138,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ConsentSignature" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -153,15 +153,15 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.birthdate = self.birthdate;
+    managedObject.birthdate = ((id)self.birthdate == [NSNull null]) ? nil : self.birthdate;
 
-    managedObject.imageData = self.imageData;
+    managedObject.imageData = ((id)self.imageData == [NSNull null]) ? nil : self.imageData;
 
-    managedObject.imageMimeType = self.imageMimeType;
+    managedObject.imageMimeType = ((id)self.imageMimeType == [NSNull null]) ? nil : self.imageMimeType;
 
-    managedObject.name = self.name;
+    managedObject.name = ((id)self.name == [NSNull null]) ? nil : self.name;
 
-    managedObject.scope = self.scope;
+    managedObject.scope = ((id)self.scope == [NSNull null]) ? nil : self.scope;
 
     // Calling code will handle saving these changes to cacheContext.
 }

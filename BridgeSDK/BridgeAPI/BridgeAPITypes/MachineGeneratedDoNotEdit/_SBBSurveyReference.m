@@ -41,11 +41,13 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyReference)
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nullable, nonatomic, retain) NSDate* createdOn;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, retain) NSString* guid;
 
-@property (nonatomic, strong) NSString* href;
+@property (nullable, nonatomic, retain) NSString* href;
+
+@property (nullable, nonatomic, retain) NSManagedObject *activityForSurvey;
 
 @end
 
@@ -79,7 +81,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 
@@ -87,7 +89,7 @@
 
     [dict setObjectIfNotNil:self.href forKey:@"href"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -108,7 +110,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.createdOn = managedObject.createdOn;
 
@@ -122,7 +124,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyReference" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -137,11 +139,11 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.createdOn = self.createdOn;
+    managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
 
-    managedObject.guid = self.guid;
+    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
 
-    managedObject.href = self.href;
+    managedObject.href = ((id)self.href == [NSNull null]) ? nil : self.href;
 
     // Calling code will handle saving these changes to cacheContext.
 }

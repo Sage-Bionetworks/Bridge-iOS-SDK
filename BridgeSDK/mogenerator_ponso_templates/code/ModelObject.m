@@ -162,6 +162,14 @@
     self.sourceDictionaryRepresentation = nil;
 }
 
+- (BOOL)isDirectlyCacheableWithContext:(NSManagedObjectContext *)context
+{
+    NSEntityDescription *entity = [self entityForContext:context];
+    NSString *entityIDKeyPath = entity.userInfo[@"entityIDKeyPath"];
+    
+    return (entityIDKeyPath.length > 0);
+}
+
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
 {
     // will be overridden in generated classes that have an entityIDKeyPath defined in their userInfo in the model
@@ -199,7 +207,7 @@
                     [self updateManagedObject:existingObject withObjectManager:objectManager cacheManager:cacheManager];
                 } else {
                     // no existing object found to update, so creating a new one
-                    [self saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+                    [self createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
                 }
             }];
             
@@ -208,7 +216,7 @@
     }
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     // generated subclasses will override this
     return nil;

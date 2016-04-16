@@ -41,21 +41,17 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (ConsentStatus)
 
-@property (nonatomic, strong) NSNumber* consented;
+@property (nullable, nonatomic, retain) NSNumber* consented;
 
-@property (nonatomic, assign) BOOL consentedValue;
+@property (nullable, nonatomic, retain) NSString* name;
 
-@property (nonatomic, strong) NSString* name;
+@property (nullable, nonatomic, retain) NSNumber* required;
 
-@property (nonatomic, strong) NSNumber* required;
+@property (nullable, nonatomic, retain) NSNumber* signedMostRecentConsent;
 
-@property (nonatomic, assign) BOOL requiredValue;
+@property (nullable, nonatomic, retain) NSString* subpopulationGuid;
 
-@property (nonatomic, strong) NSNumber* signedMostRecentConsent;
-
-@property (nonatomic, assign) BOOL signedMostRecentConsentValue;
-
-@property (nonatomic, strong) NSString* subpopulationGuid;
+@property (nullable, nonatomic, retain) NSManagedObject *userSessionInfo;
 
 @end
 
@@ -123,7 +119,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.consented forKey:@"consented"];
 
@@ -135,7 +131,7 @@
 
     [dict setObjectIfNotNil:self.subpopulationGuid forKey:@"subpopulationGuid"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -156,7 +152,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.consented = managedObject.consented;
 
@@ -174,7 +170,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ConsentStatus" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -189,15 +185,15 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.consented = self.consented;
+    managedObject.consented = ((id)self.consented == [NSNull null]) ? nil : self.consented;
 
-    managedObject.name = self.name;
+    managedObject.name = ((id)self.name == [NSNull null]) ? nil : self.name;
 
-    managedObject.required = self.required;
+    managedObject.required = ((id)self.required == [NSNull null]) ? nil : self.required;
 
-    managedObject.signedMostRecentConsent = self.signedMostRecentConsent;
+    managedObject.signedMostRecentConsent = ((id)self.signedMostRecentConsent == [NSNull null]) ? nil : self.signedMostRecentConsent;
 
-    managedObject.subpopulationGuid = self.subpopulationGuid;
+    managedObject.subpopulationGuid = ((id)self.subpopulationGuid == [NSNull null]) ? nil : self.subpopulationGuid;
 
     // Calling code will handle saving these changes to cacheContext.
 }

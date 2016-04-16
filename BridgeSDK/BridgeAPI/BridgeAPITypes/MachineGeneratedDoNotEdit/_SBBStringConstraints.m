@@ -41,15 +41,11 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (StringConstraints)
 
-@property (nonatomic, strong) NSNumber* maxLength;
+@property (nullable, nonatomic, retain) NSNumber* maxLength;
 
-@property (nonatomic, assign) int64_t maxLengthValue;
+@property (nullable, nonatomic, retain) NSNumber* minLength;
 
-@property (nonatomic, strong) NSNumber* minLength;
-
-@property (nonatomic, assign) int64_t minLengthValue;
-
-@property (nonatomic, strong) NSString* pattern;
+@property (nullable, nonatomic, retain) NSString* pattern;
 
 @end
 
@@ -103,7 +99,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.maxLength forKey:@"maxLength"];
 
@@ -111,7 +107,7 @@
 
     [dict setObjectIfNotNil:self.pattern forKey:@"pattern"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -132,7 +128,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.maxLength = managedObject.maxLength;
 
@@ -146,7 +142,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"StringConstraints" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -161,11 +157,11 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.maxLength = self.maxLength;
+    managedObject.maxLength = ((id)self.maxLength == [NSNull null]) ? nil : self.maxLength;
 
-    managedObject.minLength = self.minLength;
+    managedObject.minLength = ((id)self.minLength == [NSNull null]) ? nil : self.minLength;
 
-    managedObject.pattern = self.pattern;
+    managedObject.pattern = ((id)self.pattern == [NSNull null]) ? nil : self.pattern;
 
     // Calling code will handle saving these changes to cacheContext.
 }

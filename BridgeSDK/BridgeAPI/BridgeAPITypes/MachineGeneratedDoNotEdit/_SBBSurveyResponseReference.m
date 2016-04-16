@@ -41,9 +41,11 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyResponseReference)
 
-@property (nonatomic, strong) NSString* href;
+@property (nullable, nonatomic, retain) NSString* href;
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, retain) NSString* identifier;
+
+@property (nullable, nonatomic, retain) NSManagedObject *activity;
 
 @end
 
@@ -75,13 +77,13 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.href forKey:@"href"];
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -102,7 +104,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.href = managedObject.href;
 
@@ -114,7 +116,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponseReference" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -129,9 +131,9 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.href = self.href;
+    managedObject.href = ((id)self.href == [NSNull null]) ? nil : self.href;
 
-    managedObject.identifier = self.identifier;
+    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
 
     // Calling code will handle saving these changes to cacheContext.
 }

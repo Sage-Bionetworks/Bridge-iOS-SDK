@@ -51,7 +51,7 @@
           },
       @{
           @"type": @"ScheduledActivity",
-          @"guid": @"task-1-guid",
+          @"guid": @"task-2-guid",
           @"activity": @{
                   @"activityType": @"task",
                   @"label": @"This is a task",

@@ -51,7 +51,7 @@
           @"longField": @-3,
           @"longLongField": @-4444444444444444,
           @"uShortField": @USHRT_MAX,
-          @"uLongField": @ULONG_MAX,
+          @"uLongField": @0xffffffff,
           @"uLongLongField": @ULLONG_MAX,
           @"floatField": @3.7e-3,
           @"doubleField": @6.022e123,
@@ -112,7 +112,7 @@
     XCTAssert([testObject isKindOfClass:[TestMappedObject class]], @"Creates correct type");
     XCTAssert([testObject.mappedObjectSubField isKindOfClass:[TestMappedSubObject class]], @"Creates correct subtype for Bridge-object field");
     XCTAssert([testObject.mappedObjectArrayField[0] isKindOfClass:[TestMappedSubObject class]], @"Creates correct subtype for Bridge-object array field");
-    XCTAssert([testObject.dateStringField isKindOfClass:[NSString class]] && [testObject.dateStringField isEqualToString:_jsonForTests[@"dateField"]], @"Correctly maps date field as string");
+    XCTAssert([testObject.dateStringField isKindOfClass:[NSString class]] && [[NSDate dateWithISO8601String:testObject.dateStringField] isEqual:[NSDate dateWithISO8601String:_jsonForTests[@"dateField"]]], @"Correctly maps date field as string");
     [_objectManager clearMappingForType:@"TestBridgeSubObject"];
     [_objectManager clearMappingForType:@"TestBridgeObject"];
 }

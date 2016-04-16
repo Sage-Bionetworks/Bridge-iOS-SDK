@@ -45,19 +45,19 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyAnswer)
 
-@property (nonatomic, strong) NSDate* answeredOn;
+@property (nullable, nonatomic, retain) NSDate* answeredOn;
 
-@property (nonatomic, strong) NSArray* answers;
+@property (nullable, nonatomic, retain) NSArray* answers;
 
-@property (nonatomic, strong) NSData* ciphertext;
+@property (nullable, nonatomic, retain) NSData* ciphertext;
 
-@property (nonatomic, strong) NSString* client;
+@property (nullable, nonatomic, retain) NSString* client;
 
-@property (nonatomic, strong) NSNumber* declined;
+@property (nullable, nonatomic, retain) NSNumber* declined;
 
-@property (nonatomic, assign) BOOL declinedValue;
+@property (nullable, nonatomic, retain) NSString* questionGuid;
 
-@property (nonatomic, strong) NSString* questionGuid;
+@property (nullable, nonatomic, retain) NSManagedObject *surveyResponse;
 
 @end
 
@@ -105,7 +105,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:[self.answeredOn ISO8601String] forKey:@"answeredOn"];
 
@@ -117,7 +117,7 @@
 
     [dict setObjectIfNotNil:self.questionGuid forKey:@"questionGuid"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -151,7 +151,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyAnswer" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];

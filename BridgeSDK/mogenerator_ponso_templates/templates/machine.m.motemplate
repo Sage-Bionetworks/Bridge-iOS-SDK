@@ -53,48 +53,36 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (<$name$>)
 <$foreach Attribute noninheritedAttributes do$>
-<$if TemplateVar.arc$>
-<$if Attribute.hasDefinedAttributeType$>@property (nonatomic, strong) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
-<$else$>
-<$if Attribute.hasDefinedAttributeType$>@property (nonatomic, retain) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
-<$endif$>
-<$if Attribute.hasScalarAttributeType$>@property (nonatomic, assign) <$Attribute.scalarAttributeType$> <$Attribute.name$>Value;<$endif$>
+<$if Attribute.hasDefinedAttributeType$>@property (nullable, nonatomic, retain) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
 <$endforeach do$>
-<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
+<$foreach Relationship noninheritedRelationships do$>
 <$if Relationship.isToMany$>
-<$if TemplateVar.arc$>
-@property (nonatomic, strong, readonly) NSArray *<$Relationship.name$>;
-<$else$>
-@property (nonatomic, retain, readonly) NSArray *<$Relationship.name$>;
-<$endif$>
-<$else$>
-<$if Relationship.isTransient $>@property (nonatomic, assign, readwrite) NSManagedObject *<$Relationship.name$>;
-<$else$>
-<$if TemplateVar.arc$>
-@property (nonatomic, strong, readwrite) NSManagedObject *<$Relationship.name$>;
-<$else$>
-@property (nonatomic, retain, readwrite) <NSManagedObject *<$Relationship.name$>;
-<$endif$>
-<$endif$>
-<$endif$><$endif$><$endforeach do$>
-<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
-<$if Relationship.isToMany$>- (void)add<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)add<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value_;
-- (void)remove<$Relationship.name.initialCapitalString$>Objects;
-- (void)remove<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)remove<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value_;
 <$if Relationship.isOrdered$>
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *<$Relationship.name$>;
+<$else$>
+@property (nullable, nonatomic, retain) NSSet<NSManagedObject *> *<$Relationship.name$>;
+<$endif$>
+<$else$>
+@property (nullable, nonatomic, retain) NSManagedObject *<$Relationship.name$>;
+<$endif$><$endforeach do$>
+<$foreach Relationship noninheritedRelationships do$>
+<$if Relationship.isToMany$>- (void)add<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value;
+- (void)remove<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value;
+<$if Relationship.isOrdered$>- (void)add<$Relationship.name.initialCapitalString$>:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)remove<$Relationship.name.initialCapitalString$>:(NSOrderedSet<NSManagedObject *> *)values;
+
 - (void)insertObject:(NSManagedObject *)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx;
 - (void)removeObjectFrom<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx;
-- (void)insert<$Relationship.name.initialCapitalString$>:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)insert<$Relationship.name.initialCapitalString$>:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
 - (void)remove<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
-- (void)replace<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes with<$Relationship.name.initialCapitalString$>:(NSArray *)values;
+- (void)replace<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes with<$Relationship.name.initialCapitalString$>:(NSArray<NSManagedObject *> *)values;
+<$else$>
+- (void)add<$Relationship.name.initialCapitalString$>:(NSSet<NSManagedObject *> *)values;
+- (void)remove<$Relationship.name.initialCapitalString$>:(NSSet<NSManagedObject *> *)values;
 <$endif$>
-<$endif$><$endif$><$endforeach do$>
-<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isToMany$>
-- (void) set<$Relationship.name.initialCapitalString$>: (NSManagedObject *) <$Relationship.name$>_ settingInverse: (BOOL) setInverse;
-<$endif$><$endif$><$endforeach do$>
+<$endif$>
+<$endif$><$endforeach do$>
 @end
 
 @implementation _<$generatedObjectClassName$>
@@ -263,6 +251,11 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     NSString *key = @"";
     for (NSString *path in paths) {
         NSString *value = [dictionary valueForKeyPath:path];
+        if (!value) {
+            // probably creating in CacheManager, so just use provided synthetic key, if any
+            key = [dictionary valueForKeyPath:@"<$userInfo.entityIDKeyPath$>"] ?: @"";
+            break;
+        }
         key = [key stringByAppendingString:value];
     }
 
@@ -308,7 +301,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>
     <$if Attribute.hasDateAttributeType$>
     [dict setObjectIfNotNil:[self.<$Attribute.name$> ISO8601String] forKey:@"<$Attribute.name$>"];
@@ -354,7 +347,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     }
     <$endif$>
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -408,25 +401,42 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
     return self;
 <$else$>
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
+    <$if Attribute.hasScalarAttributeType$><$if Attribute.isUnsigned$>
+        // ensure that unsigned-ness is preserved
+    <$if Attribute.isReadonly$>_<$Attribute.name$> = [NSNumber <$Attribute.scalarFactoryMethodName$>[managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>]];
+    <$else$>
+        self.<$Attribute.name$>Value = [managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>];
+    <$endif$>
+    <$else$>
     <$if Attribute.isReadonly$>
         _<$Attribute.name$> = managedObject.<$Attribute.name$>;
     <$else$>
         self.<$Attribute.name$> = managedObject.<$Attribute.name$>;
+    <$endif$>
+    <$endif$>
+    <$else$>
+    <$if Attribute.isReadonly$>
+        _<$Attribute.name$> = managedObject.<$Attribute.name$>;
+    <$else$>
+        self.<$Attribute.name$> = managedObject.<$Attribute.name$>;
+    <$endif$>
     <$endif$>
 		<$endif$><$endforeach do$>
 		<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
             <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
 		for(NSManagedObject *<$Relationship.name$>ManagedObj in managedObject.<$Relationship.name$>)
 		{
-            <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
+            Class objectClass = [SBBObjectManager bridgeClassFromType:<$Relationship.name$>ManagedObj.entity.name];
+            <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectClass alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
             if(<$Relationship.name$>Obj != nil)
             {
                 [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
             }
 		}<$else$>NSManagedObject *<$Relationship.name$>ManagedObj = managedObject.<$Relationship.name$>;
-        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.generatedObjectClassName$> alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
+        Class <$Relationship.name$>Class = [SBBObjectManager bridgeClassFromType:<$Relationship.name$>ManagedObj.entity.name];
+        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.name$>Class alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
         if(<$Relationship.name$>Obj != nil)
         {
           self.<$Relationship.name$> = <$Relationship.name$>Obj;
@@ -437,7 +447,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 <$endif$>
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"<$name$>" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -464,68 +474,61 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;<$break$><$endif$><$endforeach do$>
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
-    managedObject.<$Attribute.name$> = self.<$Attribute.name$>;
+    managedObject.<$Attribute.name$> = ((id)self.<$Attribute.name$> == [NSNull null]) ? nil : self.<$Attribute.name$>;
 	<$endif$><$endforeach do$>
-    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
-    <$if Relationship.isToMany$><$if (! Relationship.isTransient) $>if([self.<$Relationship.name$> count] > 0) {
-        <$if Relationship.destinationEntity.userInfo.entityIDKeyPath$>for (<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>) {
-            // see if a managed object for obj is already in the relationship
-            BOOL alreadyInRelationship = NO;
-            __block NSManagedObject *relMo = nil;
-            NSString *keyPath = @"<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>";
-            NSString *objectId = obj.<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>;
-            while ([objectId isKindOfClass:[NSArray class]]) {
-                objectId = ((NSArray *)objectId).firstObject;
-            }
+    <$foreach Relationship noninheritedRelationships do$>
+    <$if ! Relationship.userInfo.notInPONSODictionary $>
+    <$if Relationship.isToMany$>
+    <$if ! Relationship.isTransient $>// first make a copy of the existing relationship collection, to iterate through while mutating original
+    id <$Relationship.name$>Copy = managedObject.<$Relationship.name$>;
 
-            for (NSManagedObject *mo in managedObject.<$Relationship.name$>) {
-                if ([[mo valueForKeyPath:keyPath] isEqualToString:objectId]) {
-                    relMo = mo;
-                    alreadyInRelationship = YES;
-                    break;
-                }
-            }
+    // now remove all items from the existing relationship
+    <$if Relationship.isOrdered$>NSMutableOrderedSet<$else$>NSMutableSet<$endif$> *<$Relationship.name$>Set = [managedObject.<$Relationship.name$> mutableCopy];
+    [<$Relationship.name$>Set removeAllObjects];
+    managedObject.<$Relationship.name$> = <$Relationship.name$>Set;
 
-            // if not, check if one exists but just isn't in the relationship yet
-            if (!relMo) {
-                NSEntityDescription *relEntity = [NSEntityDescription entityForName:@"<$Relationship.destinationEntity.name$>" inManagedObjectContext:cacheContext];
-                NSFetchRequest *request = [[NSFetchRequest alloc] init];
-                [request setEntity:relEntity];
-                
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
-                [request setPredicate:predicate];
-                
-                NSError *error;
-                NSArray *objects = [cacheContext executeFetchRequest:request error:&error];
-                if (objects.count) {
-                    relMo = [objects firstObject];
-                }
-            }
-
-            // if still not, create one
-            if (!relMo) {
-                relMo = [NSEntityDescription insertNewObjectForEntityForName:@"<$Relationship.destinationEntity.name$>" inManagedObjectContext:cacheContext];
-            }
-
-            // update it from obj
-            [obj updateManagedObject:relMo withObjectManager:objectManager cacheManager:cacheManager];
-
-            // add to relationship if not already in it
-            if (!alreadyInRelationship) {
-                [managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
-            }
-        }<$else$>[managedObject remove<$Relationship.name.initialCapitalString$>Objects];
+    // now put the "new" items, if any, into the relationship
+    if([self.<$Relationship.name$> count] > 0) {
 		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>) {
-            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
-		}<$endif$>
-	}<$endif$>
-	<$else$>
-    <$if ! Relationship.isTransient $><$if Relationship.destinationEntity.userInfo.entityIDKeyPath$>
-    <$else$>[cacheContext deleteObject:managedObject.<$Relationship.name$>];
-    NSManagedObject *relMo<$Relationship.name.initialCapitalString$> = [self.<$Relationship.name$> saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            }
+            <$if Relationship.isOrdered$>NSMutableOrderedSet *<$Relationship.name$>Set = [managedObject mutableOrderedSetValueForKey:@"<$Relationship.name$>"];
+            [<$Relationship.name$>Set addObject:relMo];
+            managedObject.<$Relationship.name$> = <$Relationship.name$>Set;
+            <$else$>[managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
+            <$endif$>
+        }
+	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in <$Relationship.name$>Copy) {
+        <$if Relationship.inverseRelationship.isToMany$>if (![[relMo valueForKey:@"<$Relationship.inverseRelationship.name$>"] count]) {
+        <$else$>if (![relMo valueForKey:@"<$Relationship.inverseRelationship.name$>"]) {
+        <$endif$>   [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    <$Relationship.name$>Copy = nil;
+    <$endif$>
+    <$else$>
+    <$if ! Relationship.isTransient $>
+    <$if Relationship.destinationEntity.userInfo.entityIDKeyPath$>// destination entity <$Relationship.destinationEntity.name$> is directly cacheable, so get it from cache manager
+    NSManagedObject *relMo<$Relationship.name.initialCapitalString$> = [cacheManager cachedObjectForBridgeObject:self.<$Relationship.name$>];
+    <$else$>// destination entity <$Relationship.destinationEntity.name$> is not directly cacheable, so delete it and create the replacement
+    if (managedObject.<$Relationship.name$>) {
+        [cacheContext deleteObject:managedObject.<$Relationship.name$>];
+    }
+    NSManagedObject *relMo<$Relationship.name.initialCapitalString$> = [self.<$Relationship.name$> createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    <$endif$>
     [managedObject set<$Relationship.name.initialCapitalString$>:relMo<$Relationship.name.initialCapitalString$>];
-	<$endif$><$endif$>
+	<$endif$>
 	<$endif$>
     <$endif$>
 	<$endforeach do$>

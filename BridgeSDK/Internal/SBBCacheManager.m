@@ -30,7 +30,6 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 @property (nonatomic, strong) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (nonatomic, strong) NSString *persistentStoreType;
 @property (nonatomic, strong) NSPersistentStore *persistentStore;
-@property (nonatomic, strong) NSString *persistentStoreName;
 @property (nonatomic, strong) NSManagedObjectContext *cacheIOContext;
 
 @property (nonatomic, weak) id appWillTerminateObserver;
@@ -73,13 +72,16 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 - (instancetype)init
 {
     if (self = [super init]) {
-        [self dispatchSyncToBridgeObjectCacheQueue:^{
-            self.objectsCachedByTypeAndID = [NSMutableDictionary dictionary];
-            self.appWillTerminateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-                // TODO: Make sure the Core Data MOC is saved
-            }];
-            self.memoryWarningObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-                [self dispatchSyncToBridgeObjectCacheQueue:^{
+        // No one could be using this instance of SBBCacheManager yet so we don't need to serialize access to its members
+        self.objectsCachedByTypeAndID = [NSMutableDictionary dictionary];
+        self.appWillTerminateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            if (_cacheIOContext) {
+                [self saveCacheIOContext];
+            }
+        }];
+        self.memoryWarningObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
+            if (_cacheIOContext) {
+                [self.cacheIOContext performBlockAndWait:^{
                     // clear out anything in the in-mem cache that's not currently being held somewhere else
                     // -- first copy everything to a strong-to-weak map table
                     NSMapTable *cacheCopy = [NSMapTable strongToWeakObjectsMapTable];
@@ -93,7 +95,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
                     // -- and create a new one from the map table, which will now only contain those objects which are being held elsewhere
                     self.objectsCachedByTypeAndID = [[cacheCopy dictionaryRepresentation] mutableCopy];
                 }];
-            }];
+            }
         }];
     }
     
@@ -127,13 +129,13 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
         return nil;
     }
     
-    // first look for it in the mem cache
-    __block SBBBridgeObject *fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
-    
-    
-    // if not there, look for it in CoreData
-    if (!fetched) {
-        [context performBlockAndWait:^{
+    __block SBBBridgeObject *fetched = nil;
+
+    [context performBlockAndWait:^{
+        fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
+        
+        // if not there, look for it in CoreData
+        if (!fetched) {
             NSManagedObject *fetchedMO = [self managedObjectOfEntity:entity withId:objectId atKeyPath:keyPath];
             
             SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
@@ -147,21 +149,20 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
             
             if (!fetched && create) {
                 fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
-                [fetched saveToContext:context withObjectManager:om cacheManager:self];
+                [fetched createInContext:context withObjectManager:om cacheManager:self];
                 [self saveCacheIOContext];
             }
-        }];
-        
-        NSString *key = [self inMemoryKeyForType:type andId:objectId];
-        [self dispatchSyncToBridgeObjectCacheQueue:^{
+            
+            NSString *key = [self inMemoryKeyForType:type andId:objectId];
+            
             if (fetched) {
                 [self.objectsCachedByTypeAndID setObject:fetched forKey:key];
             } else {
                 [self.objectsCachedByTypeAndID removeObjectForKey:key];
             }
-        }];
-    }
-    
+        }
+    }];
+   
     return fetched;
 }
 
@@ -228,7 +229,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     }
     
     // Get it from the cache by type & id
-    SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:NO];
+    SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:YES];
     
     if (object) {
         SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
@@ -239,7 +240,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
             if (fetchedMO) {
                 [object updateManagedObject:fetchedMO withObjectManager:om cacheManager:self];
             } else {
-                [object saveToContext:self.cacheIOContext withObjectManager:om cacheManager:self];
+                [object createInContext:self.cacheIOContext withObjectManager:om cacheManager:self];
             }
             
             [self saveCacheIOContext];
@@ -247,6 +248,47 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     }
     
     return object;
+}
+
+- (NSManagedObject *)cachedObjectForBridgeObject:(ModelObject *)bridgeObject
+{
+    __block NSManagedObject *fetchedMO = nil;
+    NSEntityDescription *entity = [bridgeObject entityForContext:self.cacheIOContext];
+    NSString *entityIDKeyPath = entity.userInfo[@"entityIDKeyPath"];
+    NSString *key = [bridgeObject valueForKeyPath:entityIDKeyPath];
+    [self.cacheIOContext performBlockAndWait:^{
+        fetchedMO = [self managedObjectOfEntity:entity withId:key atKeyPath:entityIDKeyPath];
+    }];
+    
+    return fetchedMO;
+}
+
+- (void)removeFromCacheObjectOfType:(NSString *)type withId:(NSString *)objectId
+{
+    NSManagedObjectContext *context = self.cacheIOContext;
+    [context performBlock:^{
+        SBBBridgeObject *obj = [self cachedObjectOfType:type withId:objectId createIfMissing:NO];
+        if (obj) {
+            NSManagedObject *fetchedMO = [self cachedObjectForBridgeObject:obj];
+            if (fetchedMO) {
+                [context deleteObject:fetchedMO];
+                [context processPendingChanges];
+                
+                // if it has *any* relationships with cascade-delete rules, we'll run through the entire mem cache and clean out
+                // anything with no corresponding managed object, just to be sure it's correct and up-to-date
+                NSDictionary <NSString *, NSRelationshipDescription *> *relationshipsByName = fetchedMO.entity.relationshipsByName;
+                for (NSString *relationshipName in relationshipsByName.allKeys) {
+                    NSRelationshipDescription *relationship = relationshipsByName[relationshipName];
+                    if (relationship.deleteRule == NSCascadeDeleteRule) {
+                        [self cleanupDeletedManagedObjectsFromMemoryCache];
+                        break;
+                    }
+                }
+            }
+            
+            [self removeFromMemoryBridgeObjectOfType:type andId:objectId];
+        }
+    }];
 }
 
 - (NSString *)encryptionKey
@@ -270,13 +312,18 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     return _bridgeObjectCacheQueue;
 }
 
-// BE CAREFUL never to allow this to be called recursively, even indirectly.
-// The only way to ensure this is to never synchronously call out to anything
-// in dispatchBlock that you can't absolutely guarantee will never get back here.
-- (void)dispatchSyncToBridgeObjectCacheQueue:(dispatch_block_t)dispatchBlock
-{
-    dispatch_sync(self.bridgeObjectCacheQueue, dispatchBlock);
-}
+//// BE CAREFUL never to allow this to be called recursively, even indirectly.
+//// The only way to ensure this is to never synchronously call out to anything
+//// in dispatchBlock that you can't absolutely guarantee will never get back here.
+//- (void)dispatchSyncToBridgeObjectCacheQueue:(dispatch_block_t)dispatchBlock
+//{
+//    dispatch_sync(self.bridgeObjectCacheQueue, dispatchBlock);
+//}
+//
+//- (void)dispatchAsyncToBridgeObjectCacheQueue:(dispatch_block_t)dispatchBlock
+//{
+//    dispatch_async(self.bridgeObjectCacheQueue, dispatchBlock);
+//}
 
 - (NSString *)inMemoryKeyForType:(NSString *)type andId:(NSString *)objectId
 {
@@ -287,11 +334,32 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 {
     NSString *key = [self inMemoryKeyForType:type andId:objectId];
     __block SBBBridgeObject *object = nil;
-    [self dispatchSyncToBridgeObjectCacheQueue:^{
+    [self.cacheIOContext performBlockAndWait:^{
         object = [self.objectsCachedByTypeAndID objectForKey:key];
     }];
     
     return object;
+}
+
+// should only be called from within the context's queue
+- (void)removeFromMemoryBridgeObjectOfType:(NSString *)type andId:(NSString *)objectId
+{
+    NSString *key = [self inMemoryKeyForType:type andId:objectId];
+    [self.objectsCachedByTypeAndID removeObjectForKey:key];
+}
+
+// should only be called from within the context's queue
+- (void)cleanupDeletedManagedObjectsFromMemoryCache
+{
+    NSMutableDictionary *cacheCopy = [self.objectsCachedByTypeAndID mutableCopy];
+    for (NSString *key in self.objectsCachedByTypeAndID.allKeys) {
+        SBBBridgeObject *bridgeObj = self.objectsCachedByTypeAndID[key];
+        NSManagedObject *fetchedMO = [self cachedObjectForBridgeObject:bridgeObj];
+        if (!fetchedMO) {
+            [cacheCopy removeObjectForKey:key];
+        }
+    }
+    self.objectsCachedByTypeAndID = cacheCopy;
 }
 
 #pragma mark - CoreData cache
@@ -300,16 +368,29 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 - (NSManagedObject *)managedObjectOfEntity:(NSEntityDescription *)entity withId:(NSString *)objectId atKeyPath:(NSString *)keyPath
 {
     NSManagedObject *fetchedMO = nil;
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entity];
     
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
-    [request setPredicate:predicate];
-    
-    NSError *error;
-    NSArray *objects = [self.cacheIOContext executeFetchRequest:request error:&error];
-    if (objects.count) {
-        fetchedMO = [objects firstObject];
+    if (entity && entity.userInfo[@"entityIDKeyPath"] && objectId.length && keyPath.length) {
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:entity];
+        
+        NSRange range;
+        BOOL keyPathIsIndexed = ((range = [keyPath rangeOfString:@"]"]).location != NSNotFound);
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K LIKE %@", keyPath, objectId];
+        if (!keyPathIsIndexed) {
+            [request setPredicate:predicate];
+        }
+        
+        NSError *error;
+        NSArray *objects = [self.cacheIOContext executeFetchRequest:request error:&error];
+        
+        if (objects.count && keyPathIsIndexed) {
+            objects = [objects filteredArrayUsingPredicate:predicate];
+        }
+        
+        if (objects.count) {
+            NSAssert(objects.count == 1, @"%lu %@ objects found with %@ == @\"%@\"", (unsigned long)objects.count, entity.name, keyPath, objectId);
+            fetchedMO = [objects firstObject];
+        }
     }
     
     return fetchedMO;
@@ -438,9 +519,14 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
 - (NSManagedObjectContext *)cacheIOContext
 {
     if (!_cacheIOContext) {
-        _cacheIOContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-        _cacheIOContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
-        _cacheIOContext.undoManager = [[NSUndoManager alloc] init];
+        [self dispatchSyncToCacheManagerCoreDataQueue:^{
+            // check again in case it got set before we got our turn in the core data queue
+            if (!_cacheIOContext) {
+                _cacheIOContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+                _cacheIOContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
+                _cacheIOContext.undoManager = [[NSUndoManager alloc] init];
+            }
+        }];
     }
     
     return _cacheIOContext;
@@ -477,8 +563,9 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
 
 - (BOOL)resetCache
 {
+    NSManagedObjectContext *context = self.cacheIOContext;
     __block BOOL reset = NO;
-    [self dispatchSyncToBridgeObjectCacheQueue:^{
+    [context performBlockAndWait:^{
         self.objectsCachedByTypeAndID = [NSMutableDictionary dictionary];
         reset = [self resetDatabase];
     }];
@@ -509,9 +596,11 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
             _managedObjectModel = nil;
             
             NSURL *storeURL = [self storeURL];
-            if (![[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error]) {
-                NSLog(@"Unable to delete SQLite db file at %@ : error %@, %@", storeURL, error, [error userInfo]);
-                return;
+            if ([[NSFileManager defaultManager] fileExistsAtPath:storeURL.path]) {
+                if (![[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error]) {
+                    NSLog(@"Unable to delete SQLite db file at %@ : error %@, %@", storeURL, error, [error userInfo]);
+                    return;
+                }
             }
             
             reset = YES;

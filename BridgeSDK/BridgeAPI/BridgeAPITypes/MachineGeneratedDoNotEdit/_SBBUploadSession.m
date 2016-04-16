@@ -41,11 +41,11 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (UploadSession)
 
-@property (nonatomic, strong) NSDate* expires;
+@property (nullable, nonatomic, retain) NSDate* expires;
 
-@property (nonatomic, strong) NSString* id;
+@property (nullable, nonatomic, retain) NSString* id;
 
-@property (nonatomic, strong) NSString* url;
+@property (nullable, nonatomic, retain) NSString* url;
 
 @end
 
@@ -79,7 +79,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:[self.expires ISO8601String] forKey:@"expires"];
 
@@ -87,7 +87,7 @@
 
     [dict setObjectIfNotNil:self.url forKey:@"url"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -108,7 +108,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.expires = managedObject.expires;
 
@@ -122,7 +122,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UploadSession" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -137,11 +137,11 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.expires = self.expires;
+    managedObject.expires = ((id)self.expires == [NSNull null]) ? nil : self.expires;
 
-    managedObject.id = self.id;
+    managedObject.id = ((id)self.id == [NSNull null]) ? nil : self.id;
 
-    managedObject.url = self.url;
+    managedObject.url = ((id)self.url == [NSNull null]) ? nil : self.url;
 
     // Calling code will handle saving these changes to cacheContext.
 }

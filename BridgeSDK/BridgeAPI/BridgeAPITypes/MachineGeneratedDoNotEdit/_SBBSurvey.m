@@ -45,44 +45,51 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (Survey)
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nullable, nonatomic, retain) NSDate* createdOn;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, retain) NSString* guid;
 
-@property (nonatomic, strong) NSString* guidAndCreatedOn;
+@property (nullable, nonatomic, retain) NSString* guidAndCreatedOn;
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, retain) NSString* identifier;
 
-@property (nonatomic, strong) NSDate* modifiedOn;
+@property (nullable, nonatomic, retain) NSDate* modifiedOn;
 
-@property (nonatomic, strong) NSString* name;
+@property (nullable, nonatomic, retain) NSString* name;
 
-@property (nonatomic, strong) NSNumber* published;
+@property (nullable, nonatomic, retain) NSNumber* published;
 
-@property (nonatomic, assign) BOOL publishedValue;
+@property (nullable, nonatomic, retain) NSNumber* schemaRevision;
 
-@property (nonatomic, strong) NSNumber* schemaRevision;
+@property (nullable, nonatomic, retain) NSNumber* version;
 
-@property (nonatomic, assign) double schemaRevisionValue;
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *elements;
 
-@property (nonatomic, strong) NSNumber* version;
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *surveyResponses;
 
-@property (nonatomic, assign) double versionValue;
-
-@property (nonatomic, strong, readonly) NSArray *elements;
-
-- (void)addElementsObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)addElementsObject:(NSManagedObject *)value_;
-- (void)removeElementsObjects;
-- (void)removeElementsObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)removeElementsObject:(NSManagedObject *)value_;
+- (void)addElementsObject:(NSManagedObject *)value;
+- (void)removeElementsObject:(NSManagedObject *)value;
+- (void)addElements:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)removeElements:(NSOrderedSet<NSManagedObject *> *)values;
 
 - (void)insertObject:(NSManagedObject *)value inElementsAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromElementsAtIndex:(NSUInteger)idx;
-- (void)insertElements:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)insertElements:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeElementsAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInElementsAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
-- (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray *)values;
+- (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray<NSManagedObject *> *)values;
+
+- (void)addSurveyResponsesObject:(NSManagedObject *)value;
+- (void)removeSurveyResponsesObject:(NSManagedObject *)value;
+- (void)addSurveyResponses:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)removeSurveyResponses:(NSOrderedSet<NSManagedObject *> *)values;
+
+- (void)insertObject:(NSManagedObject *)value inSurveyResponsesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromSurveyResponsesAtIndex:(NSUInteger)idx;
+- (void)insertSurveyResponses:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeSurveyResponsesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInSurveyResponsesAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
+- (void)replaceSurveyResponsesAtIndexes:(NSIndexSet *)indexes withSurveyResponses:(NSArray<NSManagedObject *> *)values;
 
 @end
 
@@ -156,6 +163,11 @@
     NSString *key = @"";
     for (NSString *path in paths) {
         NSString *value = [dictionary valueForKeyPath:path];
+        if (!value) {
+            // probably creating in CacheManager, so just use provided synthetic key, if any
+            key = [dictionary valueForKeyPath:@"guidAndCreatedOn"] ?: @"";
+            break;
+        }
         key = [key stringByAppendingString:value];
     }
 
@@ -172,7 +184,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 
@@ -202,7 +214,7 @@
 
 	}
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -228,7 +240,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.createdOn = managedObject.createdOn;
 
@@ -250,7 +262,8 @@
 
 		for(NSManagedObject *elementsManagedObj in managedObject.elements)
 		{
-            SBBSurveyElement *elementsObj = [[SBBSurveyElement alloc] initWithManagedObject:elementsManagedObj objectManager:objectManager cacheManager:cacheManager];
+            Class objectClass = [SBBObjectManager bridgeClassFromType:elementsManagedObj.entity.name];
+            SBBSurveyElement *elementsObj = [[objectClass alloc] initWithManagedObject:elementsManagedObj objectManager:objectManager cacheManager:cacheManager];
             if(elementsObj != nil)
             {
                 [self addElementsObject:elementsObj];
@@ -262,7 +275,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Survey" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -278,73 +291,59 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.createdOn = self.createdOn;
+    managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
 
-    managedObject.guid = self.guid;
+    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
 
-    managedObject.guidAndCreatedOn = self.guidAndCreatedOn;
+    managedObject.guidAndCreatedOn = ((id)self.guidAndCreatedOn == [NSNull null]) ? nil : self.guidAndCreatedOn;
 
-    managedObject.identifier = self.identifier;
+    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
 
-    managedObject.modifiedOn = self.modifiedOn;
+    managedObject.modifiedOn = ((id)self.modifiedOn == [NSNull null]) ? nil : self.modifiedOn;
 
-    managedObject.name = self.name;
+    managedObject.name = ((id)self.name == [NSNull null]) ? nil : self.name;
 
-    managedObject.published = self.published;
+    managedObject.published = ((id)self.published == [NSNull null]) ? nil : self.published;
 
-    managedObject.schemaRevision = self.schemaRevision;
+    managedObject.schemaRevision = ((id)self.schemaRevision == [NSNull null]) ? nil : self.schemaRevision;
 
-    managedObject.version = self.version;
+    managedObject.version = ((id)self.version == [NSNull null]) ? nil : self.version;
 
+    // first make a copy of the existing relationship collection, to iterate through while mutating original
+    id elementsCopy = managedObject.elements;
+
+    // now remove all items from the existing relationship
+    NSMutableOrderedSet *elementsSet = [managedObject.elements mutableCopy];
+    [elementsSet removeAllObjects];
+    managedObject.elements = elementsSet;
+
+    // now put the "new" items, if any, into the relationship
     if([self.elements count] > 0) {
-        for (SBBSurveyElement *obj in self.elements) {
-            // see if a managed object for obj is already in the relationship
-            BOOL alreadyInRelationship = NO;
-            __block NSManagedObject *relMo = nil;
-            NSString *keyPath = @"guid";
-            NSString *objectId = obj.guid;
-            while ([objectId isKindOfClass:[NSArray class]]) {
-                objectId = ((NSArray *)objectId).firstObject;
+		for(SBBSurveyElement *obj in self.elements) {
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
+            NSMutableOrderedSet *elementsSet = [managedObject mutableOrderedSetValueForKey:@"elements"];
+            [elementsSet addObject:relMo];
+            managedObject.elements = elementsSet;
 
-            for (NSManagedObject *mo in managedObject.elements) {
-                if ([[mo valueForKeyPath:keyPath] isEqualToString:objectId]) {
-                    relMo = mo;
-                    alreadyInRelationship = YES;
-                    break;
-                }
-            }
-
-            // if not, check if one exists but just isn't in the relationship yet
-            if (!relMo) {
-                NSEntityDescription *relEntity = [NSEntityDescription entityForName:@"SurveyElement" inManagedObjectContext:cacheContext];
-                NSFetchRequest *request = [[NSFetchRequest alloc] init];
-                [request setEntity:relEntity];
-
-                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%@ LIKE %@", keyPath, objectId];
-                [request setPredicate:predicate];
-
-                NSError *error;
-                NSArray *objects = [cacheContext executeFetchRequest:request error:&error];
-                if (objects.count) {
-                    relMo = [objects firstObject];
-                }
-            }
-
-            // if still not, create one
-            if (!relMo) {
-                relMo = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyElement" inManagedObjectContext:cacheContext];
-            }
-
-            // update it from obj
-            [obj updateManagedObject:relMo withObjectManager:objectManager cacheManager:cacheManager];
-
-            // add to relationship if not already in it
-            if (!alreadyInRelationship) {
-                [managedObject addElementsObject:relMo];
-            }
         }
 	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in elementsCopy) {
+        if (![relMo valueForKey:@"survey"]) {
+           [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    elementsCopy = nil;
 
     // Calling code will handle saving these changes to cacheContext.
 }

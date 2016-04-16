@@ -44,24 +44,21 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (ResourceList)
 
-@property (nonatomic, strong) NSNumber* total;
+@property (nullable, nonatomic, retain) NSNumber* total;
 
-@property (nonatomic, assign) int64_t totalValue;
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *items;
 
-@property (nonatomic, strong, readonly) NSArray *items;
-
-- (void)addItemsObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)addItemsObject:(NSManagedObject *)value_;
-- (void)removeItemsObjects;
-- (void)removeItemsObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)removeItemsObject:(NSManagedObject *)value_;
+- (void)addItemsObject:(NSManagedObject *)value;
+- (void)removeItemsObject:(NSManagedObject *)value;
+- (void)addItems:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)removeItems:(NSOrderedSet<NSManagedObject *> *)values;
 
 - (void)insertObject:(NSManagedObject *)value inItemsAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
-- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)insertItems:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
-- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
+- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray<NSManagedObject *> *)values;
 
 @end
 
@@ -108,7 +105,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.total forKey:@"total"];
 
@@ -124,7 +121,7 @@
 
 	}
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -150,13 +147,14 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.total = managedObject.total;
 
 		for(NSManagedObject *itemsManagedObj in managedObject.items)
 		{
-            SBBBridgeObject *itemsObj = [[SBBBridgeObject alloc] initWithManagedObject:itemsManagedObj objectManager:objectManager cacheManager:cacheManager];
+            Class objectClass = [SBBObjectManager bridgeClassFromType:itemsManagedObj.entity.name];
+            SBBBridgeObject *itemsObj = [[objectClass alloc] initWithManagedObject:itemsManagedObj objectManager:objectManager cacheManager:cacheManager];
             if(itemsObj != nil)
             {
                 [self addItemsObject:itemsObj];
@@ -168,7 +166,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ResourceList" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -184,15 +182,43 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.total = self.total;
+    managedObject.total = ((id)self.total == [NSNull null]) ? nil : self.total;
 
+    // first make a copy of the existing relationship collection, to iterate through while mutating original
+    id itemsCopy = managedObject.items;
+
+    // now remove all items from the existing relationship
+    NSMutableOrderedSet *itemsSet = [managedObject.items mutableCopy];
+    [itemsSet removeAllObjects];
+    managedObject.items = itemsSet;
+
+    // now put the "new" items, if any, into the relationship
     if([self.items count] > 0) {
-        [managedObject removeItemsObjects];
 		for(SBBBridgeObject *obj in self.items) {
-            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject addItemsObject:relMo];
-		}
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            }
+            NSMutableOrderedSet *itemsSet = [managedObject mutableOrderedSetValueForKey:@"items"];
+            [itemsSet addObject:relMo];
+            managedObject.items = itemsSet;
+
+        }
 	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in itemsCopy) {
+        if (![relMo valueForKey:@"resourceList"]) {
+           [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    itemsCopy = nil;
 
     // Calling code will handle saving these changes to cacheContext.
 }

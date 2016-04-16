@@ -41,11 +41,13 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyRule)
 
-@property (nonatomic, strong) NSString* operator;
+@property (nullable, nonatomic, retain) NSString* operator;
 
-@property (nonatomic, strong) NSString* skipTo;
+@property (nullable, nonatomic, retain) NSString* skipTo;
 
-@property (nonatomic, strong) id value;
+@property (nullable, nonatomic, retain) id value;
+
+@property (nullable, nonatomic, retain) NSManagedObject *surveyConstraints;
 
 @end
 
@@ -79,7 +81,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.operator forKey:@"operator"];
 
@@ -87,7 +89,7 @@
 
     [dict setObjectIfNotNil:self.value forKey:@"value"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -108,7 +110,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.operator = managedObject.operator;
 
@@ -122,7 +124,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyRule" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -137,11 +139,11 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.operator = self.operator;
+    managedObject.operator = ((id)self.operator == [NSNull null]) ? nil : self.operator;
 
-    managedObject.skipTo = self.skipTo;
+    managedObject.skipTo = ((id)self.skipTo == [NSNull null]) ? nil : self.skipTo;
 
-    managedObject.value = self.value;
+    managedObject.value = ((id)self.value == [NSNull null]) ? nil : self.value;
 
     // Calling code will handle saving these changes to cacheContext.
 }

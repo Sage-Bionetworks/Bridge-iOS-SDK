@@ -41,19 +41,13 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (DecimalConstraints)
 
-@property (nonatomic, strong) NSNumber* maxValue;
+@property (nullable, nonatomic, retain) NSNumber* maxValue;
 
-@property (nonatomic, assign) double maxValueValue;
+@property (nullable, nonatomic, retain) NSNumber* minValue;
 
-@property (nonatomic, strong) NSNumber* minValue;
+@property (nullable, nonatomic, retain) NSNumber* step;
 
-@property (nonatomic, assign) double minValueValue;
-
-@property (nonatomic, strong) NSNumber* step;
-
-@property (nonatomic, assign) double stepValue;
-
-@property (nonatomic, strong) NSString* unit;
+@property (nullable, nonatomic, retain) NSString* unit;
 
 @end
 
@@ -119,7 +113,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.maxValue forKey:@"maxValue"];
 
@@ -129,7 +123,7 @@
 
     [dict setObjectIfNotNil:self.unit forKey:@"unit"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -150,7 +144,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.maxValue = managedObject.maxValue;
 
@@ -166,7 +160,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"DecimalConstraints" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -181,13 +175,13 @@
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.maxValue = self.maxValue;
+    managedObject.maxValue = ((id)self.maxValue == [NSNull null]) ? nil : self.maxValue;
 
-    managedObject.minValue = self.minValue;
+    managedObject.minValue = ((id)self.minValue == [NSNull null]) ? nil : self.minValue;
 
-    managedObject.step = self.step;
+    managedObject.step = ((id)self.step == [NSNull null]) ? nil : self.step;
 
-    managedObject.unit = self.unit;
+    managedObject.unit = ((id)self.unit == [NSNull null]) ? nil : self.unit;
 
     // Calling code will handle saving these changes to cacheContext.
 }

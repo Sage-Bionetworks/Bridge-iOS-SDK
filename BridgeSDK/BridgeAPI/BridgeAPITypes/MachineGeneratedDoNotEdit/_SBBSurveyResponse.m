@@ -45,32 +45,29 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyResponse)
 
-@property (nonatomic, strong) NSDate* completedOn;
+@property (nullable, nonatomic, retain) NSDate* completedOn;
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, retain) NSString* identifier;
 
-@property (nonatomic, strong) NSDate* startedOn;
+@property (nullable, nonatomic, retain) NSDate* startedOn;
 
-@property (nonatomic, strong) NSString* status;
+@property (nullable, nonatomic, retain) NSString* status;
 
-@property (nonatomic, strong, readonly) NSArray *answers;
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *answers;
 
-@property (nonatomic, strong, readwrite) NSManagedObject *survey;
+@property (nullable, nonatomic, retain) NSManagedObject *survey;
 
-- (void)addAnswersObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)addAnswersObject:(NSManagedObject *)value_;
-- (void)removeAnswersObjects;
-- (void)removeAnswersObject:(NSManagedObject *)value_ settingInverse: (BOOL) setInverse;
-- (void)removeAnswersObject:(NSManagedObject *)value_;
+- (void)addAnswersObject:(NSManagedObject *)value;
+- (void)removeAnswersObject:(NSManagedObject *)value;
+- (void)addAnswers:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)removeAnswers:(NSOrderedSet<NSManagedObject *> *)values;
 
 - (void)insertObject:(NSManagedObject *)value inAnswersAtIndex:(NSUInteger)idx;
 - (void)removeObjectFromAnswersAtIndex:(NSUInteger)idx;
-- (void)insertAnswers:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)insertAnswers:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
 - (void)removeAnswersAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInAnswersAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
-- (void)replaceAnswersAtIndexes:(NSIndexSet *)indexes withAnswers:(NSArray *)values;
-
-- (void) setSurvey: (NSManagedObject *) survey_ settingInverse: (BOOL) setInverse;
+- (void)replaceAnswersAtIndexes:(NSIndexSet *)indexes withAnswers:(NSArray<NSManagedObject *> *)values;
 
 @end
 
@@ -120,7 +117,7 @@
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-  NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentationFromObjectManager:objectManager]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:[self.completedOn ISO8601String] forKey:@"completedOn"];
 
@@ -144,7 +141,7 @@
 
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -172,7 +169,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super init]) {
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.completedOn = managedObject.completedOn;
 
@@ -184,14 +181,16 @@
 
 		for(NSManagedObject *answersManagedObj in managedObject.answers)
 		{
-            SBBSurveyAnswer *answersObj = [[SBBSurveyAnswer alloc] initWithManagedObject:answersManagedObj objectManager:objectManager cacheManager:cacheManager];
+            Class objectClass = [SBBObjectManager bridgeClassFromType:answersManagedObj.entity.name];
+            SBBSurveyAnswer *answersObj = [[objectClass alloc] initWithManagedObject:answersManagedObj objectManager:objectManager cacheManager:cacheManager];
             if(answersObj != nil)
             {
                 [self addAnswersObject:answersObj];
             }
 		}
             NSManagedObject *surveyManagedObj = managedObject.survey;
-        SBBSurvey *surveyObj = [[SBBSurvey alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
+        Class surveyClass = [SBBObjectManager bridgeClassFromType:surveyManagedObj.entity.name];
+        SBBSurvey *surveyObj = [[surveyClass alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
         if(surveyObj != nil)
         {
           self.survey = surveyObj;
@@ -202,7 +201,7 @@
 
 }
 
-- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyResponse" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
@@ -218,21 +217,54 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.completedOn = self.completedOn;
+    managedObject.completedOn = ((id)self.completedOn == [NSNull null]) ? nil : self.completedOn;
 
-    managedObject.identifier = self.identifier;
+    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
 
-    managedObject.startedOn = self.startedOn;
+    managedObject.startedOn = ((id)self.startedOn == [NSNull null]) ? nil : self.startedOn;
 
-    managedObject.status = self.status;
+    managedObject.status = ((id)self.status == [NSNull null]) ? nil : self.status;
 
+    // first make a copy of the existing relationship collection, to iterate through while mutating original
+    id answersCopy = managedObject.answers;
+
+    // now remove all items from the existing relationship
+    NSMutableOrderedSet *answersSet = [managedObject.answers mutableCopy];
+    [answersSet removeAllObjects];
+    managedObject.answers = answersSet;
+
+    // now put the "new" items, if any, into the relationship
     if([self.answers count] > 0) {
-        [managedObject removeAnswersObjects];
 		for(SBBSurveyAnswer *obj in self.answers) {
-            NSManagedObject *relMo = [obj saveToContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-            [managedObject addAnswersObject:relMo];
-		}
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            }
+            NSMutableOrderedSet *answersSet = [managedObject mutableOrderedSetValueForKey:@"answers"];
+            [answersSet addObject:relMo];
+            managedObject.answers = answersSet;
+
+        }
 	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in answersCopy) {
+        if (![relMo valueForKey:@"surveyResponse"]) {
+           [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    answersCopy = nil;
+
+    // destination entity Survey is directly cacheable, so get it from cache manager
+    NSManagedObject *relMoSurvey = [cacheManager cachedObjectForBridgeObject:self.survey];
+
+    [managedObject setSurvey:relMoSurvey];
 
     // Calling code will handle saving these changes to cacheContext.
 }
