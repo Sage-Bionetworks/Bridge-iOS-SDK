@@ -25,7 +25,7 @@
 
 // use ModelObject as the parameter type because test case classes don't derive from SBBBridgeObject
 // (because they're generated from a separate test data model)
-- (NSManagedObject *)cachedObjectForBridgeObject:(ModelObject *)bridgeObject;
+- (NSManagedObject *)cachedObjectForBridgeObject:(ModelObject *)bridgeObject inContext:(NSManagedObjectContext *)context;
 
 - (void)removeFromCacheObjectOfType:(NSString *)type withId:(NSString *)objectId;
 

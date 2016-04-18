@@ -256,6 +256,18 @@
     return managedObject;
 }
 
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [cacheManager cachedObjectForBridgeObject:self inContext:cacheContext];
+    if (managedObject) {
+        [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
@@ -298,7 +310,7 @@
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
-                relMo = [cacheManager cachedObjectForBridgeObject:obj];
+                relMo = [cacheManager cachedObjectForBridgeObject:obj inContext:cacheContext];
             } else {
                 // sub object is not directly cacheable, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];

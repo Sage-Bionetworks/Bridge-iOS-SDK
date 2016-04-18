@@ -256,7 +256,7 @@
     ModelObject *testObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
     
     // now get it from the cache
-    NSManagedObject *testCachedObject = [_cacheManager cachedObjectForBridgeObject:testObject];
+    NSManagedObject *testCachedObject = [_cacheManager cachedObjectForBridgeObject:testObject inContext:_cacheManager.cacheIOContext];
     [self compareJSON:_jsonForTests toManagedObject:testCachedObject];
 }
 
@@ -330,7 +330,7 @@
     ModelObject *cachedObject = [_cacheManager cachedObjectOfType:type withId:objectId createIfMissing:NO];
     XCTAssertNotNil(cachedObject, @"Test object is in the memory cache");
     
-    NSManagedObject *fetchedMO = [_cacheManager cachedObjectForBridgeObject:testObject];
+    NSManagedObject *fetchedMO = [_cacheManager cachedObjectForBridgeObject:testObject inContext:context];
     XCTAssertNotNil(fetchedMO, @"Test object is in the CoreData cache");
     
     // now remove it
@@ -340,7 +340,7 @@
     cachedObject = [_cacheManager cachedObjectOfType:type withId:objectId createIfMissing:NO];
     XCTAssertNil(cachedObject, @"Test object has been removed from the memory cache");
     
-    fetchedMO = [_cacheManager cachedObjectForBridgeObject:testObject];
+    fetchedMO = [_cacheManager cachedObjectForBridgeObject:testObject inContext:context];
     XCTAssertNil(fetchedMO, @"Test object has been removed from the CoreData cache");
     
     // ...aaand make sure the cache (which was pristine at the start of this test) is now empty

@@ -150,6 +150,18 @@
     return managedObject;
 }
 
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [cacheManager cachedObjectForBridgeObject:self inContext:cacheContext];
+    if (managedObject) {
+        [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 

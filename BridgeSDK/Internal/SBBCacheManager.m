@@ -250,13 +250,13 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     return object;
 }
 
-- (NSManagedObject *)cachedObjectForBridgeObject:(ModelObject *)bridgeObject
+- (NSManagedObject *)cachedObjectForBridgeObject:(ModelObject *)bridgeObject inContext:(NSManagedObjectContext *)context
 {
     __block NSManagedObject *fetchedMO = nil;
     NSEntityDescription *entity = [bridgeObject entityForContext:self.cacheIOContext];
     NSString *entityIDKeyPath = entity.userInfo[@"entityIDKeyPath"];
     NSString *key = [bridgeObject valueForKeyPath:entityIDKeyPath];
-    [self.cacheIOContext performBlockAndWait:^{
+    [context performBlockAndWait:^{
         fetchedMO = [self managedObjectOfEntity:entity withId:key atKeyPath:entityIDKeyPath];
     }];
     
@@ -269,7 +269,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     [context performBlock:^{
         SBBBridgeObject *obj = [self cachedObjectOfType:type withId:objectId createIfMissing:NO];
         if (obj) {
-            NSManagedObject *fetchedMO = [self cachedObjectForBridgeObject:obj];
+            NSManagedObject *fetchedMO = [self cachedObjectForBridgeObject:obj inContext:context];
             if (fetchedMO) {
                 [context deleteObject:fetchedMO];
                 [context processPendingChanges];
@@ -354,7 +354,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     NSMutableDictionary *cacheCopy = [self.objectsCachedByTypeAndID mutableCopy];
     for (NSString *key in self.objectsCachedByTypeAndID.allKeys) {
         SBBBridgeObject *bridgeObj = self.objectsCachedByTypeAndID[key];
-        NSManagedObject *fetchedMO = [self cachedObjectForBridgeObject:bridgeObj];
+        NSManagedObject *fetchedMO = [self cachedObjectForBridgeObject:bridgeObj inContext:self.cacheIOContext];
         if (!fetchedMO) {
             [cacheCopy removeObjectForKey:key];
         }

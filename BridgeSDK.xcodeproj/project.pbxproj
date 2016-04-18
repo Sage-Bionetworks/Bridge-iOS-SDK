@@ -402,6 +402,13 @@
 			remoteGlobalIDString = 80855F4F19BE258C006601C7;
 			remoteInfo = BridgeSDK;
 		};
+		80DB992A1CC4153800B56EAE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = FB7564EF1512D3C4007B806B;
+			remoteInfo = RNCryptor;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1413,6 +1420,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				80DB992B1CC4153800B56EAE /* PBXTargetDependency */,
 			);
 			name = BridgeSDK;
 			productName = BridgeSDK;
@@ -1846,6 +1854,11 @@
 			isa = PBXTargetDependency;
 			target = 80855F4F19BE258C006601C7 /* BridgeSDK */;
 			targetProxy = 80DB6BA61BACB27C0062D1EF /* PBXContainerItemProxy */;
+		};
+		80DB992B1CC4153800B56EAE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = RNCryptor;
+			targetProxy = 80DB992A1CC4153800B56EAE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
