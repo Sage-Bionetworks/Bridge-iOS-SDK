@@ -279,6 +279,8 @@ function disclosure_triangle(elt) {
 <dl>
 <dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithError:" target="_top">-uploadManager:uploadOfFile:completedWithError:</a></tt></dt>
 <dd></dd>
+<dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:" target="_top">-uploadManager:uploadOfFile:completedWithVerificationURL:</a></tt></dt>
+<dd></dd>
 </dl>
 <hr class="betweenAPIEntries">
 <!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithError:;   name=SBBUploadManagerDelegate::uploadManager:uploadOfFile:completedWithError: --><a name="//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithError:"></a>
@@ -316,10 +318,48 @@ function disclosure_triangle(elt) {
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithError:;name=start --><p>Required delegate method that gets called when a background file upload task finishes, successfully or otherwise.
 </p>
 <!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithError:;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:;   name=SBBUploadManagerDelegate::uploadManager:uploadOfFile:completedWithVerificationURL: --><a name="//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:"></a>
+<h3><a name="uploadManager:uploadOfFile:completedWithVerificationURL:">uploadManager:uploadOfFile:completedWithVerificationURL:</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><tt>@optional</tt>
+<br>- (<!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a -->)<a machinegenerated="true" href="index.html#//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithError:" logicalPath="//apple_ref/occ/instm/SBBUploadManagerDelegate/uploadManager //apple_ref/occ/clm/SBBUploadManagerDelegate/uploadManager //apple_ref/occ/intfcm/SBBUploadManagerDelegate/uploadManager //apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager" target="_top"><span class="function">uploadManager</span></a>:(<a machinegenerated="true" href="../../Classes/SBBUploadManager/index.html#//apple_ref/occ/cl/SBBUploadManager" logicalPath="//apple_ref/occ/cl/SBBUploadManager" target="_top"><span class="type">SBBUploadManager</span></a> <span class="type">*</span>)<span class="param">manager</span> 
+        <!-- a logicalPath="//apple_ref/occ/instm/SBBUploadManagerDelegate/uploadOfFile //apple_ref/occ/clm/SBBUploadManagerDelegate/uploadOfFile //apple_ref/occ/intfcm/SBBUploadManagerDelegate/uploadOfFile //apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadOfFile //apple_ref/occ/func/uploadOfFile //apple_ref/occ/ftmplt/SBBUploadManagerDelegate/uploadOfFile //apple_ref/occ/defn/uploadOfFile //apple_ref/occ/macro/uploadOfFile //apple_ref/doc/anysymbol/uploadOfFile" machineGenerated="true" --><span class="function">uploadOfFile</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">file</span> <!-- a logicalPath="//apple_ref/occ/instm/SBBUploadManagerDelegate/completedWithVerificationURL //apple_ref/occ/clm/SBBUploadManagerDelegate/completedWithVerificationURL //apple_ref/occ/intfcm/SBBUploadManagerDelegate/completedWithVerificationURL //apple_ref/occ/intfm/SBBUploadManagerDelegate/completedWithVerificationURL //apple_ref/occ/func/completedWithVerificationURL //apple_ref/occ/ftmplt/SBBUploadManagerDelegate/completedWithVerificationURL //apple_ref/occ/defn/completedWithVerificationURL //apple_ref/occ/macro/completedWithVerificationURL //apple_ref/doc/anysymbol/completedWithVerificationURL" machineGenerated="true" --><span class="function">completedWithVerificationURL</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/NSURL //apple_ref/occ/tdef/NSURL //apple_ref/occ/tag/NSURL //apple_ref/occ/struct/NSURL //apple_ref/occ/intf/NSURL //apple_ref/doc/anysymbol/NSURL" machineGenerated="true" --><span class="type">NSURL</span><!-- /a --> <span class="type">*</span>)<!-- a logicalPath="//apple_ref/occ/econst/url //apple_ref/occ/data/SBBUploadManagerDelegate/url //apple_ref/occ/data/url //apple_ref/occ/clconst/SBBUploadManagerDelegate/url " machineGenerated="true" --><span class="var">url</span><!-- /a -->; </pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:/manager;   name=uploadManager:uploadOfFile:completedWithVerificationURL:::manager -->
+<a name="//apple_ref/doc/methodparam/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:/manager"></a>
+<code>manager</code>
+</dt>
+<dd><p>The upload manager instance making the call.</p></dd>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:/file;   name=uploadManager:uploadOfFile:completedWithVerificationURL:::file -->
+<a name="//apple_ref/doc/methodparam/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:/file"></a>
+<code>file</code>
+</dt>
+<dd><p>The path to the file whose upload task finished or failed.</p></dd>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:/url;   name=uploadManager:uploadOfFile:completedWithVerificationURL:::url -->
+<a name="//apple_ref/doc/methodparam/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:/url"></a>
+<code>url</code>
+</dt>
+<dd><p>The url to call to get more information about the post-upload status of the data.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:;name=start --><p>Optional delegate method available only in debug builds.
+Called when a background file upload task finishes, successfully or otherwise in debug builds.
+Provides a URL that can be called for more information about the post-upload status of the data.
+</p>
+<!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:;name=end --><!-- end discussion -->
 <p class="gapBeforeFooter">&nbsp;</p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Wednesday, March 25, 2015
+<p class="hd_timestamp">Last Updated: Tuesday, April 19, 2016
 </p>
 </div>
 </td>
