@@ -8,13 +8,17 @@
 
 #import "SBBCacheManager.h"
 
-@interface SBBObjectManager ()
+@protocol SBBObjectManagerInternalProtocol <SBBObjectManagerProtocol>
+
+@property (nonatomic, strong) id<SBBCacheManagerProtocol> cacheManager;
+
+@end
+
+@interface SBBObjectManager () <SBBObjectManagerInternalProtocol>
 
 @property (nonatomic, strong) NSMutableDictionary *classForType;
 @property (nonatomic, strong) NSMutableDictionary *typeForClass;
 @property (nonatomic, strong) NSMutableDictionary *mappingsForType;
-
-@property (nonatomic, strong) id<SBBCacheManagerProtocol> cacheManager;
 
 + (instancetype)objectManagerWithCacheManager:(id<SBBCacheManagerProtocol>)cacheManager;
 + (Class)bridgeClassFromType:(NSString *)type;

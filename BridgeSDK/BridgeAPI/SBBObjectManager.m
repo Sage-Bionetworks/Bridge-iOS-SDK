@@ -40,6 +40,8 @@
 
 @implementation SBBObjectManager
 
+@synthesize cacheManager;
+
 + (instancetype)defaultComponent
 {
     static SBBObjectManager *shared;
@@ -714,9 +716,12 @@
         
         id bridgeJson = json;
         
-        // Try the cache first (if it's not a directly cacheable entity, this will be nil)
-        id<SBBCacheManagerProtocol> cacheMan = self.cacheManager ?: SBBComponent(SBBCacheManager);
-        id bridgeObject = [cacheMan cachedObjectFromBridgeJSON:json];
+        id bridgeObject = nil;
+        if (gSBBUseCache) {
+            // Try the cache first (if it's not a directly cacheable entity, this will be nil)
+            id<SBBCacheManagerProtocol> cacheMan = self.cacheManager ?: SBBComponent(SBBCacheManager);
+            bridgeObject = [cacheMan cachedObjectFromBridgeJSON:json];
+        }
         // otherwise, our internal class for this type knows how to initialize itself from the json
         if (bridgeObject) {
             // in case we got partial json passed in and combined it with what was cached

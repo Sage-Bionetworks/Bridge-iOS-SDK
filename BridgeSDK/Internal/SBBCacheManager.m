@@ -15,6 +15,8 @@
 #import "ModelObjectInternal.h"
 @import UIKit;
 
+BOOL gSBBUseCache = NO;
+
 static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 @interface SBBCacheManager ()<NSCacheDelegate>
@@ -47,6 +49,10 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 + (instancetype)defaultComponent
 {
+    if (!gSBBUseCache) {
+        return nil;
+    }
+    
     static SBBCacheManager *shared;
     
     static dispatch_once_t onceToken;

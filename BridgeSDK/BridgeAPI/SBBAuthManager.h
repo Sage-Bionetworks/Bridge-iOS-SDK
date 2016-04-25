@@ -34,7 +34,7 @@
 #import "SBBComponent.h"
 #import "SBBNetworkManager.h"
 
-/// Global study identifier, specific to each app. Must be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy: class method.
+/// Global study identifier, specific to each app. Must be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy: or setupWithStudy:useCache: class method.
 extern  NSString * _Nonnull gSBBAppStudy;
 
 @protocol SBBAuthManagerProtocol;

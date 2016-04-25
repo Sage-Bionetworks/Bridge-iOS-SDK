@@ -32,12 +32,18 @@
 
 #import "BridgeSDK.h"
 #import "SBBAuthManagerInternal.h"
+#import "SBBCacheManager.h"
 
 @implementation BridgeSDK
 
 + (void)setupWithStudy:(NSString *)study
 {
     [self setupWithStudy:study environment:gDefaultEnvironment];
+}
+
++ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache
+{
+    [self setupWithStudy:study useCache:useCache environment:gDefaultEnvironment];
 }
 
 + (void)setupWithAppPrefix:(NSString *)appPrefix
@@ -47,8 +53,14 @@
 
 + (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment
 {
+    [self setupWithStudy:study useCache:NO environment:environment];
+}
+
++ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment
+{
     gSBBAppStudy = study;
     gSBBDefaultEnvironment = environment;
+    gSBBUseCache = useCache;
     
     // make sure the Bridge network manager is set up as the delegate for the background session
     [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];

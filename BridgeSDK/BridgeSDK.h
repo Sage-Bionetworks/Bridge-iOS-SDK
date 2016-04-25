@@ -83,7 +83,13 @@ static SBBEnvironment gDefaultEnvironment = kDefaultEnvironment;
  * If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
  *
  *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
+ *  @param useCache A flag indicating whether to use the SDK's built-in persistent caching. Pass NO if you want to handle this yourself.
  *  @param environment Which server environment to run against.
+ */
++ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment;
+
+/*!
+ * Convenience method for setting up the study with caching turned off (default).
  */
 + (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment;
 
@@ -102,6 +108,12 @@ static SBBEnvironment gDefaultEnvironment = kDefaultEnvironment;
  * server environment. If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
  *
  *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
+ *  @param useCache A flag indicating whether to use the SDK's built-in persistent caching. Pass NO if you want to handle this yourself.
+ */
++ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache;
+
+/*!
+ * Convenience method for setting up the study with caching turned off (default).
  */
 + (void)setupWithStudy:(NSString *)study;
 

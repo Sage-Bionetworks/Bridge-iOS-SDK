@@ -37,6 +37,12 @@
 @protocol SBBNetworkManagerProtocol;
 @protocol SBBObjectManagerProtocol;
 
+typedef NS_ENUM(NSUInteger, SBBCachingPolicy) {
+    SBBCachingPolicyNoCaching = 0,
+    SBBCachingPolicyFallBackToCached,
+    SBBCachingPolicyCachedOnly
+};
+
 /*!
  This is the "base protocol" for Bridge API Managers.
  */
