@@ -99,6 +99,16 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     return filtered;
 }
 
+- (void)mapSubObjectsInTaskList:(NSMutableArray *)taskList
+{
+    if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
+        // in case object mapping has been set up
+        for (NSInteger i = 0; i < taskList.count; ++i) {
+            taskList[i] = [((id<SBBObjectManagerInternalProtocol>)self.objectManager) mappedObjectForBridgeObject:taskList[i]];
+        }
+    }
+}
+
 - (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
@@ -107,26 +117,19 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     NSArray *savedTasks = [NSArray array];
     id<SBBCacheManagerProtocol> cacheManager = nil;
     if (gSBBUseCache) {
-        BOOL isInternalObjectManager = [self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)];
-        if (isInternalObjectManager) {
+        if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
             cacheManager = ((id<SBBObjectManagerInternalProtocol>)self.objectManager).cacheManager;
         }
         SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedSingletonObjectOfType:@"ResourceList" createIfMissing:NO];
         
         // if we're going straight to cache, we're done
         if (policy == SBBCachingPolicyCachedOnly) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (completion) {
-                    NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
-                    if (isInternalObjectManager) {
-                        // in case object mapping has been set up
-                        for (NSInteger i = 0; i < requestedTasks.count; ++i) {
-                            requestedTasks[i] = [((id<SBBObjectManagerInternalProtocol>)self.objectManager) mappedObjectForBridgeObject:requestedTasks[i]];
-                        }
-                    }
-                    completion(requestedTasks, nil);
-                }
-            });
+            if (completion) {
+                NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
+                [self mapSubObjectsInTaskList:requestedTasks];
+                completion(requestedTasks, nil);
+            }
+            
             return nil;
         }
         
@@ -153,12 +156,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
         }
         if (completion) {
             NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
-            if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
-                // in case object mapping has been set up
-                for (NSInteger i = 0; i < requestedTasks.count; ++i) {
-                    requestedTasks[i] = [((id<SBBObjectManagerInternalProtocol>)self.objectManager) mappedObjectForBridgeObject:requestedTasks[i]];
-                }
-            }
+            [self mapSubObjectsInTaskList:requestedTasks];
             completion(requestedTasks, error);
         }
     }];
