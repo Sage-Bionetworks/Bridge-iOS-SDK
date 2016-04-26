@@ -12,6 +12,8 @@
 
 @property (nonatomic, strong) id<SBBCacheManagerProtocol> cacheManager;
 
+- (id)mappedObjectForBridgeObject:(SBBBridgeObject *)bridgeObject;
+
 @end
 
 @interface SBBObjectManager () <SBBObjectManagerInternalProtocol>

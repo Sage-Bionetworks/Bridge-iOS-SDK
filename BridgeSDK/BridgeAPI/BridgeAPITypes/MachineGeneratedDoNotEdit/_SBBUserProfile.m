@@ -31,8 +31,12 @@
 //
 
 #import "_SBBUserProfile.h"
+#import "_SBBUserProfileInternal.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
+
+#import "RNEncryptor.h"
+#import "RNDecryptor.h"
 
 @import ObjectiveC;
 
@@ -42,6 +46,8 @@
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (UserProfile)
+
+@property (nullable, nonatomic, retain) NSData* ciphertext;
 
 @property (nullable, nonatomic, retain) NSString* email;
 
@@ -249,14 +255,13 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
-
-        self.email = managedObject.email;
-
-        self.firstName = managedObject.firstName;
-
-        self.lastName = managedObject.lastName;
-
+    NSString *password = cacheManager.encryptionKey;
+    if (password) {
+        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
+        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
+        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+    } else {
+        self = nil;
     }
 
     return self;
@@ -288,13 +293,16 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
-
-    managedObject.email = ((id)self.email == [NSNull null]) ? nil : self.email;
-
-    managedObject.firstName = ((id)self.firstName == [NSNull null]) ? nil : self.firstName;
-
-    managedObject.lastName = ((id)self.lastName == [NSNull null]) ? nil : self.lastName;
+    NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
+    NSError *error;
+    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
+    NSString *password = cacheManager.encryptionKey;
+    if (password && !error) {
+        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:&error];
+        if (!error) {
+            managedObject.ciphertext = ciphertext;
+        }
+    }
 
     // Calling code will handle saving these changes to cacheContext.
 }

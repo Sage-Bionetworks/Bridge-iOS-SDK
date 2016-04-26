@@ -14,6 +14,7 @@
 #import "SBBTestAuthManagerDelegate.h"
 #import "SBBCacheManager.h"
 #import "SBBObjectManagerInternal.h"
+#import "SBBCacheManager.h"
 
 @interface SBBBridgeAPIUnitTestCase ()
 
@@ -30,6 +31,7 @@
     // Put setup code here. This method is called before the invocation of each test method in the class.
     if (!gSBBAppStudy) {
         gSBBAppStudy = @"ios-sdk-int-tests";
+        gSBBUseCache = YES;
     }
     _mockURLSession = [MockURLSession new];
     SBBBridgeNetworkManager *bridgeNetMan = (SBBBridgeNetworkManager *)SBBComponent(SBBBridgeNetworkManager);

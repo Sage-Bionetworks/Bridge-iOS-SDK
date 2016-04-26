@@ -37,10 +37,10 @@
 /*!
  Completion block called when retrieving scheduled activities from the API.
  
- @param activitiesList By default, an SBBResourceList object, unless the ResourceList type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:. The item property (or whatever it was mapped to) contains an NSArray of SBBScheduledActivity objects and the total (or mapped-to) property contains an NSNumber indicating how many ScheduledActivity objects were retrieved--again, unless the ScheduledActivity type has been mapped to a different class.
+ @param activitiesList By default, an array of SBBScheduledActivity objects, unless the ScheduledActivity type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:.
  @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBActivityManagerGetCompletionBlock)(id activitiesList, NSError *error);
+typedef void (^SBBActivityManagerGetCompletionBlock)(NSArray *activitiesList, NSError *error);
 
 /*!
  Completion block called when updating a ScheduledActivity's status to the API.

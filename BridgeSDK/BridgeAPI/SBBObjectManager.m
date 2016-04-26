@@ -35,6 +35,7 @@
 #import "ModelObjectInternal.h"
 #import "SBBComponentManager.h"
 #import "NSDate+SBBAdditions.h"
+#import "SBBBridgeObject.h"
 #import <objc/runtime.h>
 
 
@@ -739,23 +740,7 @@
         
         NSDictionary *mappings = _mappingsForType[type];
         if (mappings) {
-            Class objectClass = [self classFromType:type];
-            if (objectClass == Nil) {
-#if DEBUG
-                NSLog(@"Unable to determine class of object to create for type %@", type);
-#endif
-                return nil;
-            }
-            object = [objectClass new];
-            
-            for (NSString *bridgeFieldKey in [mappings allKeys]) {
-                id bridgeFieldValue = bridgeJson[bridgeFieldKey];
-                if (!bridgeFieldValue) {
-                    continue;
-                }
-                NSString *targetClassKey = mappings[bridgeFieldKey];
-                [self setProperty:targetClassKey inObject:object fromJson:bridgeFieldValue];
-            }
+            object = [self mappedObjectForBridgeJSON:bridgeJson ofType:type withMappings:mappings];
         } else {
             object = bridgeObject;
         }
@@ -852,6 +837,40 @@
     [_classForType removeObjectForKey:type];
     [_typeForClass removeObjectForKey:className];
     [_mappingsForType removeObjectForKey:type];
+}
+
+- (id)mappedObjectForBridgeJSON:(id)bridgeJson ofType:(NSString *)type withMappings:(NSDictionary *)mappings
+{
+    Class objectClass = [self classFromType:type];
+    if (objectClass == Nil) {
+#if DEBUG
+        NSLog(@"Unable to determine class of object to create for type %@", type);
+#endif
+        return nil;
+    }
+    id object = [objectClass new];
+    
+    for (NSString *bridgeFieldKey in [mappings allKeys]) {
+        id bridgeFieldValue = bridgeJson[bridgeFieldKey];
+        if (!bridgeFieldValue) {
+            continue;
+        }
+        NSString *targetClassKey = mappings[bridgeFieldKey];
+        [self setProperty:targetClassKey inObject:object fromJson:bridgeFieldValue];
+    }
+    
+    return object;
+}
+
+- (id)mappedObjectForBridgeObject:(SBBBridgeObject *)bridgeObject
+{
+    NSDictionary *mappings = _mappingsForType[bridgeObject.type];
+    if (!mappings) {
+        return bridgeObject;
+    }
+
+    id bridgeJSON = [bridgeObject dictionaryRepresentationFromObjectManager:self];
+    return [self mappedObjectForBridgeJSON:bridgeJSON ofType:bridgeObject.type withMappings:mappings];
 }
 
 @end
