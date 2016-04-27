@@ -112,11 +112,7 @@
     <entity name="MultiValueConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="allowMultiple" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="allowOther" optional="YES" attributeType="Boolean" syncable="YES"/>
-        <attribute name="enumeration" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="NSArray"/>
-            </userInfo>
-        </attribute>
+        <relationship name="enumeration" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyQuestionOption" inverseName="multiValueConstraints" inverseEntity="SurveyQuestionOption" syncable="YES"/>
     </entity>
     <entity name="ResourceList" parentEntity="BridgeObject" syncable="YES">
         <attribute name="total" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
@@ -253,6 +249,11 @@
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image" inverseName="surveyQuestionOption" inverseEntity="Image" syncable="YES"/>
+        <relationship name="multiValueConstraints" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="MultiValueConstraints" inverseName="enumeration" inverseEntity="MultiValueConstraints" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
     </entity>
     <entity name="SurveyReference" parentEntity="TaskReference" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
@@ -378,7 +379,7 @@
         <element name="SurveyElement" positionX="0" positionY="0" width="128" height="120"/>
         <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="75"/>
         <element name="SurveyQuestion" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="SurveyQuestionOption" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="SurveyQuestionOption" positionX="0" positionY="0" width="128" height="120"/>
         <element name="SurveyReference" positionX="0" positionY="0" width="128" height="105"/>
         <element name="SurveyResponse" positionX="0" positionY="0" width="128" height="135"/>
         <element name="SurveyResponseReference" positionX="0" positionY="0" width="128" height="90"/>

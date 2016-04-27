@@ -51,6 +51,8 @@
 
 @property (nullable, nonatomic, retain) NSManagedObject *image;
 
+@property (nullable, nonatomic, retain) NSManagedObject *multiValueConstraints;
+
 @end
 
 @implementation _SBBSurveyQuestionOption

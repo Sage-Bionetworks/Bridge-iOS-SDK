@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyConstraints.h"
 
+@class SBBSurveyQuestionOption;
+
 @protocol _SBBMultiValueConstraints
 
 @end
@@ -47,6 +49,19 @@
 
 @property (nonatomic, assign) BOOL allowOtherValue;
 
-@property (nonatomic, strong) NSArray* enumeration;
+@property (nonatomic, strong, readonly) NSArray *enumeration;
+
+- (void)addEnumerationObject:(SBBSurveyQuestionOption*)value_ settingInverse: (BOOL) setInverse;
+- (void)addEnumerationObject:(SBBSurveyQuestionOption*)value_;
+- (void)removeEnumerationObjects;
+- (void)removeEnumerationObject:(SBBSurveyQuestionOption*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeEnumerationObject:(SBBSurveyQuestionOption*)value_;
+
+- (void)insertObject:(SBBSurveyQuestionOption*)value inEnumerationAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromEnumerationAtIndex:(NSUInteger)idx;
+- (void)insertEnumeration:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeEnumerationAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInEnumerationAtIndex:(NSUInteger)idx withObject:(SBBSurveyQuestionOption*)value;
+- (void)replaceEnumerationAtIndexes:(NSIndexSet *)indexes withEnumeration:(NSArray *)values;
 
 @end
