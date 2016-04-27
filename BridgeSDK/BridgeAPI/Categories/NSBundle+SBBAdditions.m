@@ -80,4 +80,12 @@
     return [NSURL URLWithString:[NSString stringWithFormat:@"http://appstore.com/%@", appName]];
 }
 
+- (NSString *)appName {
+    return [self objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+}
+
+- (NSString *)appVersion {
+    return [self objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+}
+
 @end

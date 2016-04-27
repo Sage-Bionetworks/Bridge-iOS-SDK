@@ -32,8 +32,15 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSBundle (SBBAdditions)
 
-- (NSURL * _Nonnull)appStoreLinkURL;
+- (NSURL *)appStoreLinkURL;
+
+- (NSString *)appName;
+- (NSString *)appVersion;
 
 @end
+
+NS_ASSUME_NONNULL_END

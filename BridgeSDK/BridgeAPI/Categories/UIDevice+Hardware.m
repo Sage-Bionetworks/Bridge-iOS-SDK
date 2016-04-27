@@ -308,6 +308,13 @@
   return outstring;
 }
 
+- (NSString *)deviceInfo {
+    NSString *deviceModel = [self platformString];
+    NSString *osName = [self systemName];
+    NSString *osVersion = [self systemVersion];
+    return [NSString stringWithFormat:@"%@; %@/%@", deviceModel, osName, osVersion];
+}
+
 // Illicit Bluetooth check -- cannot be used in App Store
 /*
  Class  btclass = NSClassFromString(@"GKBluetoothSupport");
