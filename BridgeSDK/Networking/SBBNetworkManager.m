@@ -31,6 +31,7 @@
 #import "BridgeSDK.h"
 #import "SBBNetworkManagerInternal.h"
 #import "SBBErrors.h"
+#import "NSBundle+SBBAdditions.h"
 #import "NSError+SBBAdditions.h"
 #import "Reachability.h"
 #import "UIDevice+Hardware.h"
@@ -520,13 +521,11 @@ NSString *kAPIPrefix = @"webservices";
     NSBundle *mainBundle = [NSBundle mainBundle];
     UIDevice *currentDevice = [UIDevice currentDevice];
     
-    NSString *appName = [mainBundle objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
-    NSString *appVersion = [mainBundle objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
-    NSString *deviceModel = [currentDevice platformString];
-    NSString *osName = [currentDevice systemName];
-    NSString *osVersion = [currentDevice systemVersion];
+    NSString *appName = [mainBundle appName];
+    NSString *appVersion = [mainBundle appVersion];
+    NSString *deviceInfo = [currentDevice deviceInfo];
     
-    return [NSString stringWithFormat:@"%@/%@ (%@; %@/%@) BridgeSDK/%0.0f", appName, appVersion, deviceModel, osName, osVersion, BridgeSDKVersionNumber];
+    return [NSString stringWithFormat:@"%@/%@ (%@) BridgeSDK/%0.0f", appName, appVersion, deviceInfo, BridgeSDKVersionNumber];
 }
 
 - (NSString *)acceptLanguageHeader

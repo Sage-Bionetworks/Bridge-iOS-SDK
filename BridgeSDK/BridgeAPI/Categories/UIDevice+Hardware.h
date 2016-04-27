@@ -117,4 +117,7 @@ typedef enum {
 
 - (BOOL) hasRetinaDisplay;
 - (UIDeviceFamily) deviceFamily;
+
+- (NSString *) deviceInfo;
+
 @end
