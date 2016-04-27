@@ -1,7 +1,7 @@
 //
-//  SBBUserProfile.h
+//  _SBBUserProfile.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,5 @@
 @property (nonatomic, strong) NSString* firstName;
 
 @property (nonatomic, strong) NSString* lastName;
-
-@property (nonatomic, strong) NSString* username;
 
 @end

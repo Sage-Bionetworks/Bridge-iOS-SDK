@@ -1,28 +1,15 @@
 //
 //  SBBTestBridgeObject.m
-//  BridgeSDK
-//
-//  Created by Erin Mounts on 9/29/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//	
+//  $Id$
 //
 
 #import "SBBTestBridgeObject.h"
 
 @implementation SBBTestBridgeObject
 
-@end
+#pragma mark Abstract method overrides
 
-
-@implementation SBBTestBridgeSubObject
-
-@end
-
-
-@implementation TestMappedSubObject
-
-@end
-
-
-@implementation TestMappedObject
+// Custom logic goes here.
 
 @end

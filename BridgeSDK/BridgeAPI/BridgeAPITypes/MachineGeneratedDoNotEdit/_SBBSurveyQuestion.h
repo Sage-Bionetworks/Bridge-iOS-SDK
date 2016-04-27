@@ -1,7 +1,7 @@
 //
-//  SBBSurveyQuestion.h
+//  _SBBSurveyQuestion.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyElement.h"
 
-#import "SBBSurveyConstraints.h"
+@class SBBSurveyConstraints;
 
 @protocol _SBBSurveyQuestion
 
@@ -41,8 +41,10 @@
 
 @interface _SBBSurveyQuestion : SBBSurveyElement
 
-@property (nonatomic, strong) SBBSurveyConstraints* constraints;
-
 @property (nonatomic, strong) NSString* uiHint;
+
+@property (nonatomic, strong, readwrite) SBBSurveyConstraints *constraints;
+
+- (void) setConstraints: (SBBSurveyConstraints*) constraints_ settingInverse: (BOOL) setInverse;
 
 @end

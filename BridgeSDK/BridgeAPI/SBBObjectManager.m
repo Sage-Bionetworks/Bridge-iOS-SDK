@@ -31,20 +31,17 @@
 //
 
 #import "SBBObjectManager.h"
-#import "ModelObject.h"
+#import "SBBObjectManagerInternal.h"
+#import "ModelObjectInternal.h"
+#import "SBBComponentManager.h"
 #import "NSDate+SBBAdditions.h"
+#import "SBBBridgeObject.h"
 #import <objc/runtime.h>
-
-@interface SBBObjectManager ()
-
-@property (nonatomic, strong) NSMutableDictionary *classForType;
-@property (nonatomic, strong) NSMutableDictionary *typeForClass;
-@property (nonatomic, strong) NSMutableDictionary *mappingsForType;
-
-@end
 
 
 @implementation SBBObjectManager
+
+@synthesize cacheManager;
 
 + (instancetype)defaultComponent
 {
@@ -52,7 +49,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = [[self alloc] init];
+        shared = [self objectManager];
     });
     
     return shared;
@@ -60,7 +57,14 @@
 
 + (instancetype)objectManager
 {
-    return [[self alloc] init];
+    return [self objectManagerWithCacheManager:SBBComponent(SBBCacheManager)];
+}
+
++ (instancetype)objectManagerWithCacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    SBBObjectManager *om = [[self alloc] init];
+    om.cacheManager = cacheManager;
+    return om;
 }
 
 - (instancetype)init
@@ -74,19 +78,45 @@
     return self;
 }
 
-- (Class)classFromType:(NSString *)type
++ (NSString *)bridgeClassNameFromType:(NSString *)type
+{
+    NSString *className = [NSString stringWithFormat:@"SBB%@", type];
+    
+    return className;
+}
+
+- (NSString *)classNameFromType:(NSString *)type
 {
     NSString *className = _classForType[type];
     if (!className.length) {
-        className = [NSString stringWithFormat:@"SBB%@", type];
+        className = [[self class] bridgeClassNameFromType:type];
     }
     
+    return className;
+}
+
++ (Class)classFromClassName:(NSString *)className
+{
     Class classFromType = Nil;
     if (className.length) {
         classFromType = NSClassFromString(className);
     }
     
     return classFromType;
+}
+
++ (Class)bridgeClassFromType:(NSString *)type
+{
+    NSString *className = [self bridgeClassNameFromType:type];
+    
+    return [self classFromClassName:className];
+}
+
+- (Class)classFromType:(NSString *)type
+{
+    NSString *className = [self classNameFromType:type];
+    
+    return [[self class] classFromClassName:className];
 }
 
 - (NSString *)typeFromClass:(Class)objectClass
@@ -656,6 +686,7 @@
     return json;
 }
 
+
 - (id)objectFromBridgeJSON:(id)json
 {
     id object = nil;
@@ -683,31 +714,35 @@
             // not an API object, no way to determine type; just pass it through as raw json
             return json;
         }
-        Class objectClass = [self classFromType:type];
-        if (objectClass == Nil) {
-#if DEBUG
-            NSLog(@"Unable to determine class of object to create for type %@", type);
-#endif
-            return nil;
+        
+        id bridgeJson = json;
+        
+        id bridgeObject = nil;
+        if (gSBBUseCache) {
+            // Try the cache first (if it's not a directly cacheable entity, this will be nil)
+            id<SBBCacheManagerProtocol> cacheMan = self.cacheManager ?: SBBComponent(SBBCacheManager);
+            bridgeObject = [cacheMan cachedObjectFromBridgeJSON:json];
         }
-        object = [objectClass new];
+        // otherwise, our internal class for this type knows how to initialize itself from the json
+        if (bridgeObject) {
+            // in case we got partial json passed in and combined it with what was cached
+            bridgeJson = [bridgeObject dictionaryRepresentationFromObjectManager:self];
+        } else {
+            Class bridgeClass = [[self class] bridgeClassFromType:type];
+            if (bridgeClass == Nil) {
+#if DEBUG
+                NSLog(@"Unable to determine class of object to create for type %@", type);
+#endif
+                return nil;
+            }
+            bridgeObject = [[bridgeClass alloc] initWithDictionaryRepresentation:json objectManager:self];
+        }
+        
         NSDictionary *mappings = _mappingsForType[type];
         if (mappings) {
-            for (NSString *bridgeFieldKey in [mappings allKeys]) {
-                id bridgeFieldValue = json[bridgeFieldKey];
-                if (!bridgeFieldValue) {
-                    continue;
-                }
-                NSString *targetClassKey = mappings[bridgeFieldKey];
-                [self setProperty:targetClassKey inObject:object fromJson:bridgeFieldValue];
-            }
+            object = [self mappedObjectForBridgeJSON:bridgeJson ofType:type withMappings:mappings];
         } else {
-            // assume target class has same fields as API json object; ignore misses
-            for (NSString *fieldKey in json) {
-                // TODO: If need be, set up and handle standard alternate mappings when API field name is an obj-c keyword
-                // or NSObject selector name
-                [self setProperty:fieldKey inObject:object fromJson:json[fieldKey]];
-            }
+            object = bridgeObject;
         }
     }
     
@@ -761,36 +796,14 @@
                 bridgeJSON[@"type"] = type;
             }
         } else {
-            // use our internal class for this type to get a canonical list of properties to convert to json with the
-            // same field names
-            NSString *internalClassNameForType = [NSString stringWithFormat:@"SBB%@", type];
-            Class internalClassForType = NSClassFromString(internalClassNameForType);
-            if (internalClassForType == Nil) {
-#if DEBUG
-                NSLog(@"Couldn't find internal class %@ for type %@, unable to convert to json:\n%@", internalClassNameForType, type, object);
-#endif
-                return nil;
-            }
-            
-            // ignore scalar properties (those will be the "xxxValue" helper properties)
-            NSDictionary *namesAndGetters = [self propertyNamesAndGettersInClass:internalClassForType objectsOnly:YES];
-            for (NSString *fieldKey in namesAndGetters.allKeys) {
-                // TODO: If need be, set up and handle standard alternate mappings when API field name is an obj-c keyword
-                // or NSObject selector name
-                id json = [self getJsonFromProperty:fieldKey inObject:object];
-                if (json) {
-                    bridgeJSON[fieldKey] = json;
-                }
-            }
-            
-            // set the Bridge "type" field, if necessary
-            if (!bridgeJSON[@"type"]) {
-                bridgeJSON[@"type"] = type;
-            }
+            // our internal class for this type knows how to convert itself to json
+            bridgeJSON = [object dictionaryRepresentationFromObjectManager:self];
         }
     }
     return bridgeJSON;
 }
+
+#pragma mark - Object mapping
 
 - (void)setupMappingForType:(NSString *)type toClass:(Class)mapToClass fieldToPropertyMappings:(NSDictionary *)mappings
 {
@@ -824,6 +837,40 @@
     [_classForType removeObjectForKey:type];
     [_typeForClass removeObjectForKey:className];
     [_mappingsForType removeObjectForKey:type];
+}
+
+- (id)mappedObjectForBridgeJSON:(id)bridgeJson ofType:(NSString *)type withMappings:(NSDictionary *)mappings
+{
+    Class objectClass = [self classFromType:type];
+    if (objectClass == Nil) {
+#if DEBUG
+        NSLog(@"Unable to determine class of object to create for type %@", type);
+#endif
+        return nil;
+    }
+    id object = [objectClass new];
+    
+    for (NSString *bridgeFieldKey in [mappings allKeys]) {
+        id bridgeFieldValue = bridgeJson[bridgeFieldKey];
+        if (!bridgeFieldValue) {
+            continue;
+        }
+        NSString *targetClassKey = mappings[bridgeFieldKey];
+        [self setProperty:targetClassKey inObject:object fromJson:bridgeFieldValue];
+    }
+    
+    return object;
+}
+
+- (id)mappedObjectForBridgeObject:(SBBBridgeObject *)bridgeObject
+{
+    NSDictionary *mappings = _mappingsForType[bridgeObject.type];
+    if (!mappings) {
+        return bridgeObject;
+    }
+
+    id bridgeJSON = [bridgeObject dictionaryRepresentationFromObjectManager:self];
+    return [self mappedObjectForBridgeJSON:bridgeJSON ofType:bridgeObject.type withMappings:mappings];
 }
 
 @end

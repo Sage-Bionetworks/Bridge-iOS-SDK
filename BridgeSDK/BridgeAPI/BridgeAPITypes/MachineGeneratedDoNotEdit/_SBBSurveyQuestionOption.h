@@ -1,7 +1,7 @@
 //
-//  SBBSurveyQuestionOption.h
+//  _SBBSurveyQuestionOption.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-#import "SBBImage.h"
+@class SBBImage;
 
 @protocol _SBBSurveyQuestionOption
 
@@ -43,10 +43,12 @@
 
 @property (nonatomic, strong) NSString* detail;
 
-@property (nonatomic, strong) SBBImage* image;
-
 @property (nonatomic, strong) NSString* label;
 
 @property (nonatomic, strong) NSString* value;
+
+@property (nonatomic, strong, readwrite) SBBImage *image;
+
+- (void) setImage: (SBBImage*) image_ settingInverse: (BOOL) setInverse;
 
 @end

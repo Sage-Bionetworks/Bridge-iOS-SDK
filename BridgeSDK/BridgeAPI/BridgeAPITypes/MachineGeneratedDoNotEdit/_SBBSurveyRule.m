@@ -1,7 +1,7 @@
 //
 //  SBBSurveyRule.m
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -31,15 +31,29 @@
 //
 
 #import "_SBBSurveyRule.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 @interface _SBBSurveyRule()
 
 @end
 
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+@interface NSManagedObject (SurveyRule)
+
+@property (nullable, nonatomic, retain) NSString* operator;
+
+@property (nullable, nonatomic, retain) NSString* skipTo;
+
+@property (nullable, nonatomic, retain) id value;
+
+@property (nullable, nonatomic, retain) NSManagedObject *surveyConstraints;
+
+@end
+
 @implementation _SBBSurveyRule
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -53,25 +67,21 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.operator = [dictionary objectForKey:@"operator"];
+    self.operator = [dictionary objectForKey:@"operator"];
 
-        self.skipTo = [dictionary objectForKey:@"skipTo"];
+    self.skipTo = [dictionary objectForKey:@"skipTo"];
 
-        self.value = [dictionary objectForKey:@"value"];
+    self.value = [dictionary objectForKey:@"value"];
 
-	}
-
-	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.operator forKey:@"operator"];
 
@@ -79,7 +89,7 @@
 
     [dict setObjectIfNotNil:self.value forKey:@"value"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -88,6 +98,66 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"SurveyRule" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        self.operator = managedObject.operator;
+
+        self.skipTo = managedObject.skipTo;
+
+        self.value = managedObject.value;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyRule" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [cacheManager cachedObjectForBridgeObject:self inContext:cacheContext];
+    if (managedObject) {
+        [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    managedObject.operator = ((id)self.operator == [NSNull null]) ? nil : self.operator;
+
+    managedObject.skipTo = ((id)self.skipTo == [NSNull null]) ? nil : self.skipTo;
+
+    managedObject.value = ((id)self.value == [NSNull null]) ? nil : self.value;
+
+    // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access

@@ -8,6 +8,24 @@
 
 #import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBUserManagerInternal.h"
+#import "SBBUserProfile.h"
+
+@interface SBBUserProfile (customFields)
+
+@property (nonatomic, strong) NSString *customStringField;
+@property (nonatomic, strong) NSDictionary *customDictField;
+@property (nonatomic, strong) NSArray *customArrayField;
+
+@end
+
+@implementation SBBUserProfile (customFields)
+
+@dynamic customStringField;
+@dynamic customDictField;
+@dynamic customArrayField;
+
+@end
+
 
 @interface SBBUserManagerUnitTests : SBBBridgeAPIUnitTestCase
 
@@ -27,17 +45,27 @@
 
 - (void)testGetUserProfileWithCompletion
 {
-    NSDictionary *userProfile =
-    @{
-      @"type": @"UserProfile",
-      @"firstName": @"First",
-      @"lastName": @"Last",
-      @"username": @"1337p4t13nt",
-      @"email": @"email@fake.tld"
-      };
-    [self.mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
+    SBBUserProfile *testUserProfile = [[SBBUserProfile alloc] init];
+    testUserProfile.firstName = @"First";
+    testUserProfile.lastName = @"Last";
+    testUserProfile.email = @"email@fake.tld";
+    testUserProfile.customStringField = @"customStringFieldContents";
+    testUserProfile.customDictField = @{@"customDictFieldKey": @"customDictFieldValue"};
+    testUserProfile.customArrayField = @[@"customArrayFieldValue1", @"customArrayFieldValue2"];
+    
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
+    NSDictionary *userProfileJSON = [oMan bridgeJSONFromObject:testUserProfile];
+    XCTAssert([[userProfileJSON objectForKey:@"customStringField"] isKindOfClass:[NSString class]], @"Custom string field serializes to NSString");
+    XCTAssert([[userProfileJSON objectForKey:@"customDictField"] isKindOfClass:[NSString class]], @"Custom dictionary field serializes to NSString");
+    XCTAssert([[userProfileJSON objectForKey:@"customArrayField"] isKindOfClass:[NSString class]], @"Custom array field serializes to NSString");
+    [self.mockURLSession setJson:userProfileJSON andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
     SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+    [uMan getUserProfileWithCompletion:^(SBBUserProfile *userProfile, NSError *error) {
+        XCTAssert([userProfile isKindOfClass:[SBBUserProfile class]], @"Converted incoming json to SBBUserProfile");
+        XCTAssertEqualObjects(testUserProfile.customStringField, userProfile.customStringField, @"Custom string field: object equal to JSON");
+        XCTAssertEqualObjects(testUserProfile.customDictField, userProfile.customDictField, @"Custom dict field: object equal to JSON");
+        XCTAssertEqualObjects(testUserProfile.customArrayField, userProfile.customArrayField, @"Custom array field: object equal to JSON");
+    }];
     [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
     [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");

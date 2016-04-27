@@ -1,7 +1,7 @@
 //
-//  <$managedObjectClassName$>.m
+//  <$generatedObjectClassName$>.m
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -27,23 +27,67 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to <$managedObjectClassName$>.h instead.
+// Make changes to <$generatedObjectClassName$>.h instead.
 //
 
-#import "_<$managedObjectClassName$>.h"
+#import "_<$generatedObjectClassName$>.h"<$if needsInternalHeader$>
+#import "_<$generatedObjectClassName$>Internal.h"<$endif$>
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
+<$if userInfo.encrypted$>
+#import "RNEncryptor.h"
+#import "RNDecryptor.h"
+<$endif$>
+<$if userInfo.isExtendable$>
+@import ObjectiveC;
+<$endif$>
 
-<$foreach Relationship noninheritedRelationships do$>#import "<$Relationship.destinationEntity.managedObjectClassName$>.h"
+<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>#import "<$Relationship.destinationEntity.generatedObjectClassName$>.h"
+<$endif$><$endforeach do$>
+
+@interface _<$generatedObjectClassName$>()
+<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if Relationship.isToMany$>@property (nonatomic, strong, readwrite) NSArray *<$Relationship.name$>;
+<$endif$><$endif$><$endforeach do$>
+@end
+
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+@interface NSManagedObject (<$name$>)
+<$foreach Attribute noninheritedAttributes do$>
+<$if Attribute.hasDefinedAttributeType$>@property (nullable, nonatomic, retain) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
 <$endforeach do$>
+<$foreach Relationship noninheritedRelationships do$>
+<$if Relationship.isToMany$>
+<$if Relationship.isOrdered$>
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *<$Relationship.name$>;
+<$else$>
+@property (nullable, nonatomic, retain) NSSet<NSManagedObject *> *<$Relationship.name$>;
+<$endif$>
+<$else$>
+@property (nullable, nonatomic, retain) NSManagedObject *<$Relationship.name$>;
+<$endif$><$endforeach do$>
+<$foreach Relationship noninheritedRelationships do$>
+<$if Relationship.isToMany$>- (void)add<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value;
+- (void)remove<$Relationship.name.initialCapitalString$>Object:(NSManagedObject *)value;
+<$if Relationship.isOrdered$>- (void)add<$Relationship.name.initialCapitalString$>:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)remove<$Relationship.name.initialCapitalString$>:(NSOrderedSet<NSManagedObject *> *)values;
 
-@interface _<$managedObjectClassName$>()
-<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>@property (nonatomic, strong, readwrite) NSArray *<$Relationship.name$>;
+- (void)insertObject:(NSManagedObject *)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx;
+- (void)removeObjectFrom<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx;
+- (void)insert<$Relationship.name.initialCapitalString$>:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
+- (void)remove<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
+- (void)replace<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes with<$Relationship.name.initialCapitalString$>:(NSArray<NSManagedObject *> *)values;
+<$else$>
+- (void)add<$Relationship.name.initialCapitalString$>:(NSSet<NSManagedObject *> *)values;
+- (void)remove<$Relationship.name.initialCapitalString$>:(NSSet<NSManagedObject *> *)values;
+<$endif$>
+<$endif$>
 <$endif$><$endforeach do$>
 @end
 
-@implementation _<$managedObjectClassName$>
+@implementation _<$generatedObjectClassName$>
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -70,77 +114,240 @@
 
 
 #pragma mark Dictionary representation
-
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+<$if userInfo.isExtendable$>
+// Check that the selector corresponds to a property.
+// Note that this doesn't handle custom getter/setter names in the declaration.
++ (objc_property_t)propertyFromSelector:(SEL)sel
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
-	{
-		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
-    <$if Attribute.isReadonly$>
-        <$if Attribute.hasDateAttributeType$>
-        _<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
-        <$else$>
-        _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
-        <$endif$>
-    <$else$>
-        <$if Attribute.hasDateAttributeType$>
-        self.<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
-        <$else$>
-        self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
-        <$endif$>
-    <$endif$>
-		<$endif$><$endforeach do$>
-		<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
-		for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
-		{
-      <$if TemplateVar.arc$>
- 			<$Relationship.destinationEntity.managedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.managedObjectClassName$> alloc] initWithDictionaryRepresentation:objectRepresentationForDict];
-     <$else$>
-			<$Relationship.destinationEntity.managedObjectClassName$> *<$Relationship.name$>Obj = [[[<$Relationship.destinationEntity.managedObjectClassName$> alloc] initWithDictionaryRepresentation:objectRepresentationForDict] autorelease];
-      <$endif$>
-			[self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
-		}<$else$>NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
-		if(<$Relationship.name$>Dict != nil)
-		{
-			<$Relationship.destinationEntity.managedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.destinationEntity.managedObjectClassName$> alloc] initWithDictionaryRepresentation:<$Relationship.name$>Dict];
-			self.<$Relationship.name$> = <$Relationship.name$>Obj;
-      <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
-		}<$endif$><$endif$><$endif$><$endforeach do$>
-	}
-	
-	return self;
+    NSString *propertyName = NSStringFromSelector(sel);
+    objc_property_t property = NULL;
+    if ([propertyName hasSuffix:@":"]) {
+        // setter--assume sel is of the form 'setXxxXxx:' where the property name is 'XxxXxx' or 'xxxXxx'
+        // - cut off the trailing ':'
+        propertyName = [[propertyName substringToIndex:propertyName.length - 1] substringFromIndex:3];
+        property = class_getProperty([self class], [propertyName UTF8String]);
+        if (property == NULL) {
+            // dromedary-camelCase the string and try again
+            propertyName = [[[propertyName substringToIndex:1] lowercaseString] stringByAppendingString:[propertyName substringFromIndex:1]];
+            property = class_getProperty([self class], [propertyName UTF8String]);
+        }
+    } else {
+        // getter--assume selector is property name
+        property = class_getProperty([self class], [propertyName UTF8String]);
+    }
+
+    return property;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+static NSString *nameForProperty(objc_property_t property)
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
+    return [NSString stringWithCString:property_getName(property) encoding:NSUTF8StringEncoding];
+}
+
+static void dynamicSetterIMP(id self, SEL _cmd, id value)
+{
+    objc_property_t property = [[self class] propertyFromSelector:_cmd];
+    if (value) {
+        [[self customFields] setObject:value forKey:nameForProperty(property)];
+    } else {
+        [[self customFields] removeObjectForKey:nameForProperty(property)];
+    }
+}
+
+static id dynamicGetterIMP(id self, SEL _cmd)
+{
+    objc_property_t property = [[self class] propertyFromSelector:_cmd];
+    return [[self customFields] objectForKey:nameForProperty(property)];
+}
+
+// Create the custom fields container on demand.
+// Note: it's an associated object and not just a property because we don't want to include it when serializing the object to JSON.
+- (NSMutableDictionary *)customFields
+{
+    NSMutableDictionary *customFields = objc_getAssociatedObject(self, @selector(customFields));
+    if (!customFields) {
+        customFields = [NSMutableDictionary dictionary];
+        objc_setAssociatedObject(self, @selector(customFields), customFields, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    
+    return customFields;
+}
+
+
+// This is called by the Objective-C runtime when the object receives a message on a selector it doesn't implement.
+// We're going to take advantage of that to provide setter and getter implementations for @dynamic properties
+// declared in categories of <$generatedObjectClassName$>, so that all the existing machinery around marshaling and serializing
+// objects to/from Bridge JSON will just work.
++ (BOOL)resolveInstanceMethod:(SEL)sel
+{
+    BOOL isSetter = [NSStringFromSelector(sel) hasSuffix:@":"];
+    objc_property_t property = [self propertyFromSelector:sel];
+    if (property) {
+        if (isSetter) {
+            // set the IMP for sel to dynamicSetterIMP
+            class_addMethod(self, sel, (IMP)dynamicSetterIMP, "v@:@");
+        } else {
+            // set the IMP for sel to dynamicGetterIMP
+            class_addMethod(self, sel, (IMP)dynamicGetterIMP, "@@:");
+        }
+    }
+    
+    return [super resolveInstanceMethod:sel];
+}
+
+- (NSString *)typeEncodingForPropertyName:(NSString *)propertyName
+{
+    objc_property_t theProperty = class_getProperty([self class], [propertyName UTF8String]);
+    if (theProperty == NULL) {
+        return nil;
+    }
+
+    const char *propertyAttrs = property_getAttributes(theProperty);
+    NSString *propertyAttributes = [NSString stringWithCString:propertyAttrs encoding:NSUTF8StringEncoding];
+    NSArray *attributeList = [propertyAttributes componentsSeparatedByString:@","];
+    NSString *typeEncoding = [attributeList[0] substringFromIndex:1];
+
+    return typeEncoding;
+}
+
+- (BOOL)typeIsNSString:(NSString *)propertyName
+{
+    return [[self typeEncodingForPropertyName:propertyName] isEqualToString:@"@\"NSString\""];
+}
+
+- (NSArray *)originalProperties
+{
+    NSMutableArray *props = [@[<$foreach Attribute allAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>@"<$Attribute.name$>", <$endif$><$endif$><$endforeach do$><$if userInfo.syntheticKeyComponentPaths.length$><$if userInfo.entityIDKeyPath.length$><$userInfo.entityIDKeyPath$>, <$endif$><$endif$><$foreach Relationship allRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$>@"<$Relationship.name$>", <$endif$><$endif$><$endif$><$endforeach do$>@"__end_of_properties__"] mutableCopy];
+    [props removeLastObject];
+
+    return props;
+}
+<$endif$>
+
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
+    <$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>
+<$if Attribute.isReadonly$>
+    <$if Attribute.hasDateAttributeType$>
+    _<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$elseif Attribute.hasSetAttributeType$>
+    _<$Attribute.name$> = [NSSet setWithArray:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$else$>
+    _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+    <$endif$>
+<$else$>
+    <$if Attribute.hasDateAttributeType$>
+    self.<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$elseif Attribute.hasSetAttributeType$>
+    self.<$Attribute.name$> = [NSSet setWithArray:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$else$>
+    self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+    <$endif$>
+<$endif$>
+    <$endif$><$endif$><$endforeach do$>
+<$if userInfo.syntheticKeyComponentPaths.length$><$if userInfo.entityIDKeyPath.length$>
+    NSArray *paths = [@"<$userInfo.syntheticKeyComponentPaths$>" componentsSeparatedByString:@","];
+    NSString *key = @"";
+    for (NSString *path in paths) {
+        NSString *value = [dictionary valueForKeyPath:path];
+        if (!value) {
+            // probably creating in CacheManager, so just use provided synthetic key, if any
+            key = [dictionary valueForKeyPath:@"<$userInfo.entityIDKeyPath$>"] ?: @"";
+            break;
+        }
+        key = [key stringByAppendingString:value];
+    }
+
+    self.<$userInfo.entityIDKeyPath$> = key;
+<$endif$><$endif$>
+    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
+        <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
+    {
+        <$if TemplateVar.arc$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        <$else$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectManager objectFromBridgeJSON:objectRepresentationForDict] autorelease];
+        <$endif$>
+        [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
+    }<$else$>NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
+    if(<$Relationship.name$>Dict != nil)
+    {
+        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:<$Relationship.name$>Dict];
+        self.<$Relationship.name$> = <$Relationship.name$>Obj;
+        <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
+    }<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
+    <$if userInfo.isExtendable$>
+    // now update from the custom fields
+    NSPredicate *pred = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.originalProperties];
+    NSArray *customProperties = [dictionary.allKeys filteredArrayUsingPredicate:pred];
+    for (NSString *propertyName in customProperties) {
+        // Assuming custom properties are not readonly, and why would they be, after all?
+        // ...also assume they are JSON types (NSString, NSNumber, NSNull, NSArray<JSON-types>, NSDictionary<JSON-types>)
+        // ...and that they are not using custom setter names.
+        id value = [dictionary objectForKey:propertyName];
+        if (![self typeIsNSString:propertyName]) {
+            // Custom properties are always serialized as JSON NSStrings.
+            value = [NSJSONSerialization JSONObjectWithData:[value dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+        }
+        NSString *camelizedProp = [[[propertyName substringToIndex:1] uppercaseString] stringByAppendingString:[propertyName substringFromIndex:1]];
+        NSString *setterName = [NSString stringWithFormat:@"set%@:", camelizedProp];
+        SEL setter = NSSelectorFromString(setterName);
+        if ([self respondsToSelector:setter]) {
+            [self performSelector:setter withObject:value];
+        }
+    }
+    <$endif$>
+}
+
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>
     <$if Attribute.hasDateAttributeType$>
     [dict setObjectIfNotNil:[self.<$Attribute.name$> ISO8601String] forKey:@"<$Attribute.name$>"];
+    <$elseif Attribute.hasSetAttributeType$>
+    NSSortDescriptor *desc = [NSSortDescriptor sortDescriptorWithKey:@"" ascending:YES];
+    [dict setObjectIfNotNil:[self.<$Attribute.name$> sortedArrayUsingDescriptors:@[desc]] forKey:@"<$Attribute.name$>"];
     <$else$>
     [dict setObjectIfNotNil:self.<$Attribute.name$> forKey:@"<$Attribute.name$>"];
-    <$endif$>
-	<$endif$><$endforeach do$>
-	<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0)
+    <$endif$><$endif$><$endif$><$endforeach do$>
+    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
+    <$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0)
 	{
 		<$if (! Relationship.isTransient) or (Relationship.userInfo.destinationEntityIDKeyPath) $>
 		NSMutableArray *<$Relationship.name$>RepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.<$Relationship.name$> count]];
-		for(<$Relationship.destinationEntity.managedObjectClassName$> *obj in self.<$Relationship.name$>)
+		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>)
 		{
 			<$if Relationship.userInfo.destinationEntityIDKeyPath $>[<$Relationship.name$>RepresentationsForDictionary addObject:[obj valueForKeyPath:@"<$Relationship.userInfo.destinationEntityIDKeyPath$>"]];
-			<$else$>[<$Relationship.name$>RepresentationsForDictionary addObject:[obj dictionaryRepresentation]];<$endif$>
+			<$else$>[<$Relationship.name$>RepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];<$endif$>
 		}
 		[dict setObjectIfNotNil:<$Relationship.name$>RepresentationsForDictionary forKey:@"<$Relationship.name$>"];
 		<$endif$>
 	}
 	<$else$>
 	<$if Relationship.userInfo.destinationEntityIDKeyPath $>[dict setObjectIfNotNil:[self.<$Relationship.name$> valueForKeyPath:@"<$Relationship.userInfo.destinationEntityIDKeyPath$>"] forKey:@"<$Relationship.name$>"];
-	<$else$><$if ! Relationship.isTransient $>[dict setObjectIfNotNil:[self.<$Relationship.name$> dictionaryRepresentation] forKey:@"<$Relationship.name$>"];
+	<$else$><$if ! Relationship.isTransient $>[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.<$Relationship.name$>] forKey:@"<$Relationship.name$>"];
 	<$endif$>
 	<$endif$>
 	<$endif$>
+    <$endif$>
 	<$endforeach do$>
-	return dict;
+
+    <$if userInfo.isExtendable$>
+    // add in the custom fields
+    NSDictionary *customFields = [self customFields];
+    for (NSString *propertyName in [customFields allKeys]) {
+        id value = customFields[propertyName];
+        if (![self typeIsNSString:propertyName]) {
+            // Custom properties are always serialized as JSON NSStrings.
+            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:value options:0 error:nil];
+            value = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        }
+        [dict setValue:value forKey:propertyName];
+    }
+    <$endif$>
+
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -148,35 +355,206 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 	
-	<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if Relationship.userInfo.destinationEntityIDKeyPath $><$if Relationship.isToMany$>NSArray *<$managedObjectClassName$>_<$Relationship.name$>IDs = [self.sourceDictionaryRepresentation objectForKey:@"<$managedObjectClassName$>.<$Relationship.name$>"];
-	for(id <$managedObjectClassName$>_<$Relationship.name$>ID in <$managedObjectClassName$>_<$Relationship.name$>IDs)
+	<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if Relationship.userInfo.destinationEntityIDKeyPath $><$if Relationship.isToMany$>NSArray *<$generatedObjectClassName$>_<$Relationship.name$>IDs = [self.sourceDictionaryRepresentation objectForKey:@"<$generatedObjectClassName$>.<$Relationship.name$>"];
+	for(id <$generatedObjectClassName$>_<$Relationship.name$>ID in <$generatedObjectClassName$>_<$Relationship.name$>IDs)
 	{
-		<$Relationship.destinationEntity.managedObjectClassName$> *<$Relationship.name$>Obj = [(_<$managedObjectClassName$><_<$managedObjectClassName$>> *)self fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:<$managedObjectClassName$>_<$Relationship.name$>ID];
+		<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [(_<$generatedObjectClassName$><_<$generatedObjectClassName$>> *)self fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:<$generatedObjectClassName$>_<$Relationship.name$>ID];
 		if(<$Relationship.name$>Obj != nil)
 			[self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
 	}
-	<$else$>self.<$Relationship.name$> = [(_<$managedObjectClassName$><_<$managedObjectClassName$>> *)self fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:[self.sourceDictionaryRepresentation objectForKey:@"<$managedObjectClassName$>.<$Relationship.name$>"]];
-	<$if ! Relationship.inverseRelationship.isToMany$>self.<$Relationship.name$>.<$Relationship.inverseRelationship.name$> = (<$managedObjectClassName$>*)self;
-	<$else$>[self.<$Relationship.name$> add<$Relationship.inverseRelationship.name.initialCapitalString$>Object:(<$managedObjectClassName$>*)self];<$endif$>
+	<$else$>self.<$Relationship.name$> = [(_<$generatedObjectClassName$><_<$generatedObjectClassName$>> *)self fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:[self.sourceDictionaryRepresentation objectForKey:@"<$generatedObjectClassName$>.<$Relationship.name$>"]];
+	<$if ! Relationship.inverseRelationship.isToMany$>self.<$Relationship.name$>.<$Relationship.inverseRelationship.name$> = (<$generatedObjectClassName$>*)self;
+	<$else$>[self.<$Relationship.name$> add<$Relationship.inverseRelationship.name.initialCapitalString$>Object:(<$generatedObjectClassName$>*)self];<$endif$>
 	
-	<$endif$><$endif$><$endforeach do$>
+	<$endif$><$endif$><$endif$><$endforeach do$>
 
 
-	<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.isTransient$><$if Relationship.destinationEntity != Relationship.entity $><$if Relationship.isToMany$>
-	for(<$Relationship.destinationEntity.managedObjectClassName$> *<$Relationship.name$>Obj in self.<$Relationship.name$>)
+	<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isTransient$><$if Relationship.destinationEntity != Relationship.entity $><$if Relationship.isToMany$>
+	for(<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj in self.<$Relationship.name$>)
 	{
 		[<$Relationship.name$>Obj awakeFromDictionaryRepresentationInit];
 	}
 	<$else$>[self.<$Relationship.name$> awakeFromDictionaryRepresentationInit];
-	<$endif$><$endif$><$endif$><$endforeach do$>
+	<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
 	
 	[super awakeFromDictionaryRepresentationInit];
 }
 
+#pragma mark Core Data cache
+
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"<$name$>" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+<$if userInfo.encrypted$>
+    NSString *password = cacheManager.encryptionKey;
+    if (password) {
+        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
+        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
+        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+    } else {
+        self = nil;
+    }
+
+    return self;
+<$else$>
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
+    <$if Attribute.hasScalarAttributeType$><$if Attribute.isUnsigned$>
+        // ensure that unsigned-ness is preserved
+    <$if Attribute.isReadonly$>_<$Attribute.name$> = [NSNumber <$Attribute.scalarFactoryMethodName$>[managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>]];
+    <$else$>
+        self.<$Attribute.name$>Value = [managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>];
+    <$endif$>
+    <$else$>
+    <$if Attribute.isReadonly$>
+        _<$Attribute.name$> = managedObject.<$Attribute.name$>;
+    <$else$>
+        self.<$Attribute.name$> = managedObject.<$Attribute.name$>;
+    <$endif$>
+    <$endif$>
+    <$else$>
+    <$if Attribute.isReadonly$>
+        _<$Attribute.name$> = managedObject.<$Attribute.name$>;
+    <$else$>
+        self.<$Attribute.name$> = managedObject.<$Attribute.name$>;
+    <$endif$>
+    <$endif$>
+		<$endif$><$endforeach do$>
+		<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
+            <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
+		for(NSManagedObject *<$Relationship.name$>ManagedObj in managedObject.<$Relationship.name$>)
+		{
+            Class objectClass = [SBBObjectManager bridgeClassFromType:<$Relationship.name$>ManagedObj.entity.name];
+            <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectClass alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if(<$Relationship.name$>Obj != nil)
+            {
+                [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
+            }
+		}<$else$>NSManagedObject *<$Relationship.name$>ManagedObj = managedObject.<$Relationship.name$>;
+        Class <$Relationship.name$>Class = [SBBObjectManager bridgeClassFromType:<$Relationship.name$>ManagedObj.entity.name];
+        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.name$>Class alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(<$Relationship.name$>Obj != nil)
+        {
+          self.<$Relationship.name$> = <$Relationship.name$>Obj;
+        }<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
+    }
+
+    return self;
+<$endif$>
+}
+
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"<$name$>" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+<$if userInfo[@"entityIDKeyPath"]$>
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [cacheManager cachedObjectForBridgeObject:self inContext:cacheContext];
+    if (managedObject) {
+        [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+<$endif$>
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    <$if userInfo.encrypted$>
+    NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
+    NSError *error;
+    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
+    NSString *password = cacheManager.encryptionKey;
+    if (password && !error) {
+        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:&error];
+        if (!error) {
+            managedObject.ciphertext = ciphertext;
+        }
+    }
+    <$else$>
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;<$break$><$endif$><$endforeach do$>
+	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
+    managedObject.<$Attribute.name$> = ((id)self.<$Attribute.name$> == [NSNull null]) ? nil : self.<$Attribute.name$>;
+	<$endif$><$endforeach do$>
+    <$foreach Relationship noninheritedRelationships do$>
+    <$if ! Relationship.userInfo.notInPONSODictionary $>
+    <$if Relationship.isToMany$>
+    <$if ! Relationship.isTransient $>// first make a copy of the existing relationship collection, to iterate through while mutating original
+    id <$Relationship.name$>Copy = managedObject.<$Relationship.name$>;
+
+    // now remove all items from the existing relationship
+    <$if Relationship.isOrdered$>NSMutableOrderedSet<$else$>NSMutableSet<$endif$> *<$Relationship.name$>Set = [managedObject.<$Relationship.name$> mutableCopy];
+    [<$Relationship.name$>Set removeAllObjects];
+    managedObject.<$Relationship.name$> = <$Relationship.name$>Set;
+
+    // now put the "new" items, if any, into the relationship
+    if([self.<$Relationship.name$> count] > 0) {
+		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>) {
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj inContext:cacheContext];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            }
+            <$if Relationship.isOrdered$>NSMutableOrderedSet *<$Relationship.name$>Set = [managedObject mutableOrderedSetValueForKey:@"<$Relationship.name$>"];
+            [<$Relationship.name$>Set addObject:relMo];
+            managedObject.<$Relationship.name$> = <$Relationship.name$>Set;
+            <$else$>[managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
+            <$endif$>
+        }
+	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in <$Relationship.name$>Copy) {
+        <$if Relationship.inverseRelationship.isToMany$>if (![[relMo valueForKey:@"<$Relationship.inverseRelationship.name$>"] count]) {
+        <$else$>if (![relMo valueForKey:@"<$Relationship.inverseRelationship.name$>"]) {
+        <$endif$>   [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    <$Relationship.name$>Copy = nil;
+    <$endif$>
+    <$else$>
+    <$if ! Relationship.isTransient $>
+    <$if Relationship.destinationEntity.userInfo.entityIDKeyPath$>// destination entity <$Relationship.destinationEntity.name$> is directly cacheable, so get it from cache manager
+    NSManagedObject *relMo<$Relationship.name.initialCapitalString$> = [cacheManager cachedObjectForBridgeObject:self.<$Relationship.name$> inContext:cacheContext];
+    <$else$>// destination entity <$Relationship.destinationEntity.name$> is not directly cacheable, so delete it and create the replacement
+    if (managedObject.<$Relationship.name$>) {
+        [cacheContext deleteObject:managedObject.<$Relationship.name$>];
+    }
+    NSManagedObject *relMo<$Relationship.name.initialCapitalString$> = [self.<$Relationship.name$> createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+    <$endif$>
+    [managedObject set<$Relationship.name.initialCapitalString$>:relMo<$Relationship.name.initialCapitalString$>];
+	<$endif$>
+	<$endif$>
+    <$endif$>
+	<$endforeach do$>
+    <$endif$>
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
 
-<$foreach Relationship noninheritedRelationships do$><$if Relationship.isToMany$>
-- (void)add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.managedObjectClassName$>*)value_ settingInverse: (BOOL) setInverse
+<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if Relationship.isToMany$>
+- (void)add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_ settingInverse: (BOOL) setInverse
 {
     if(self.<$Relationship.name$> == nil)
 	{
@@ -193,13 +571,13 @@
 	}
 		
 	[(NSMutableArray *)self.<$Relationship.name$> addObject:value_];
-	<$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
-	    [value_ set<$Relationship.inverseRelationship.name.initialCapitalString$>: (<$managedObjectClassName$>*)self settingInverse: NO];
-	}<$endif$><$endif$>
+	<$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
+	    [value_ set<$Relationship.inverseRelationship.name.initialCapitalString$>: (<$generatedObjectClassName$>*)self settingInverse: NO];
+	}<$endif$><$endif$><$endif$>
 }
-- (void)add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.managedObjectClassName$>*)value_
+- (void)add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_
 {
-    [self add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.managedObjectClassName$>*)value_ settingInverse: YES];
+    [self add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_ settingInverse: YES];
 }
 
 - (void)remove<$Relationship.name.initialCapitalString$>Objects
@@ -216,29 +594,29 @@
 	<$endif$>
 }
 
-- (void)remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.managedObjectClassName$>*)value_ settingInverse: (BOOL) setInverse
+- (void)remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_ settingInverse: (BOOL) setInverse
 {
-    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
+    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
         [value_ set<$Relationship.inverseRelationship.name.initialCapitalString$>: nil settingInverse: NO];
-    }<$endif$><$endif$>
+    }<$endif$><$endif$><$endif$>
     [(NSMutableArray *)self.<$Relationship.name$> removeObject:value_];
 }
 
-- (void)remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.managedObjectClassName$>*)value_
+- (void)remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_
 {
-    [self remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.managedObjectClassName$>*)value_ settingInverse: YES];
+    [self remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_ settingInverse: YES];
 }
 <$if Relationship.isOrdered$>
-- (void)insertObject:(<$Relationship.destinationEntity.managedObjectClassName$>*)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx {
+- (void)insertObject:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx {
     [self insertObject:value in<$Relationship.name.initialCapitalString$>AtIndex:idx settingInverse:YES];
 }
 
-- (void)insertObject:(<$Relationship.destinationEntity.managedObjectClassName$>*)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
+- (void)insertObject:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
 
     [(NSMutableArray *)self.<$Relationship.name$> insertObject:value atIndex:idx];
-    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
-    [value set<$Relationship.inverseRelationship.name.initialCapitalString$>:(<$managedObjectClassName$>*)self settingInverse: NO];
-    }<$endif$><$endif$>
+    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
+    [value set<$Relationship.inverseRelationship.name.initialCapitalString$>:(<$generatedObjectClassName$>*)self settingInverse: NO];
+    }<$endif$><$endif$><$endif$>
 }
 
 - (void)removeObjectFrom<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx {
@@ -246,7 +624,7 @@
 }
 
 - (void)removeObjectFrom<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
-    <$Relationship.destinationEntity.managedObjectClassName$> *object = [self.<$Relationship.name$> objectAtIndex:idx];
+    <$Relationship.destinationEntity.generatedObjectClassName$> *object = [self.<$Relationship.name$> objectAtIndex:idx];
     [self remove<$Relationship.name.initialCapitalString$>Object:object settingInverse:YES];
 }
 
@@ -256,11 +634,11 @@
 
 - (void)insert<$Relationship.name.initialCapitalString$>:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
     [(NSMutableArray *)self.<$Relationship.name$> insertObjects:value atIndexes:indexes];
-    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
-        for (<$Relationship.destinationEntity.managedObjectClassName$>* object in value) {
-            [object set<$Relationship.inverseRelationship.name.initialCapitalString$>:(<$managedObjectClassName$>*)self settingInverse: NO];
+    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
+        for (<$Relationship.destinationEntity.generatedObjectClassName$>* object in value) {
+            [object set<$Relationship.inverseRelationship.name.initialCapitalString$>:(<$generatedObjectClassName$>*)self settingInverse: NO];
         }
-    }<$endif$><$endif$>
+    }<$endif$><$endif$><$endif$>
 }
 
 - (void)remove<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes {
@@ -268,25 +646,25 @@
 }
 
 - (void)remove<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
-    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
+    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
     NSArray *objectsRemoved = [(NSMutableArray *)self.<$Relationship.name$> objectsAtIndexes:indexes];
-        for (<$Relationship.destinationEntity.managedObjectClassName$>* object in objectsRemoved) {
+        for (<$Relationship.destinationEntity.generatedObjectClassName$>* object in objectsRemoved) {
             [object set<$Relationship.inverseRelationship.name.initialCapitalString$>:nil settingInverse: NO];
         }
-    }<$endif$><$endif$>
+    }<$endif$><$endif$><$endif$>
     [(NSMutableArray *)self.<$Relationship.name$> removeObjectsAtIndexes:indexes];
 }
 
-- (void)replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx withObject:(<$Relationship.destinationEntity.managedObjectClassName$>*)value {
+- (void)replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx withObject:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value {
     [self replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:idx withObject:value settingInverse:YES];
 }
 
-- (void)replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx withObject:(<$Relationship.destinationEntity.managedObjectClassName$>*)value settingInverse:(BOOL)setInverse {
-    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
-    <$Relationship.destinationEntity.managedObjectClassName$>* objectReplaced = [(NSMutableArray *)self.<$Relationship.name$> objectAtIndex:idx];
+- (void)replaceObjectIn<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx withObject:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value settingInverse:(BOOL)setInverse {
+    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
+    <$Relationship.destinationEntity.generatedObjectClassName$>* objectReplaced = [(NSMutableArray *)self.<$Relationship.name$> objectAtIndex:idx];
     [objectReplaced set<$Relationship.inverseRelationship.name.initialCapitalString$>:nil settingInverse: NO];
-    [value set<$Relationship.inverseRelationship.name.initialCapitalString$>:(<$managedObjectClassName$>*)self settingInverse: NO];
-    }<$endif$><$endif$>
+    [value set<$Relationship.inverseRelationship.name.initialCapitalString$>:(<$generatedObjectClassName$>*)self settingInverse: NO];
+    }<$endif$><$endif$><$endif$>
     [(NSMutableArray *)self.<$Relationship.name$> replaceObjectAtIndex:idx withObject:value];
 }
 
@@ -295,29 +673,29 @@
 }
 
 - (void)replace<$Relationship.name.initialCapitalString$>AtIndexes:(NSIndexSet *)indexes with<$Relationship.name.initialCapitalString$>:(NSArray *)value settingInverse:(BOOL)setInverse {
-    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
+    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
     NSArray *objectsReplaced = [(NSMutableArray *)self.<$Relationship.name$> objectsAtIndexes:indexes];
-        for (<$Relationship.destinationEntity.managedObjectClassName$>* object in objectsReplaced) {
+        for (<$Relationship.destinationEntity.generatedObjectClassName$>* object in objectsReplaced) {
             [object set<$Relationship.inverseRelationship.name.initialCapitalString$>:nil settingInverse: NO];
         }
-        for (<$Relationship.destinationEntity.managedObjectClassName$>* object in value) {
-            [object set<$Relationship.inverseRelationship.name.initialCapitalString$>:(<$managedObjectClassName$>*)self settingInverse: NO];
+        for (<$Relationship.destinationEntity.generatedObjectClassName$>* object in value) {
+            [object set<$Relationship.inverseRelationship.name.initialCapitalString$>:(<$generatedObjectClassName$>*)self settingInverse: NO];
         }
-    }<$endif$><$endif$>
+    }<$endif$><$endif$><$endif$>
     [(NSMutableArray *)self.<$Relationship.name$> replaceObjectsAtIndexes:indexes withObjects:value];
 }
 <$endif$>
-<$endif$><$endforeach do$>
+<$endif$><$endif$><$endforeach do$>
 
-<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.isToMany$>
-- (void) set<$Relationship.name.initialCapitalString$>: (<$Relationship.destinationEntity.managedObjectClassName$>*) <$Relationship.name$>_ settingInverse: (BOOL) setInverse
+<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isToMany$>
+- (void) set<$Relationship.name.initialCapitalString$>: (<$Relationship.destinationEntity.generatedObjectClassName$>*) <$Relationship.name$>_ settingInverse: (BOOL) setInverse
 {
-    <$if Relationship.inverseRelationship$><$if Relationship.inverseRelationship.isToMany$>if (<$Relationship.name$>_ == nil) {
-        [_<$Relationship.name$> remove<$Relationship.inverseRelationship.name.initialCapitalString$>Object: (<$managedObjectClassName$>*)self settingInverse: NO];
+    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if Relationship.inverseRelationship.isToMany$>if (<$Relationship.name$>_ == nil) {
+        [_<$Relationship.name$> remove<$Relationship.inverseRelationship.name.initialCapitalString$>Object: (<$generatedObjectClassName$>*)self settingInverse: NO];
     }<$else$>if (<$Relationship.name$>_ == nil) {
         [_<$Relationship.name$> set<$Relationship.inverseRelationship.name.initialCapitalString$>: nil settingInverse: NO];
     }
-    <$endif$><$endif$>
+    <$endif$><$endif$><$endif$>
     <$if TemplateVar.arc$>
     _<$Relationship.name$> = <$Relationship.name$>_;
     <$else$>
@@ -327,34 +705,34 @@
     }<$endif$>
     <$endif$>
 
-    <$if Relationship.inverseRelationship$><$if Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
-        [_<$Relationship.name$> add<$Relationship.inverseRelationship.name.initialCapitalString$>Object: (<$managedObjectClassName$>*)self settingInverse: NO];
+    <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
+        [_<$Relationship.name$> add<$Relationship.inverseRelationship.name.initialCapitalString$>Object: (<$generatedObjectClassName$>*)self settingInverse: NO];
     }<$else$>if (setInverse == YES) {
-        [<$Relationship.name$> set<$Relationship.inverseRelationship.name.initialCapitalString$>: (<$managedObjectClassName$>*)self settingInverse: NO];
-    }<$endif$><$endif$>
+        [_<$Relationship.name$> set<$Relationship.inverseRelationship.name.initialCapitalString$>: (<$generatedObjectClassName$>*)self settingInverse: NO];
+    }<$endif$><$endif$><$endif$>
 }
 
-- (void) set<$Relationship.name.initialCapitalString$>: (<$Relationship.destinationEntity.managedObjectClassName$>*) <$Relationship.name$>_
+- (void) set<$Relationship.name.initialCapitalString$>: (<$Relationship.destinationEntity.generatedObjectClassName$>*) <$Relationship.name$>_
 {
     [self set<$Relationship.name.initialCapitalString$>: <$Relationship.name$>_ settingInverse: YES];
 }
 
-- (<$Relationship.destinationEntity.managedObjectClassName$>*) <$Relationship.name$>
+- (<$Relationship.destinationEntity.generatedObjectClassName$>*) <$Relationship.name$>
 {
     return _<$Relationship.name$>;
 }
 
-<$endif$><$endforeach do$>
+<$endif$><$endif$><$endforeach do$>
 
 <$if TemplateVar.arc$>
-<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.isToMany$>@synthesize <$Relationship.name$> = _<$Relationship.name$>;<$endif$><$endforeach do$>
+<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isToMany$>@synthesize <$Relationship.name$> = _<$Relationship.name$>;<$endif$><$endif$><$endforeach do$>
 <$else$>
 - (void)dealloc
 {
     <$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>self.<$Attribute.name$> = nil;
     <$endif$><$endforeach do$>
-    <$foreach Relationship noninheritedRelationships do$>self.<$Relationship.name$> = nil;
-    <$endforeach do$>
+    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>self.<$Relationship.name$> = nil;
+    <$endif$><$endforeach do$>
     [super dealloc];
 }
 
@@ -362,8 +740,8 @@
 
 <$foreach Attribute noninheritedAttributes do$>@synthesize <$Attribute.name$> = _<$Attribute.name$>;
 <$endforeach do$>
-<$foreach Relationship noninheritedRelationships do$>@synthesize <$Relationship.name$> = _<$Relationship.name$>;
-<$endforeach do$>
+<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>@synthesize <$Relationship.name$> = _<$Relationship.name$>;
+<$endif$><$endforeach do$>
 <$endif$>
 
 @end

@@ -51,7 +51,7 @@
           },
       @{
           @"type": @"ScheduledActivity",
-          @"guid": @"task-1-guid",
+          @"guid": @"task-2-guid",
           @"activity": @{
                   @"activityType": @"task",
                   @"label": @"This is a task",
@@ -75,11 +75,9 @@
     [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:kSBBActivityAPI andMethod:@"GET"];
     id<SBBActivityManagerProtocol> tMan = SBBComponent(SBBActivityManager);
     
-    [tMan getScheduledActivitiesForDaysAhead:0 withCompletion:^(SBBResourceList *tasksRList, NSError *error) {
-        XCTAssert([tasksRList isKindOfClass:[SBBResourceList class]], @"Converted incoming json to SBBResourceList");
-        NSArray *tasks = tasksRList.items;
-        XCTAssert([tasks isKindOfClass:[NSArray class]], @"Converted items to NSArray");
-        XCTAssert(tasks.count, @"Converted items to non-empty NSArray");
+    [tMan getScheduledActivitiesForDaysAhead:0 withCompletion:^(NSArray *tasks, NSError *error) {
+        XCTAssert([tasks isKindOfClass:[NSArray class]], @"Converted incoming object to NSArray");
+        XCTAssert(tasks.count, @"Converted object to non-empty NSArray");
         if (tasks.count) {
             SBBScheduledActivity *task0 = tasks[0];
             XCTAssert([task0 isKindOfClass:[SBBScheduledActivity class]], @"Converted items to NSArray of SBBScheduledActivity objects");

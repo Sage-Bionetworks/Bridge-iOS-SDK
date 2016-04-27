@@ -1,7 +1,7 @@
 //
-//  SBBDataGroups.h
+//  _SBBDataGroups.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -39,6 +39,6 @@
 
 @interface _SBBDataGroups : SBBBridgeObject
 
-@property (nonatomic, strong) NSSet<NSString *> * dataGroups;
+@property (nonatomic, strong) NSSet<NSString *>* dataGroups;
 
 @end

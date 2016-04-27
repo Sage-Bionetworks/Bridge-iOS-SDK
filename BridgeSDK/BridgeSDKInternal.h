@@ -31,3 +31,9 @@
 //
 
 #define GLOBAL_API_PREFIX @"/v3"
+
+// SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define SBBBUNDLEIDSTRING @STRINGIZE2(SBBBUNDLEID)
+

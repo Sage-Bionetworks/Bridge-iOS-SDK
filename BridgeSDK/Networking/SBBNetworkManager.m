@@ -123,6 +123,8 @@ NSString *kAPIPrefix = @"webservices";
 
 @property (nonatomic, strong) NSMutableCharacterSet *URLQueryKeysAndValuesAllowedCharacterSet;
 
+- (instancetype)initWithBaseURL:(NSString *)baseURL bridgeStudy:(NSString *)bridgeStudy;
+
 @end
 
 @implementation SBBNetworkManager
@@ -497,7 +499,9 @@ NSString *kAPIPrefix = @"webservices";
         valueString = [[NSString alloc] initWithData:valueData encoding:NSUTF8StringEncoding];
       }
     } else {
+#if DEBUG
       NSLog(@"Unable to determine how to convert parameter '%@' value to string: %@, skipping", param, value);
+#endif
     }
     
     if (valueString) {

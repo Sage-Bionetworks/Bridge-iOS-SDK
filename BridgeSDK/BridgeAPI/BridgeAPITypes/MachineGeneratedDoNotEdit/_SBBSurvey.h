@@ -1,7 +1,7 @@
 //
-//  SBBSurvey.h
+//  _SBBSurvey.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+@class SBBSurveyElement;
+
 @protocol _SBBSurvey
 
 @end
@@ -40,8 +42,6 @@
 @interface _SBBSurvey : SBBBridgeObject
 
 @property (nonatomic, strong) NSDate* createdOn;
-
-@property (nonatomic, strong) NSArray* elements;
 
 @property (nonatomic, strong) NSString* guid;
 
@@ -62,5 +62,20 @@
 @property (nonatomic, strong) NSNumber* version;
 
 @property (nonatomic, assign) double versionValue;
+
+@property (nonatomic, strong, readonly) NSArray *elements;
+
+- (void)addElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse;
+- (void)addElementsObject:(SBBSurveyElement*)value_;
+- (void)removeElementsObjects;
+- (void)removeElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeElementsObject:(SBBSurveyElement*)value_;
+
+- (void)insertObject:(SBBSurveyElement*)value inElementsAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromElementsAtIndex:(NSUInteger)idx;
+- (void)insertElements:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeElementsAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInElementsAtIndex:(NSUInteger)idx withObject:(SBBSurveyElement*)value;
+- (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray *)values;
 
 @end

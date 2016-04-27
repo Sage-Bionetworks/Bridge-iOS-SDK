@@ -363,6 +363,34 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }];
 }
 
+- (NSString *)savedUsername
+{
+    NSString *username = nil;
+    if (_authDelegate) {
+        if ([_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) {
+            username = [_authDelegate usernameForAuthManager:self];
+        }
+    } else {
+        username = [self usernameFromKeychain];
+    }
+    
+    return username;
+}
+
+- (NSString *)savedPassword
+{
+    NSString *password = nil;
+    if (_authDelegate) {
+        if ([_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
+            password = [_authDelegate passwordForAuthManager:self];
+        }
+    } else {
+        password = [self passwordFromKeychain];
+    }
+    
+    return password;
+}
+
 - (void)ensureSignedInWithCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
     if ([self isAuthenticated]) {
@@ -372,18 +400,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }
     else
     {
-        NSString *username = nil;
-        NSString *password = nil;
-        if (_authDelegate) {
-            if ([_authDelegate respondsToSelector:@selector(usernameForAuthManager:)] &&
-                [_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
-                username = [_authDelegate usernameForAuthManager:self];
-                password = [_authDelegate passwordForAuthManager:self];
-            }
-        } else {
-            username = [self usernameFromKeychain];
-            password = [self passwordFromKeychain];
-        }
+        NSString *username = [self savedUsername];
+        NSString *password = [self savedPassword];
         
         if (!username.length || !password.length) {
             if (completion) {

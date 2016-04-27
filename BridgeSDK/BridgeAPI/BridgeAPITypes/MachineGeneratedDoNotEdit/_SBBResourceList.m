@@ -1,7 +1,7 @@
 //
 //  SBBResourceList.m
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -31,15 +31,40 @@
 //
 
 #import "_SBBResourceList.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBBridgeObject.h"
+
 @interface _SBBResourceList()
+@property (nonatomic, strong, readwrite) NSArray *items;
+
+@end
+
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+@interface NSManagedObject (ResourceList)
+
+@property (nullable, nonatomic, retain) NSNumber* total;
+
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *items;
+
+- (void)addItemsObject:(NSManagedObject *)value;
+- (void)removeItemsObject:(NSManagedObject *)value;
+- (void)addItems:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)removeItems:(NSOrderedSet<NSManagedObject *> *)values;
+
+- (void)insertObject:(NSManagedObject *)value inItemsAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
+- (void)insertItems:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
+- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray<NSManagedObject *> *)values;
 
 @end
 
 @implementation _SBBResourceList
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -63,29 +88,40 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.items = [dictionary objectForKey:@"items"];
+    self.total = [dictionary objectForKey:@"total"];
 
-        self.total = [dictionary objectForKey:@"total"];
+    for(id objectRepresentationForDict in [dictionary objectForKey:@"items"])
+    {
+        SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
-	}
+        [self addItemsObject:itemsObj];
+    }
 
-	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
-
-    [dict setObjectIfNotNil:self.items forKey:@"items"];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.total forKey:@"total"];
 
-	return dict;
+    if([self.items count] > 0)
+	{
+
+		NSMutableArray *itemsRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.items count]];
+		for(SBBBridgeObject *obj in self.items)
+		{
+			[itemsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+		}
+		[dict setObjectIfNotNil:itemsRepresentationsForDictionary forKey:@"items"];
+
+	}
+
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -93,9 +129,202 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	for(SBBBridgeObject *itemsObj in self.items)
+	{
+		[itemsObj awakeFromDictionaryRepresentationInit];
+	}
+
 	[super awakeFromDictionaryRepresentationInit];
 }
 
+#pragma mark Core Data cache
+
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"ResourceList" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        self.total = managedObject.total;
+
+		for(NSManagedObject *itemsManagedObj in managedObject.items)
+		{
+            Class objectClass = [SBBObjectManager bridgeClassFromType:itemsManagedObj.entity.name];
+            SBBBridgeObject *itemsObj = [[objectClass alloc] initWithManagedObject:itemsManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if(itemsObj != nil)
+            {
+                [self addItemsObject:itemsObj];
+            }
+		}
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ResourceList" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [cacheManager cachedObjectForBridgeObject:self inContext:cacheContext];
+    if (managedObject) {
+        [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.total = ((id)self.total == [NSNull null]) ? nil : self.total;
+
+    // first make a copy of the existing relationship collection, to iterate through while mutating original
+    id itemsCopy = managedObject.items;
+
+    // now remove all items from the existing relationship
+    NSMutableOrderedSet *itemsSet = [managedObject.items mutableCopy];
+    [itemsSet removeAllObjects];
+    managedObject.items = itemsSet;
+
+    // now put the "new" items, if any, into the relationship
+    if([self.items count] > 0) {
+		for(SBBBridgeObject *obj in self.items) {
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj inContext:cacheContext];
+            } else {
+                // sub object is not directly cacheable, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            }
+            NSMutableOrderedSet *itemsSet = [managedObject mutableOrderedSetValueForKey:@"items"];
+            [itemsSet addObject:relMo];
+            managedObject.items = itemsSet;
+
+        }
+	}
+
+    // now delete any objects that aren't still in the relationship
+    for (NSManagedObject *relMo in itemsCopy) {
+        if (![relMo valueForKey:@"resourceList"]) {
+           [cacheContext deleteObject:relMo];
+        }
+    }
+
+    // ...and let go of the collection copy
+    itemsCopy = nil;
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
+
+- (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse
+{
+    if(self.items == nil)
+	{
+
+		self.items = [NSMutableArray array];
+
+	}
+
+	[(NSMutableArray *)self.items addObject:value_];
+
+}
+- (void)addItemsObject:(SBBBridgeObject*)value_
+{
+    [self addItemsObject:(SBBBridgeObject*)value_ settingInverse: YES];
+}
+
+- (void)removeItemsObjects
+{
+
+	self.items = [NSMutableArray array];
+
+}
+
+- (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse
+{
+
+    [(NSMutableArray *)self.items removeObject:value_];
+}
+
+- (void)removeItemsObject:(SBBBridgeObject*)value_
+{
+    [self removeItemsObject:(SBBBridgeObject*)value_ settingInverse: YES];
+}
+
+- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx {
+    [self insertObject:value inItemsAtIndex:idx settingInverse:YES];
+}
+
+- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
+
+    [(NSMutableArray *)self.items insertObject:value atIndex:idx];
+
+}
+
+- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx {
+    [self removeObjectFromItemsAtIndex:idx settingInverse:YES];
+}
+
+- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
+    SBBBridgeObject *object = [self.items objectAtIndex:idx];
+    [self removeItemsObject:object settingInverse:YES];
+}
+
+- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes {
+    [self insertItems:value atIndexes:indexes settingInverse:YES];
+}
+
+- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
+    [(NSMutableArray *)self.items insertObjects:value atIndexes:indexes];
+
+}
+
+- (void)removeItemsAtIndexes:(NSIndexSet *)indexes {
+    [self removeItemsAtIndexes:indexes settingInverse:YES];
+}
+
+- (void)removeItemsAtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
+
+    [(NSMutableArray *)self.items removeObjectsAtIndexes:indexes];
+}
+
+- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value {
+    [self replaceObjectInItemsAtIndex:idx withObject:value settingInverse:YES];
+}
+
+- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value settingInverse:(BOOL)setInverse {
+
+    [(NSMutableArray *)self.items replaceObjectAtIndex:idx withObject:value];
+}
+
+- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)value {
+    [self replaceItemsAtIndexes:indexes withItems:value settingInverse:YES];
+}
+
+- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)value settingInverse:(BOOL)setInverse {
+
+    [(NSMutableArray *)self.items replaceObjectsAtIndexes:indexes withObjects:value];
+}
 
 @end

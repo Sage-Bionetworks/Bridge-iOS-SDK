@@ -1,7 +1,7 @@
 //
 //  SBBActivity.m
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -31,15 +31,43 @@
 //
 
 #import "_SBBActivity.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
+
+#import "SBBSurveyReference.h"
+#import "SBBSurveyResponseReference.h"
+#import "SBBTaskReference.h"
 
 @interface _SBBActivity()
 
 @end
 
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+@interface NSManagedObject (Activity)
+
+@property (nullable, nonatomic, retain) NSString* activityType;
+
+@property (nullable, nonatomic, retain) NSString* guid;
+
+@property (nullable, nonatomic, retain) NSString* label;
+
+@property (nullable, nonatomic, retain) NSString* labelDetail;
+
+@property (nullable, nonatomic, retain) NSManagedObject *schedule;
+
+@property (nullable, nonatomic, retain) NSManagedObject *scheduledActivity;
+
+@property (nullable, nonatomic, retain) NSManagedObject *survey;
+
+@property (nullable, nonatomic, retain) NSManagedObject *surveyResponse;
+
+@property (nullable, nonatomic, retain) NSManagedObject *task;
+
+@end
+
 @implementation _SBBActivity
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -53,33 +81,45 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.activityType = [dictionary objectForKey:@"activityType"];
+    self.activityType = [dictionary objectForKey:@"activityType"];
 
-        self.guid = [dictionary objectForKey:@"guid"];
+    self.guid = [dictionary objectForKey:@"guid"];
 
-        self.label = [dictionary objectForKey:@"label"];
+    self.label = [dictionary objectForKey:@"label"];
 
-        self.labelDetail = [dictionary objectForKey:@"labelDetail"];
+    self.labelDetail = [dictionary objectForKey:@"labelDetail"];
 
-        self.survey = [dictionary objectForKey:@"survey"];
+        NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
+    if(surveyDict != nil)
+    {
+        SBBSurveyReference *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
+        self.survey = surveyObj;
 
-        self.surveyResponse = [dictionary objectForKey:@"surveyResponse"];
+    }
+        NSDictionary *surveyResponseDict = [dictionary objectForKey:@"surveyResponse"];
+    if(surveyResponseDict != nil)
+    {
+        SBBSurveyResponseReference *surveyResponseObj = [objectManager objectFromBridgeJSON:surveyResponseDict];
+        self.surveyResponse = surveyResponseObj;
 
-        self.task = [dictionary objectForKey:@"task"];
+    }
+        NSDictionary *taskDict = [dictionary objectForKey:@"task"];
+    if(taskDict != nil)
+    {
+        SBBTaskReference *taskObj = [objectManager objectFromBridgeJSON:taskDict];
+        self.task = taskObj;
 
-	}
+    }
 
-	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.activityType forKey:@"activityType"];
 
@@ -89,13 +129,13 @@
 
     [dict setObjectIfNotNil:self.labelDetail forKey:@"labelDetail"];
 
-    [dict setObjectIfNotNil:self.survey forKey:@"survey"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
-    [dict setObjectIfNotNil:self.surveyResponse forKey:@"surveyResponse"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.surveyResponse] forKey:@"surveyResponse"];
 
-    [dict setObjectIfNotNil:self.task forKey:@"task"];
+	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -103,9 +143,176 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	[self.task awakeFromDictionaryRepresentationInit];
+	[self.survey awakeFromDictionaryRepresentationInit];
+	[self.surveyResponse awakeFromDictionaryRepresentationInit];
+
 	[super awakeFromDictionaryRepresentationInit];
 }
 
+#pragma mark Core Data cache
+
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"Activity" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        self.activityType = managedObject.activityType;
+
+        self.guid = managedObject.guid;
+
+        self.label = managedObject.label;
+
+        self.labelDetail = managedObject.labelDetail;
+
+            NSManagedObject *surveyManagedObj = managedObject.survey;
+        Class surveyClass = [SBBObjectManager bridgeClassFromType:surveyManagedObj.entity.name];
+        SBBSurveyReference *surveyObj = [[surveyClass alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(surveyObj != nil)
+        {
+          self.survey = surveyObj;
+        }
+            NSManagedObject *surveyResponseManagedObj = managedObject.surveyResponse;
+        Class surveyResponseClass = [SBBObjectManager bridgeClassFromType:surveyResponseManagedObj.entity.name];
+        SBBSurveyResponseReference *surveyResponseObj = [[surveyResponseClass alloc] initWithManagedObject:surveyResponseManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(surveyResponseObj != nil)
+        {
+          self.surveyResponse = surveyResponseObj;
+        }
+            NSManagedObject *taskManagedObj = managedObject.task;
+        Class taskClass = [SBBObjectManager bridgeClassFromType:taskManagedObj.entity.name];
+        SBBTaskReference *taskObj = [[taskClass alloc] initWithManagedObject:taskManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if(taskObj != nil)
+        {
+          self.task = taskObj;
+        }
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Activity" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [cacheManager cachedObjectForBridgeObject:self inContext:cacheContext];
+    if (managedObject) {
+        [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.activityType = ((id)self.activityType == [NSNull null]) ? nil : self.activityType;
+
+    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
+
+    managedObject.label = ((id)self.label == [NSNull null]) ? nil : self.label;
+
+    managedObject.labelDetail = ((id)self.labelDetail == [NSNull null]) ? nil : self.labelDetail;
+
+    // destination entity SurveyReference is not directly cacheable, so delete it and create the replacement
+    if (managedObject.survey) {
+        [cacheContext deleteObject:managedObject.survey];
+    }
+    NSManagedObject *relMoSurvey = [self.survey createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
+    [managedObject setSurvey:relMoSurvey];
+
+    // destination entity SurveyResponseReference is not directly cacheable, so delete it and create the replacement
+    if (managedObject.surveyResponse) {
+        [cacheContext deleteObject:managedObject.surveyResponse];
+    }
+    NSManagedObject *relMoSurveyResponse = [self.surveyResponse createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
+    [managedObject setSurveyResponse:relMoSurveyResponse];
+
+    // destination entity TaskReference is not directly cacheable, so delete it and create the replacement
+    if (managedObject.task) {
+        [cacheContext deleteObject:managedObject.task];
+    }
+    NSManagedObject *relMoTask = [self.task createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
+    [managedObject setTask:relMoTask];
+
+    // Calling code will handle saving these changes to cacheContext.
+}
+
 #pragma mark Direct access
+
+- (void) setSurvey: (SBBSurveyReference*) survey_ settingInverse: (BOOL) setInverse
+{
+
+    _survey = survey_;
+
+}
+
+- (void) setSurvey: (SBBSurveyReference*) survey_
+{
+    [self setSurvey: survey_ settingInverse: YES];
+}
+
+- (SBBSurveyReference*) survey
+{
+    return _survey;
+}
+
+- (void) setSurveyResponse: (SBBSurveyResponseReference*) surveyResponse_ settingInverse: (BOOL) setInverse
+{
+
+    _surveyResponse = surveyResponse_;
+
+}
+
+- (void) setSurveyResponse: (SBBSurveyResponseReference*) surveyResponse_
+{
+    [self setSurveyResponse: surveyResponse_ settingInverse: YES];
+}
+
+- (SBBSurveyResponseReference*) surveyResponse
+{
+    return _surveyResponse;
+}
+
+- (void) setTask: (SBBTaskReference*) task_ settingInverse: (BOOL) setInverse
+{
+
+    _task = task_;
+
+}
+
+- (void) setTask: (SBBTaskReference*) task_
+{
+    [self setTask: task_ settingInverse: YES];
+}
+
+- (SBBTaskReference*) task
+{
+    return _task;
+}
+
+@synthesize survey = _survey;@synthesize surveyResponse = _surveyResponse;@synthesize task = _task;
 
 @end

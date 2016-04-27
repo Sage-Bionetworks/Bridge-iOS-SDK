@@ -54,4 +54,6 @@ extern SBBEnvironment gSBBDefaultEnvironment;
 
 - (void)clearKeychainStore;
 
+- (NSString *)savedPassword;
+
 @end

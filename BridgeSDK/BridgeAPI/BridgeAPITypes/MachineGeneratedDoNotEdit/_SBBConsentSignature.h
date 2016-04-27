@@ -1,7 +1,7 @@
 //
-//  SBBConsentSignature.h
+//  _SBBConsentSignature.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without

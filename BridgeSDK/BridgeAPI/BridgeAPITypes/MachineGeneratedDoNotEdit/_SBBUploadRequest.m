@@ -1,7 +1,7 @@
 //
 //  SBBUploadRequest.m
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -31,15 +31,29 @@
 //
 
 #import "_SBBUploadRequest.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 @interface _SBBUploadRequest()
 
 @end
 
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+@interface NSManagedObject (UploadRequest)
+
+@property (nullable, nonatomic, retain) NSNumber* contentLength;
+
+@property (nullable, nonatomic, retain) NSString* contentMd5;
+
+@property (nullable, nonatomic, retain) NSString* contentType;
+
+@property (nullable, nonatomic, retain) NSString* name;
+
+@end
+
 @implementation _SBBUploadRequest
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -63,27 +77,23 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.contentLength = [dictionary objectForKey:@"contentLength"];
+    self.contentLength = [dictionary objectForKey:@"contentLength"];
 
-        self.contentMd5 = [dictionary objectForKey:@"contentMd5"];
+    self.contentMd5 = [dictionary objectForKey:@"contentMd5"];
 
-        self.contentType = [dictionary objectForKey:@"contentType"];
+    self.contentType = [dictionary objectForKey:@"contentType"];
 
-        self.name = [dictionary objectForKey:@"name"];
+    self.name = [dictionary objectForKey:@"name"];
 
-	}
-
-	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.contentLength forKey:@"contentLength"];
 
@@ -93,7 +103,7 @@
 
     [dict setObjectIfNotNil:self.name forKey:@"name"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -102,6 +112,70 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"UploadRequest" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        self.contentLength = managedObject.contentLength;
+
+        self.contentMd5 = managedObject.contentMd5;
+
+        self.contentType = managedObject.contentType;
+
+        self.name = managedObject.name;
+
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UploadRequest" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [cacheManager cachedObjectForBridgeObject:self inContext:cacheContext];
+    if (managedObject) {
+        [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    managedObject.contentLength = ((id)self.contentLength == [NSNull null]) ? nil : self.contentLength;
+
+    managedObject.contentMd5 = ((id)self.contentMd5 == [NSNull null]) ? nil : self.contentMd5;
+
+    managedObject.contentType = ((id)self.contentType == [NSNull null]) ? nil : self.contentType;
+
+    managedObject.name = ((id)self.name == [NSNull null]) ? nil : self.name;
+
+    // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access

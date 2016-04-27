@@ -7,6 +7,7 @@
 //
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
+@import BridgeSDK;
 
 @interface SBBUserManagerIntegrationTests : SBBBridgeAPIIntegrationTestCase
 

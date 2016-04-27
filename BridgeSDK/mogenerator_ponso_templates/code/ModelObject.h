@@ -19,6 +19,8 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "SBBObjectManager.h"
+@import CoreData;
 
 /*!
 	Abstract superclass for all of our model classes.
@@ -43,9 +45,12 @@
 - (BOOL)writeToFile:(NSString *)filePath;
 
 - (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary;
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary;
 - (NSDictionary *)dictionaryRepresentation;
 
 - (void)awakeFromDictionaryRepresentationInit;
+
+- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 @end
 

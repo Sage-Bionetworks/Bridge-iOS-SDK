@@ -1,7 +1,7 @@
 //
-//  SBBUserSessionInfo.h
+//  _SBBUserSessionInfo.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-#import "SBBConsentStatus.h"
+@class SBBConsentStatus;
 
 @protocol _SBBUserSessionInfo
 
@@ -44,8 +44,6 @@
 @property (nonatomic, strong) NSNumber* authenticated;
 
 @property (nonatomic, assign) BOOL authenticatedValue;
-
-@property (nonatomic, strong) NSDictionary<NSString *, SBBConsentStatus *>* consentStatuses;
 
 @property (nonatomic, strong) NSNumber* consented;
 
@@ -70,5 +68,13 @@
 @property (nonatomic, assign) BOOL signedMostRecentConsentValue;
 
 @property (nonatomic, strong) NSString* username;
+
+@property (nonatomic, strong, readonly) NSArray *consentStatuses;
+
+- (void)addConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse;
+- (void)addConsentStatusesObject:(SBBConsentStatus*)value_;
+- (void)removeConsentStatusesObjects;
+- (void)removeConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeConsentStatusesObject:(SBBConsentStatus*)value_;
 
 @end

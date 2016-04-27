@@ -1,7 +1,7 @@
 //
-//  SBBScheduledActivity.h
+//  _SBBScheduledActivity.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -33,15 +33,13 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-#import "SBBActivity.h"
+@class SBBActivity;
 
 @protocol _SBBScheduledActivity
 
 @end
 
 @interface _SBBScheduledActivity : SBBBridgeObject
-
-@property (nonatomic, strong) SBBActivity* activity;
 
 @property (nonatomic, strong) NSDate* expiresOn;
 
@@ -58,5 +56,9 @@
 @property (nonatomic, strong) NSDate* startedOn;
 
 @property (nonatomic, strong) NSString* status;
+
+@property (nonatomic, strong, readwrite) SBBActivity *activity;
+
+- (void) setActivity: (SBBActivity*) activity_ settingInverse: (BOOL) setInverse;
 
 @end

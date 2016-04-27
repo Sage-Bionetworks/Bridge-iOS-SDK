@@ -1,7 +1,7 @@
 //
 //  SBBSurveyAnswer.m
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -31,15 +31,39 @@
 //
 
 #import "_SBBSurveyAnswer.h"
+#import "_SBBSurveyAnswerInternal.h"
+#import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
+
+#import "RNEncryptor.h"
+#import "RNDecryptor.h"
 
 @interface _SBBSurveyAnswer()
 
 @end
 
+// see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
+@interface NSManagedObject (SurveyAnswer)
+
+@property (nullable, nonatomic, retain) NSDate* answeredOn;
+
+@property (nullable, nonatomic, retain) NSArray* answers;
+
+@property (nullable, nonatomic, retain) NSData* ciphertext;
+
+@property (nullable, nonatomic, retain) NSString* client;
+
+@property (nullable, nonatomic, retain) NSNumber* declined;
+
+@property (nullable, nonatomic, retain) NSString* questionGuid;
+
+@property (nullable, nonatomic, retain) NSManagedObject *surveyResponse;
+
+@end
+
 @implementation _SBBSurveyAnswer
 
-- (id)init
+- (instancetype)init
 {
 	if((self = [super init]))
 	{
@@ -63,29 +87,25 @@
 
 #pragma mark Dictionary representation
 
-- (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary
+- (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	if((self = [super initWithDictionaryRepresentation:dictionary]))
-	{
+    [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-        self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
+    self.answeredOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"answeredOn"]];
 
-        self.answers = [dictionary objectForKey:@"answers"];
+    self.answers = [dictionary objectForKey:@"answers"];
 
-        self.client = [dictionary objectForKey:@"client"];
+    self.client = [dictionary objectForKey:@"client"];
 
-        self.declined = [dictionary objectForKey:@"declined"];
+    self.declined = [dictionary objectForKey:@"declined"];
 
-        self.questionGuid = [dictionary objectForKey:@"questionGuid"];
+    self.questionGuid = [dictionary objectForKey:@"questionGuid"];
 
-	}
-
-	return self;
 }
 
-- (NSDictionary *)dictionaryRepresentation
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[super dictionaryRepresentation]];
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:[self.answeredOn ISO8601String] forKey:@"answeredOn"];
 
@@ -97,7 +117,7 @@
 
     [dict setObjectIfNotNil:self.questionGuid forKey:@"questionGuid"];
 
-	return dict;
+	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
@@ -106,6 +126,68 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
+}
+
+#pragma mark Core Data cache
+
+- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:@"SurveyAnswer" inManagedObjectContext:context];
+}
+
+- (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSString *password = cacheManager.encryptionKey;
+    if (password) {
+        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
+        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
+        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+    } else {
+        self = nil;
+    }
+
+    return self;
+
+}
+
+- (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyAnswer" inManagedObjectContext:cacheContext];
+    [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (NSManagedObject *)saveToContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    NSManagedObject *managedObject = [cacheManager cachedObjectForBridgeObject:self inContext:cacheContext];
+    if (managedObject) {
+        [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
+
+    return managedObject;
+}
+
+- (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+
+    NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
+    NSError *error;
+    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
+    NSString *password = cacheManager.encryptionKey;
+    if (password && !error) {
+        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:&error];
+        if (!error) {
+            managedObject.ciphertext = ciphertext;
+        }
+    }
+
+    // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access

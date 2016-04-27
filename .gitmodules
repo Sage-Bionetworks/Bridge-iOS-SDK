@@ -1,0 +1,3 @@
+[submodule "Submodules/RNCryptor"]
+	path = Submodules/RNCryptor
+	url = https://github.com/RNCryptor/RNCryptor.git

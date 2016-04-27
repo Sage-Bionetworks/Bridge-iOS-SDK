@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 4.3">
+    <entity name="BridgeObject_test" isAbstract="YES" syncable="YES">
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="parentTestBridgeObject" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TestBridgeObject" inverseName="bridgeObjectArrayField" inverseEntity="TestBridgeObject" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="TestBridgeCacheableSubObject" parentEntity="TestBridgeSubObject" syncable="YES">
+        <userInfo>
+            <entry key="entityIDKeyPath" value="stringField"/>
+        </userInfo>
+    </entity>
+    <entity name="TestBridgeObject" parentEntity="BridgeObject_test" syncable="YES">
+        <attribute name="dateField" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="doubleField" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="floatField" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="jsonArrayField" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray"/>
+            </userInfo>
+        </attribute>
+        <attribute name="jsonDictField" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSDictionary"/>
+            </userInfo>
+        </attribute>
+        <attribute name="longField" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="longLongField" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="shortField" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="stringField" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uLongField" optional="YES" attributeType="Integer 32" minValueString="0" defaultValueString="0" syncable="YES"/>
+        <attribute name="uLongLongField" optional="YES" attributeType="Integer 64" minValueString="0" defaultValueString="0" syncable="YES"/>
+        <attribute name="uShortField" optional="YES" attributeType="Integer 16" minValueString="0" defaultValueString="0" syncable="YES"/>
+        <relationship name="bridgeObjectArrayField" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject_test" inverseName="parentTestBridgeObject" inverseEntity="BridgeObject_test" syncable="YES"/>
+        <relationship name="bridgeObjectSetField" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="TestBridgeSubObject" inverseName="testBridgeObjectSet" inverseEntity="TestBridgeSubObject" syncable="YES"/>
+        <relationship name="bridgeSubObjectField" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TestBridgeSubObject" inverseName="testBridgeObjectArray" inverseEntity="TestBridgeSubObject" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="guid"/>
+        </userInfo>
+    </entity>
+    <entity name="TestBridgeSubObject" parentEntity="BridgeObject_test" syncable="YES">
+        <attribute name="stringField" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="testBridgeObjectArray" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TestBridgeObject" inverseName="bridgeSubObjectField" inverseEntity="TestBridgeObject" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="testBridgeObjectSet" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="TestBridgeObject" inverseName="bridgeObjectSetField" inverseEntity="TestBridgeObject" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <elements>
+        <element name="BridgeObject_test" positionX="-54" positionY="90" width="128" height="75"/>
+        <element name="TestBridgeObject" positionX="-63" positionY="-18" width="128" height="285"/>
+        <element name="TestBridgeSubObject" positionX="-36" positionY="108" width="128" height="90"/>
+        <element name="TestBridgeCacheableSubObject" positionX="-54" positionY="108" width="128" height="45"/>
+    </elements>
+</model>

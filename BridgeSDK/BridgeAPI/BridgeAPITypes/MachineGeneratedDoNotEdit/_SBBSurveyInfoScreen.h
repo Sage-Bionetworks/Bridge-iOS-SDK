@@ -1,7 +1,7 @@
 //
-//  SBBSurveyInfoScreen.h
+//  _SBBSurveyInfoScreen.h
 //
-//	Copyright (c) 2014, 2015 Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyElement.h"
 
-#import "SBBImage.h"
+@class SBBImage;
 
 @protocol _SBBSurveyInfoScreen
 
@@ -41,8 +41,10 @@
 
 @interface _SBBSurveyInfoScreen : SBBSurveyElement
 
-@property (nonatomic, strong) SBBImage* image;
-
 @property (nonatomic, strong) NSString* title;
+
+@property (nonatomic, strong, readwrite) SBBImage *image;
+
+- (void) setImage: (SBBImage*) image_ settingInverse: (BOOL) setInverse;
 
 @end

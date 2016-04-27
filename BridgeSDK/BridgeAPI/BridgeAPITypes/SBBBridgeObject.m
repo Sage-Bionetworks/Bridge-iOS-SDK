@@ -28,6 +28,9 @@
 //
 
 #import "SBBBridgeObject.h"
+#import "SBBObjectManager.h"
+#import "SBBComponentManager.h"
+#import "ModelObjectInternal.h"
 
 @implementation SBBBridgeObject
 
@@ -51,7 +54,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat: @"<%@ %@> %@", NSStringFromClass([self class]), @([self hash]), self.dictionaryRepresentation];
+    return [NSString stringWithFormat: @"<%@ %p> %@", NSStringFromClass([self class]), self, self.dictionaryRepresentation];
 }
 
 @end
