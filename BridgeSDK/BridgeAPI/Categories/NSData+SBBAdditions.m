@@ -97,7 +97,7 @@
 
 - (NSString *)hexMD5
 {
-    const char *result = [self dataMD5].bytes;
+    const unsigned char *result = [self dataMD5].bytes;
     return [NSString stringWithFormat:
             @"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
             result[0], result[1], result[2], result[3],
