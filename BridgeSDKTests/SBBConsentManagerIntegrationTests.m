@@ -109,7 +109,7 @@
             [expectSigned fulfill];
         } else {
             unconsentedEmail = emailAddress;
-            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
@@ -165,7 +165,7 @@
         } else {
             unconsentedEmail = emailAddress;
             NSArray *dataGroups = @[@"sdk-int-1", @"sdk-int-2"];
-            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
@@ -277,7 +277,7 @@
     [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             consentedEmail = emailAddress;
-            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in consented user %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
                     [expectWithdrew fulfill];

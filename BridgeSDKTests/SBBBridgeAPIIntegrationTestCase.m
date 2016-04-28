@@ -50,7 +50,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         NSDictionary *credentials = [[NSDictionary alloc] initWithContentsOfFile:credentialsPlist][@"studies"];
         NSDictionary *studyCredentials = credentials[gSBBAppStudy];
         
-        [gAdminAuthManager signInWithUsername:studyCredentials[@"username"] password:studyCredentials[@"password"] completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [gAdminAuthManager signInWithEmail:studyCredentials[@"email"] password:studyCredentials[@"password"] completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
             if (error) {
                 NSLog(@"Error logging in to admin account:\n%@\nResponse: %@", error, responseObject);
             } else {
@@ -78,7 +78,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         } else {
             _devUserEmail = emailAddress;
             _devUserPassword = password;
-            [gDevAuthManager signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [gDevAuthManager signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to dev user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 }
@@ -106,7 +106,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
         } else {
             _testUserEmail = emailAddress;
             _testUserPassword = password;
-            [SBBComponent(SBBAuthManager) signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [SBBComponent(SBBAuthManager) signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 }

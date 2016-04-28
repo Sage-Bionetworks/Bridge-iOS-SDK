@@ -85,17 +85,17 @@ extern  NSString * _Nonnull gSBBAppStudy;
 /*!
  *  If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
  *  when it obtains a new session token, so that the delegate can store the username and password used,
- *  to be returned later in the usernameForAuthManager: and passwordForAuthManager: calls.
+ *  to be returned later in the emailForAuthManager: and passwordForAuthManager: calls.
  *
  *  @note This method is optional. It provides a convenient interface for keeping track of the auth credentials used in the most recent successful signIn, for re-use when automatically refreshing an expired session token.
  *
  *  @param authManager The auth manager instance making the delegate request.
  *  @param sessionToken The session token just obtained by the auth manager.
  */
-- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken forUsername:(nullable NSString *)username andPassword:(nullable NSString *)password;
+- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken forEmail:(nullable NSString *)email andPassword:(nullable NSString *)password;
 
 /*!
- *  This delegate method should return the username for the user account last signed up for or signed in to,
+ *  This delegate method should return the email for the user account last signed up for or signed in to,
  *  or nil if the user has never signed up or signed in on this device.
  *
  *  @note This method is optional. If both this and passwordForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.
@@ -104,13 +104,19 @@ extern  NSString * _Nonnull gSBBAppStudy;
  *
  *  @return The username, or nil.
  */
-- (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
+- (nullable NSString *)emailForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
+
+/*!
+ * For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this. 
+ */
+- (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager __deprecated;
+
 
 /*!
  *  This delegate method should return the password for the user account last signed up for or signed in to,
  *  or nil if the user has never signed up or signed in on this device.
  *
- *  @note This method is optional. If both this and usernameForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.
+ *  @note This method is optional. If both this and emailForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.
  *
  *  @param authManager The auth manager instance making the delegate request.
  *
@@ -170,14 +176,19 @@ extern  NSString * _Nonnull gSBBAppStudy;
 - (nonnull NSURLSessionDataTask *)resendEmailVerification:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
- * Sign in to an existing account with a userName and password.
+ * Sign in to an existing account with an email and password.
  *
- * @param username The username of the account being signed into.
+ * @param email The email address of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
  * @param password The password of the account.
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you've mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of id<SBBObjectManagerProtocol> if you've set one up).
  * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionDataTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).
+ */
+- (nonnull NSURLSessionDataTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __deprecated;
 
 /*!
  * Sign out of the user's Bridge account.

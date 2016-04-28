@@ -72,7 +72,7 @@
     aMan.authDelegate = delegate;
     XCTestExpectation *expectBadUserFails = [self expectationWithDescription:@"signIn failed for nonexistent user"];
 
-    [aMan signInWithUsername:@"notSignedUp" password:@"notAPassword" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [aMan signInWithEmail:@"notSignedUp" password:@"notAPassword" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
         [expectBadUserFails fulfill];
     }];
@@ -89,7 +89,7 @@
     [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             unconsentedEmail = emailAddress;
-            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet, @"Valid credentials, no consent test");
                 [aMan clearKeychainStore];
                 [expect412Unconsented fulfill];
@@ -117,7 +117,7 @@
     [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             consentedEmail = emailAddress;
-            [aMan signInWithUsername:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 XCTAssert(!error
                           && [responseObject[@"type"] isEqualToString:@"UserSessionInfo"]
                           && [responseObject[@"sessionToken"] length] > 0,

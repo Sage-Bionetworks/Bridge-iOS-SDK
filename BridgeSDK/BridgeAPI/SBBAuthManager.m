@@ -58,7 +58,7 @@ static NSString *envSessionTokenKeyFormat[] = {
     @"SBBSessionTokenCustom-%@"
 };
 
-static NSString *envUsernameKeyFormat[] = {
+static NSString *envEmailKeyFormat[] = {
     @"SBBUsername-%@",
     @"SBBUsernameStaging-%@",
     @"SBBusernameDev-%@",
@@ -296,14 +296,19 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"username":username, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self signInWithEmail:username password:password completion:completion];
+}
+
+- (NSURLSessionDataTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Save session token in the keychain
         // ??? Save credentials in the keychain?
         NSString *sessionToken = responseObject[@"sessionToken"];
         if (sessionToken.length) {
             if (_authDelegate) {
-                if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forUsername:andPassword:)]) {
-                    [_authDelegate authManager:self didGetSessionToken:sessionToken forUsername:username andPassword:password];
+                if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)]) {
+                    [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
                 } else {
                     [_authDelegate authManager:self didGetSessionToken:sessionToken];
                 }
@@ -314,7 +319,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                 dispatchSyncToKeychainQueue(^{
                     UICKeyChainStore *store = [self.class sdkKeychainStore];
                     [store setString:_sessionToken forKey:self.sessionTokenKey];
-                    [store setString:username forKey:self.usernameKey];
+                    [store setString:email forKey:self.emailKey];
                     [store setString:password forKey:self.passwordKey];
                     
                     [store synchronize];
@@ -336,10 +341,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         // Remove the session token (and credentials?) from the keychain
         // ??? Do we want to not do this in case of error?
         if (_authDelegate) {
-            if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forUsername:andPassword:)] &&
-                [_authDelegate respondsToSelector:@selector(usernameForAuthManager:)] &&
+            if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)] &&
+                ([_authDelegate respondsToSelector:@selector(emailForAuthManager:)] ||
+                 [_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) &&
                 [_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
-                [_authDelegate authManager:self didGetSessionToken:nil forUsername:nil andPassword:nil];
+                [_authDelegate authManager:self didGetSessionToken:nil forEmail:nil andPassword:nil];
             } else {
                 [_authDelegate authManager:self didGetSessionToken:nil];
             }
@@ -347,7 +353,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             dispatchSyncToKeychainQueue(^{
                 UICKeyChainStore *store = [self.class sdkKeychainStore];
                 [store removeItemForKey:self.sessionTokenKey];
-                [store removeItemForKey:self.usernameKey];
+                [store removeItemForKey:self.emailKey];
                 [store removeItemForKey:self.passwordKey];
                 [store synchronize];
             });
@@ -363,18 +369,20 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }];
 }
 
-- (NSString *)savedUsername
+- (NSString *)savedEmail
 {
-    NSString *username = nil;
+    NSString *email = nil;
     if (_authDelegate) {
-        if ([_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) {
-            username = [_authDelegate usernameForAuthManager:self];
+        if ([_authDelegate respondsToSelector:@selector(emailForAuthManager:)]) {
+            email = [_authDelegate emailForAuthManager:self];
+        } else if ([_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) {
+            email = [_authDelegate usernameForAuthManager:self];
         }
     } else {
-        username = [self usernameFromKeychain];
+        email = [self emailFromKeychain];
     }
     
-    return username;
+    return email;
 }
 
 - (NSString *)savedPassword
@@ -400,17 +408,17 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }
     else
     {
-        NSString *username = [self savedUsername];
+        NSString *email = [self savedEmail];
         NSString *password = [self savedPassword];
         
-        if (!username.length || !password.length) {
+        if (!email.length || !password.length) {
             if (completion) {
                 completion(nil, nil, [NSError SBBNoCredentialsError]);
             }
         }
         else
         {
-            [self signInWithUsername:username password:password completion:completion];
+            [self signInWithEmail:email password:password completion:completion];
         }
     }
 }
@@ -460,12 +468,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return token;
 }
 
-- (NSString *)usernameKey
+- (NSString *)emailKey
 {
-    return [NSString stringWithFormat:envUsernameKeyFormat[_networkManager.environment], gSBBAppStudy];
+    return [NSString stringWithFormat:envEmailKeyFormat[_networkManager.environment], gSBBAppStudy];
 }
 
-- (NSString *)usernameFromKeychain
+- (NSString *)emailFromKeychain
 {
     if (!gSBBAppStudy) {
         return nil;
@@ -473,7 +481,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     
     __block NSString *token = nil;
     dispatchSyncToKeychainQueue(^{
-        token = [[self.class sdkKeychainStore] stringForKey:[self usernameKey]];
+        token = [[self.class sdkKeychainStore] stringForKey:[self emailKey]];
     });
     
     return token;
