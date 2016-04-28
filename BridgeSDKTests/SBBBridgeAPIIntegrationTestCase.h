@@ -11,6 +11,8 @@
 
 #define TEST_STUDY @"api"
 
+extern NSString * const kUserSessionInfoIdKey;
+
 typedef void (^SBBBridgeAPIIntegrationTestCaseCreateCompletionBlock)(NSString *emailAddress, NSString *password, id responseObject, NSError *error);
 typedef void (^SBBBridgeAPIIntegrationTestCaseCreateSubpopCompletionBlock)(NSString *subpopGuid, id responseObject, NSError *error);
 

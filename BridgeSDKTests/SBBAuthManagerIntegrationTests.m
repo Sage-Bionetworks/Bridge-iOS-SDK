@@ -47,20 +47,30 @@
         }
     }];
     
-    // delete the test user just created
-    XCTestExpectation *expectDelete = [self expectationWithDescription:@"delete completion handler called"];
-    [self deleteUser:emailAddress completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-        if (!error) {
-            NSLog(@"Deleted test account %@", emailAddress);
+    // ok we need the user id to delete the account we just signed up, but we don't get it in the signup response
+    // so we have to sign in to delete it.
+    XCTestExpectation *expectSignedInAndDeleted = [self expectationWithDescription:@"signIn to delete failed for test signUp user"];
+    
+    [SBBComponent(SBBAuthManager) signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"Failed to sign in to delete test signUp user: %@", error);
+            [expectSignedInAndDeleted fulfill];
         } else {
-            NSLog(@"Failed to delete test account %@\n\nError:%@\nResponse:%@", emailAddress, error, responseObject);
+            // delete the test user just created
+            [self deleteUser:responseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                if (!error) {
+                    NSLog(@"Deleted test account %@", emailAddress);
+                } else {
+                    NSLog(@"Failed to delete test signUp account %@ after successfully signing in\n\nError:%@\nResponse:%@", emailAddress, error, responseObject);
+                }
+                [expectSignedInAndDeleted fulfill];
+            }];
         }
-        [expectDelete fulfill];
     }];
     
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
-            NSLog(@"Timeout Error: %@", error);
+            NSLog(@"Timeout signing in to delete signUp test user: %@", error);
         }
     }];
 }
@@ -85,13 +95,18 @@
     
     XCTestExpectation *expect412Unconsented = [self expectationWithDescription:@"signIn returns a 412 status code for unconsented user"];
     
+    __block NSString *unconsentedId = nil;
     __block NSString *unconsentedEmail = nil;
     [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
-        if (!error) {
+        if (error) {
+            NSLog(@"Failed to create unconsented test user");
+            [expect412Unconsented fulfill];
+        } else {
             unconsentedEmail = emailAddress;
             [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet, @"Valid credentials, no consent test");
                 [aMan clearKeychainStore];
+                unconsentedId = responseObject[kUserSessionInfoIdKey];
                 [expect412Unconsented fulfill];
             }];
         }
@@ -104,13 +119,17 @@
     }];
     
     // clean up the unconsented user we just created (no need to wait for it to finish, nothing else depends on it)
-    [self deleteUser:unconsentedEmail completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-        if (!error) {
-            NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
-        } else {
-            NSLog(@"Failed to delete unconsented test account %@\n\nError:%@\nResponse:%@", unconsentedEmail, error, responseObject);
-        }
-    }];
+    if (unconsentedId) {
+        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            if (!error) {
+                NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
+            } else {
+                NSLog(@"Failed to delete unconsented test account %@\n\nError:%@\nResponse:%@", unconsentedEmail, error, responseObject);
+            }
+        }];
+    } else {
+        NSLog(@"Failed to retrieve test account id for %@, account not deleted", unconsentedEmail);
+    }
     
     XCTestExpectation *expectSignedIn = [self expectationWithDescription:@"consented test user signed in"];
     __block NSString *consentedEmail = nil;

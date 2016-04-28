@@ -103,6 +103,7 @@
     XCTestExpectation *expectSigned = [self expectationWithDescription:@"consent signature recorded"];
     
     __block NSString *unconsentedEmail = nil;
+    __block NSString *unconsentedId = nil;
     [self createTestUserConsented:NO roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error creating unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
@@ -114,6 +115,7 @@
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
                 } else {
+                    unconsentedId = responseObject[kUserSessionInfoIdKey];
                     [cMan consentSignature:@"Eggplant McTester" birthdate:[NSDate dateWithTimeIntervalSinceNow:-(30 * 365.25 * 86400)] signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id responseObject, NSError *error) {
                         if (error) {
                             NSLog(@"Error recording consent signature:\n%@\nResponse: %@", error, responseObject);
@@ -133,13 +135,17 @@
     }];
     
     // clean up the test user we just created (no need to wait for it to finish, nothing else depends on it)
-    [self deleteUser:unconsentedEmail completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-        if (!error) {
-            NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
-        } else {
-            NSLog(@"Failed to delete unconsented test account %@\n\nError:%@\nResponse:%@", unconsentedEmail, error, responseObject);
-        }
-    }];
+    if (unconsentedId) {
+        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            if (!error) {
+                NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
+            } else {
+                NSLog(@"Failed to delete unconsented test account %@\n\nError:%@\nResponse:%@", unconsentedEmail, error, responseObject);
+            }
+        }];
+    } else {
+        NSLog(@"Failed to retrieve test account id for %@, account not deleted", unconsentedEmail);
+    }
 }
 
 - (void)testConsentAndGetSignatureForSubpop {
@@ -153,6 +159,7 @@
     XCTestExpectation *expectSigned = [self expectationWithDescription:@"consent signature recorded"];
     
     __block NSString *unconsentedEmail = nil;
+    __block NSString *unconsentedId = nil;
     __block BOOL consentSigned = NO;
     
     NSString *signname = @"Eggplant McTester";
@@ -170,34 +177,33 @@
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
                 } else {
+                    unconsentedId = responseObject[kUserSessionInfoIdKey];
                     // sign default (required) consent first
-                    {
-                        [cMan consentSignature:signname forSubpopulationGuid:gSBBAppStudy birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
-                            if (error) {
-                                NSLog(@"Error recording default consent signature:\n%@\nResponse: %@", error, responseObject);
-                                [expectSigned fulfill];
-                            } else {
-                                // add to subpopulation that has its own required consent
-                                [uMan addToDataGroups:dataGroups completion:^(id responseObject, NSError *error) {
-                                    if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
-                                        NSLog(@"Error adding user %@ to groups %@:\n%@\nResponse: %@", unconsentedEmail, dataGroups, error, responseObject);
+                    [cMan consentSignature:signname forSubpopulationGuid:gSBBAppStudy birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+                        if (error) {
+                            NSLog(@"Error recording default consent signature:\n%@\nResponse: %@", error, responseObject);
+                            [expectSigned fulfill];
+                        } else {
+                            // add to subpopulation that has its own required consent
+                            [uMan addToDataGroups:dataGroups completion:^(id responseObject, NSError *error) {
+                                if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
+                                    NSLog(@"Error adding user %@ to groups %@:\n%@\nResponse: %@", unconsentedEmail, dataGroups, error, responseObject);
+                                    [expectSigned fulfill];
+                                } else {
+                                    // sign subpopulation consent
+                                    [cMan consentSignature:signname forSubpopulationGuid:self.testSubpopRequiredGuid birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id responseObject, NSError *error) {
+                                        if (error) {
+                                            NSLog(@"Error recording subpop consent signature:\n%@\nResponse: %@", error, responseObject);
+                                        } else {
+                                            consentSigned = YES;
+                                        }
+                                        XCTAssert(!error, @"Successfully recorded subpop consent signature");
                                         [expectSigned fulfill];
-                                    } else {
-                                        // sign subpopulation consent
-                                        [cMan consentSignature:signname forSubpopulationGuid:self.testSubpopRequiredGuid birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id responseObject, NSError *error) {
-                                            if (error) {
-                                                NSLog(@"Error recording subpop consent signature:\n%@\nResponse: %@", error, responseObject);
-                                            } else {
-                                                consentSigned = YES;
-                                            }
-                                            XCTAssert(!error, @"Successfully recorded subpop consent signature");
-                                            [expectSigned fulfill];
-                                        }];
-                                    }
-                                }];
-                            }
-                        }];
-                    }
+                                    }];
+                                }
+                            }];
+                        }
+                    }];
                 }
             }];
         }
@@ -237,13 +243,17 @@
     }
     
     // clean up the test user we just created (no need to wait for it to finish, nothing else depends on it)
-    [self deleteUser:unconsentedEmail completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-        if (!error) {
-            NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
-        } else {
-            NSLog(@"Failed to delete unconsented test account %@\n\nError:%@\nResponse:%@", unconsentedEmail, error, responseObject);
-        }
-    }];
+    if (unconsentedId) {
+        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            if (!error) {
+                NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
+            } else {
+                NSLog(@"Failed to delete unconsented test account %@\n\nError:%@\nResponse:%@", unconsentedEmail, error, responseObject);
+            }
+        }];
+    } else {
+        NSLog(@"Failed to retrieve test account id for %@, account not deleted", unconsentedEmail);
+    }
 }
 
 - (void)testRetrieveConsentSignature
@@ -274,6 +284,7 @@
     XCTestExpectation *expectWithdrew = [self expectationWithDescription:@"consent withdrawn"];
     
     __block NSString *consentedEmail = nil;
+    __block NSString *consentedId = nil;
     [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             consentedEmail = emailAddress;
@@ -282,6 +293,7 @@
                     NSLog(@"Error signing in consented user %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
                     [expectWithdrew fulfill];
                 } else {
+                    consentedId = responseObject[kUserSessionInfoIdKey];
                     [cMan withdrawConsentWithReason:nil completion:^(id responseObject, NSError *error) {
                         if (error) {
                             NSLog(@"Error withdrawing consent:\n%@\nResponse: %@", error, responseObject);
@@ -301,13 +313,17 @@
     }];
     
     // clean up the test user we just created (no need to wait for it to finish, nothing else depends on it)
-    [self deleteUser:consentedEmail completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-        if (!error) {
-            NSLog(@"Deleted consented test account %@", consentedEmail);
-        } else {
-            NSLog(@"Failed to delete consented test account %@\n\nError:%@\nResponse:%@", consentedEmail, error, responseObject);
-        }
-    }];
+    if (consentedId) {
+        [self deleteUser:consentedId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            if (!error) {
+                NSLog(@"Deleted consented test account %@", consentedEmail);
+            } else {
+                NSLog(@"Failed to delete consented test account %@\n\nError:%@\nResponse:%@", consentedEmail, error, responseObject);
+            }
+        }];
+    } else {
+        NSLog(@"Failed to retrieve test account id for %@, account not deleted", consentedEmail);
+    }
 }
 
 @end

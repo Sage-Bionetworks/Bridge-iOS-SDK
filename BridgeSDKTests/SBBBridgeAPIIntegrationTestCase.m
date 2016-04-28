@@ -18,6 +18,8 @@ static TestAdminAuthDelegate *gAdminAuthDelegate;
 static SBBAuthManager *gDevAuthManager;
 static TestAdminAuthDelegate *gDevAuthDelegate;
 
+NSString * const kUserSessionInfoIdKey = @"id";
+
 //#define ADMIN_API @"/admin/v1/users"
 #define ADMIN_API @"/v3/users"
 #define ADMIN_SUBPOP_API @"/v3/subpopulations"
@@ -126,7 +128,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     XCTestExpectation *expectTestDeleted = [self expectationWithDescription:@"test user deleted"];
-    [self deleteUser:_testUserEmail completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self deleteUser:_testSignInResponseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (!error) {
             NSLog(@"Deleted test account %@", _testUserEmail);
         } else {
@@ -154,7 +156,7 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
     }];
     
     XCTestExpectation *expectDevDeleted = [self expectationWithDescription:@"dev user deleted"];
-    [self deleteUser:_devUserEmail completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self deleteUser:_devSignInResponseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (!error) {
             NSLog(@"Deleted dev account %@", _devUserEmail);
         } else {
@@ -207,13 +209,13 @@ static TestAdminAuthDelegate *gDevAuthDelegate;
     }];
 }
 
-- (void)deleteUser:(NSString *)emailAddress completionHandler:(SBBNetworkManagerCompletionBlock)completion
+- (void)deleteUser:(NSString *)userId completionHandler:(SBBNetworkManagerCompletionBlock)completion
 {
-    NSString *deleteEmailFormat = ADMIN_API @"?email=%@";
-    NSString *deleteEmail = [NSString stringWithFormat:deleteEmailFormat, emailAddress];
+    NSString *deleteUserFormat = ADMIN_API @"/%@";
+    NSString *deleteUser = [NSString stringWithFormat:deleteUserFormat, userId];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [gAdminAuthManager addAuthHeaderToHeaders:headers];
-    [SBBComponent(SBBNetworkManager) delete:deleteEmail headers:headers parameters:nil completion:completion];
+    [SBBComponent(SBBNetworkManager) delete:deleteUser headers:headers parameters:nil completion:completion];
 }
 
 - (void)createSubpopulation:(NSString *)subpopName forGroups:(NSArray *)inGroups notGroups:(NSArray *)outGroups required:(BOOL)required withCompletion:(SBBBridgeAPIIntegrationTestCaseCreateSubpopCompletionBlock)completion
