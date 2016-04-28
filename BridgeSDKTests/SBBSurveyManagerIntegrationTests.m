@@ -14,6 +14,7 @@
 
 @property (nonatomic, strong) NSString *ardUserEmail;
 @property (nonatomic, strong) NSString *ardUserPassword;
+@property (nonatomic, strong) NSString *ardUserId;
 @property (nonatomic, strong) SBBAuthManager *aMan;
 
 @end
@@ -42,6 +43,8 @@
             [_aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to all-roles test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
+                } else {
+                    _ardUserId = responseObject[kUserSessionInfoIdKey];
                 }
                 [expectARDUser fulfill];
             }];
@@ -64,7 +67,7 @@
     
     // 4. Delete the test god-mode user.
     XCTestExpectation *expectation = [self expectationWithDescription:@"test user deleted"];
-    [self deleteUser:_ardUserEmail completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self deleteUser:_ardUserId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (!error) {
             NSLog(@"Deleted all-roles test account %@", _ardUserEmail);
         } else {
