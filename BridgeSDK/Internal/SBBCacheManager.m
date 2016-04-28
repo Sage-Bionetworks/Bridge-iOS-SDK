@@ -465,8 +465,13 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     }
     
     NSURL *storeURL = [self storeURL];
-    
+    NSURL *storeDirURL = [storeURL URLByDeletingLastPathComponent];
     NSError *error = nil;
+    
+    if (![[NSFileManager defaultManager] createDirectoryAtURL:storeDirURL withIntermediateDirectories:YES attributes:nil error:&error]) {
+        NSLog(@"Error attempting to create persistent store directory at path %@:\n%@", storeDirURL.absoluteURL, error);
+        return nil;
+    }
     
     // Automatic Lightweight Migration
     NSMutableDictionary *options = [NSMutableDictionary dictionaryWithObjectsAndKeys:
