@@ -13,6 +13,7 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBObjectManagerInternal.h"
 #import "ModelObjectInternal.h"
+#import "NSData+SBBAdditions.h"
 @import UIKit;
 
 BOOL gSBBUseCache = NO;
@@ -519,7 +520,15 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
 
 - (NSURL *)storeURL
 {
-    return [[self appDocumentsDirectory] URLByAppendingPathComponent:self.persistentStoreName];
+    NSURL *storeURL = [self appDocumentsDirectory];
+    SBBAuthManager *authMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
+    if ([authMan respondsToSelector:@selector(savedEmail)]) {
+        NSString *emailHash = [[authMan.savedEmail dataUsingEncoding:NSUTF8StringEncoding] hexMD5];
+        if (emailHash) {
+            storeURL = [storeURL URLByAppendingPathComponent:emailHash];
+        }
+    }
+    return [storeURL URLByAppendingPathComponent:self.persistentStoreName];
 }
 
 - (NSManagedObjectContext *)cacheIOContext
