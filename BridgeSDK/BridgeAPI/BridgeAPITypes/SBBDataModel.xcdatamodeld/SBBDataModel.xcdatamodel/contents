@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15E65" minimumToolsVersion="Xcode 4.3">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="10171" systemVersion="15D21" minimumToolsVersion="Xcode 4.3">
     <entity name="Activity" representedClassName="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -253,7 +253,7 @@
             </userInfo>
         </attribute>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image" inverseName="surveyQuestionOption" inverseEntity="Image" syncable="YES"/>
-        <relationship name="multiValueConstraints" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="MultiValueConstraints" inverseName="enumeration" inverseEntity="MultiValueConstraints" syncable="YES">
+        <relationship name="multiValueConstraints" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MultiValueConstraints" inverseName="enumeration" inverseEntity="MultiValueConstraints" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
