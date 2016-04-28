@@ -37,5 +37,6 @@
 - (NSData *)gzipDeflate;
 
 - (NSString*)contentMD5;
+- (NSString*)hexMD5;
 
 @end

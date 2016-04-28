@@ -185,12 +185,12 @@
     return self;
 }
 
-- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerInternalProtocol>)objectManager
 {
     // If objectManager doesn't define a cacheManager, or the generated code for this object doesn't
     // define an entity (because there's no entityIDKeyPath in the userInfo), this method does nothing
     if ([objectManager respondsToSelector:@selector(cacheManager)]) {
-        id<SBBCacheManagerProtocol> cacheManager = [(id)objectManager cacheManager];
+        id<SBBCacheManagerProtocol> cacheManager = objectManager.cacheManager;
         NSManagedObjectContext *cacheContext = cacheManager.cacheIOContext;
         NSEntityDescription *entity = [self entityForContext:cacheContext];
         if (entity) {
