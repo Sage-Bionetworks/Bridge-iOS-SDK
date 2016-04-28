@@ -186,11 +186,6 @@ extern  NSString * _Nonnull gSBBAppStudy;
 - (nonnull NSURLSessionDataTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
- * For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).
- */
-- (nonnull NSURLSessionDataTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __deprecated;
-
-/*!
  * Sign out of the user's Bridge account.
  *
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
@@ -235,6 +230,13 @@ extern  NSString * _Nonnull gSBBAppStudy;
  *  @param headers A mutable dictionary containing HTTP header key-value (string) pairs, to which to add the auth header.
  */
 - (void)addAuthHeaderToHeaders:(nonnull NSMutableDictionary *)headers;
+
+@optional
+
+/*!
+ * For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).
+ */
+- (nonnull NSURLSessionDataTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __deprecated;
 
 @end
 
