@@ -20,9 +20,9 @@
   _sessionToken = sessionToken;
 }
 
-- (NSString *)usernameForAuthManager:(id<SBBAuthManagerProtocol>)authManager
+- (NSString *)emailForAuthManager:(id<SBBAuthManagerProtocol>)authManager
 {
-  return _username;
+  return _email;
 }
 
 - (NSString *)passwordForAuthManager:(id<SBBAuthManagerProtocol>)authManager

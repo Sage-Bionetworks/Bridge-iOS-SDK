@@ -40,18 +40,18 @@
   // always use an auth delegate so we don't pollute the keychain for integration tests
   SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
   aMan.authDelegate = delegate;
-  [aMan signInWithUsername:@"notSignedUp" password:@"" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [aMan signInWithEmail:@"notSignedUp" password:@"" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
   }];
   
   NSString *uuid = [[NSProcessInfo processInfo] globallyUniqueString];
-  NSDictionary *sessionInfoJson = @{@"username": @"signedUpUser",
+  NSDictionary *sessionInfoJson = @{@"email": @"signedUpUser",
                                     @"sessionToken": uuid,
                                     @"type": @"UserSessionInfo",
                                     @"consented": @NO,
                                     @"authenticated":@YES};
   [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
-  [aMan signInWithUsername:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [aMan signInWithEmail:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
     XCTAssert([delegate.sessionToken isEqualToString:uuid], @"Delegate received sessionToken");
   }];
@@ -60,9 +60,9 @@
 - (void)testEnsureSignedIn
 {
   NSString *sessionToken = [[NSProcessInfo processInfo] globallyUniqueString];
-  NSString *username = @"signedUpUser";
+  NSString *email = @"signedUpUser";
   NSString *password = @"123456";
-  NSDictionary *sessionInfoJson = @{@"username": username,
+  NSDictionary *sessionInfoJson = @{@"email": email,
                                     @"sessionToken": sessionToken,
                                     @"type": @"UserSessionInfo",
                                     @"consented": @NO,
@@ -80,7 +80,7 @@
   }];
   
   // now try it with saved username/password
-  delegate.username = username;
+  delegate.email = email;
   delegate.password = password;
   [aMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
     XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
@@ -96,9 +96,9 @@
 {
     // set up mock credentials for the auth manager to auto-renew with
     NSString *sessionToken = [[NSProcessInfo processInfo] globallyUniqueString];
-    NSString *username = @"signedUpUser";
+    NSString *email = @"signedUpUser";
     NSString *password = @"123456";
-    NSDictionary *sessionInfoJson = @{@"username": username,
+    NSDictionary *sessionInfoJson = @{@"email": email,
                                       @"sessionToken": sessionToken,
                                       @"type": @"UserSessionInfo",
                                       @"consented": @NO,
@@ -108,7 +108,7 @@
     
     // set up the auth delegate with the mock credentials
     SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    delegate.username = username;
+    delegate.email = email;
     delegate.password = password;
     aMan.authDelegate = delegate;
     
@@ -128,13 +128,12 @@
       @"type": @"UserProfile",
       @"firstName": @"First",
       @"lastName": @"Last",
-      @"username": @"1337p4t13nt",
       @"email": @"email@fake.tld"
       };
     [mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
     SBBObjectManager *oMan = [SBBObjectManager objectManager];
     SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:aMan networkManager:bridgeNetMan objectManager:oMan];
-    [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
+    [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"email": @"stringField"}];
     [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
         XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");

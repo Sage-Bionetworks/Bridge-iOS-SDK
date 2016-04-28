@@ -91,7 +91,7 @@
             NSLog(@"Error changing data sharing scope:\n%@\nResponse: %@", error, responseObject);
             [expectChangedSharing fulfill];
         } else {
-            [SBBComponent(SBBAuthManager) signInWithUsername:self.testUserEmail password:self.testUserPassword completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [SBBComponent(SBBAuthManager) signInWithEmail:self.testUserEmail password:self.testUserPassword completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to get user session info after changing data sharing scope:\n%@\nResponse: %@", error, responseObject);
                 }
