@@ -401,7 +401,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
     return self;
 <$else$>
-    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+    if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     <$if Attribute.hasScalarAttributeType$><$if Attribute.isUnsigned$>
         // ensure that unsigned-ness is preserved
