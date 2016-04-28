@@ -247,7 +247,11 @@
     <entity name="SurveyQuestionOption" parentEntity="BridgeObject" syncable="YES">
         <attribute name="detail" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="id&lt;NSCopying, NSCoding, NSObject&gt;"/>
+            </userInfo>
+        </attribute>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image" inverseName="surveyQuestionOption" inverseEntity="Image" syncable="YES"/>
         <relationship name="multiValueConstraints" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="MultiValueConstraints" inverseName="enumeration" inverseEntity="MultiValueConstraints" syncable="YES">
             <userInfo>

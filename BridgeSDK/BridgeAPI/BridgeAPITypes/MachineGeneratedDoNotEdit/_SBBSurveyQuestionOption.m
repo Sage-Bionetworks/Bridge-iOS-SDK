@@ -47,7 +47,7 @@
 
 @property (nullable, nonatomic, retain) NSString* label;
 
-@property (nullable, nonatomic, retain) NSString* value;
+@property (nullable, nonatomic, retain) id<NSCopying, NSCoding, NSObject> value;
 
 @property (nullable, nonatomic, retain) NSManagedObject *image;
 
