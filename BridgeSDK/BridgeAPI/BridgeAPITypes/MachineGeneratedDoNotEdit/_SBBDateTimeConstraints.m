@@ -118,7 +118,7 @@
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    if (self == [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+    if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.allowFuture = managedObject.allowFuture;
 
