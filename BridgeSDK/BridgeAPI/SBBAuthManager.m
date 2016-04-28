@@ -294,6 +294,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [_networkManager post:kSBBAuthResendAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
 }
 
+- (NSURLSessionDataTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [self signInWithEmail:username password:password completion:completion];
+}
+
 - (NSURLSessionDataTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
@@ -337,7 +342,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         // ??? Do we want to not do this in case of error?
         if (_authDelegate) {
             if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)] &&
-                [_authDelegate respondsToSelector:@selector(emailForAuthManager:)] &&
+                ([_authDelegate respondsToSelector:@selector(emailForAuthManager:)] ||
+                 [_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) &&
                 [_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
                 [_authDelegate authManager:self didGetSessionToken:nil forEmail:nil andPassword:nil];
             } else {
@@ -369,6 +375,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (_authDelegate) {
         if ([_authDelegate respondsToSelector:@selector(emailForAuthManager:)]) {
             email = [_authDelegate emailForAuthManager:self];
+        } else if ([_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) {
+            email = [_authDelegate usernameForAuthManager:self];
         }
     } else {
         email = [self emailFromKeychain];

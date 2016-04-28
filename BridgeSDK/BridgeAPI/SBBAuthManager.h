@@ -107,6 +107,12 @@ extern  NSString * _Nonnull gSBBAppStudy;
 - (nullable NSString *)emailForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
 
 /*!
+ * For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this. 
+ */
+- (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager __deprecated;
+
+
+/*!
  *  This delegate method should return the password for the user account last signed up for or signed in to,
  *  or nil if the user has never signed up or signed in on this device.
  *
@@ -178,6 +184,11 @@ extern  NSString * _Nonnull gSBBAppStudy;
  * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
 - (nonnull NSURLSessionDataTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).
+ */
+- (nonnull NSURLSessionDataTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __deprecated;
 
 /*!
  * Sign out of the user's Bridge account.
