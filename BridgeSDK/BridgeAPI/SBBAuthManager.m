@@ -376,7 +376,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         if ([_authDelegate respondsToSelector:@selector(emailForAuthManager:)]) {
             email = [_authDelegate emailForAuthManager:self];
         } else if ([_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             email = [_authDelegate usernameForAuthManager:self];
+#pragma clang diagnostic pop
         }
     } else {
         email = [self emailFromKeychain];
