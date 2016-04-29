@@ -91,7 +91,8 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
         // "valid things" are defined as the subset of the above things that the server would return.
         // valid things expire after the start of today and are not marked as finished. the flag is
         // set so we want to exclude those things.
-        predicate = [NSPredicate predicateWithFormat:@"NOT (%K > %@ AND %K == nil)",
+        predicate = [NSPredicate predicateWithFormat:@"NOT ((%K == nil OR %K > %@) AND %K == nil)",
+                     NSStringFromSelector(@selector(expiresOn)),
                      NSStringFromSelector(@selector(expiresOn)), todayStart,
                      NSStringFromSelector(@selector(finishedOn))
                      ];
@@ -122,7 +123,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
         if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
             cacheManager = ((id<SBBObjectManagerInternalProtocol>)self.objectManager).cacheManager;
         }
-        SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedSingletonObjectOfType:@"ResourceList" createIfMissing:NO];
+        SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedObjectOfType:@"ResourceList" withId:@"ScheduledActivity" createIfMissing:NO];
         
         // if we're going straight to cache, we're done
         if (policy == SBBCachingPolicyCachedOnly) {
@@ -152,6 +153,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
             // the daysBehind window.
             if (!error && savedTasks.count) {
                 [tasks insertItems:savedTasks atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, savedTasks.count)]];
+                tasks.totalValue += savedTasks.count;
                 
                 // ...and save it back to the cache for later.
                 [tasks saveToCoreDataCacheWithObjectManager:self.objectManager];

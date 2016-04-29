@@ -328,8 +328,9 @@
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
                 relMo = [cacheManager cachedObjectForBridgeObject:obj inContext:cacheContext];
-            } else {
-                // sub object is not directly cacheable, so create it before adding
+            }
+            if (!relMo) {
+                // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
             [managedObject addConsentStatusesObject:relMo];
