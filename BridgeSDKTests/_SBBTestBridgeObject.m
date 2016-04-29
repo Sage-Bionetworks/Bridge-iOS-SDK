@@ -225,12 +225,18 @@
 
     self.uShortField = [dictionary objectForKey:@"uShortField"];
 
+    // overwrite the old bridgeObjectArrayField relationship entirely rather than adding to it
+    self.bridgeObjectArrayField = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"bridgeObjectArrayField"])
     {
         SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
 
         [self addBridgeObjectArrayFieldObject:bridgeObjectArrayFieldObj];
     }
+
+    // overwrite the old bridgeObjectSetField relationship entirely rather than adding to it
+    self.bridgeObjectSetField = [NSMutableArray array];
 
     for(id objectRepresentationForDict in [dictionary objectForKey:@"bridgeObjectSetField"])
     {

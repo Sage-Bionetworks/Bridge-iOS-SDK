@@ -94,6 +94,9 @@
 
     self.total = [dictionary objectForKey:@"total"];
 
+    // overwrite the old items relationship entirely rather than adding to it
+    self.items = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"items"])
     {
         SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];

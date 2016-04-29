@@ -134,6 +134,9 @@
 
     self.times = [dictionary objectForKey:@"times"];
 
+    // overwrite the old activities relationship entirely rather than adding to it
+    self.activities = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"activities"])
     {
         SBBActivity *activitiesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];

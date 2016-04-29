@@ -108,6 +108,9 @@
 
     self.allowOther = [dictionary objectForKey:@"allowOther"];
 
+    // overwrite the old enumeration relationship entirely rather than adding to it
+    self.enumeration = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"enumeration"])
     {
         SBBSurveyQuestionOption *enumerationObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];

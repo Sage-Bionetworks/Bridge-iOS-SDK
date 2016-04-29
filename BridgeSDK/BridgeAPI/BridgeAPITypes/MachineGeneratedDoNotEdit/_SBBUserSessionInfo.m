@@ -154,6 +154,9 @@
 
     self.username = [dictionary objectForKey:@"username"];
 
+    // overwrite the old consentStatuses relationship entirely rather than adding to it
+    self.consentStatuses = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"consentStatuses"])
     {
         SBBConsentStatus *consentStatusesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
