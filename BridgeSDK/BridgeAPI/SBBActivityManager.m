@@ -79,9 +79,11 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     NSDate *windowEnd = [cal startOfDayForDate:[todayEnd dateByAddingTimeInterval:daysAhead * kSBB24Hours]];
     
     // things that either expired during the daysBefore period, or expire after that but start before the end of daysAhead
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K > %@ AND %K < %@) OR (%K >= %@ AND %K < %@)",
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K != nil AND %K > %@ AND %K < %@) OR ((%K == nil OR %K >= %@) AND %K < %@)",
+                              NSStringFromSelector(@selector(expiresOn)),
                               NSStringFromSelector(@selector(expiresOn)), windowStart,
                               NSStringFromSelector(@selector(expiresOn)), todayStart,
+                              NSStringFromSelector(@selector(expiresOn)),
                               NSStringFromSelector(@selector(expiresOn)), todayStart,
                               NSStringFromSelector(@selector(scheduledOn)), windowEnd];
     NSArray *filtered = [tasks filteredArrayUsingPredicate:predicate];
@@ -138,7 +140,8 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
         savedTasks = [self filterTasks:tasks.items forDaysAhead:kMaxAdvance andDaysBehind:kDaysToCache excludeStillValid:YES];
     }
 
-    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(daysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    // always request the maximum days ahead from the server so we have them cached
+    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(kMaxAdvance), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         SBBResourceList *tasks = [self.objectManager objectFromBridgeJSON:responseObject];
         if (policy == SBBCachingPolicyFallBackToCached) {
             // we've either updated the cached tasks list from the server, or not, as the case may be;

@@ -99,6 +99,9 @@
 
     self.status = [dictionary objectForKey:@"status"];
 
+    // overwrite the old answers relationship entirely rather than adding to it
+    self.answers = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"answers"])
     {
         SBBSurveyAnswer *answersObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];

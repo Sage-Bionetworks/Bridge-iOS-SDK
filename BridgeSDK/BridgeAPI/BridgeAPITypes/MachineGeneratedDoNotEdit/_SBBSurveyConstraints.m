@@ -86,6 +86,9 @@
 
     self.dataType = [dictionary objectForKey:@"dataType"];
 
+    // overwrite the old rules relationship entirely rather than adding to it
+    self.rules = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"rules"])
     {
         SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];

@@ -263,6 +263,9 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 <$endif$><$endif$>
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
         <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
+    // overwrite the old <$Relationship.name$> relationship entirely rather than adding to it
+    self.<$Relationship.name$> = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
     {
         <$if TemplateVar.arc$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];

@@ -173,6 +173,9 @@
 
     self.guidAndCreatedOn = key;
 
+    // overwrite the old elements relationship entirely rather than adding to it
+    self.elements = [NSMutableArray array];
+
     for(id objectRepresentationForDict in [dictionary objectForKey:@"elements"])
     {
         SBBSurveyElement *elementsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
