@@ -180,8 +180,9 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     
-    // always request the maximum days ahead from the server so we have them cached
-    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(kMaxAdvance), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    // if caching, always request the maximum days ahead from the server so we have them cached
+    NSInteger fetchDaysAhead = gSBBUseCache ? kMaxAdvance : daysAhead;
+    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(fetchDaysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (gSBBUseCache) {
             [self.cacheManager.cacheIOContext performBlock:^{
                 SBBResourceList *tasks = [self cachedTasksFromCacheManager:self.cacheManager];
@@ -216,7 +217,10 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
             }];
         } else {
             // not caching, do it the old-fashioned way (-ish)
-            SBBResourceList *tasks = [self.objectManager objectFromBridgeJSON:responseObject];
+            SBBResourceList *tasks = nil;
+            if (!error) {
+                tasks = [self.objectManager objectFromBridgeJSON:responseObject];
+            }
             if (completion) {
                 completion(tasks.items, error);
             }
