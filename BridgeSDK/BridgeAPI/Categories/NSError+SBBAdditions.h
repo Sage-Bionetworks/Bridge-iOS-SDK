@@ -41,6 +41,7 @@
 + (NSError *)SBBNoCredentialsError;
 + (NSError *)SBBNotAuthenticatedError;
 + (NSError *)SBBUnsupportedAppVersionError;
++ (NSError *)SBBActivitiesBeingUpdatedError;
 + (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url;
 + (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass;
 + (NSError *)generateSBBTempFileErrorForURL:(NSURL *)url;

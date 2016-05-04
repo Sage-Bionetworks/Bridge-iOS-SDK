@@ -59,25 +59,34 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
 /*!
  Gets all available, started, or scheduled activities for a user. The "daysAhead" parameter allows you to retrieve activities that are scheduled in the future for the indicated number of days past today (to a maximum of four days, at this time). This allows certain kinds of UIs (e.g. "You have N activities tomorrow" or "You have completed N of X activities today", even when the activities are not yet to be performed). A "daysBehind" parameter allows you to retain previously-cached activities that have not yet been completed that expired within the indicated number of days in the past. This allows UIs that say, e.g., "You left N activities uncompleted yesterday." Scheduled activities will be returned in the timezone of the device at the time of the request. Once a task is finished, or expires (the time has passed for it to be started), or becomes invalid due to a schedule change on the server, it will be removed from the list of scheduled activities returned from Bridge, and (except for previously-fetched but unfinished tasks within daysBehind) will also be removed from the list passed to this method's completion handler.
  
+ If activities are in the process of being updated already, because either this or another method that can update the cached scheduled activities was called in another thread and the completion handler hasn't returned, this method will either block until available, or return nil and the completion handler will be called with an SBBActivitiesBeingUpdatedError error, depending on the value passed in to the wait parameter.
+ 
  @param daysAhead  A number of days in the future (0-4) for which to retrieve available/started/scheduled activities.
  @param daysBehind  A number of days in the past (no limit) for which to include previously-cached but expired and unfinished activities (ignored if the SDK was initialized with useCache=NO).
  @param policy Caching policy to use (ignored if the SDK was initialized with useCache=NO).
+ @param wait Whether to wait for any previous activity updates to complete, or to just exit if busy.
  @param completion An SBBActivityManagerGetCompletionBlock to be called upon completion.
  
  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
+- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy andWait:(BOOL)wait withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
 /**
- This is a convenience method that uses a value of 0 for daysBehind.
+ This is a convenience method that assumes default values of 1 for daysBehind and NO for wait.
  */
 - (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
 /**
- This is a convenience method that uses the default caching policy, which is SBBCachingPolicyFallBackToCache,
- if caching is enabled. Also implies a default daysBehind value of 0.
+ This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyFallBackToCache,
+ if caching is enabled. Also implies default values of 1 for daysBehind and NO for wait.
  */
 - (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
+
+/**
+ This is a convenience method that assumes a default value of NO for wait, so will not block if activities are
+ busy being updated.
+ */
+- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
 /*!
  Mark a ScheduledActivity as started, as of the time this method is called.

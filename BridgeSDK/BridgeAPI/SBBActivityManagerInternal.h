@@ -34,3 +34,10 @@
 
 /* CONSTANTS */
 extern NSString * const kSBBActivityAPI;
+
+@protocol SBBActivityManagerInternalProtocol <SBBActivityManagerProtocol>
+
+// Note: this method blocks until activityAccessLock is available
+- (void)flushUncompletedActivities;
+
+@end

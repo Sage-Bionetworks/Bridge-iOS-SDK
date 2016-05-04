@@ -31,6 +31,7 @@
 //
 
 #import "SBBUserManager.h"
+#import "SBBActivityManagerInternal.h"
 
 /* CONSTANTS */
 extern NSString * const kSBBUserProfileAPI;
@@ -41,3 +42,9 @@ extern NSString * const kSBBUserDataGroupsAPI;
 
 extern NSString * const kSBBUserDataSharingScopeKey;
 extern NSString * const kSBBUserDataSharingScopeStrings[];
+
+@protocol SBBUserManagerInternalProtocol <SBBUserManagerProtocol>
+
+@property (nonatomic, strong) id<SBBActivityManagerInternalProtocol> activityManager;
+
+@end

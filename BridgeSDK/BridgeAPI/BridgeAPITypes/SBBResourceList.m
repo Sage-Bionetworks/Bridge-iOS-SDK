@@ -35,4 +35,53 @@
 
 // Custom logic goes here.
 
+#pragma mark Keep "total" field in sync with actual count of items
+- (void)addItemsObject:(SBBBridgeObject*)value_
+{
+    [super addItemsObject:value_];
+    self.totalValue = self.items.count;
+}
+
+- (void)removeItemsObjects
+{
+    [super removeItemsObjects];
+    self.totalValue = self.items.count;
+}
+
+- (void)removeItemsObject:(SBBBridgeObject*)value_
+{
+    [super removeItemsObject:value_];
+    self.totalValue = self.items.count;
+}
+
+- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx {
+    [super insertObject:value inItemsAtIndex:idx];
+    self.totalValue = self.items.count;
+}
+
+- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx {
+    [super removeObjectFromItemsAtIndex:idx];
+    self.totalValue = self.items.count;
+}
+
+- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes {
+    [super insertItems:value atIndexes:indexes];
+    self.totalValue = self.items.count;
+}
+
+- (void)removeItemsAtIndexes:(NSIndexSet *)indexes {
+    [super removeItemsAtIndexes:indexes];
+    self.totalValue = self.items.count;
+}
+
+- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value {
+    [super replaceObjectInItemsAtIndex:idx withObject:value];
+    self.totalValue = self.items.count;
+}
+
+- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)value {
+    [super replaceItemsAtIndexes:indexes withItems:value];
+    self.totalValue = self.items.count;
+}
+
 @end
