@@ -188,6 +188,7 @@
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeObjectNotExpectedClass userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
+
 /*********************************************************************************/
 #pragma mark - Error handlers
 /*********************************************************************************/

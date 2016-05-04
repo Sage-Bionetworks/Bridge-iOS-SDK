@@ -145,6 +145,8 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
 /*!
  Update the user's dataGroups to the Bridge API.
  
+ @note If using caching, be aware that calling this method (or any of the convenience methods which call it) will remove unexpired, unfinished scheduled activities from the cache. The next call to get scheduled activities will replace them with the correct schedule going forward for the new set of data groups.
+ 
  @param dataGroups A client object representing the dataGroups as they should be updated.
  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  

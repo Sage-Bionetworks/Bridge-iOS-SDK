@@ -18,7 +18,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    [BridgeSDK setupWithStudy:@"ios-sdk-int-tests"];
+    // TODO: emm 2016-05-04 figure out how to do all tests both with and without caching in one run
+    [BridgeSDK setupWithStudy:@"ios-sdk-int-tests" useCache:YES];
     return YES;
 }
 

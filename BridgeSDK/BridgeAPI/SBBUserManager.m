@@ -37,6 +37,8 @@
 #import "BridgeSDKInternal.h"
 #import "NSDate+SBBAdditions.h"
 #import "SBBDataGroups.h"
+#import "SBBCacheManager.h"
+#import "SBBActivityManagerInternal.h"
 
 #define USER_API GLOBAL_API_PREFIX @"/users/self"
 
@@ -53,7 +55,13 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
     @"all_qualified_researchers"
 };
 
+@interface SBBUserManager()<SBBUserManagerInternalProtocol>
+
+@end
+
 @implementation SBBUserManager
+
+@synthesize activityManager = _activityManager;
 
 + (instancetype)defaultComponent
 {
@@ -65,6 +73,15 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
   });
   
   return shared;
+}
+
+- (id<SBBActivityManagerInternalProtocol>)activityManager
+{
+    if (!_activityManager) {
+        _activityManager = (id<SBBActivityManagerInternalProtocol>)SBBComponent(SBBActivityManager);
+    }
+    
+    return _activityManager;
 }
 
 - (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion
@@ -164,6 +181,12 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     return [self.networkManager post:kSBBUserDataGroupsAPI headers:headers parameters:jsonGroups completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (!error) {
+            // updating data groups generally invalidates your schedule so we need to flush the cache
+            if ([self.activityManager conformsToProtocol:@protocol(SBBActivityManagerInternalProtocol)]) {
+                [self.activityManager flushUncompletedActivities];
+            }
+        }
         if (completion) {
             completion(responseObject, error);
         }

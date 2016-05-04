@@ -37,6 +37,7 @@
 #import "SBBObjectManagerInternal.h"
 #import "SBBBridgeObjects.h"
 #import "NSDate+SBBAdditions.h"
+#import "NSError+SBBAdditions.h"
 #import "BridgeSDKInternal.h"
 
 #define ACTIVITY_API GLOBAL_API_PREFIX @"/activities"
@@ -46,7 +47,15 @@ NSTimeInterval const kSBB24Hours =       86400;
 NSInteger const     kDaysToCache =       7;
 NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 
+@interface SBBActivityManager()<SBBActivityManagerInternalProtocol>
+
+@property (nonatomic, readonly) id<SBBCacheManagerProtocol> cacheManager;
+
+@end
+
 @implementation SBBActivityManager
+
+@synthesize cacheManager = _cacheManager;
 
 + (instancetype)defaultComponent
 {
@@ -68,6 +77,11 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 - (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     return [self getScheduledActivitiesForDaysAhead:daysAhead daysBehind:1 cachingPolicy:policy withCompletion:completion];
+}
+
+- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+{
+    return [self getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:policy andWait:NO withCompletion:completion];
 }
 
 - (NSArray *)filterTasks:(NSArray *)tasks forDaysAhead:(NSInteger)daysAhead andDaysBehind:(NSInteger)daysBehind excludeStillValid:(BOOL)excludeValid
@@ -112,57 +126,104 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     }
 }
 
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+- (id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-    [self.authManager addAuthHeaderToHeaders:headers];
-    
-    NSArray *savedTasks = [NSArray array];
-    id<SBBCacheManagerProtocol> cacheManager = nil;
-    if (gSBBUseCache) {
-        if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
-            cacheManager = ((id<SBBObjectManagerInternalProtocol>)self.objectManager).cacheManager;
-        }
-        SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedObjectOfType:@"ResourceList" withId:@"ScheduledActivity" createIfMissing:NO];
-        
-        // if we're going straight to cache, we're done
-        if (policy == SBBCachingPolicyCachedOnly) {
-            if (completion) {
-                NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
-                [self mapSubObjectsInTaskList:requestedTasks];
-                completion(requestedTasks, nil);
-            }
-            
-            return nil;
-        }
-        
-        // otherwise, keep all tasks from the past kDaysToCache days, and finished ones from today (or later?)
-        // (because the server doesn't give us those)
-        savedTasks = [self filterTasks:tasks.items forDaysAhead:kMaxAdvance andDaysBehind:kDaysToCache excludeStillValid:YES];
+    if (!_cacheManager && gSBBUseCache && [self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
+        _cacheManager = ((id<SBBObjectManagerInternalProtocol>)self.objectManager).cacheManager;
     }
+    return _cacheManager;
+}
 
-    // always request the maximum days ahead from the server so we have them cached
-    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(kMaxAdvance), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-        SBBResourceList *tasks = [self.objectManager objectFromBridgeJSON:responseObject];
-        if (policy == SBBCachingPolicyFallBackToCached) {
-            // we've either updated the cached tasks list from the server, or not, as the case may be;
-            // in either case, we want to pass the cached tasks list to the completion handler.
-            tasks = (SBBResourceList *)[cacheManager cachedObjectOfType:@"ResourceList" withId:@"ScheduledActivity" createIfMissing:NO];
-            
-            // ...ok, if we *did* update from the server though, we want to add back the ones left over from
-            // the daysBehind window.
-            if (!error && savedTasks.count) {
-                [tasks insertItems:savedTasks atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, savedTasks.count)]];
-                tasks.totalValue += savedTasks.count;
-                
-                // ...and save it back to the cache for later.
-                [tasks saveToCoreDataCacheWithObjectManager:self.objectManager];
-            }
-        }
+// make sure to be on the cache IO queue before calling these next three methods, and stay there until after
+// all three have been called!
+- (SBBResourceList *)cachedTasksFromCacheManager:(id<SBBCacheManagerProtocol>)cacheManager
+{
+    SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedObjectOfType:@"ResourceList" withId:@"ScheduledActivity" createIfMissing:NO];
+    
+    return tasks;
+}
+
+- (NSArray<SBBScheduledActivity *> *)savedTasksFromCachedTasks:(NSArray<SBBScheduledActivity *> *)cachedTasks
+{
+    return [self filterTasks:cachedTasks forDaysAhead:kMaxAdvance andDaysBehind:kDaysToCache excludeStillValid:YES];
+}
+
+- (void)addSavedTasks:(NSArray<SBBScheduledActivity *> *)savedTasks toResourceList:(SBBResourceList *)resourceList
+{
+    NSAssert([resourceList isKindOfClass:[SBBResourceList class]], @"resourceList must be an SBBResourceList object!");
+    if (!savedTasks.count) {
+        // nothing to do
+        return;
+    }
+    
+    [resourceList insertItems:savedTasks atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, savedTasks.count)]];
+    
+    // ...and save it back to the cache for later.
+    [resourceList saveToCoreDataCacheWithObjectManager:self.objectManager];
+}
+
+- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy andWait:(BOOL)wait withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+{
+    // if we're going straight to cache, just get it and get out
+    if (policy == SBBCachingPolicyCachedOnly) {
+        SBBResourceList *tasks = [self cachedTasksFromCacheManager:self.cacheManager];
+        
         if (completion) {
             NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
             [self mapSubObjectsInTaskList:requestedTasks];
-            completion(requestedTasks, error);
+            completion(requestedTasks, nil);
+        }
+        
+        return nil;
+    }
+
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    
+    // if caching, always request the maximum days ahead from the server so we have them cached
+    NSInteger fetchDaysAhead = gSBBUseCache ? kMaxAdvance : daysAhead;
+    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(fetchDaysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        if (gSBBUseCache) {
+            [self.cacheManager.cacheIOContext performBlock:^{
+                SBBResourceList *tasks = [self cachedTasksFromCacheManager:self.cacheManager];
+                
+                // before processing updated data, save all tasks from the past kDaysToCache days,
+                // and finished ones from today (or later?) (because the server doesn't give us those)
+                NSArray<SBBScheduledActivity *> *savedTasks = [self savedTasksFromCachedTasks:tasks.items];
+
+                // now process the new data into the cache
+                if (!error) {
+                    [self.objectManager objectFromBridgeJSON:responseObject];
+                }
+                
+                // we've either updated the cached tasks list from the server, or not, as the case may be;
+                // in either case, we want to pass the cached tasks list to the completion handler.
+                tasks = (SBBResourceList *)[self.cacheManager cachedObjectOfType:@"ResourceList" withId:@"ScheduledActivity" createIfMissing:NO];
+                
+                // ...ok, if we *did* update from the server though, we want to add back any we saved from before.
+                if (!error && savedTasks.count) {
+                    [self addSavedTasks:savedTasks toResourceList:tasks];
+                }
+                
+                if (completion) {
+                    NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
+                    [self mapSubObjectsInTaskList:requestedTasks];
+                    
+                    // now get the heck out of the cacheIOContext queue
+                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                        completion(requestedTasks, error);
+                    });
+                }
+            }];
+        } else {
+            // not caching, do it the old-fashioned way (-ish)
+            SBBResourceList *tasks = nil;
+            if (!error) {
+                tasks = [self.objectManager objectFromBridgeJSON:responseObject];
+            }
+            if (completion) {
+                completion(tasks.items, error);
+            }
         }
     }];
 }
@@ -198,6 +259,23 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
             completion(responseObject, error);
         }
     }];
+}
+
+// Note: this method blocks until it gets its turn in the cache IO context queue
+- (void)flushUncompletedActivities
+{
+    if (gSBBUseCache) {
+        if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
+            [self.cacheManager.cacheIOContext performBlockAndWait:^{
+                SBBResourceList *cachedTasks = [self cachedTasksFromCacheManager:self.cacheManager];
+                NSArray<SBBScheduledActivity *> *savedTasks = [self savedTasksFromCachedTasks:cachedTasks.items];
+                
+                // clear out all its items and just add back the ones we saved
+                [cachedTasks removeItemsObjects];
+                [self addSavedTasks:savedTasks toResourceList:cachedTasks];
+            }];
+        }
+    }
 }
 
 @end
