@@ -44,7 +44,6 @@ typedef NS_ENUM(NSInteger, SBBErrorCode)
     SBBErrorCodeServerPreconditionNotMet = -1004,
     SBBErrorCodeNoCredentialsAvailable = -1005,
     SBBErrorCodeUnsupportedAppVersion = -1006,
-    SBBErrorCodeActivitiesBeingUpdated = -1007,
     
     SBBErrorCodeS3UploadErrorResponse = -1020,
     

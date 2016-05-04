@@ -138,13 +138,6 @@
     return [self SBBUnsupportedAppVersionErrorWithObject:nil];
 }
 
-+ (NSError *)SBBActivitiesBeingUpdatedError
-{
-    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeActivitiesBeingUpdated
-                           userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_ACTIVITIES_UPDATING", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Scheduled activities are already being updated.",
-                                                                                                   @"Error Description: currently in the process of updating scheduled activities")}];
-}
-
 + (NSError *)SBBUnsupportedAppVersionErrorWithObject:(id _Nullable)foundationObject
 {
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
