@@ -183,8 +183,8 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
     return [self.networkManager post:kSBBUserDataGroupsAPI headers:headers parameters:jsonGroups completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         if (!error) {
             // updating data groups generally invalidates your schedule so we need to flush the cache
-            if ([_activityManager conformsToProtocol:@protocol(SBBActivityManagerInternalProtocol)]) {
-                [_activityManager flushUncompletedActivities];
+            if ([self.activityManager conformsToProtocol:@protocol(SBBActivityManagerInternalProtocol)]) {
+                [self.activityManager flushUncompletedActivities];
             }
         }
         if (completion) {
