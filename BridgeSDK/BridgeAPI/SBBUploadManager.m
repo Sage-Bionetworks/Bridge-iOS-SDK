@@ -459,7 +459,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
                         [_uploadDelegate uploadManager:self uploadOfFile:uploadTask.taskDescription completedWithVerificationURL:url];
                     }
                 }
-                NSLog(@"Successfully called upload complete for upload ID %@, check status at %@", uploadSession.id, uploadStatusUrlString);
+                NSLog(@"Successfully called upload complete for upload ID %@, check status with curl -H \"Bridge-Session:%@\" %@", uploadSession.id, [self.authManager.authDelegate sessionTokenForAuthManager:self.authManager], uploadStatusUrlString);
             }
 #endif
             [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
