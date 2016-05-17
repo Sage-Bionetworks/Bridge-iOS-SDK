@@ -89,6 +89,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     NSCalendar *cal = [NSCalendar currentCalendar];
     NSDate *windowStart = [cal startOfDayForDate:[NSDate dateWithTimeIntervalSinceNow:-daysBehind * kSBB24Hours]];
     NSDate *todayStart = [cal startOfDayForDate:[NSDate date]];
+    NSDate *now = [NSDate date];
     NSDate *todayEnd = [cal startOfDayForDate:[NSDate dateWithTimeIntervalSinceNow:kSBB24Hours]];
     NSDate *windowEnd = [cal startOfDayForDate:[todayEnd dateByAddingTimeInterval:daysAhead * kSBB24Hours]];
     
@@ -103,11 +104,11 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     NSArray *filtered = [tasks filteredArrayUsingPredicate:predicate];
     if (excludeValid) {
         // "valid things" are defined as the subset of the above things that the server would return.
-        // valid things expire after the start of today and are not marked as finished. the flag is
+        // valid things expire after now and are not marked as finished. the flag is
         // set so we want to exclude those things.
-        predicate = [NSPredicate predicateWithFormat:@"NOT ((%K == nil OR %K > %@) AND %K == nil)",
+        predicate = [NSPredicate predicateWithFormat:@"NOT ((%K == nil OR %K >= %@) AND %K == nil)",
                      NSStringFromSelector(@selector(expiresOn)),
-                     NSStringFromSelector(@selector(expiresOn)), todayStart,
+                     NSStringFromSelector(@selector(expiresOn)), now,
                      NSStringFromSelector(@selector(finishedOn))
                      ];
         filtered = [filtered filteredArrayUsingPredicate:predicate];
