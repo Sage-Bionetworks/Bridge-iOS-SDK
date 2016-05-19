@@ -36,12 +36,14 @@
 
 + (NSDateFormatter *)ISO8601formatter;
 + (NSDateFormatter *)ISO8601DateOnlyformatter;
++ (NSDateFormatter *)ISO8601TimeOnlyformatter;
 
 + (instancetype)dateWithISO8601String:(NSString *)iso8601string;
 
 - (NSString *)ISO8601String;
 - (NSString *)ISO8601StringUTC;
 - (NSString *)ISO8601DateOnlyString;
+- (NSString *)ISO8601TimeOnlyString;
 - (NSString *)ISO8601OffsetString;
 
 @end

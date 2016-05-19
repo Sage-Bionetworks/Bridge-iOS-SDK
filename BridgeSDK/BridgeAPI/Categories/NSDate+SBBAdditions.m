@@ -72,6 +72,18 @@
     return formatter;
 }
 
++ (NSDateFormatter *)ISO8601TimeOnlyformatter
+{
+    static NSDateFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[self ISO8601formatter] copy];
+        [formatter setDateFormat:@"HH:mm:ss.SSS"];
+    });
+    
+    return formatter;
+}
+
 + (NSDateFormatter *)ISO8601OffsetOnlyformatter
 {
     static NSDateFormatter *formatter;
@@ -104,6 +116,11 @@
 - (NSString *)ISO8601DateOnlyString
 {
     return [[[self class] ISO8601DateOnlyformatter] stringFromDate:self];
+}
+
+- (NSString *)ISO8601TimeOnlyString
+{
+    return [[[self class] ISO8601TimeOnlyformatter] stringFromDate:self];
 }
 
 - (NSString *)ISO8601OffsetString
