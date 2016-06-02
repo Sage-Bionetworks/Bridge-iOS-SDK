@@ -277,11 +277,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password dataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBNetworkManagerCompletionBlock)completion
 {
+    // Add a no-cache header to prevent the caching of sensitive data like the password
+    NSDictionary *headers = [[NSDictionary alloc] initWithObjectsAndKeys:@"no-cache", @"cache-control", nil];
     NSMutableDictionary *params = [@{@"study":gSBBAppStudy, @"email":email, @"username":username, @"password":password, @"type":@"SignUp"} mutableCopy];
     if (dataGroups) {
         [params setObject:dataGroups forKey:@"dataGroups"];
     }
-    return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:params completion:completion];
+    return [_networkManager post:kSBBAuthSignUpAPI headers:headers parameters:params completion:completion];
 }
 
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
@@ -301,7 +303,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    // Add a no-cache header to prevent the caching of sensitive data like the password
+    NSDictionary *headers = [[NSDictionary alloc] initWithObjectsAndKeys:@"no-cache", @"cache-control", nil];
+    return [_networkManager post:kSBBAuthSignInAPI headers:headers parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Save session token in the keychain
         // ??? Save credentials in the keychain?
         NSString *sessionToken = responseObject[@"sessionToken"];
