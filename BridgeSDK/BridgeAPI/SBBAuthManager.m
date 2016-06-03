@@ -277,13 +277,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password dataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    // Add a no-cache header to prevent the caching of sensitive data like the password
-    NSDictionary *nocacheHeader = [[NSDictionary alloc] initWithObjectsAndKeys:@"no-cache", @"cache-control", nil];
     NSMutableDictionary *params = [@{@"study":gSBBAppStudy, @"email":email, @"username":username, @"password":password, @"type":@"SignUp"} mutableCopy];
     if (dataGroups) {
         [params setObject:dataGroups forKey:@"dataGroups"];
     }
-    return [_networkManager post:kSBBAuthSignUpAPI headers:nocacheHeader parameters:params completion:completion];
+    return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:params completion:completion];
 }
 
 - (NSURLSessionDataTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
@@ -303,9 +301,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    // Add a no-cache header to prevent the caching of sensitive data like the password
-    NSDictionary *nocacheHeader = [[NSDictionary alloc] initWithObjectsAndKeys:@"no-cache", @"cache-control", nil];
-    return [_networkManager post:kSBBAuthSignInAPI headers:nocacheHeader parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
         // Save session token in the keychain
         // ??? Save credentials in the keychain?
         NSString *sessionToken = responseObject[@"sessionToken"];
@@ -437,9 +433,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    // Add a no-cache header to prevent the caching of sensitive data like the password
-    NSDictionary *nocacheHeader = [[NSDictionary alloc] initWithObjectsAndKeys:@"no-cache", @"cache-control", nil];
-    return [_networkManager post:kSBBAuthResetAPI headers:nocacheHeader parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
+    return [_networkManager post:kSBBAuthResetAPI headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
 }
 
 #pragma mark Internal helper methods
