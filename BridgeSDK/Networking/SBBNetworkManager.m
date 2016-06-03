@@ -557,7 +557,7 @@ NSString *kAPIPrefix = @"webservices";
   mutableRequest.HTTPShouldHandleCookies = self.sendCookies;
   [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
   [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
-  // Add a no-cache header to prevent data from being caching the request locally
+  // Add a no-cache header to prevent data from being cached locally
   [mutableRequest setValue:@"no-cache" forHTTPHeaderField:@"cache-control"];
   
   if (headers) {
