@@ -437,7 +437,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionDataTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthResetAPI headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
+    // Add a no-cache header to prevent the caching of sensitive data like the password
+    NSDictionary *nocacheHeader = [[NSDictionary alloc] initWithObjectsAndKeys:@"no-cache", @"cache-control", nil];
+    return [_networkManager post:kSBBAuthResetAPI headers:nocacheHeader parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
 }
 
 #pragma mark Internal helper methods
