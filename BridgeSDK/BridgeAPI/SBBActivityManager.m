@@ -251,7 +251,9 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     id jsonTasks = [self.objectManager bridgeJSONFromObject:scheduledActivities];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    return [self.networkManager post:kSBBActivityAPI headers:headers parameters:jsonTasks completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    
+    // Activities can be started/finished without a network connection, so this has to be able to do that too
+    return [self.networkManager post:kSBBActivityAPI headers:headers parameters:jsonTasks background:YES completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
 #if DEBUG
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
         NSLog(@"Update tasks HTTP response code: %ld", (long)httpResponse.statusCode);

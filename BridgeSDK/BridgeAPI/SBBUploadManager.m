@@ -255,6 +255,125 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     return uploadSession;
 }
 
+// When uploading a file to Bridge, first we use background download to get an SBBUploadSession object from Bridge.
+// Then we use the pre-signed URL in that SBBUploadSession to upload our file to S3.
+// When that finishes, we tell Bridge that the requested upload is completed.
+// To avoid having multiple layers of nested completion handlers in one method, they're broken out by step:
+
+// --- Here's the completion handler for the step where we tell Bridge the upload completed:
+- (void)toldBridgeFileUploadedWithTask:(NSURLSessionUploadTask *)uploadTask forBridgeSession:(SBBUploadSession *)uploadSession error:(NSError *)error
+{
+#if DEBUG
+    if (error) {
+        NSLog(@"Error calling upload complete for upload ID %@:\n%@", uploadSession.id, error);
+    } else {
+        NSString* uploadStatusUrlString = nil;
+        if ([self.networkManager isKindOfClass:[SBBNetworkManager class]]) {
+            NSString* relativeUrl = [NSString stringWithFormat:kSBBUploadStatusAPIFormat, uploadSession.id];
+            NSURL* url = [(SBBNetworkManager*) self.networkManager URLForRelativeorAbsoluteURLString:relativeUrl];
+            uploadStatusUrlString = [url absoluteString];
+            if ([_uploadDelegate respondsToSelector:@selector(uploadManager:uploadOfFile:completedWithVerificationURL:)]) {
+                [_uploadDelegate uploadManager:self uploadOfFile:uploadTask.taskDescription completedWithVerificationURL:url];
+            }
+        }
+        NSLog(@"Successfully called upload complete for upload ID %@, check status with curl -H \"Bridge-Session:%@\" %@", uploadSession.id, [self.authManager.authDelegate sessionTokenForAuthManager:self.authManager], uploadStatusUrlString);
+    }
+#endif
+    [self completeUploadOfFile:uploadTask.taskDescription withError:error];
+}
+
+// --- Here's the completion handler for the step where we upload the file to S3:
+- (void)uploadedFileToS3WithTask:(NSURLSessionUploadTask *)uploadTask response:(NSHTTPURLResponse *)httpResponse error:(NSError *)error
+{
+    NSInteger httpStatusCode = httpResponse.statusCode;
+    
+    // client-side networking issue
+    if (error) {
+        [self completeUploadOfFile:uploadTask.taskDescription withError:error];
+        return;
+    }
+    
+    // server didn't like the request, or otherwise hiccupped
+    if (httpStatusCode >= 300) {
+        // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
+        // (along with all 4xx and 5xx of course)
+        NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
+        NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
+        [self completeUploadOfFile:uploadTask.taskDescription withError:s3Error];
+        return;
+    }
+    
+    // tell the API we done did it
+    SBBUploadSession *uploadSession = [self uploadSessionForFile:uploadTask.taskDescription];
+    [self setUploadSessionJSON:nil forFile:uploadTask.taskDescription];
+    NSString *uploadId = uploadSession.id;
+    if (!uploadId.length) {
+        NSAssert(uploadId, @"uploadId is nil");
+    }
+    NSString *ref = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, uploadId];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    [self.networkManager post:ref headers:headers parameters:nil background:YES completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self toldBridgeFileUploadedWithTask:uploadTask forBridgeSession:uploadSession error:error];
+    }];
+}
+
+// --- And here's the completion handler for getting the SBBUploadSession in the first place:
+- (void)downloadedBridgeUploadSessionWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask fileURL:(NSURL *)file
+{
+    NSError *error;
+    NSData *jsonData = [NSData dataWithContentsOfURL:file options:0 error:&error];
+    if (error) {
+        NSLog(@"Error reading downloaded UploadSession file into an NSData object:\n%@", error);
+        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+        return;
+    }
+    
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+    if (error) {
+        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+        NSLog(@"Error deserializing downloaded UploadSession data into objects:\n%@", error);
+        return;
+    }
+    
+    SBBUploadSession *uploadSession = [_cleanObjectManager objectFromBridgeJSON:jsonObject];
+    SBBUploadRequest *uploadRequest = [self uploadRequestForFile:downloadTask.taskDescription];
+    if (!uploadRequest || !uploadRequest.contentLength || !uploadRequest.contentType || !uploadRequest.contentMd5) {
+        NSLog(@"Failed to retrieve upload request headers for temp file %@", downloadTask.taskDescription);
+        NSString *desc = [NSString stringWithFormat:@"Error retrieving upload request headers for temp file URL:\n%@", downloadTask.taskDescription];
+        error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
+        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+        return;
+    }
+    [self setUploadRequestJSON:nil forFile:downloadTask.taskDescription];
+    if ([uploadSession isKindOfClass:[SBBUploadSession class]]) {
+#if DEBUG
+        NSLog(@"Successfully obtained upload session with upload ID %@", uploadSession.id);
+#endif
+        [self setUploadSessionJSON:jsonObject forFile:downloadTask.taskDescription];
+        NSDictionary *uploadHeaders =
+        @{
+          @"Content-Length": [uploadRequest.contentLength stringValue],
+          @"Content-Type": uploadRequest.contentType,
+          @"Content-MD5": uploadRequest.contentMd5
+          };
+        NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
+        [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription completion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+#if DEBUG
+            if (error) {
+                NSLog(@"Error uploading to S3 for upload ID %@:\n%@", uploadSession.id, error);
+            } else {
+                NSLog(@"Successfully uploaded to S3 for upload ID %@", uploadSession.id);
+            }
+#endif
+            [self uploadedFileToS3WithTask:(NSURLSessionUploadTask *)task response:response error:error];
+        }];
+    } else {
+        NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
+        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+    }
+}
+
 - (void)uploadFileToBridge:(NSURL *)fileUrl contentType:(NSString *)contentType completion:(SBBUploadManagerCompletionBlock)completion
 {
     if (![fileUrl isFileURL] || ![[NSFileManager defaultManager] isReadableFileAtPath:[fileUrl path]]) {
@@ -309,7 +428,21 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     }];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    [self.networkManager downloadFileFromURLString:kSBBUploadAPI method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:nil taskCompletion:nil];
+    
+    NSURLSessionDownloadTask *downloadTask = [self.networkManager downloadFileFromURLString:kSBBUploadAPI method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:^(NSURL *file) {
+        [self downloadedBridgeUploadSessionWithDownloadTask:downloadTask fileURL:file];
+    } taskCompletion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+        // We don't care about this unless there was a network error, or an HTTP response indicating an error.
+        // Otherwise we'll have gotten and handled the downloaded file url in the downloadCompletion block, above.
+        if (!error && [task.response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
+            error = [NSError generateSBBErrorForStatusCode:httpResponse.statusCode];
+        }
+        
+        if (error) {
+            [self completeUploadOfFile:task.taskDescription withError:error];
+        }
+    }];
 }
 
 #pragma mark - Delegate methods
@@ -354,128 +487,128 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     }
 }
 
-- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
-{
-    NSError *error;
-    NSData *jsonData = [NSData dataWithContentsOfURL:location options:0 error:&error];
-    if (error) {
-        NSLog(@"Error reading downloaded UploadSession file into an NSData object:\n%@", error);
-        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
-        return;
-    }
-    
-    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
-    if (error) {
-        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
-        NSLog(@"Error deserializing downloaded UploadSession data into objects:\n%@", error);
-        return;
-    }
-    
-    SBBUploadSession *uploadSession = [_cleanObjectManager objectFromBridgeJSON:jsonObject];
-    SBBUploadRequest *uploadRequest = [self uploadRequestForFile:downloadTask.taskDescription];
-    if (!uploadRequest || !uploadRequest.contentLength || !uploadRequest.contentType || !uploadRequest.contentMd5) {
-        NSLog(@"Failed to retrieve upload request headers for temp file %@", downloadTask.taskDescription);
-        NSString *desc = [NSString stringWithFormat:@"Error retrieving upload request headers for temp file URL:\n%@", downloadTask.taskDescription];
-        error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
-        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
-        return;
-    }
-    [self setUploadRequestJSON:nil forFile:downloadTask.taskDescription];
-    if ([uploadSession isKindOfClass:[SBBUploadSession class]]) {
-#if DEBUG
-        NSLog(@"Successfully obtained upload session with upload ID %@", uploadSession.id);
-#endif
-        [self setUploadSessionJSON:jsonObject forFile:downloadTask.taskDescription];
-        NSDictionary *uploadHeaders =
-        @{
-          @"Content-Length": [uploadRequest.contentLength stringValue],
-          @"Content-Type": uploadRequest.contentType,
-          @"Content-MD5": uploadRequest.contentMd5
-          };
-        SBBNetworkManagerTaskCompletionBlock uploadFileCompletion = nil;
-#if DEBUG
-        uploadFileCompletion = ^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
-            if (error) {
-                NSLog(@"Error uploading to S3 for upload ID %@:\n%@", uploadSession.id, error);
-            } else {
-                NSLog(@"Successfully uploaded to S3 for upload ID %@", uploadSession.id);
-            }
-        };
-#endif
-        NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
-        [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription
-                             completion:uploadFileCompletion];
-    } else {
-        NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
-        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
-    }
-}
+//- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
+//{
+//    NSError *error;
+//    NSData *jsonData = [NSData dataWithContentsOfURL:location options:0 error:&error];
+//    if (error) {
+//        NSLog(@"Error reading downloaded UploadSession file into an NSData object:\n%@", error);
+//        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+//        return;
+//    }
+//    
+//    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
+//    if (error) {
+//        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+//        NSLog(@"Error deserializing downloaded UploadSession data into objects:\n%@", error);
+//        return;
+//    }
+//    
+//    SBBUploadSession *uploadSession = [_cleanObjectManager objectFromBridgeJSON:jsonObject];
+//    SBBUploadRequest *uploadRequest = [self uploadRequestForFile:downloadTask.taskDescription];
+//    if (!uploadRequest || !uploadRequest.contentLength || !uploadRequest.contentType || !uploadRequest.contentMd5) {
+//        NSLog(@"Failed to retrieve upload request headers for temp file %@", downloadTask.taskDescription);
+//        NSString *desc = [NSString stringWithFormat:@"Error retrieving upload request headers for temp file URL:\n%@", downloadTask.taskDescription];
+//        error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
+//        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+//        return;
+//    }
+//    [self setUploadRequestJSON:nil forFile:downloadTask.taskDescription];
+//    if ([uploadSession isKindOfClass:[SBBUploadSession class]]) {
+//#if DEBUG
+//        NSLog(@"Successfully obtained upload session with upload ID %@", uploadSession.id);
+//#endif
+//        [self setUploadSessionJSON:jsonObject forFile:downloadTask.taskDescription];
+//        NSDictionary *uploadHeaders =
+//        @{
+//          @"Content-Length": [uploadRequest.contentLength stringValue],
+//          @"Content-Type": uploadRequest.contentType,
+//          @"Content-MD5": uploadRequest.contentMd5
+//          };
+//        SBBNetworkManagerTaskCompletionBlock uploadFileCompletion = nil;
+//#if DEBUG
+//        uploadFileCompletion = ^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+//            if (error) {
+//                NSLog(@"Error uploading to S3 for upload ID %@:\n%@", uploadSession.id, error);
+//            } else {
+//                NSLog(@"Successfully uploaded to S3 for upload ID %@", uploadSession.id);
+//            }
+//        };
+//#endif
+//        NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
+//        [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription
+//                             completion:uploadFileCompletion];
+//    } else {
+//        NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
+//        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+//    }
+//}
 
-- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
-{
-    if ([task isKindOfClass:[NSURLSessionUploadTask class]]) {
-        NSURLSessionUploadTask *uploadTask = (NSURLSessionUploadTask *)task;
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)uploadTask.response;
-        NSInteger httpStatusCode = httpResponse.statusCode;
-        
-        // client-side networking issue
-        if (error) {
-            [self completeUploadOfFile:uploadTask.taskDescription withError:error];
-            return;
-        }
-        
-        // server didn't like the request, or otherwise hiccupped
-        if (httpStatusCode >= 300) {
-            // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
-            // (along with all 4xx and 5xx of course)
-            NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
-            NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
-            [self completeUploadOfFile:uploadTask.taskDescription withError:s3Error];
-            return;
-        }
-        
-        // tell the API we done did it
-        SBBUploadSession *uploadSession = [self uploadSessionForFile:uploadTask.taskDescription];
-        [self setUploadSessionJSON:nil forFile:uploadTask.taskDescription];
-        NSString *uploadId = uploadSession.id;
-        if (!uploadId.length) {
-            NSAssert(uploadId, @"uploadId is nil");
-        }
-        NSString *ref = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, uploadId];
-        NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-        [self.authManager addAuthHeaderToHeaders:headers];
-        [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
-            
-#if DEBUG
-            if (error) {
-                NSLog(@"Error calling upload complete for upload ID %@:\n%@", uploadSession.id, error);
-            } else {
-                NSString* uploadStatusUrlString = nil;
-                if ([self.networkManager isKindOfClass:[SBBNetworkManager class]]) {
-                    NSString* relativeUrl = [NSString stringWithFormat:kSBBUploadStatusAPIFormat, uploadSession.id];
-                    NSURL* url = [(SBBNetworkManager*) self.networkManager URLForRelativeorAbsoluteURLString:relativeUrl];
-                    uploadStatusUrlString = [url absoluteString];
-                    if ([_uploadDelegate respondsToSelector:@selector(uploadManager:uploadOfFile:completedWithVerificationURL:)]) {
-                        [_uploadDelegate uploadManager:self uploadOfFile:uploadTask.taskDescription completedWithVerificationURL:url];
-                    }
-                }
-                NSLog(@"Successfully called upload complete for upload ID %@, check status with curl -H \"Bridge-Session:%@\" %@", uploadSession.id, [self.authManager.authDelegate sessionTokenForAuthManager:self.authManager], uploadStatusUrlString);
-            }
-#endif
-            [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
-                [self completeUploadOfFile:uploadTask.taskDescription withError:error];
-            }];
-        }];
-    } else if ([task isKindOfClass:[NSURLSessionDownloadTask class]]) {
-        if (!error && [task.response isKindOfClass:[NSHTTPURLResponse class]]) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
-            error = [NSError generateSBBErrorForStatusCode:httpResponse.statusCode];
-        }
-        
-        if (error) {
-            [self completeUploadOfFile:task.taskDescription withError:error];
-        }
-    }
-}
+//- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
+//{
+//    if ([task isKindOfClass:[NSURLSessionUploadTask class]]) {
+//        NSURLSessionUploadTask *uploadTask = (NSURLSessionUploadTask *)task;
+//        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)uploadTask.response;
+//        NSInteger httpStatusCode = httpResponse.statusCode;
+//        
+//        // client-side networking issue
+//        if (error) {
+//            [self completeUploadOfFile:uploadTask.taskDescription withError:error];
+//            return;
+//        }
+//        
+//        // server didn't like the request, or otherwise hiccupped
+//        if (httpStatusCode >= 300) {
+//            // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
+//            // (along with all 4xx and 5xx of course)
+//            NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
+//            NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
+//            [self completeUploadOfFile:uploadTask.taskDescription withError:s3Error];
+//            return;
+//        }
+//        
+//        // tell the API we done did it
+//        SBBUploadSession *uploadSession = [self uploadSessionForFile:uploadTask.taskDescription];
+//        [self setUploadSessionJSON:nil forFile:uploadTask.taskDescription];
+//        NSString *uploadId = uploadSession.id;
+//        if (!uploadId.length) {
+//            NSAssert(uploadId, @"uploadId is nil");
+//        }
+//        NSString *ref = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, uploadId];
+//        NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+//        [self.authManager addAuthHeaderToHeaders:headers];
+//        [self.networkManager post:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+//            
+//#if DEBUG
+//            if (error) {
+//                NSLog(@"Error calling upload complete for upload ID %@:\n%@", uploadSession.id, error);
+//            } else {
+//                NSString* uploadStatusUrlString = nil;
+//                if ([self.networkManager isKindOfClass:[SBBNetworkManager class]]) {
+//                    NSString* relativeUrl = [NSString stringWithFormat:kSBBUploadStatusAPIFormat, uploadSession.id];
+//                    NSURL* url = [(SBBNetworkManager*) self.networkManager URLForRelativeorAbsoluteURLString:relativeUrl];
+//                    uploadStatusUrlString = [url absoluteString];
+//                    if ([_uploadDelegate respondsToSelector:@selector(uploadManager:uploadOfFile:completedWithVerificationURL:)]) {
+//                        [_uploadDelegate uploadManager:self uploadOfFile:uploadTask.taskDescription completedWithVerificationURL:url];
+//                    }
+//                }
+//                NSLog(@"Successfully called upload complete for upload ID %@, check status with curl -H \"Bridge-Session:%@\" %@", uploadSession.id, [self.authManager.authDelegate sessionTokenForAuthManager:self.authManager], uploadStatusUrlString);
+//            }
+//#endif
+//            [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+//                [self completeUploadOfFile:uploadTask.taskDescription withError:error];
+//            }];
+//        }];
+//    } else if ([task isKindOfClass:[NSURLSessionDownloadTask class]]) {
+//        if (!error && [task.response isKindOfClass:[NSHTTPURLResponse class]]) {
+//            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
+//            error = [NSError generateSBBErrorForStatusCode:httpResponse.statusCode];
+//        }
+//        
+//        if (error) {
+//            [self completeUploadOfFile:task.taskDescription withError:error];
+//        }
+//    }
+//}
 
 @end

@@ -102,9 +102,19 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
  *  @param URLString  The URL to which you are making this HTTP request.
  *  @param headers    The HTTP headers for this request.
  *  @param parameters The parameters for this request, to be passed in the query portion of the request.
+ *  @param background A BOOL flag indicating whether the request should be performed as a background download.
  *  @param completion A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.
  *
  *  @return The NSURLSessionDataTask used to make the request, so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask* )get:(NSString *)URLString
+                      headers:(NSDictionary *)headers
+                   parameters:(id)parameters
+                   background:(BOOL)background
+                   completion:(SBBNetworkManagerCompletionBlock)completion;
+
+/**
+ This is a convenience method that assumes a default value of NO for background.
  */
 - (NSURLSessionDataTask* )get:(NSString *)URLString
                       headers:(NSDictionary *)headers
@@ -117,9 +127,19 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
  *  @param URLString  The URL to which you are making this HTTP request.
  *  @param headers    The HTTP headers for this request.
  *  @param parameters The parameters for this request, to be passed in the request body as JSON. May be nil.
+ *  @param background A BOOL flag indicating whether the request should be performed as a background download.
  *  @param completion A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.
  *
  *  @return The NSURLSessionDataTask used to make the request, so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask* )post:(NSString *)URLString
+                       headers:(NSDictionary *)headers
+                    parameters:(id)parameters
+                    background:(BOOL)background
+                    completion:(SBBNetworkManagerCompletionBlock)completion;
+
+/**
+ This is a convenience method that assumes a default value of NO for background.
  */
 - (NSURLSessionDataTask* )post:(NSString *)URLString
                        headers:(NSDictionary *)headers
@@ -132,9 +152,19 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
  *  @param URLString  The URL to which you are making this HTTP request.
  *  @param headers    The HTTP headers for this request.
  *  @param parameters The parameters for this request, to be passed in the request body as JSON. May be nil.
+ *  @param background A BOOL flag indicating whether the request should be performed as a background download.
  *  @param completion A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.
  *
  *  @return The NSURLSessionDataTask used to make the request, so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask* )put:(NSString *)URLString
+                      headers:(NSDictionary *)headers
+                   parameters:(id)parameters
+                   background:(BOOL)background
+                   completion:(SBBNetworkManagerCompletionBlock)completion;
+
+/**
+ This is a convenience method that assumes a default value of NO for background.
  */
 - (NSURLSessionDataTask* )put:(NSString *)URLString
                       headers:(NSDictionary *)headers
@@ -146,18 +176,36 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
 - (NSURLSessionDataTask *)delete_:(NSString *)URLString
                           headers:(NSDictionary *)headers
                        parameters:(id)parameters
+                       background:(BOOL)background
+                       completion:(SBBNetworkManagerCompletionBlock)completion;
+
+- (NSURLSessionDataTask *)delete_:(NSString *)URLString
+                          headers:(NSDictionary *)headers
+                       parameters:(id)parameters
                        completion:(SBBNetworkManagerCompletionBlock)completion;
 #else
 /*!
  *  Perform an HTTP DELETE with the specified URL, HTTP headers, parameters, and completion handler.
  *
- *  @note Since delete is a C++ keyword, when calling this method from Objective-C++ you must use the selector delete_:headers:parameters:completion: instead of delete:headers:parameters:completion:.
+ *  @note Since delete is a C++ keyword, when calling this method from Objective-C++ you must use the selector delete_:headers:parameters:background:completion: instead of delete:headers:parameters:background:completion:.
  *  @param URLString  The URL to which you are making this HTTP request.
  *  @param headers    The HTTP headers for this request.
  *  @param parameters The parameters for this request, to be passed in the request body as JSON. Usually for a DELETE this will be nil.
+ *  @param background A BOOL flag indicating whether the request should be performed as a background download.
  *  @param completion A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.
  *
  *  @return The NSURLSessionDataTask used to make the request, so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionDataTask *)delete:(NSString *)URLString
+                         headers:(NSDictionary *)headers
+                      parameters:(id)parameters
+                      background:(BOOL)background
+                      completion:(SBBNetworkManagerCompletionBlock)completion;
+
+/**
+ This is a convenience method that assumes a default value of NO for background.
+ 
+ @note Since delete is a C++ keyword, when calling this method from Objective-C++ you must use the selector delete_:headers:parameters:completion: instead of delete:headers:parameters:completion:.
  */
 - (NSURLSessionDataTask *)delete:(NSString *)URLString
                          headers:(NSDictionary *)headers
@@ -234,13 +282,6 @@ typedef NS_ENUM(NSInteger, SBBEnvironment) {
 
 - (BOOL) isInternetConnected;
 - (BOOL) isServerReachable;
-
-//@protected
-- (NSURLSessionDataTask *) doDataTask:(NSString*) method
-                            URLString:(NSString*)URLString
-                              headers:(NSDictionary *)headers
-                           parameters:(NSDictionary *)parameters
-                           completion:(SBBNetworkManagerCompletionBlock)completion;
 @end
 
 
