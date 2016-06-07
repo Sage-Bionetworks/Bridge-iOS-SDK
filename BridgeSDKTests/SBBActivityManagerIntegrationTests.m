@@ -158,10 +158,10 @@
         if (error) {
             NSLog(@"Error getting tasks for %@:\n%@", tzStr, error);
         }
-        XCTAssert([tasksList isKindOfClass:[NSArray class]], "Method returned an NSArray");
+        XCTAssert([tasksList isKindOfClass:[NSArray class]], @"Method returned an NSArray");
         if (tasksList.count) {
             SBBScheduledActivity *task = tasksList[0];
-            XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], "Method returned a list of ScheduledActivity objects");
+            XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], @"Method returned a list of ScheduledActivity objects");
         }
         NSInteger countMyActivities = 0;
         for (SBBScheduledActivity *task in tasksList) {
@@ -169,7 +169,7 @@
                 countMyActivities++;
             }
         }
-        XCTAssert(countMyActivities == daysAhead + 1, "Server returned a list that actually contains one item from test schedule per day requested");
+        XCTAssert(countMyActivities == daysAhead + 1, @"Server returned a list that actually contains one item from test schedule per day requested");
         
         [expectTasks fulfill];
     }];
@@ -223,6 +223,38 @@
     
     [NSTimeZone setDefaultTimeZone:originalTZ];
     [NSTimeZone resetSystemTimeZone];
+}
+
+- (void)testUpdateScheduledActivities {
+    NSInteger daysAhead = 0; // just get today's
+    XCTestExpectation *expectTasks = [self expectationWithDescription:@"got scheduled activities for Update Activities test"];
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead withCompletion:^(NSArray *tasksList, NSError *error) {
+        if (error) {
+            NSLog(@"Error getting tasks for update test:\n%@", error);
+            [expectTasks fulfill];
+            return;
+        }
+        XCTAssert([tasksList isKindOfClass:[NSArray class]], @"Method returned an NSArray");
+        SBBScheduledActivity *task = [tasksList lastObject];
+        XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], @"Method returned a list of ScheduledActivity objects");
+        task.startedOn = [NSDate date];
+        task.finishedOn = [NSDate date];
+        [SBBComponent(SBBActivityManager) updateScheduledActivities:@[task] withCompletion:^(id responseObject, NSError *error) {
+            BOOL isDictionary = [responseObject isKindOfClass:[NSDictionary class]];
+            XCTAssert(isDictionary, @"Update activity response is an NSDictionary");
+            if (isDictionary) {
+                XCTAssertEqualObjects([responseObject objectForKey:@"message"], @"Activities updated.", @"Update activity succeeded.");
+            }
+            
+            [expectTasks fulfill];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error attempting to get tasks for update test: %@", error);
+        }
+    }];
 }
 
 - (void)createTestSchedule:(NSDictionary *)schedule completionHandler:(SBBNetworkManagerCompletionBlock)completion
