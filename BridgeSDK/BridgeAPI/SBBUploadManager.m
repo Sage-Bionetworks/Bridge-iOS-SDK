@@ -429,7 +429,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     
-    NSURLSessionDownloadTask *downloadTask = [self.networkManager downloadFileFromURLString:kSBBUploadAPI method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:^(NSURL *file) {
+    __block NSURLSessionDownloadTask *downloadTask = [self.networkManager downloadFileFromURLString:kSBBUploadAPI method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:[tempFileURL path] downloadCompletion:^(NSURL *file) {
         [self downloadedBridgeUploadSessionWithDownloadTask:downloadTask fileURL:file];
     } taskCompletion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
         // We don't care about this unless there was a network error, or an HTTP response indicating an error.

@@ -403,12 +403,15 @@ NSString *kAPIPrefix = @"webservices";
 
 - (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString retryObject:(SBBNetworkRetryObject *)retryObject method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion
 {
-    SBBNetworkRetryObject *localRetryObject;
+    SBBNetworkRetryObject * localRetryObject;
+    __weak SBBNetworkRetryObject * weakLocalRetryObject;
     if (!retryObject) {
         localRetryObject = [[SBBNetworkRetryObject alloc] init];
+        weakLocalRetryObject = localRetryObject;
         localRetryObject.completionBlock = taskCompletion;
         localRetryObject.retryBlock = ^ {
-            [self downloadFileFromURLString:urlString retryObject:localRetryObject method:httpMethod httpHeaders:headers parameters:parameters taskDescription:description downloadCompletion:downloadCompletion taskCompletion:taskCompletion];
+            __strong SBBNetworkRetryObject *strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
+            [self downloadFileFromURLString:urlString retryObject:strongLocalRetryObject method:httpMethod httpHeaders:headers parameters:parameters taskDescription:description downloadCompletion:downloadCompletion taskCompletion:taskCompletion];
         };
     }
     else
@@ -417,6 +420,17 @@ NSString *kAPIPrefix = @"webservices";
     }
     
     NSMutableURLRequest *request = [self requestWithMethod:httpMethod URLString:urlString headers:headers parameters:parameters error:nil];
+    
+    // keep track of the response (downloaded) data here, so we can report it
+    // in case of an unhandled HTTP error status code
+    __block NSData *data = nil;
+    SBBNetworkManagerDownloadCompletionBlock downloadCompletionWithErrorChecking = ^(NSURL *file) {
+        data = [NSData dataWithContentsOfURL:file];
+        if (downloadCompletion) {
+            downloadCompletion(file);
+        }
+    };
+    
     SBBNetworkManagerTaskCompletionBlock taskCompletionWithErrorChecking = ^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
         NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
         if (error)
@@ -433,7 +447,7 @@ NSString *kAPIPrefix = @"webservices";
     };
     
     NSURLSessionDownloadTask *task = [self.backgroundSession downloadTaskWithRequest:request];
-    [self setCompletionBlock:downloadCompletion forDownload:task];
+    [self setCompletionBlock:downloadCompletionWithErrorChecking forDownload:task];
     [self setCompletionBlock:taskCompletionWithErrorChecking forTask:task];
     task.taskDescription = description;
     
