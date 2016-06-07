@@ -52,7 +52,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         NSDictionary *credentials = [[NSDictionary alloc] initWithContentsOfFile:credentialsPlist][@"studies"];
         NSDictionary *studyCredentials = credentials[gSBBAppStudy];
         
-        [gAdminAuthManager signInWithEmail:studyCredentials[@"email"] password:studyCredentials[@"password"] completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [gAdminAuthManager signInWithEmail:studyCredentials[@"email"] password:studyCredentials[@"password"] completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (error) {
                 NSLog(@"Error logging in to admin account:\n%@\nResponse: %@", error, responseObject);
             } else {
@@ -80,7 +80,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         } else {
             _devUserEmail = emailAddress;
             _devUserPassword = password;
-            [gDevAuthManager signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [gDevAuthManager signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to dev user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 }
@@ -108,7 +108,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         } else {
             _testUserEmail = emailAddress;
             _testUserPassword = password;
-            [SBBComponent(SBBAuthManager) signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [SBBComponent(SBBAuthManager) signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 }
@@ -128,7 +128,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
 - (void)tearDown {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     XCTestExpectation *expectTestDeleted = [self expectationWithDescription:@"test user deleted"];
-    [self deleteUser:_testSignInResponseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self deleteUser:_testSignInResponseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (!error) {
             NSLog(@"Deleted test account %@", _testUserEmail);
         } else {
@@ -145,7 +145,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
     
     XCTestExpectation *expectDevSignedOut = [self expectationWithDescription:@"dev user signed out"];
 
-    [gDevAuthManager signOutWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [gDevAuthManager signOutWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         [expectDevSignedOut fulfill];
     }];
     
@@ -156,7 +156,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
     }];
     
     XCTestExpectation *expectDevDeleted = [self expectationWithDescription:@"dev user deleted"];
-    [self deleteUser:_devSignInResponseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self deleteUser:_devSignInResponseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (!error) {
             NSLog(@"Deleted dev account %@", _devUserEmail);
         } else {
@@ -195,7 +195,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
     NSString *consentedState = consented ? @"consented" : @"unconsented";
     
     id<SBBBridgeNetworkManagerProtocol> bridgeMan = SBBComponent(SBBBridgeNetworkManager);
-    [bridgeMan post:ADMIN_API headers:headers parameters:signUpObject completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [bridgeMan post:ADMIN_API headers:headers parameters:signUpObject completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Failed to create %@ user %@\nError:%@\nResponse:%@", consentedState, emailAddress, error, responseObject);
             emailAddress = nil;
@@ -243,7 +243,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
     }
     
     id<SBBBridgeNetworkManagerProtocol> bridgeMan = SBBComponent(SBBBridgeNetworkManager);
-    [bridgeMan post:ADMIN_SUBPOP_API headers:headers parameters:subpopObject completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [bridgeMan post:ADMIN_SUBPOP_API headers:headers parameters:subpopObject completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         NSString *guid = nil;
         
         if (error) {

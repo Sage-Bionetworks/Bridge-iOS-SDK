@@ -313,7 +313,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     NSString *ref = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, uploadId];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    [self.networkManager post:ref headers:headers parameters:nil background:YES completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self.networkManager post:ref headers:headers parameters:nil background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         [self toldBridgeFileUploadedWithTask:uploadTask forBridgeSession:uploadSession error:error];
     }];
 }
@@ -487,8 +487,8 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     }
 }
 
-//- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
-//{
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
+{
 //    NSError *error;
 //    NSData *jsonData = [NSData dataWithContentsOfURL:location options:0 error:&error];
 //    if (error) {
@@ -542,7 +542,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 //        NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
 //        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
 //    }
-//}
+}
 
 //- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 //{

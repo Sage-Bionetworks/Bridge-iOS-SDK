@@ -74,12 +74,12 @@
     return self;
 }
 
-- (NSURLSessionDataTask *) doDataTask: (NSString*) method
-                            URLString: (NSString*)URLString
-                              headers: (NSDictionary *)headers
-                           parameters:(NSDictionary *)parameters
-                           background:(BOOL)background
-                           completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)doDataTask:(NSString *)method
+                       URLString:(NSString *)URLString
+                         headers:(NSDictionary *)headers
+                      parameters:(NSDictionary *)parameters
+                      background:(BOOL)background
+                      completion:(SBBNetworkManagerCompletionBlock)completion
 {
     // If we have already tried to call services and the unsupported app exception code was returned
     // then do not try again. Just return the error.
@@ -113,7 +113,7 @@
     return [super downloadFileFromURLString:urlString method:httpMethod httpHeaders:headers parameters:parameters taskDescription:description downloadCompletion:downloadCompletion taskCompletion:taskCompletion];
 }
 
-- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
 {
     if (retryObject && retryObject.retryBlock && error.code == SBBErrorCodeServerNotAuthenticated && [_authManager isAuthenticated])
     {
@@ -122,7 +122,7 @@
 #endif
         // clear the stored session token if any, and attempt reauth
         [_authManager clearSessionToken];
-        [_authManager ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [_authManager ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             // ignore 412 Not Consented on signIn when auto-renewing the session token; some Bridge endpoints still work when not consented,
             // and those that don't will themselves return a 412 status code
             BOOL relevantError = (error && error.code != SBBErrorCodeServerPreconditionNotMet);
@@ -185,7 +185,7 @@
     }
 }
 
-- (void)checkForAndHandleServerPreconditionNotMetHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task responseObject:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
+- (void)checkForAndHandleServerPreconditionNotMetHTTPError:(NSError *)error task:(NSURLSessionTask *)task responseObject:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
 {
     if (error.code == SBBErrorCodeServerPreconditionNotMet)
     {

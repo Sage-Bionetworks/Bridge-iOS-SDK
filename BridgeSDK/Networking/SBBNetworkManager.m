@@ -284,50 +284,55 @@ NSString *kAPIPrefix = @"webservices";
 /*********************************************************************************/
 #pragma mark - basic HTTP methods
 /*********************************************************************************/
-- (NSURLSessionDataTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [self get:URLString headers:headers parameters:parameters background:NO completion:completion];
 }
 
-- (NSURLSessionDataTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [self doDataTask:@"GET" URLString:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
-- (NSURLSessionDataTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [self put:URLString headers:headers parameters:parameters background:NO completion:completion];
 }
 
-- (NSURLSessionDataTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [self doDataTask:@"PUT" URLString:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
-- (NSURLSessionDataTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [self post:URLString headers:headers parameters:parameters background:NO completion:completion];
 }
 
-- (NSURLSessionDataTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [self doDataTask:@"POST" URLString:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
-- (NSURLSessionDataTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [self delete:URLString headers:headers parameters:parameters background:NO completion:completion];
 }
 
-- (NSURLSessionDataTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [self doDataTask:@"DELETE" URLString:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
 // in case this class is used from C++, because delete is a keyword in that language (see header)
-- (NSURLSessionDataTask *)delete_:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)delete_:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [self delete:URLString headers:headers parameters:parameters completion:completion];
+    return [self delete:URLString headers:headers parameters:parameters background:NO completion:completion];
+}
+
+- (NSURLSessionTask *)delete_:(NSString *)URLString headers:(NSDictionary *)headers background:(BOOL)background parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [self delete:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
 - (NSString *)keyForTask:(NSURLSessionTask *)task
@@ -398,7 +403,7 @@ NSString *kAPIPrefix = @"webservices";
 
 - (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString retryObject:(SBBNetworkRetryObject *)retryObject method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion
 {
-    SBBNetworkRetryObject * localRetryObject;
+    SBBNetworkRetryObject *localRetryObject;
     if (!retryObject) {
         localRetryObject = [[SBBNetworkRetryObject alloc] init];
         localRetryObject.completionBlock = taskCompletion;
@@ -412,7 +417,7 @@ NSString *kAPIPrefix = @"webservices";
     }
     
     NSMutableURLRequest *request = [self requestWithMethod:httpMethod URLString:urlString headers:headers parameters:parameters error:nil];
-    SBBNetworkManagerTaskCompletionBlock *taskCompletionWithErrorChecking = ^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+    SBBNetworkManagerTaskCompletionBlock taskCompletionWithErrorChecking = ^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
         NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
         if (error)
         {
@@ -425,7 +430,7 @@ NSString *kAPIPrefix = @"webservices";
         else if (taskCompletion) {
             taskCompletion(task, response, error);
         }
-    }
+    };
     
     NSURLSessionDownloadTask *task = [self.backgroundSession downloadTaskWithRequest:request];
     [self setCompletionBlock:downloadCompletion forDownload:task];
@@ -458,22 +463,22 @@ NSString *kAPIPrefix = @"webservices";
     return headers;
 }
 
-- (NSURLSessionDataTask *) doDataTask:(NSString*) method
-                            URLString:(NSString*)URLString
-                              headers:(NSDictionary *)headers
-                           parameters:(NSDictionary *)parameters
-                           background:(BOOL)background
-                           completion:(SBBNetworkManagerCompletionBlock)completion {
+- (NSURLSessionTask *) doDataTask:(NSString*) method
+                        URLString:(NSString*)URLString
+                          headers:(NSDictionary *)headers
+                       parameters:(NSDictionary *)parameters
+                       background:(BOOL)background
+                       completion:(SBBNetworkManagerCompletionBlock)completion {
     return [self doDataTask:method retryObject:nil URLString:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
-- (NSURLSessionDataTask *) doDataTask: (NSString*) method
-                          retryObject: (SBBNetworkRetryObject*) retryObject
-                            URLString: (NSString*)URLString
-                              headers: (NSDictionary *)headers
-                           parameters:(NSDictionary *)parameters
-                           background:(BOOL)background
-                           completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *) doDataTask: (NSString*) method
+                      retryObject: (SBBNetworkRetryObject*) retryObject
+                        URLString: (NSString*)URLString
+                          headers: (NSDictionary *)headers
+                       parameters:(NSDictionary *)parameters
+                       background:(BOOL)background
+                       completion:(SBBNetworkManagerCompletionBlock)completion
 {
     if (background) {
         __block NSData *data;
@@ -504,7 +509,7 @@ NSString *kAPIPrefix = @"webservices";
         localRetryObject.completionBlock = completion;
         localRetryObject.retryBlock = ^ {
             __strong SBBNetworkRetryObject * strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
-            [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:[self headersPreparedForRetry:headers] parameters:parameters completion:completion];
+            [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:[self headersPreparedForRetry:headers] parameters:parameters background:background completion:completion];
         };
     }
     else
@@ -758,7 +763,7 @@ NSString *kAPIPrefix = @"webservices";
 /*********************************************************************************/
 #pragma mark - Error Handler
 /*********************************************************************************/
-- (void)handleError:(NSError*)error task:(NSURLSessionDataTask*)task response:(id)responseObject retryObject: (SBBNetworkRetryObject*)retryObject
+- (void)handleError:(NSError*)error task:(NSURLSessionTask*)task response:(id)responseObject retryObject: (SBBNetworkRetryObject*)retryObject
 {
     NSInteger errorCode = error.code;
     NSError * apcError = [NSError generateSBBErrorForNSURLError:error isInternetConnected:self.isInternetConnected isServerReachable:self.isServerReachable];
@@ -800,7 +805,7 @@ NSString *kAPIPrefix = @"webservices";
     }
 }
 
-- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
 {
     //TODO: Add retry for Server maintenance
     if (retryObject.completionBlock)

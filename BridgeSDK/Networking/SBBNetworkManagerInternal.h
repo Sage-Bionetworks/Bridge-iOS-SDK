@@ -53,16 +53,16 @@ extern NSString *kAPIPrefix;
 
 - (instancetype)initWithBaseURL:(NSString*)baseURL bridgeStudy:(NSString*)bridgeStudy;
 
-- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject;
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject;
 - (NSDictionary *)headersPreparedForRetry:(NSDictionary *)headers;
 
 - (NSURL *) URLForRelativeorAbsoluteURLString: (NSString*) URLString;
 
-- (NSURLSessionDataTask *) doDataTask:(NSString*) method
-                            URLString:(NSString*)URLString
-                              headers:(NSDictionary *)headers
-                           parameters:(NSDictionary *)parameters
-                           background:(BOOL)background
-                           completion:(SBBNetworkManagerCompletionBlock)completion;
+- (NSURLSessionTask *) doDataTask:(NSString*) method
+                        URLString:(NSString*)URLString
+                          headers:(NSDictionary *)headers
+                       parameters:(NSDictionary *)parameters
+                       background:(BOOL)background
+                       completion:(SBBNetworkManagerCompletionBlock)completion;
 
 @end

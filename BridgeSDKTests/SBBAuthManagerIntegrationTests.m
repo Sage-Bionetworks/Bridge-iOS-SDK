@@ -35,7 +35,7 @@
     NSString *usernameFormat = @"iOSIntegrationTestUser%@";
     NSString *username = [NSString stringWithFormat:usernameFormat, unique];
     NSString *password = @"123456";
-    [SBBComponent(SBBAuthManager) signUpWithEmail:emailAddress username:username password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [SBBComponent(SBBAuthManager) signUpWithEmail:emailAddress username:username password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) NSLog(@"Error signing up with email %@:\n%@\n%@", emailAddress, error, responseObject);
         XCTAssert(!error, @"Signed up for account with no error");
         [expectSignUp fulfill];
@@ -51,13 +51,13 @@
     // so we have to sign in to delete it.
     XCTestExpectation *expectSignedInAndDeleted = [self expectationWithDescription:@"signIn to delete failed for test signUp user"];
     
-    [SBBComponent(SBBAuthManager) signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [SBBComponent(SBBAuthManager) signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Failed to sign in to delete test signUp user: %@", error);
             [expectSignedInAndDeleted fulfill];
         } else {
             // delete the test user just created
-            [self deleteUser:responseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [self deleteUser:responseObject[kUserSessionInfoIdKey] completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 if (!error) {
                     NSLog(@"Deleted test account %@", emailAddress);
                 } else {
@@ -82,7 +82,7 @@
     aMan.authDelegate = delegate;
     XCTestExpectation *expectBadUserFails = [self expectationWithDescription:@"signIn failed for nonexistent user"];
 
-    [aMan signInWithEmail:@"notSignedUp" password:@"notAPassword" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [aMan signInWithEmail:@"notSignedUp" password:@"notAPassword" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
         [expectBadUserFails fulfill];
     }];
@@ -103,7 +103,7 @@
             [expect412Unconsented fulfill];
         } else {
             unconsentedEmail = emailAddress;
-            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet, @"Valid credentials, no consent test");
                 [aMan clearKeychainStore];
                 unconsentedId = responseObject[kUserSessionInfoIdKey];
@@ -120,7 +120,7 @@
     
     // clean up the unconsented user we just created (no need to wait for it to finish, nothing else depends on it)
     if (unconsentedId) {
-        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (!error) {
                 NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
             } else {
@@ -136,7 +136,7 @@
     [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             consentedEmail = emailAddress;
-            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 XCTAssert(!error
                           && [responseObject[@"type"] isEqualToString:@"UserSessionInfo"]
                           && [responseObject[@"sessionToken"] length] > 0,
@@ -157,7 +157,7 @@
     
     XCTAssert(consentedEmail.length && aMan.isAuthenticated, @"Check signed-in before signing out");
     XCTestExpectation *expectSignedOut = [self expectationWithDescription:@"signed-in test user signed out"];
-    [aMan signOutWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [aMan signOutWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error signing out from account %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
         }

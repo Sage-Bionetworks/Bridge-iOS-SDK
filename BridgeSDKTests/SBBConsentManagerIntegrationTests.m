@@ -58,7 +58,7 @@
     if (self.testSubpopRequiredGuid) {
         XCTestExpectation *expectDeletedRequiredSubpop = [self expectationWithDescription:@"required subpop deleted"];
         
-        [self deleteSubpopulation:self.testSubpopRequiredGuid completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self deleteSubpopulation:self.testSubpopRequiredGuid completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (error) {
                 NSLog(@"Error deleting required test subpop:\n%@\nResponse: %@", error, responseObject);
             } else {
@@ -72,7 +72,7 @@
     if (self.testSubpopOptionalGuid) {
         XCTestExpectation *expectDeletedOptionalSubpop = [self expectationWithDescription:@"optional subpop deleted"];
         
-        [self deleteSubpopulation:self.testSubpopOptionalGuid completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self deleteSubpopulation:self.testSubpopOptionalGuid completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (error) {
                 NSLog(@"Error deleting optional test subpop:\n%@\nResponse: %@", error, responseObject);
             } else {
@@ -110,7 +110,7 @@
             [expectSigned fulfill];
         } else {
             unconsentedEmail = emailAddress;
-            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
@@ -136,7 +136,7 @@
     
     // clean up the test user we just created (no need to wait for it to finish, nothing else depends on it)
     if (unconsentedId) {
-        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (!error) {
                 NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
             } else {
@@ -172,7 +172,7 @@
         } else {
             unconsentedEmail = emailAddress;
             NSArray *dataGroups = @[@"sdk-int-1", @"sdk-int-2"];
-            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in unconsented user %@:\n%@\nResponse: %@", unconsentedEmail, error, responseObject);
                     [expectSigned fulfill];
@@ -244,7 +244,7 @@
     
     // clean up the test user we just created (no need to wait for it to finish, nothing else depends on it)
     if (unconsentedId) {
-        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self deleteUser:unconsentedId completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (!error) {
                 NSLog(@"Deleted unconsented test account %@", unconsentedEmail);
             } else {
@@ -288,7 +288,7 @@
     [self createTestUserConsented:YES roles:@[] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (!error) {
             consentedEmail = emailAddress;
-            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 if (error && error.code != SBBErrorCodeServerPreconditionNotMet) {
                     NSLog(@"Error signing in consented user %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
                     [expectWithdrew fulfill];
@@ -314,7 +314,7 @@
     
     // clean up the test user we just created (no need to wait for it to finish, nothing else depends on it)
     if (consentedId) {
-        [self deleteUser:consentedId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self deleteUser:consentedId completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (!error) {
                 NSLog(@"Deleted consented test account %@", consentedEmail);
             } else {

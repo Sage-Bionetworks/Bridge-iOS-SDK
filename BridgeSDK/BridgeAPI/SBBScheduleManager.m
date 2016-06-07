@@ -55,11 +55,11 @@ NSString * const kSBBScheduleAPI =       SCHEDULE_API;
   return shared;
 }
 
-- (NSURLSessionDataTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBScheduleAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager get:kSBBScheduleAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     SBBResourceList *schedules = [self.objectManager objectFromBridgeJSON:responseObject];
     if (completion) {
       completion(schedules, error);

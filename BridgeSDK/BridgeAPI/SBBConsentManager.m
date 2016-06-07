@@ -67,21 +67,21 @@ NSString * const kSBBMimeTypePng = @"image/png";
     return shared;
 }
 
-- (NSURLSessionDataTask *)consentSignature:(NSString *)name
-                                 birthdate:(NSDate *)date
-                            signatureImage:(UIImage*)signatureImage
-                               dataSharing:(SBBUserDataSharingScope)scope
-                                completion:(SBBConsentManagerCompletionBlock)completion
+- (NSURLSessionTask *)consentSignature:(NSString *)name
+                             birthdate:(NSDate *)date
+                        signatureImage:(UIImage*)signatureImage
+                           dataSharing:(SBBUserDataSharingScope)scope
+                            completion:(SBBConsentManagerCompletionBlock)completion
 {
     return [self consentSignature:name forSubpopulationGuid:gSBBAppStudy birthdate:date signatureImage:signatureImage dataSharing:scope completion:completion];
 }
 
-- (NSURLSessionDataTask *)consentSignature:(NSString *)name
-                      forSubpopulationGuid:(NSString *)subpopGuid
-                                 birthdate:(NSDate *)date
-                            signatureImage:(UIImage*)signatureImage
-                               dataSharing:(SBBUserDataSharingScope)scope
-                                completion:(SBBConsentManagerCompletionBlock)completion
+- (NSURLSessionTask *)consentSignature:(NSString *)name
+                  forSubpopulationGuid:(NSString *)subpopGuid
+                             birthdate:(NSDate *)date
+                        signatureImage:(UIImage*)signatureImage
+                           dataSharing:(SBBUserDataSharingScope)scope
+                            completion:(SBBConsentManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
@@ -105,14 +105,14 @@ NSString * const kSBBMimeTypePng = @"image/png";
     
     NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, subpopGuid];
     return [self.networkManager post:endpoint headers:headers parameters:researchConsent
-                          completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                          completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                               if (completion) {
                                   completion(responseObject, error);
                               }
                           }];
 }
 
-- (NSURLSessionDataTask *)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion
+- (NSURLSessionTask *)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion
 {
     return [self getConsentSignatureForSubpopulation:gSBBAppStudy completion:^(id consentSignature, NSError *error) {
         NSString* name = nil;
@@ -134,14 +134,14 @@ NSString * const kSBBMimeTypePng = @"image/png";
     }];
 }
 
-- (NSURLSessionDataTask *)getConsentSignatureForSubpopulation:(NSString *)subpopGuid completion:(SBBConsentManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getConsentSignatureForSubpopulation:(NSString *)subpopGuid completion:(SBBConsentManagerGetCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     
     NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, subpopGuid];
     return [self.networkManager get:endpoint headers:headers parameters:nil
-                         completion:^(NSURLSessionDataTask* task, id responseObject, NSError* error) {
+                         completion:^(NSURLSessionTask* task, id responseObject, NSError* error) {
                              // call the completion call back
                              if (completion != nil) {
                                  id consentSignature = [self.objectManager objectFromBridgeJSON:responseObject];
@@ -150,12 +150,12 @@ NSString * const kSBBMimeTypePng = @"image/png";
                          }];
 }
 
-- (NSURLSessionDataTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
+- (NSURLSessionTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
 {
     return [self withdrawConsentForSubpopulation:gSBBAppStudy withReason:reason completion:completion];
 }
 
-- (NSURLSessionDataTask *)withdrawConsentForSubpopulation:(NSString *)subpopGuid withReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
+- (NSURLSessionTask *)withdrawConsentForSubpopulation:(NSString *)subpopGuid withReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
@@ -165,7 +165,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
     return [self.networkManager post:endpoint
                              headers:headers
                           parameters:parameters
-                          completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                          completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                               if (completion) {
                                   completion(responseObject, error);
                               }
@@ -173,7 +173,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
     
 }
 
-- (NSURLSessionDataTask *)emailConsentForSubpopulation:(NSString *)subpopGuid completion:(SBBConsentManagerCompletionBlock)completion
+- (NSURLSessionTask *)emailConsentForSubpopulation:(NSString *)subpopGuid completion:(SBBConsentManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
@@ -182,7 +182,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
     return [self.networkManager post:endpoint
                              headers:headers
                           parameters:nil
-                          completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+                          completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                               if (completion) {
                                   completion(responseObject, error);
                               }

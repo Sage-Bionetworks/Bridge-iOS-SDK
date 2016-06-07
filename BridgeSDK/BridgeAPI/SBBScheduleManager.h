@@ -52,9 +52,9 @@ typedef void (^SBBScheduleManagerGetCompletionBlock)(id schedulesList, NSError *
  
  @param completion An SBBScheduleManagerGetCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion;
+- (NSURLSessionTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion;
 
 @end
 

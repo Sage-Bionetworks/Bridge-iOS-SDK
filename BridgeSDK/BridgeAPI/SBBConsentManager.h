@@ -81,13 +81,13 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *  @param scope      The scope of data sharing to which the user has consented.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)consentSignature:(nonnull NSString *)name
-                                 birthdate:(nonnull NSDate *)date
-                            signatureImage:(nullable UIImage*)signatureImage
-                               dataSharing:(SBBUserDataSharingScope)scope
-                                completion:(nullable SBBConsentManagerCompletionBlock)completion __deprecated;
+- (nonnull NSURLSessionTask *)consentSignature:(nonnull NSString *)name
+                                     birthdate:(nonnull NSDate *)date
+                                signatureImage:(nullable UIImage*)signatureImage
+                                   dataSharing:(SBBUserDataSharingScope)scope
+                                    completion:(nullable SBBConsentManagerCompletionBlock)completion __deprecated;
 
 /*!
  *  Submit the user's "signature" and birthdate to indicate consent to participate in this research project.
@@ -99,14 +99,14 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *  @param scope      The scope of data sharing to which the user has consented.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)consentSignature:(nonnull NSString *)name
-                      forSubpopulationGuid:(nonnull NSString *)subpopGuid
-                                 birthdate:(nonnull NSDate *)date
-                            signatureImage:(nullable UIImage*)signatureImage
-                               dataSharing:(SBBUserDataSharingScope)scope
-                                completion:(nullable SBBConsentManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)consentSignature:(nonnull NSString *)name
+                          forSubpopulationGuid:(nonnull NSString *)subpopGuid
+                                     birthdate:(nonnull NSDate *)date
+                                signatureImage:(nullable UIImage*)signatureImage
+                                   dataSharing:(SBBUserDataSharingScope)scope
+                                    completion:(nullable SBBConsentManagerCompletionBlock)completion;
 
 /*!
  *  Retrieve the user's consent signature as previously submitted. If the user has not submitted a consent signature,
@@ -116,9 +116,9 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *
  *  @param completion An SBBConsentManagerRetrieveCompletionBlock to be called upon completion.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)retrieveConsentSignatureWithCompletion:(nullable SBBConsentManagerRetrieveCompletionBlock)completion __deprecated;
+- (nonnull NSURLSessionTask *)retrieveConsentSignatureWithCompletion:(nullable SBBConsentManagerRetrieveCompletionBlock)completion __deprecated;
 
 /*!
  Get the user's consent signature as previously submitted. If the user has not submitted a required consent
@@ -128,9 +128,9 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  @param subpopGuid The GUID of the subpopulation for which the consent signature is being fetched.
  @param completion An SBBConsentManagerGetCompletionBlock to be called upon completion. See the documentation of that block type for details on what is passed to it under various circumstances.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)getConsentSignatureForSubpopulation:(nonnull NSString *)subpopGuid completion:(nullable SBBConsentManagerGetCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)getConsentSignatureForSubpopulation:(nonnull NSString *)subpopGuid completion:(nullable SBBConsentManagerGetCompletionBlock)completion;
 
 /*!
  *  Withdraw the user's consent signature previously submitted. This has the effect of withdrawing them from the
@@ -141,9 +141,9 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *  @param reason A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)withdrawConsentWithReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion __deprecated;
+- (nonnull NSURLSessionTask *)withdrawConsentWithReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion __deprecated;
 
 /*!
  Withdraw the user's consent signature previously submitted for a specific subpopulation.
@@ -152,9 +152,9 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  @param reason     A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.
  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)withdrawConsentForSubpopulation:(nonnull NSString *)subpopGuid withReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)withdrawConsentForSubpopulation:(nonnull NSString *)subpopGuid withReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion;
 
 /*!
  Email (again) the consent document signed by the user when consenting as a member of a particular subpopulation.
@@ -162,9 +162,9 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  @param subpopGuid The GUID of the subpopulation for which the consent document is to be emailed.
  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)emailConsentForSubpopulation:(nonnull NSString *)subpopGuid completion:(nullable SBBConsentManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)emailConsentForSubpopulation:(nonnull NSString *)subpopGuid completion:(nullable SBBConsentManagerCompletionBlock)completion;
 
 @end
 

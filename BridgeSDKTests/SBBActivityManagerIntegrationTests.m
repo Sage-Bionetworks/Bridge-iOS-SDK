@@ -51,7 +51,7 @@
         } else {
             _ardUserEmail = emailAddress;
             _ardUserPassword = password;
-            [_aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [_aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to all-roles test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 } else {
@@ -72,7 +72,7 @@
     _scheduleJSON = @"{\"type\":\"SchedulePlan\",\"label\":\"Sample Schedule\",\"strategy\":{\"schedule\":{\"scheduleType\":\"recurring\",\"interval\":\"P1D\",\"expires\":\"P1D\",\"times\":[\"23:59\"],\"activities\":[{\"type\":\"Activity\",\"label\":\"Sample Task\",\"labelDetail\":\"10 minutes\",\"activityType\":\"task\",\"task\":{\"identifier\":\"task:AAA\"}}]},\"type\":\"SimpleScheduleStrategy\"}}";
     _schedule = [NSJSONSerialization JSONObjectWithData:[_scheduleJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
     XCTestExpectation *expectSchedule = [self expectationWithDescription:@"test schedule created"];
-    [self createTestSchedule:_schedule completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self createTestSchedule:_schedule completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error trying to create test schedule:\n%@", error);
         }
@@ -90,7 +90,7 @@
     // 3. Read the test schedule back in so we can get the activity guid(s).
     XCTestExpectation *expectScheduleRead = [self expectationWithDescription:@"test schedule read back in"];
     if (_scheduleGuid.length) {
-        [self readSchedule:_scheduleGuid completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self readSchedule:_scheduleGuid completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (!error) {
                 NSLog(@"Read test schedule %@", _scheduleGuid);
                 _activityGuid = [[[[responseObject objectForKey:@"strategy"] objectForKey:@"schedule"] objectForKey:@"activities"][0] objectForKey:@"guid"];
@@ -114,7 +114,7 @@
     // 3. Delete the test schedule.
     XCTestExpectation *expectSchedule = [self expectationWithDescription:@"test schedule deleted"];
     if (_scheduleGuid.length) {
-        [self deleteSchedule:_scheduleGuid completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self deleteSchedule:_scheduleGuid completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (!error) {
                 NSLog(@"Deleted test schedule %@", _scheduleGuid);
                 _scheduleGuid = nil;
@@ -134,7 +134,7 @@
     
     // 4. Delete the test god-mode user.
     XCTestExpectation *expectUser = [self expectationWithDescription:@"test user deleted"];
-    [self deleteUser:_ardUserId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self deleteUser:_ardUserId completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (!error) {
             NSLog(@"Deleted all-roles test account %@", _ardUserEmail);
         } else {

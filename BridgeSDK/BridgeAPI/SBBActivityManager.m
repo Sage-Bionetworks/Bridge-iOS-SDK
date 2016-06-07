@@ -69,17 +69,17 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     return shared;
 }
 
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion {
+- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion {
     SBBCachingPolicy policy = gSBBUseCache ? SBBCachingPolicyFallBackToCached : SBBCachingPolicyNoCaching;
     return [self getScheduledActivitiesForDaysAhead:daysAhead cachingPolicy:policy withCompletion:completion];
 }
 
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     return [self getScheduledActivitiesForDaysAhead:daysAhead daysBehind:1 cachingPolicy:policy withCompletion:completion];
 }
 
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     return [self getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:policy andWait:NO withCompletion:completion];
 }
@@ -163,7 +163,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     [resourceList saveToCoreDataCacheWithObjectManager:self.objectManager];
 }
 
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy andWait:(BOOL)wait withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy andWait:(BOOL)wait withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     // if we're going straight to cache, just get it and get out
     if (policy == SBBCachingPolicyCachedOnly) {
@@ -183,7 +183,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     
     // if caching, always request the maximum days ahead from the server so we have them cached
     NSInteger fetchDaysAhead = gSBBUseCache ? kMaxAdvance : daysAhead;
-    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(fetchDaysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(fetchDaysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (gSBBUseCache) {
             [self.cacheManager.cacheIOContext performBlock:^{
                 SBBResourceList *tasks = [self cachedTasksFromCacheManager:self.cacheManager];
@@ -229,31 +229,31 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     }];
 }
 
-- (NSURLSessionDataTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
+- (NSURLSessionTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
     scheduledActivity.startedOn = startDate;
     return [self updateScheduledActivities:@[scheduledActivity] withCompletion:completion];
 }
 
-- (NSURLSessionDataTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
+- (NSURLSessionTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
     scheduledActivity.finishedOn = finishDate;
     return [self updateScheduledActivities:@[scheduledActivity] withCompletion:completion];
 }
 
-- (NSURLSessionDataTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
+- (NSURLSessionTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
     return [self finishScheduledActivity:scheduledActivity asOf:[NSDate date] withCompletion:completion];
 }
 
-- (NSURLSessionDataTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
+- (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
     id jsonTasks = [self.objectManager bridgeJSONFromObject:scheduledActivities];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     
     // Activities can be started/finished without a network connection, so this has to be able to do that too
-    return [self.networkManager post:kSBBActivityAPI headers:headers parameters:jsonTasks background:YES completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:kSBBActivityAPI headers:headers parameters:jsonTasks background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
 #if DEBUG
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
         NSLog(@"Update tasks HTTP response code: %ld", (long)httpResponse.statusCode);
