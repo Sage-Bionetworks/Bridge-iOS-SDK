@@ -64,20 +64,20 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  @param policy Caching policy to use (ignored if the SDK was initialized with useCache=NO).
  @param completion An SBBActivityManagerGetCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
+- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
 /**
  This is a convenience method that assumes a default value of 1 for daysBehind.
  */
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
+- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
 /**
  This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyFallBackToCache,
  if caching is enabled. Also implies a default value of 1 for daysBehind.
  */
-- (NSURLSessionDataTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
+- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
 /*!
  Mark a ScheduledActivity as started, as of the time this method is called.
@@ -88,9 +88,9 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  @param startDate           The date/time as of which the Task was started.
  @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Mark a ScheduledActivity as finished, as of the time this method is called.
@@ -103,9 +103,9 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  @param finishDate          The date/time as of which the Task was finished.
  @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Delete a ScheduledActivity from the list of available/started/scheduled activities.
@@ -117,9 +117,9 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  @param scheduledActivity   The ScheduledActivity to be deleted.
  @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Update multiple scheduled activities' statuses with the API at one time.
@@ -129,9 +129,9 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  @param scheduledActivities The list of ScheduledActivity objects whose statuses are to be updated to the API.
  @param completion An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
 
 @end
 

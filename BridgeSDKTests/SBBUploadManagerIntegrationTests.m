@@ -35,7 +35,7 @@
         [expectUploaded fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout uploading file: %@", error);
         }

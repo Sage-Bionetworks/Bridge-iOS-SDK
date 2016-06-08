@@ -59,11 +59,11 @@ NSString * const kSBBSurveyResponseSubmitIdentifierAPIFormat =  SURVEY_RESPONSE_
   return shared;
 }
 
-- (NSURLSessionDataTask *)getSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     id survey = [self.objectManager objectFromBridgeJSON:responseObject];
     if (completion) {
       completion(survey, error);
@@ -71,29 +71,29 @@ NSString * const kSBBSurveyResponseSubmitIdentifierAPIFormat =  SURVEY_RESPONSE_
   }];
 }
 
-- (NSURLSessionDataTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
   NSString *version = [createdOn ISO8601StringUTC];
   NSString *ref = [NSString stringWithFormat:kSBBSurveyAPIFormat, guid, version];
   return [self getSurveyByRef:ref completion:completion];
 }
 
-- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+- (NSURLSessionTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
     return [self submitAnswers:surveyAnswers toSurvey:survey withResponseIdentifier:nil completion:completion];
 }
 
-- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey withResponseIdentifier:(NSString *)identifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+- (NSURLSessionTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey withResponseIdentifier:(NSString *)identifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
     return [self submitAnswers:surveyAnswers toSurveyByGuid:survey.guid createdOn:survey.createdOn withResponseIdentifier:identifier completion:completion];
 }
 
-- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+- (NSURLSessionTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
     return [self submitAnswers:surveyAnswers toSurveyByGuid:guid createdOn:createdOn withResponseIdentifier:nil completion:completion];
 }
 
-- (NSURLSessionDataTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)surveyGuid createdOn:(NSDate *)createdOn withResponseIdentifier:(NSString *)responseIdentifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+- (NSURLSessionTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)surveyGuid createdOn:(NSDate *)createdOn withResponseIdentifier:(NSString *)responseIdentifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
 {
     NSString *createdOnISO8601 = [createdOn ISO8601StringUTC];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
@@ -105,7 +105,7 @@ NSString * const kSBBSurveyResponseSubmitIdentifierAPIFormat =  SURVEY_RESPONSE_
         endpoint = [NSString stringWithFormat:kSBBSurveyResponseSubmitAPIFormat, surveyGuid, createdOnISO8601];
     }
     id jsonAnswers = [self.objectManager bridgeJSONFromObject:surveyAnswers];
-    return [self.networkManager post:endpoint headers:headers parameters:jsonAnswers completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:endpoint headers:headers parameters:jsonAnswers completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         id identifierHolder = [self.objectManager objectFromBridgeJSON:responseObject];
         if (completion) {
             completion(identifierHolder, error);
@@ -113,12 +113,12 @@ NSString * const kSBBSurveyResponseSubmitIdentifierAPIFormat =  SURVEY_RESPONSE_
     }];
 }
 
-- (NSURLSessionDataTask *)getSurveyResponse:(NSString *)identifier completion:(SBBSurveyManagerGetResponseCompletionBlock)completion
+- (NSURLSessionTask *)getSurveyResponse:(NSString *)identifier completion:(SBBSurveyManagerGetResponseCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
   NSString *ref = [NSString stringWithFormat:kSBBSurveyResponseAPIFormat, identifier];
-  return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     id surveyResponse = [self.objectManager objectFromBridgeJSON:responseObject];
     if (completion) {
       completion(surveyResponse, error);
@@ -126,25 +126,25 @@ NSString * const kSBBSurveyResponseSubmitIdentifierAPIFormat =  SURVEY_RESPONSE_
   }];
 }
 
-- (NSURLSessionDataTask *)addAnswers:(NSArray *)surveyAnswers toSurveyResponse:(NSString *)guid completion:(SBBSurveyManagerEditResponseCompletionBlock)completion
+- (NSURLSessionTask *)addAnswers:(NSArray *)surveyAnswers toSurveyResponse:(NSString *)guid completion:(SBBSurveyManagerEditResponseCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
   id jsonAnswers = [self.objectManager bridgeJSONFromObject:surveyAnswers];
   NSString *ref = [NSString stringWithFormat:kSBBSurveyResponseAPIFormat, guid];
-  return [self.networkManager post:ref headers:headers parameters:jsonAnswers completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager post:ref headers:headers parameters:jsonAnswers completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
   }];
 }
 
-- (NSURLSessionDataTask *)deleteSurveyResponse:(NSString *)guid completion:(SBBSurveyManagerEditResponseCompletionBlock)completion
+- (NSURLSessionTask *)deleteSurveyResponse:(NSString *)guid completion:(SBBSurveyManagerEditResponseCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
   NSString *ref = [NSString stringWithFormat:kSBBSurveyResponseAPIFormat, guid];
-  return [self.networkManager delete:ref headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager delete:ref headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }

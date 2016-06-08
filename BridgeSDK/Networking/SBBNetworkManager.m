@@ -47,7 +47,7 @@ NSString *kAPIPrefix = @"webservices";
 
 #pragma mark - APC Retry Object - Keeps track of retry count
 
-@implementation APCNetworkRetryObject
+@implementation SBBNetworkRetryObject
 
 @end
 
@@ -65,11 +65,11 @@ NSString *kAPIPrefix = @"webservices";
 
 - (instancetype)initWithBlock:(SBBNetworkManagerTaskCompletionBlock)block
 {
-  if (self = [super init]) {
-    self.completion = block;
-  }
-  
-  return self;
+    if (self = [super init]) {
+        self.completion = block;
+    }
+    
+    return self;
 }
 
 @end
@@ -88,11 +88,11 @@ NSString *kAPIPrefix = @"webservices";
 
 - (instancetype)initWithBlock:(SBBNetworkManagerDownloadCompletionBlock)block
 {
-  if (self = [super init]) {
-    self.completion = block;
-  }
-  
-  return self;
+    if (self = [super init]) {
+        self.completion = block;
+    }
+    
+    return self;
 }
 
 @end
@@ -135,20 +135,20 @@ NSString *kAPIPrefix = @"webservices";
 
 + (NSString *)baseURLForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
 {
-  NSString *baseURL = nil;
-  NSString *host = nil;
-
-  if ([prefix length] > 0) {
-    host = [self hostForEnvironment:environment appURLPrefix:prefix baseURLPath:path];
-  }
-  
-  if (host.length) {
-    baseURL = [NSString stringWithFormat:@"https://%@", host];
-  } else {
-    baseURL = path;
-  }
-
-  return baseURL;
+    NSString *baseURL = nil;
+    NSString *host = nil;
+    
+    if ([prefix length] > 0) {
+        host = [self hostForEnvironment:environment appURLPrefix:prefix baseURLPath:path];
+    }
+    
+    if (host.length) {
+        baseURL = [NSString stringWithFormat:@"https://%@", host];
+    } else {
+        baseURL = path;
+    }
+    
+    return baseURL;
 }
 
 + (NSString *)hostForEnvironment:(SBBEnvironment)environment appURLPrefix:(NSString *)prefix baseURLPath:(NSString *)path
@@ -160,7 +160,7 @@ NSString *kAPIPrefix = @"webservices";
         @"%@-custom"
     };
     NSString *host = nil;
-
+    
     if ([prefix length] > 0 && (NSInteger)environment < sizeof(envFormatStrings) / sizeof(NSString *)) {
         NSString *firstComponent = [NSString stringWithFormat:envFormatStrings[environment], prefix];
         host = [NSString stringWithFormat:@"%@.%@", firstComponent, path];
@@ -173,31 +173,31 @@ NSString *kAPIPrefix = @"webservices";
 
 + (instancetype)networkManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
 {
-  NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:baseURLPath];
-  SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL bridgeStudy:study];
-  networkManager.environment = environment;
-  return networkManager;
+    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:baseURLPath];
+    SBBNetworkManager *networkManager = [[self alloc] initWithBaseURL:baseURL bridgeStudy:study];
+    networkManager.environment = environment;
+    return networkManager;
 }
 
 + (instancetype)defaultComponent
 {
-  if (!gSBBAppStudy) {
-    return nil;
-  }
-  
-  static SBBNetworkManager *shared;
-  
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    SBBEnvironment environment = gSBBDefaultEnvironment;
+    if (!gSBBAppStudy) {
+        return nil;
+    }
     
-    NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
-    NSString *bridgeStudy = gSBBAppStudy;
-    shared = [[self alloc] initWithBaseURL:baseURL bridgeStudy:bridgeStudy];
-    shared.environment = environment;
-  });
-  
-  return shared;
+    static SBBNetworkManager *shared;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        SBBEnvironment environment = gSBBDefaultEnvironment;
+        
+        NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
+        NSString *bridgeStudy = gSBBAppStudy;
+        shared = [[self alloc] initWithBaseURL:baseURL bridgeStudy:bridgeStudy];
+        shared.environment = environment;
+    });
+    
+    return shared;
 }
 
 /*********************************************************************************/
@@ -242,7 +242,7 @@ NSString *kAPIPrefix = @"webservices";
         _URLQueryKeysAndValuesAllowedCharacterSet = [[NSCharacterSet URLQueryAllowedCharacterSet] mutableCopy];
         [_URLQueryKeysAndValuesAllowedCharacterSet removeCharactersInString:@"&+=?"];
     }
-
+    
     return _URLQueryKeysAndValuesAllowedCharacterSet;
 }
 
@@ -257,17 +257,17 @@ NSString *kAPIPrefix = @"webservices";
 - (NSURLSession *)backgroundSession
 {
     if (!_backgroundSession) {
-      // dispatch_once to make sure there's only ever one instance of a background session created with this identifier
-      static NSURLSession *bgSession;
-      static dispatch_once_t onceToken;
-      dispatch_once(&onceToken, ^{
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:kBackgroundSessionIdentifier];
-        bgSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
-      });
-      
-      _backgroundSession = bgSession;
+        // dispatch_once to make sure there's only ever one instance of a background session created with this identifier
+        static NSURLSession *bgSession;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:kBackgroundSessionIdentifier];
+            bgSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+        });
+        
+        _backgroundSession = bgSession;
     }
-  
+    
     return _backgroundSession;
 }
 
@@ -284,116 +284,187 @@ NSString *kAPIPrefix = @"webservices";
 /*********************************************************************************/
 #pragma mark - basic HTTP methods
 /*********************************************************************************/
-- (NSURLSessionDataTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self doDataTask:@"GET" URLString:URLString headers:headers parameters:parameters completion:completion];
+    return [self get:URLString headers:headers parameters:parameters background:NO completion:completion];
 }
 
-- (NSURLSessionDataTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self doDataTask:@"PUT" URLString:URLString headers:headers parameters:parameters completion:completion];
+    return [self doDataTask:@"GET" URLString:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
-- (NSURLSessionDataTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self doDataTask:@"POST" URLString:URLString headers:headers parameters:parameters completion:completion];
+    return [self put:URLString headers:headers parameters:parameters background:NO completion:completion];
 }
 
-- (NSURLSessionDataTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self doDataTask:@"DELETE" URLString:URLString headers:headers parameters:parameters completion:completion];
+    return [self doDataTask:@"PUT" URLString:URLString headers:headers parameters:parameters background:background completion:completion];
+}
+
+- (NSURLSessionTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [self post:URLString headers:headers parameters:parameters background:NO completion:completion];
+}
+
+- (NSURLSessionTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [self doDataTask:@"POST" URLString:URLString headers:headers parameters:parameters background:background completion:completion];
+}
+
+- (NSURLSessionTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [self delete:URLString headers:headers parameters:parameters background:NO completion:completion];
+}
+
+- (NSURLSessionTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [self doDataTask:@"DELETE" URLString:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
 // in case this class is used from C++, because delete is a keyword in that language (see header)
-- (NSURLSessionDataTask *)delete_:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *)delete_:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
 {
-  return [self delete:URLString headers:headers parameters:parameters completion:completion];
+    return [self delete:URLString headers:headers parameters:parameters background:NO completion:completion];
+}
+
+- (NSURLSessionTask *)delete_:(NSString *)URLString headers:(NSDictionary *)headers background:(BOOL)background parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [self delete:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
 - (NSString *)keyForTask:(NSURLSessionTask *)task
 {
-  return [NSString stringWithFormat:@"%llu", (unsigned long long)task];
+    return [NSString stringWithFormat:@"%llu", (unsigned long long)task.taskIdentifier];
 }
 
 - (SBBNetworkManagerTaskCompletionBlock)completionBlockForTask:(NSURLSessionTask *)task
 {
-  SBBDataTaskCompletionWrapper *wrapper = [_uploadCompletionHandlers objectForKey:[self keyForTask:task]];
-  return wrapper.completion;
+    SBBDataTaskCompletionWrapper *wrapper = [_uploadCompletionHandlers objectForKey:[self keyForTask:task]];
+    return wrapper.completion;
 }
 
 - (void)setCompletionBlock:(SBBNetworkManagerTaskCompletionBlock)completion forTask:(NSURLSessionTask *)task
 {
-  if (!completion) {
-    [self removeCompletionBlockForTask:task];
-    return;
-  }
-  SBBDataTaskCompletionWrapper *wrapper = [[SBBDataTaskCompletionWrapper alloc] initWithBlock:completion];
-  [_uploadCompletionHandlers setObject:wrapper forKey:[self keyForTask:task]];
+    if (!completion) {
+        [self removeCompletionBlockForTask:task];
+        return;
+    }
+    SBBDataTaskCompletionWrapper *wrapper = [[SBBDataTaskCompletionWrapper alloc] initWithBlock:completion];
+    [_uploadCompletionHandlers setObject:wrapper forKey:[self keyForTask:task]];
 }
 
 - (void)removeCompletionBlockForTask:(NSURLSessionTask *)task
 {
-  [_uploadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
+    [_uploadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
 }
 
 - (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion
 {
-  NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-  [request setAllHTTPHeaderFields:headers];
-  request.HTTPMethod = @"PUT";
-  NSURLSessionUploadTask *task = [self.backgroundSession uploadTaskWithRequest:request fromFile:fileUrl];
-  [self setCompletionBlock:completion forTask:task];
-  task.taskDescription = description;
-  
-  [task resume];
-  
-  return task;
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    [request setAllHTTPHeaderFields:headers];
+    request.HTTPMethod = @"PUT";
+    NSURLSessionUploadTask *task = [self.backgroundSession uploadTaskWithRequest:request fromFile:fileUrl];
+    [self setCompletionBlock:completion forTask:task];
+    task.taskDescription = description;
+    
+    [task resume];
+    
+    return task;
 }
 
 - (SBBNetworkManagerDownloadCompletionBlock)completionBlockForDownload:(NSURLSessionDownloadTask *)task
 {
-  SBBDownloadCompletionWrapper *wrapper = [_downloadCompletionHandlers objectForKey:[self keyForTask:task]];
-  return wrapper.completion;
+    SBBDownloadCompletionWrapper *wrapper = [_downloadCompletionHandlers objectForKey:[self keyForTask:task]];
+    return wrapper.completion;
 }
 
 - (void)setCompletionBlock:(SBBNetworkManagerDownloadCompletionBlock)completion forDownload:(NSURLSessionDownloadTask *)task
 {
-  if (!completion) {
-    [self removeCompletionBlockForDownload:task];
-    return;
-  }
-  SBBDownloadCompletionWrapper *wrapper = [[SBBDownloadCompletionWrapper alloc] initWithBlock:completion];
-  [_downloadCompletionHandlers setObject:wrapper forKey:[self keyForTask:task]];
+    if (!completion) {
+        [self removeCompletionBlockForDownload:task];
+        return;
+    }
+    SBBDownloadCompletionWrapper *wrapper = [[SBBDownloadCompletionWrapper alloc] initWithBlock:completion];
+    [_downloadCompletionHandlers setObject:wrapper forKey:[self keyForTask:task]];
 }
 
 - (void)removeCompletionBlockForDownload:(NSURLSessionDownloadTask *)task
 {
-  [_downloadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
+    [_downloadCompletionHandlers removeObjectForKey:[self keyForTask:task]];
 }
 
 - (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion
 {
-  NSMutableURLRequest *request = [self requestWithMethod:httpMethod URLString:urlString headers:headers parameters:parameters error:nil];
-  
-  NSURLSessionDownloadTask *task = [self.backgroundSession downloadTaskWithRequest:request];
-  [self setCompletionBlock:downloadCompletion forDownload:task];
-  [self setCompletionBlock:taskCompletion forTask:task];
-  task.taskDescription = description;
-  
-  [task resume];
-  
-  return task;
+    return [self downloadFileFromURLString:urlString retryObject:nil method:httpMethod httpHeaders:headers parameters:parameters taskDescription:description downloadCompletion:downloadCompletion taskCompletion:taskCompletion];
+}
+
+- (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString retryObject:(SBBNetworkRetryObject *)retryObject method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion
+{
+    SBBNetworkRetryObject * localRetryObject;
+    __weak SBBNetworkRetryObject * weakLocalRetryObject;
+    if (!retryObject) {
+        localRetryObject = [[SBBNetworkRetryObject alloc] init];
+        weakLocalRetryObject = localRetryObject;
+        localRetryObject.completionBlock = taskCompletion;
+        localRetryObject.retryBlock = ^ {
+            __strong SBBNetworkRetryObject *strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
+            [self downloadFileFromURLString:urlString retryObject:strongLocalRetryObject method:httpMethod httpHeaders:headers parameters:parameters taskDescription:description downloadCompletion:downloadCompletion taskCompletion:taskCompletion];
+        };
+    }
+    else
+    {
+        localRetryObject = retryObject;
+    }
+    
+    NSMutableURLRequest *request = [self requestWithMethod:httpMethod URLString:urlString headers:headers parameters:parameters error:nil];
+    
+    // keep track of the response (downloaded) data here, so we can report it
+    // in case of an unhandled HTTP error status code
+    __block NSData *data = nil;
+    SBBNetworkManagerDownloadCompletionBlock downloadCompletionWithErrorChecking = ^(NSURL *file) {
+        data = [NSData dataWithContentsOfURL:file];
+        if (downloadCompletion) {
+            downloadCompletion(file);
+        }
+    };
+    
+    SBBNetworkManagerTaskCompletionBlock taskCompletionWithErrorChecking = ^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+        NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
+        if (error)
+        {
+            [self handleError:error task:task response:response retryObject:localRetryObject];
+        }
+        else if (httpError)
+        {
+            [self handleHTTPError:httpError task:task response:response retryObject:localRetryObject];
+        }
+        else if (taskCompletion) {
+            taskCompletion(task, response, error);
+        }
+    };
+    
+    NSURLSessionDownloadTask *task = [self.backgroundSession downloadTaskWithRequest:request];
+    [self setCompletionBlock:downloadCompletionWithErrorChecking forDownload:task];
+    [self setCompletionBlock:taskCompletionWithErrorChecking forTask:task];
+    task.taskDescription = description;
+    
+    [task resume];
+    
+    return task;
 }
 
 
 
 - (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
-  // make sure we're being called with the expected identifier--if not, ignore
-  if ([identifier isEqualToString:kBackgroundSessionIdentifier]) {
-    [self backgroundSession];
-    _backgroundCompletionHandler = completionHandler;
-  }
+    // make sure we're being called with the expected identifier--if not, ignore
+    if ([identifier isEqualToString:kBackgroundSessionIdentifier]) {
+        [self backgroundSession];
+        _backgroundCompletionHandler = completionHandler;
+    }
 }
 
 
@@ -406,30 +477,53 @@ NSString *kAPIPrefix = @"webservices";
     return headers;
 }
 
-- (NSURLSessionDataTask *) doDataTask:(NSString*) method
-                            URLString:(NSString*)URLString
-                              headers:(NSDictionary *)headers
-                           parameters:(NSDictionary *)parameters
-                           completion:(SBBNetworkManagerCompletionBlock)completion {
-    return [self doDataTask:method retryObject:nil URLString:URLString headers:headers parameters:parameters completion:completion];
+- (NSURLSessionTask *) doDataTask:(NSString*) method
+                        URLString:(NSString*)URLString
+                          headers:(NSDictionary *)headers
+                       parameters:(NSDictionary *)parameters
+                       background:(BOOL)background
+                       completion:(SBBNetworkManagerCompletionBlock)completion {
+    return [self doDataTask:method retryObject:nil URLString:URLString headers:headers parameters:parameters background:background completion:completion];
 }
 
-- (NSURLSessionDataTask *) doDataTask: (NSString*) method
-                          retryObject: (APCNetworkRetryObject*) retryObject
-                            URLString: (NSString*)URLString
-                              headers: (NSDictionary *)headers
-                           parameters:(NSDictionary *)parameters
-                           completion:(SBBNetworkManagerCompletionBlock)completion
+- (NSURLSessionTask *) doDataTask: (NSString*) method
+                      retryObject: (SBBNetworkRetryObject*) retryObject
+                        URLString: (NSString*)URLString
+                          headers: (NSDictionary *)headers
+                       parameters:(NSDictionary *)parameters
+                       background:(BOOL)background
+                       completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    APCNetworkRetryObject * localRetryObject;
-    __weak APCNetworkRetryObject * weakLocalRetryObject;
+    if (background) {
+        __block NSData *data;
+        return [self downloadFileFromURLString:URLString method:method httpHeaders:headers parameters:parameters taskDescription:[NSUUID UUID].UUIDString downloadCompletion:^(NSURL *file) {
+            if (completion) {
+                data = [NSData dataWithContentsOfURL:file];
+            }
+        } taskCompletion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+            if (completion) {
+                id responseObject = nil;
+                if (data.length) {
+                    responseObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+                    if (!responseObject) {
+                        // maybe it was an html error page
+                        responseObject = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                    }
+                }
+                completion(task, responseObject, error);
+            }
+        }];
+    }
+    
+    SBBNetworkRetryObject * localRetryObject;
+    __weak SBBNetworkRetryObject * weakLocalRetryObject;
     if (!retryObject) {
-        localRetryObject = [[APCNetworkRetryObject alloc] init];
+        localRetryObject = [[SBBNetworkRetryObject alloc] init];
         weakLocalRetryObject = localRetryObject;
         localRetryObject.completionBlock = completion;
         localRetryObject.retryBlock = ^ {
-            __strong APCNetworkRetryObject * strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
-          [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:[self headersPreparedForRetry:headers] parameters:parameters completion:completion];
+            __strong SBBNetworkRetryObject * strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
+            [self doDataTask:method retryObject:strongLocalRetryObject URLString:URLString headers:[self headersPreparedForRetry:headers] parameters:parameters background:background completion:completion];
         };
     }
     else
@@ -437,7 +531,7 @@ NSString *kAPIPrefix = @"webservices";
         localRetryObject = retryObject;
     }
     
-  NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
+    NSMutableURLRequest *request = [self requestWithMethod:method URLString:URLString headers:headers parameters:parameters error:nil];
     __block NSURLSessionDataTask *task = [self.mainSession dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         NSError * httpError = [NSError generateSBBErrorForStatusCode:((NSHTTPURLResponse*)response).statusCode data:data];
         id responseObject = nil;
@@ -464,56 +558,56 @@ NSString *kAPIPrefix = @"webservices";
             }
         }
     }];
-  
+    
     [task resume];
- 
+    
     return task;
     
 }
 
 - (NSString *)queryStringFromParameters:(NSDictionary *)parameters
 {
-  if (![parameters isKindOfClass:[NSDictionary class]]) {
-    return nil;
-  }
-  
-  NSMutableArray *queryParams = [NSMutableArray arrayWithCapacity:parameters.count];
-  for (NSString *param in parameters) {
-    id value = parameters[param];
-    NSString *valueString;
-    if ([value isKindOfClass:[NSString class]]) {
-      valueString = value;
-    } else if ([value isKindOfClass:[NSNumber class]]) {
-      NSNumber *valueNum = (NSNumber *)value;
-      if (valueNum.objCType[0] == 'B') {
-        BOOL valueBool = [valueNum boolValue];
-        valueString = valueBool ? @"true" : @"false";
-      } else {
-        valueString = [valueNum stringValue];
-      }
-    } else if ([value isKindOfClass:[NSDate class]]) {
-      NSDate *valueDate = (NSDate *)value;
-      valueString = [valueDate ISO8601String];
-    } else if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]]) {
-      NSData *valueData = [NSJSONSerialization dataWithJSONObject:value options:0 error:nil];
-      if (valueData.length) {
-        valueString = [[NSString alloc] initWithData:valueData encoding:NSUTF8StringEncoding];
-      }
-    } else {
-#if DEBUG
-      NSLog(@"Unable to determine how to convert parameter '%@' value to string: %@, skipping", param, value);
-#endif
+    if (![parameters isKindOfClass:[NSDictionary class]]) {
+        return nil;
     }
     
-    if (valueString) {
-      NSString *qParam = [NSString stringWithFormat:@"%@=%@",
-                          [param stringByAddingPercentEncodingWithAllowedCharacters:self.URLQueryKeysAndValuesAllowedCharacterSet],
-                          [valueString stringByAddingPercentEncodingWithAllowedCharacters:self.URLQueryKeysAndValuesAllowedCharacterSet]];
-      [queryParams addObject:qParam];
+    NSMutableArray *queryParams = [NSMutableArray arrayWithCapacity:parameters.count];
+    for (NSString *param in parameters) {
+        id value = parameters[param];
+        NSString *valueString;
+        if ([value isKindOfClass:[NSString class]]) {
+            valueString = value;
+        } else if ([value isKindOfClass:[NSNumber class]]) {
+            NSNumber *valueNum = (NSNumber *)value;
+            if (valueNum.objCType[0] == 'B') {
+                BOOL valueBool = [valueNum boolValue];
+                valueString = valueBool ? @"true" : @"false";
+            } else {
+                valueString = [valueNum stringValue];
+            }
+        } else if ([value isKindOfClass:[NSDate class]]) {
+            NSDate *valueDate = (NSDate *)value;
+            valueString = [valueDate ISO8601String];
+        } else if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]]) {
+            NSData *valueData = [NSJSONSerialization dataWithJSONObject:value options:0 error:nil];
+            if (valueData.length) {
+                valueString = [[NSString alloc] initWithData:valueData encoding:NSUTF8StringEncoding];
+            }
+        } else {
+#if DEBUG
+            NSLog(@"Unable to determine how to convert parameter '%@' value to string: %@, skipping", param, value);
+#endif
+        }
+        
+        if (valueString) {
+            NSString *qParam = [NSString stringWithFormat:@"%@=%@",
+                                [param stringByAddingPercentEncodingWithAllowedCharacters:self.URLQueryKeysAndValuesAllowedCharacterSet],
+                                [valueString stringByAddingPercentEncodingWithAllowedCharacters:self.URLQueryKeysAndValuesAllowedCharacterSet]];
+            [queryParams addObject:qParam];
+        }
     }
-  }
-  
-  return [queryParams componentsJoinedByString:@"&"];
+    
+    return [queryParams componentsJoinedByString:@"&"];
 }
 
 - (NSString *)userAgentHeader
@@ -530,7 +624,7 @@ NSString *kAPIPrefix = @"webservices";
 
 - (NSString *)acceptLanguageHeader
 {
-  return [NSString stringWithFormat:@"%@", [[NSLocale preferredLanguages] componentsJoinedByString:@", "]];
+    return [NSString stringWithFormat:@"%@", [[NSLocale preferredLanguages] componentsJoinedByString:@", "]];
 }
 
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
@@ -539,46 +633,46 @@ NSString *kAPIPrefix = @"webservices";
                                 parameters:(id)parameters
                                      error:(NSError *__autoreleasing *)error
 {
-  BOOL isGET = [method isEqualToString:@"GET"];
-  if (parameters && isGET) {
-    NSString *queryString = [self queryStringFromParameters:parameters];
-    if (queryString.length) {
-      if ([URLString containsString:@"?"]) {
-        URLString = [NSString stringWithFormat:@"%@&%@", URLString, queryString];
-      } else {
-        URLString = [NSString stringWithFormat:@"%@?%@", URLString, queryString];
-      }
-    }
-  }
-  
-  NSURL *url = [self URLForRelativeorAbsoluteURLString:URLString];
-  NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
-  mutableRequest.HTTPMethod = method;
-  mutableRequest.HTTPShouldHandleCookies = self.sendCookies;
-  [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
-  [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
-  // Add a no-cache header to prevent data from being cached locally
-  [mutableRequest setValue:@"no-cache" forHTTPHeaderField:@"cache-control"];
-  
-  if (headers) {
-    for (NSString *header in headers.allKeys) {
-      [mutableRequest addValue:headers[header] forHTTPHeaderField:header];
-    }
-  }
-    
-  if (parameters && !isGET) {
-    if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
-      NSString *charset = (__bridge NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
-      [mutableRequest setValue:[NSString stringWithFormat:@"application/json; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
+    BOOL isGET = [method isEqualToString:@"GET"];
+    if (parameters && isGET) {
+        NSString *queryString = [self queryStringFromParameters:parameters];
+        if (queryString.length) {
+            if ([URLString containsString:@"?"]) {
+                URLString = [NSString stringWithFormat:@"%@&%@", URLString, queryString];
+            } else {
+                URLString = [NSString stringWithFormat:@"%@?%@", URLString, queryString];
+            }
+        }
     }
     
-    [mutableRequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:0 error:error]];
-  }
+    NSURL *url = [self URLForRelativeorAbsoluteURLString:URLString];
+    NSMutableURLRequest *mutableRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+    mutableRequest.HTTPMethod = method;
+    mutableRequest.HTTPShouldHandleCookies = self.sendCookies;
+    [mutableRequest setValue:[self userAgentHeader] forHTTPHeaderField:@"User-Agent"];
+    [mutableRequest setValue:[self acceptLanguageHeader] forHTTPHeaderField:@"Accept-Language"];
+    // Add a no-cache header to prevent data from being cached locally
+    [mutableRequest setValue:@"no-cache" forHTTPHeaderField:@"cache-control"];
+    
+    if (headers) {
+        for (NSString *header in headers.allKeys) {
+            [mutableRequest addValue:headers[header] forHTTPHeaderField:header];
+        }
+    }
+    
+    if (parameters && !isGET) {
+        if (![mutableRequest valueForHTTPHeaderField:@"Content-Type"]) {
+            NSString *charset = (__bridge NSString *)CFStringConvertEncodingToIANACharSetName(CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+            [mutableRequest setValue:[NSString stringWithFormat:@"application/json; charset=%@", charset] forHTTPHeaderField:@"Content-Type"];
+        }
+        
+        [mutableRequest setHTTPBody:[NSJSONSerialization dataWithJSONObject:parameters options:0 error:error]];
+    }
 #if DEBUG
     NSLog(@"Prepared request--URL:\n%@\nHeaders:\n%@\nBody:\n%@", mutableRequest.URL.absoluteString, mutableRequest.allHTTPHeaderFields, [[NSString alloc] initWithData:mutableRequest.HTTPBody encoding:NSUTF8StringEncoding]);
 #endif
-  
-  return mutableRequest;
+    
+    return mutableRequest;
 }
 
 - (NSURL *) URLForRelativeorAbsoluteURLString: (NSString*) URLString
@@ -598,29 +692,29 @@ NSString *kAPIPrefix = @"webservices";
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes
 {
-  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:)]) {
-    [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didResumeAtOffset:fileOffset expectedTotalBytes:expectedTotalBytes];
-  }
+    if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didResumeAtOffset:expectedTotalBytes:)]) {
+        [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didResumeAtOffset:fileOffset expectedTotalBytes:expectedTotalBytes];
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite
 {
-  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:)]) {
-    [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didWriteData:bytesWritten totalBytesWritten:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
-  }
+    if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:)]) {
+        [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didWriteData:bytesWritten totalBytesWritten:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
 {
-  SBBNetworkManagerDownloadCompletionBlock completion = [self completionBlockForDownload:downloadTask];
-  if (completion) {
-    completion(location);
-    [self removeCompletionBlockForDownload:downloadTask];
-  }
-  
-  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didFinishDownloadingToURL:)]) {
-    [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didFinishDownloadingToURL:location];
-  }
+    SBBNetworkManagerDownloadCompletionBlock completion = [self completionBlockForDownload:downloadTask];
+    if (completion) {
+        completion(location);
+        [self removeCompletionBlockForDownload:downloadTask];
+    }
+    
+    if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:downloadTask:didFinishDownloadingToURL:)]) {
+        [_backgroundTransferDelegate URLSession:session downloadTask:downloadTask didFinishDownloadingToURL:location];
+    }
 }
 
 #pragma mark - NSURLSessionDataDelegate methods
@@ -629,61 +723,61 @@ NSString *kAPIPrefix = @"webservices";
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
-  SBBNetworkManagerTaskCompletionBlock completion = [self completionBlockForTask:task];
-  if (completion) {
-    completion((NSURLSessionUploadTask *)task, (NSHTTPURLResponse *)task.response, error);
-    [self removeCompletionBlockForTask:task];
-  }
-  
-  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
-    [_backgroundTransferDelegate URLSession:session task:task didCompleteWithError:error];
-  }
+    SBBNetworkManagerTaskCompletionBlock completion = [self completionBlockForTask:task];
+    if (completion) {
+        completion((NSURLSessionUploadTask *)task, (NSHTTPURLResponse *)task.response, error);
+        [self removeCompletionBlockForTask:task];
+    }
+    
+    if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
+        [_backgroundTransferDelegate URLSession:session task:task didCompleteWithError:error];
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler
 {
-  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didReceiveChallenge:completionHandler:)]) {
-    [_backgroundTransferDelegate URLSession:session task:task didReceiveChallenge:challenge completionHandler:completionHandler];
-  } else {
-    completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
-  }
+    if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didReceiveChallenge:completionHandler:)]) {
+        [_backgroundTransferDelegate URLSession:session task:task didReceiveChallenge:challenge completionHandler:completionHandler];
+    } else {
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didSendBodyData:(int64_t)bytesSent totalBytesSent:(int64_t)totalBytesSent totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
 {
-  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:)]) {
-    [_backgroundTransferDelegate URLSession:session task:task didSendBodyData:bytesSent totalBytesSent:totalBytesSent totalBytesExpectedToSend:totalBytesExpectedToSend];
-  }
+    if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:task:didSendBodyData:totalBytesSent:totalBytesExpectedToSend:)]) {
+        [_backgroundTransferDelegate URLSession:session task:task didSendBodyData:bytesSent totalBytesSent:totalBytesSent totalBytesExpectedToSend:totalBytesExpectedToSend];
+    }
 }
 
 #pragma mark - NSURLSessionDelegate methods
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error
 {
-  [_downloadCompletionHandlers removeAllObjects];
-  [_uploadCompletionHandlers removeAllObjects];
-  
-  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:didBecomeInvalidWithError:)]) {
-    [_backgroundTransferDelegate URLSession:session didBecomeInvalidWithError:error];
-  }
+    [_downloadCompletionHandlers removeAllObjects];
+    [_uploadCompletionHandlers removeAllObjects];
+    
+    if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSession:didBecomeInvalidWithError:)]) {
+        [_backgroundTransferDelegate URLSession:session didBecomeInvalidWithError:error];
+    }
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
 {
-  if (_backgroundCompletionHandler) {
-    _backgroundCompletionHandler();
-    _backgroundCompletionHandler = nil;
-  }
-  
-  if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSessionDidFinishEventsForBackgroundURLSession:)]) {
-    [_backgroundTransferDelegate URLSessionDidFinishEventsForBackgroundURLSession:session];
-  }
+    if (_backgroundCompletionHandler) {
+        _backgroundCompletionHandler();
+        _backgroundCompletionHandler = nil;
+    }
+    
+    if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSessionDidFinishEventsForBackgroundURLSession:)]) {
+        [_backgroundTransferDelegate URLSessionDidFinishEventsForBackgroundURLSession:session];
+    }
 }
 
 /*********************************************************************************/
 #pragma mark - Error Handler
 /*********************************************************************************/
-- (void)handleError:(NSError*)error task:(NSURLSessionDataTask*)task response:(id)responseObject retryObject: (APCNetworkRetryObject*)retryObject
+- (void)handleError:(NSError*)error task:(NSURLSessionTask*)task response:(id)responseObject retryObject: (SBBNetworkRetryObject*)retryObject
 {
     NSInteger errorCode = error.code;
     NSError * apcError = [NSError generateSBBErrorForNSURLError:error isInternetConnected:self.isInternetConnected isServerReachable:self.isServerReachable];
@@ -725,7 +819,7 @@ NSString *kAPIPrefix = @"webservices";
     }
 }
 
-- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(APCNetworkRetryObject *)retryObject
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
 {
     //TODO: Add retry for Server maintenance
     if (retryObject.completionBlock)

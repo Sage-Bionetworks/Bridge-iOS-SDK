@@ -51,7 +51,7 @@
         } else {
             _ardUserEmail = emailAddress;
             _ardUserPassword = password;
-            [_aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+            [_aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 if (error) {
                     NSLog(@"Error signing in to all-roles test user account %@:\n%@\nResponse: %@", emailAddress, error, responseObject);
                 } else {
@@ -72,7 +72,7 @@
     _scheduleJSON = @"{\"type\":\"SchedulePlan\",\"label\":\"Sample Schedule\",\"strategy\":{\"schedule\":{\"scheduleType\":\"recurring\",\"interval\":\"P1D\",\"expires\":\"P1D\",\"times\":[\"23:59\"],\"activities\":[{\"type\":\"Activity\",\"label\":\"Sample Task\",\"labelDetail\":\"10 minutes\",\"activityType\":\"task\",\"task\":{\"identifier\":\"task:AAA\"}}]},\"type\":\"SimpleScheduleStrategy\"}}";
     _schedule = [NSJSONSerialization JSONObjectWithData:[_scheduleJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
     XCTestExpectation *expectSchedule = [self expectationWithDescription:@"test schedule created"];
-    [self createTestSchedule:_schedule completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self createTestSchedule:_schedule completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) {
             NSLog(@"Error trying to create test schedule:\n%@", error);
         }
@@ -90,7 +90,7 @@
     // 3. Read the test schedule back in so we can get the activity guid(s).
     XCTestExpectation *expectScheduleRead = [self expectationWithDescription:@"test schedule read back in"];
     if (_scheduleGuid.length) {
-        [self readSchedule:_scheduleGuid completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self readSchedule:_scheduleGuid completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (!error) {
                 NSLog(@"Read test schedule %@", _scheduleGuid);
                 _activityGuid = [[[[responseObject objectForKey:@"strategy"] objectForKey:@"schedule"] objectForKey:@"activities"][0] objectForKey:@"guid"];
@@ -114,7 +114,7 @@
     // 3. Delete the test schedule.
     XCTestExpectation *expectSchedule = [self expectationWithDescription:@"test schedule deleted"];
     if (_scheduleGuid.length) {
-        [self deleteSchedule:_scheduleGuid completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+        [self deleteSchedule:_scheduleGuid completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (!error) {
                 NSLog(@"Deleted test schedule %@", _scheduleGuid);
                 _scheduleGuid = nil;
@@ -134,7 +134,7 @@
     
     // 4. Delete the test god-mode user.
     XCTestExpectation *expectUser = [self expectationWithDescription:@"test user deleted"];
-    [self deleteUser:_ardUserId completionHandler:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    [self deleteUser:_ardUserId completionHandler:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (!error) {
             NSLog(@"Deleted all-roles test account %@", _ardUserEmail);
         } else {
@@ -158,10 +158,10 @@
         if (error) {
             NSLog(@"Error getting tasks for %@:\n%@", tzStr, error);
         }
-        XCTAssert([tasksList isKindOfClass:[NSArray class]], "Method returned an NSArray");
+        XCTAssert([tasksList isKindOfClass:[NSArray class]], @"Method returned an NSArray");
         if (tasksList.count) {
             SBBScheduledActivity *task = tasksList[0];
-            XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], "Method returned a list of ScheduledActivity objects");
+            XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], @"Method returned a list of ScheduledActivity objects");
         }
         NSInteger countMyActivities = 0;
         for (SBBScheduledActivity *task in tasksList) {
@@ -169,7 +169,7 @@
                 countMyActivities++;
             }
         }
-        XCTAssert(countMyActivities == daysAhead + 1, "Server returned a list that actually contains one item from test schedule per day requested");
+        XCTAssert(countMyActivities == daysAhead + 1, @"Server returned a list that actually contains one item from test schedule per day requested");
         
         [expectTasks fulfill];
     }];
@@ -223,6 +223,38 @@
     
     [NSTimeZone setDefaultTimeZone:originalTZ];
     [NSTimeZone resetSystemTimeZone];
+}
+
+- (void)testUpdateScheduledActivities {
+    NSInteger daysAhead = 0; // just get today's
+    XCTestExpectation *expectTasks = [self expectationWithDescription:@"got scheduled activities for Update Activities test"];
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead withCompletion:^(NSArray *tasksList, NSError *error) {
+        if (error) {
+            NSLog(@"Error getting tasks for update test:\n%@", error);
+            [expectTasks fulfill];
+            return;
+        }
+        XCTAssert([tasksList isKindOfClass:[NSArray class]], @"Method returned an NSArray");
+        SBBScheduledActivity *task = [tasksList lastObject];
+        XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], @"Method returned a list of ScheduledActivity objects");
+        task.startedOn = [NSDate date];
+        task.finishedOn = [NSDate date];
+        [SBBComponent(SBBActivityManager) updateScheduledActivities:@[task] withCompletion:^(id responseObject, NSError *error) {
+            BOOL isDictionary = [responseObject isKindOfClass:[NSDictionary class]];
+            XCTAssert(isDictionary, @"Update activity response is an NSDictionary");
+            if (isDictionary) {
+                XCTAssertEqualObjects([responseObject objectForKey:@"message"], @"Activities updated.", @"Update activity succeeded.");
+            }
+            
+            [expectTasks fulfill];
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error attempting to get tasks for update test: %@", error);
+        }
+    }];
 }
 
 - (void)createTestSchedule:(NSDictionary *)schedule completionHandler:(SBBNetworkManagerCompletionBlock)completion

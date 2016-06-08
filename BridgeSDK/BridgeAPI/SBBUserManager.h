@@ -81,9 +81,9 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *
  *  @param completion An SBBUserManagerGetProfileCompletionBlock to be called upon completion.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion;
+- (NSURLSessionTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion;
 
 /*!
  *  Update the UserProfile to the Bridge API.
@@ -91,9 +91,9 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *  @param profile A client object representing the UserProfile as it should be updated.
  *  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion;
+- (NSURLSessionTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion;
 
 /*!
  *  Add an external identifier for a participant.
@@ -108,18 +108,18 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *  @param externalID An external identifier to allow this participant to be tracked outside of the Bridge-specific study.
  *  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion;
+- (NSURLSessionTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion;
 
 /*!
  *  Email the user's study data in the specified date range to the email address associated with their account.
  *  @param startDate The starting date for the data to be sent.
  *  @param endDate The ending date for the data to be sent.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)emailDataToUserFrom:(NSDate *)startDate to:(NSDate *)endDate completion:(SBBUserManagerCompletionBlock)completion;
+- (NSURLSessionTask *)emailDataToUserFrom:(NSDate *)startDate to:(NSDate *)endDate completion:(SBBUserManagerCompletionBlock)completion;
 
 /*!
  *  Change the scope of data sharing for this user.
@@ -129,18 +129,18 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *
  *  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  *
- *  @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion;
+- (NSURLSessionTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion;
 
 /*!
  Fetch the data groups to which this user belongs from the Bridge API.
  
  @param completion An SBBUserManagerGetGroupsCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion;
+- (NSURLSessionTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion;
 
 /*!
  Update the user's dataGroups to the Bridge API.
@@ -150,9 +150,9 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  @param dataGroups A client object representing the dataGroups as they should be updated.
  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionDataTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion;
+- (NSURLSessionTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion;
 
 /*!
  Add the user to the specified data groups (tags).

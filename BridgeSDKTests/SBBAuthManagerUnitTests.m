@@ -40,7 +40,7 @@
   // always use an auth delegate so we don't pollute the keychain for integration tests
   SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
   aMan.authDelegate = delegate;
-  [aMan signInWithEmail:@"notSignedUp" password:@"" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [aMan signInWithEmail:@"notSignedUp" password:@"" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
   }];
   
@@ -51,7 +51,7 @@
                                     @"consented": @NO,
                                     @"authenticated":@YES};
   [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
-  [aMan signInWithEmail:@"signedUpUser" password:@"123456" completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [aMan signInWithEmail:@"signedUpUser" password:@"123456" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
     XCTAssert([delegate.sessionToken isEqualToString:uuid], @"Delegate received sessionToken");
   }];
@@ -74,7 +74,7 @@
   aMan.authDelegate = delegate;
   
   // first try it with no saved credentials
-  [aMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     XCTAssert(error.code == SBBErrorCodeNoCredentialsAvailable, @"Correct error when no credentials available");
     XCTAssert(delegate.sessionToken == nil, @"Did not attempt to call signIn endpoint without credentials");
   }];
@@ -82,12 +82,12 @@
   // now try it with saved username/password
   delegate.email = email;
   delegate.password = password;
-  [aMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
   }];
   
   // now try it with already-saved sessionToken
-  [aMan ensureSignedInWithCompletion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     XCTAssert(!task && !responseObject && !error, @"Seen as already signed in, did not attempt to sign in again");
   }];
 }

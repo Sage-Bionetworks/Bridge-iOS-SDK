@@ -32,9 +32,9 @@
 
 extern NSString *kAPIPrefix;
 
-#pragma mark - APC Retry Object - Keeps track of retry count
+#pragma mark - Retry Object - Keeps track of retry count
 
-@interface APCNetworkRetryObject : NSObject
+@interface SBBNetworkRetryObject : NSObject
 
 @property (nonatomic) NSInteger retryCount;
 @property (nonatomic, copy) SBBNetworkManagerCompletionBlock completionBlock;
@@ -53,9 +53,16 @@ extern NSString *kAPIPrefix;
 
 - (instancetype)initWithBaseURL:(NSString*)baseURL bridgeStudy:(NSString*)bridgeStudy;
 
-- (void)handleHTTPError:(NSError *)error task:(NSURLSessionDataTask *)task response:(id)responseObject retryObject:(APCNetworkRetryObject *)retryObject;
+- (void)handleHTTPError:(NSError *)error task:(NSURLSessionTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject;
 - (NSDictionary *)headersPreparedForRetry:(NSDictionary *)headers;
 
 - (NSURL *) URLForRelativeorAbsoluteURLString: (NSString*) URLString;
+
+- (NSURLSessionTask *) doDataTask:(NSString*) method
+                        URLString:(NSString*)URLString
+                          headers:(NSDictionary *)headers
+                       parameters:(NSDictionary *)parameters
+                       background:(BOOL)background
+                       completion:(SBBNetworkManagerCompletionBlock)completion;
 
 @end

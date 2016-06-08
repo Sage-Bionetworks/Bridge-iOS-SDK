@@ -84,11 +84,11 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
     return _activityManager;
 }
 
-- (NSURLSessionDataTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion
+- (NSURLSessionTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion
 {
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBUserProfileAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager get:kSBBUserProfileAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     id userProfile = [self.objectManager objectFromBridgeJSON:responseObject];
     if (completion) {
       completion(userProfile, error);
@@ -96,7 +96,7 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
   }];
 }
 
-- (NSURLSessionDataTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion
+- (NSURLSessionTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion
 {
   id jsonProfile = [self.objectManager bridgeJSONFromObject:profile];
   if (!jsonProfile) {
@@ -106,14 +106,14 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
   
   NSMutableDictionary *headers = [NSMutableDictionary dictionary];
   [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager post:kSBBUserProfileAPI headers:headers parameters:jsonProfile completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+  return [self.networkManager post:kSBBUserProfileAPI headers:headers parameters:jsonProfile completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
     if (completion) {
       completion(responseObject, error);
     }
   }];
 }
 
-- (NSURLSessionDataTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion
+- (NSURLSessionTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
@@ -121,14 +121,14 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
                                 @"identifier": externalID,
                                 @"type": @"ExternalIdentifier"
                              };
-    return [self.networkManager post:kSBBUserExternalIdAPI headers:headers parameters:params completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:kSBBUserExternalIdAPI headers:headers parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (completion) {
             completion(responseObject, error);
         }
     }];
 }
 
-- (NSURLSessionDataTask *)emailDataToUserFrom:(NSDate *)startDate to:(NSDate *)endDate completion:(SBBUserManagerCompletionBlock)completion
+- (NSURLSessionTask *)emailDataToUserFrom:(NSDate *)startDate to:(NSDate *)endDate completion:(SBBUserManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
@@ -139,30 +139,30 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
                              @"endDate": endDateString,
                              @"type": @"DateRange"
                              };
-    return [self.networkManager post:kSBBUserDataEmailDataAPI headers:headers parameters:params completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:kSBBUserDataEmailDataAPI headers:headers parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (completion) {
             completion(responseObject, error);
         }
     }];
 }
 
-- (NSURLSessionDataTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion
+- (NSURLSessionTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     NSDictionary *parameters = @{kSBBUserDataSharingScopeKey: kSBBUserDataSharingScopeStrings[scope]};
-    return [self.networkManager post:kSBBUserDataSharingAPI headers:headers parameters:parameters completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:kSBBUserDataSharingAPI headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (completion) {
             completion(responseObject, error);
         }
     }];
 }
 
-- (NSURLSessionDataTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion
+- (NSURLSessionTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    return [self.networkManager get:kSBBUserDataGroupsAPI headers:headers parameters:nil completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager get:kSBBUserDataGroupsAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         id dataGroups = [self.objectManager objectFromBridgeJSON:responseObject];
         if (completion) {
             completion(dataGroups, error);
@@ -170,7 +170,7 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
     }];
 }
 
-- (NSURLSessionDataTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion
+- (NSURLSessionTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion
 {
     id jsonGroups = [self.objectManager bridgeJSONFromObject:dataGroups];
     if (!jsonGroups) {
@@ -180,7 +180,7 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
     
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    return [self.networkManager post:kSBBUserDataGroupsAPI headers:headers parameters:jsonGroups completion:^(NSURLSessionDataTask *task, id responseObject, NSError *error) {
+    return [self.networkManager post:kSBBUserDataGroupsAPI headers:headers parameters:jsonGroups completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (!error) {
             // updating data groups generally invalidates your schedule so we need to flush the cache
             if ([self.activityManager conformsToProtocol:@protocol(SBBActivityManagerInternalProtocol)]) {

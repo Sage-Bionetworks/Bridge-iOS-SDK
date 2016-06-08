@@ -146,9 +146,9 @@ extern  NSString * _Nonnull gSBBAppStudy;
  * @param password The password to use for the account.
  * @param dataGroups An array of dataGroup tags to assign to the user at signup. Optional.
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
- * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Sign up for an account with an email address, userName, and password. This is a convenience method
@@ -158,9 +158,9 @@ extern  NSString * _Nonnull gSBBAppStudy;
  * @param username The username to use for the account.
  * @param password The password to use for the account.
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
- * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  Request Bridge to re-send the email verification link to the specified email address.
@@ -171,9 +171,9 @@ extern  NSString * _Nonnull gSBBAppStudy;
  @param email      The email address for which to re-send the verification link.
  @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)resendEmailVerification:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)resendEmailVerification:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Sign in to an existing account with an email and password.
@@ -181,17 +181,17 @@ extern  NSString * _Nonnull gSBBAppStudy;
  * @param email The email address of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
  * @param password The password of the account.
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you've mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of id<SBBObjectManagerProtocol> if you've set one up).
- * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Sign out of the user's Bridge account.
  *
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
- * @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)signOutWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)signOutWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Call this at app launch to ensure the user is logged in to their account (if any).
@@ -209,9 +209,9 @@ extern  NSString * _Nonnull gSBBAppStudy;
  @param email The email address associated with the account whose password is to be reset.
  @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)requestPasswordResetForEmail:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)requestPasswordResetForEmail:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  Reset the password for this user's account.
@@ -220,9 +220,9 @@ extern  NSString * _Nonnull gSBBAppStudy;
  @param token    The sptoken sent to the user's email address in response to a requestPasswordResetForEmail: call.
  @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionDataTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionDataTask *)resetPasswordToNewPassword:(nonnull NSString *)password resetToken:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)resetPasswordToNewPassword:(nonnull NSString *)password resetToken:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  *  This method is used by other API manager components to inject the session token header for authentication.
@@ -236,7 +236,7 @@ extern  NSString * _Nonnull gSBBAppStudy;
 /*!
  * For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).
  */
-- (nonnull NSURLSessionDataTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __deprecated;
+- (nonnull NSURLSessionTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __deprecated;
 
 @end
 
