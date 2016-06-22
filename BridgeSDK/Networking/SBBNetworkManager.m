@@ -727,7 +727,8 @@ NSString *kAPIPrefix = @"webservices";
         NSData *resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
         if (resumeData) {
             // there's resume data from a download task, so retry
-            [session downloadTaskWithResumeData:resumeData];
+            NSURLSessionDownloadTask *resumeTask = [session downloadTaskWithResumeData:resumeData];
+            [resumeTask resume];
             return;
         }
     }
