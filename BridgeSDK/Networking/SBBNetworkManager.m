@@ -723,6 +723,14 @@ NSString *kAPIPrefix = @"webservices";
 
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
+    if (error) {
+        NSData *resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
+        if (resumeData) {
+            // there's resume data from a download task, so retry
+            [session downloadTaskWithResumeData:resumeData];
+            return;
+        }
+    }
     SBBNetworkManagerTaskCompletionBlock completion = [self completionBlockForTask:task];
     if (completion) {
         completion((NSURLSessionUploadTask *)task, (NSHTTPURLResponse *)task.response, error);
