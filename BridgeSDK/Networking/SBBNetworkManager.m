@@ -367,7 +367,11 @@ NSString *kAPIPrefix = @"webservices";
     [request setAllHTTPHeaderFields:headers];
     request.HTTPMethod = @"PUT";
     NSURLSessionUploadTask *task = [self.backgroundSession uploadTaskWithRequest:request fromFile:fileUrl];
-    [self setCompletionBlock:completion forTask:task];
+    
+    [self.backgroundSession.delegateQueue addOperationWithBlock:^{
+        [self setCompletionBlock:completion forTask:task];
+    }];
+
     task.taskDescription = description;
     
     [task resume];
@@ -447,8 +451,12 @@ NSString *kAPIPrefix = @"webservices";
     };
     
     NSURLSessionDownloadTask *task = [self.backgroundSession downloadTaskWithRequest:request];
-    [self setCompletionBlock:downloadCompletionWithErrorChecking forDownload:task];
-    [self setCompletionBlock:taskCompletionWithErrorChecking forTask:task];
+    
+    [self.backgroundSession.delegateQueue addOperationWithBlock:^{
+        [self setCompletionBlock:downloadCompletionWithErrorChecking forDownload:task];
+        [self setCompletionBlock:taskCompletionWithErrorChecking forTask:task];
+    }];
+    
     task.taskDescription = description;
     
     [task resume];
@@ -721,8 +729,35 @@ NSString *kAPIPrefix = @"webservices";
 
 #pragma mark - NSURLSessionTaskDelegate methods
 
+// this method assumes it always gets called from within the background session's delegate queue
+- (void)retryFailedDownload:(NSURLSessionDownloadTask *)task forSession:(NSURLSession *)session withResumeData:(NSData *)resumeData
+{
+    NSURLSessionDownloadTask *resumeTask = [session downloadTaskWithResumeData:resumeData];
+    
+    // transfer the information associated with the old task to the new one
+    resumeTask.taskDescription = task.taskDescription;
+    SBBNetworkManagerTaskCompletionBlock taskCompletion = [self completionBlockForTask:task];
+    SBBNetworkManagerDownloadCompletionBlock downloadCompletion = [self completionBlockForDownload:task];
+    [self setCompletionBlock:taskCompletion forTask:resumeTask];
+    [self setCompletionBlock:downloadCompletion forDownload:resumeTask];
+    [self removeCompletionBlockForTask:task];
+    [self removeCompletionBlockForDownload:task];
+    
+    [resumeTask resume];
+}
+
 - (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error
 {
+    if (error) {
+        NSData *resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
+        if (resumeData) {
+            // there's resume data from a download task, so we'll use it to retry
+            [self retryFailedDownload:(NSURLSessionDownloadTask *)task forSession:session withResumeData:resumeData];
+            // ...and exit early
+            return;
+        }
+    }
+    
     SBBNetworkManagerTaskCompletionBlock completion = [self completionBlockForTask:task];
     if (completion) {
         completion((NSURLSessionUploadTask *)task, (NSHTTPURLResponse *)task.response, error);
