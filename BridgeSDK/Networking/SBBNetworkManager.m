@@ -726,8 +726,19 @@ NSString *kAPIPrefix = @"webservices";
     if (error) {
         NSData *resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
         if (resumeData) {
-            // there's resume data from a download task, so retry
+            // there's resume data from a download task, so we'll use it to retry
             NSURLSessionDownloadTask *resumeTask = [session downloadTaskWithResumeData:resumeData];
+            NSURLSessionDownloadTask *dlTask = (NSURLSessionDownloadTask *)task;
+
+            // transfer the information associated with the old task to the new one
+            resumeTask.taskDescription = task.taskDescription;
+            SBBNetworkManagerTaskCompletionBlock taskCompletion = [self completionBlockForTask:dlTask];
+            SBBNetworkManagerDownloadCompletionBlock downloadCompletion = [self completionBlockForDownload:dlTask];
+            [self setCompletionBlock:taskCompletion forTask:resumeTask];
+            [self setCompletionBlock:downloadCompletion forDownload:resumeTask];
+            [self removeCompletionBlockForTask:dlTask];
+            [self removeCompletionBlockForDownload:dlTask];
+            
             [resumeTask resume];
             return;
         }
