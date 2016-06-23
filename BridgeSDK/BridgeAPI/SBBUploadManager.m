@@ -287,6 +287,29 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     [self completeUploadOfFile:uploadTask.taskDescription withError:error];
 }
 
+- (void)handleUploadHTTPStatusCode:(NSInteger)httpStatusCode forUploadFilePath:(NSString *)filePath
+{
+    switch (httpStatusCode) {
+        case 403: {
+            // this will have happened because the pre-signed url timed out before starting the actual upload to S3,
+            // so try, try again
+#if DEBUG
+            NSLog(@"Background file upload to S3 failed with HTTP status 403 (presumably due to presigned url timeout); retrying...");
+#endif
+            NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
+            [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
+        } break;
+            
+        default: {
+            // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
+            // (along with all 4xx and 5xx of course)
+            NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
+            NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
+            [self completeUploadOfFile:filePath withError:s3Error];
+        } break;
+    }
+}
+
 // --- Here's the completion handler for the step where we upload the file to S3:
 - (void)uploadedFileToS3WithTask:(NSURLSessionUploadTask *)uploadTask response:(NSHTTPURLResponse *)httpResponse error:(NSError *)error
 {
@@ -300,21 +323,10 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     }
     
     // server didn't like the request, or otherwise hiccupped
-    if (httpStatusCode == 403) {
-        // this will have happened because the pre-signed url timed out before starting the actual upload to S3,
-        // so try, try again
-#if DEBUG
-        NSLog(@"Background file upload to S3 failed with HTTP status 403 (presumably due to presigned url timeout); retrying...");
-#endif
-        NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
-        [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
-        return;
-    } else if (httpStatusCode >= 300) {
-        // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
-        // (along with all 4xx and 5xx of course)
-        NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
-        NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
-        [self completeUploadOfFile:filePath withError:s3Error];
+    if (httpStatusCode >= 300) {
+        [self handleUploadHTTPStatusCode:httpStatusCode forUploadFilePath:filePath];
+        
+        // early exit
         return;
     }
     
@@ -376,7 +388,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
         [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription completion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
 #if DEBUG
             if (error || response.statusCode >= 300) {
-                NSLog(@"Error uploading to S3 for upload ID %@:\n%@", uploadSession.id, error);
+                NSLog(@"Error uploading to S3 for upload ID %@\nHTTP status: %ld\n%@", uploadSession.id, response.statusCode, error);
             } else {
                 NSLog(@"Successfully uploaded to S3 for upload ID %@", uploadSession.id);
             }
@@ -439,17 +451,19 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     NSString *filePath = [tempFileURL path];
     // don't use the shared SBBObjectManager--we want to use only SDK default objects for types
     NSDictionary *uploadRequestJSON = [_cleanObjectManager bridgeJSONFromObject:uploadRequest];
-    [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
+    
+    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+        [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
+    }];
 }
 
 // This presumes uploadFileToBridge:contentType:completion: was called to set things up for this file,
 // so can be used for both the initial upload attempt and any retries due to 403 (presigned url timed out).
+// It also presumes it's being called from within the background NSURLSession's delegate queue.
 - (void)kickOffUploadForFile:(NSString *)filePath uploadRequestJSON:(NSDictionary *)uploadRequestJSON
 {
     // this starts the process by downloading the Bridge UploadSession.
-    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
-        [self setUploadRequestJSON:uploadRequestJSON forFile:filePath];
-    }];
+    [self setUploadRequestJSON:uploadRequestJSON forFile:filePath];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     
