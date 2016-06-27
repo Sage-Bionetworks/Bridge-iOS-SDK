@@ -388,7 +388,7 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
         [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription completion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
 #if DEBUG
             if (error || response.statusCode >= 300) {
-                NSLog(@"Error uploading to S3 for upload ID %@\nHTTP status: %ld\n%@", uploadSession.id, response.statusCode, error);
+                NSLog(@"Error uploading to S3 for upload ID %@\nHTTP status: %@\n%@", uploadSession.id, @(response.statusCode), error);
             } else {
                 NSLog(@"Successfully uploaded to S3 for upload ID %@", uploadSession.id);
             }
