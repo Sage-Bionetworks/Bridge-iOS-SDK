@@ -41,6 +41,7 @@
 #import "NSError+SBBAdditions.h"
 #import "SBBErrors.h"
 #import "BridgeSDKInternal.h"
+#import "NSDate+SBBAdditions.h"
 
 #define UPLOAD_API GLOBAL_API_PREFIX @"/uploads"
 #define UPLOAD_STATUS_API GLOBAL_API_PREFIX @"/uploadstatuses"
@@ -52,6 +53,7 @@ static NSString * const kSBBUploadStatusAPIFormat =     UPLOAD_STATUS_API @"/%@"
 static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
 static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
+static NSString *kUploadRetry503Key = @"SBBUploadRetry503Key";
 
 #pragma mark - SBBUploadCompletionWrapper
 
@@ -97,6 +99,15 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     dispatch_once(&onceToken, ^{
         shared = [self instanceWithRegisteredDependencies];
         shared.networkManager.backgroundTransferDelegate = shared;
+        
+        // check if any uploads that got 503 status codes from S3 are due for a retry
+        // whenever the app comes to the foreground
+        [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+            [shared retry503sAfterDelay];
+        }];
+        
+        // also check right away
+        [shared retry503sAfterDelay];
     });
     
     return shared;
@@ -260,6 +271,51 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     return uploadSession;
 }
 
+- (NSDate *)retryTimeForFile:(NSString *)fileURLString
+{
+    NSDate *retryTime = nil;
+    NSString *jsonDate = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadRetry503Key][fileURLString];
+    if (jsonDate) {
+        retryTime = [NSDate dateWithISO8601String:jsonDate];
+    }
+    
+    return retryTime;
+}
+
+- (void)setRetryTime:(NSDate *)retryTime forFile:(NSString *)fileURLString
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    NSMutableDictionary *retry503s = [[defaults dictionaryForKey:kUploadRetry503Key] mutableCopy];
+    if (!retry503s) {
+        retry503s = [NSMutableDictionary dictionary];
+    }
+    if (retryTime) {
+        retry503s[fileURLString] = [retryTime ISO8601String];
+    } else {
+        [retry503s removeObjectForKey:fileURLString];
+    }
+    [defaults setObject:retry503s forKey:kUploadRetry503Key];
+    [defaults synchronize];
+}
+
+- (void)retry503sAfterDelay
+{
+    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        
+        NSDictionary *retry503s = [[defaults dictionaryForKey:kUploadRetry503Key] mutableCopy];
+        for (NSString *fileURLString in retry503s.allKeys) {
+            NSDate *retryTime = [self retryTimeForFile:fileURLString];
+            if ([retryTime timeIntervalSinceNow] <= 0.) {
+                [self setRetryTime:nil forFile:fileURLString];
+                NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:fileURLString];
+                [self kickOffUploadForFile:fileURLString uploadRequestJSON:uploadRequestJSON];
+            }
+        }
+    }];
+}
+
 // When uploading a file to Bridge, first we use background download to get an SBBUploadSession object from Bridge.
 // Then we use the pre-signed URL in that SBBUploadSession to upload our file to S3.
 // When that finishes, we tell Bridge that the requested upload is completed.
@@ -290,19 +346,32 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 - (void)handleUploadHTTPStatusCode:(NSInteger)httpStatusCode forUploadFilePath:(NSString *)filePath
 {
     switch (httpStatusCode) {
-        case 403: {
-            // this will have happened because the pre-signed url timed out before starting the actual upload to S3,
-            // so try, try again
+        case 403:
+        case 500: {
+            // 403 for our purposes means the pre-signed url timed out before starting the actual upload to S3.
+            // 500 means internal server error ("We encountered an internal error. Please try again.")
+            // either way we should try again immediately
 #if DEBUG
-            NSLog(@"Background file upload to S3 failed with HTTP status 403 (presumably due to presigned url timeout); retrying...");
+            NSLog(@"Background file upload to S3 failed with HTTP status %ld; retrying...", (long)httpStatusCode);
 #endif
             NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
             [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
         } break;
             
+        case 503: {
+            // 503 means service not available or the requests are coming too fast, so try again after
+            // at least a minimum delay
+            NSTimeInterval delay = 5. * 60.; // at least 5 minutes, actually whenever we get to it after that
+            
+#if DEBUG
+            NSLog(@"Background file upload to S3 failed with HTTP status 503; will retry some time after %ld seconds have elapsed.", (long)delay);
+#endif
+            [self setRetryTime:[NSDate dateWithTimeIntervalSinceNow:delay] forFile:filePath];
+        } break;
+            
         default: {
             // iOS handles redirects automatically so only e.g. 307 resource not changed etc. from the 300 range should end up here
-            // (along with all 4xx and 5xx of course)
+            // (along with all unhandled 4xx and 5xx of course)
             NSString *description = [NSString stringWithFormat:@"Background file upload to S3 failed with HTTP status %ld", (long)httpStatusCode];
             NSError *s3Error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeS3UploadErrorResponse userInfo:@{NSLocalizedDescriptionKey: description}];
             [self completeUploadOfFile:filePath withError:s3Error];
@@ -455,6 +524,9 @@ static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
     [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
         [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
     }];
+    
+    // while we're at it, see if there are any uploads due for a retry after getting a 503 status code from S3.
+    [self retry503sAfterDelay];
 }
 
 // This presumes uploadFileToBridge:contentType:completion: was called to set things up for this file,
