@@ -4,7 +4,7 @@
 //
 //  Created by Erin Mounts on 10/9/14.
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ static NSString * const kSBBUploadStatusAPIFormat =     UPLOAD_STATUS_API @"/%@"
 static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
 static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
-static NSString *kUploadRetry503Key = @"SBBUploadRetry503Key";
+static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
 
 #pragma mark - SBBUploadCompletionWrapper
 
@@ -100,14 +100,14 @@ static NSString *kUploadRetry503Key = @"SBBUploadRetry503Key";
         shared = [self instanceWithRegisteredDependencies];
         shared.networkManager.backgroundTransferDelegate = shared;
         
-        // check if any uploads that got 503 status codes from S3 are due for a retry
+        // check if any uploads that got 503 status codes from S3 or Bridge errors are due for a retry
         // whenever the app comes to the foreground
         [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
-            [shared retry503sAfterDelay];
+            [shared retryUploadsAfterDelay];
         }];
         
         // also check right away
-        [shared retry503sAfterDelay];
+        [shared retryUploadsAfterDelay];
     });
     
     return shared;
@@ -274,7 +274,7 @@ static NSString *kUploadRetry503Key = @"SBBUploadRetry503Key";
 - (NSDate *)retryTimeForFile:(NSString *)fileURLString
 {
     NSDate *retryTime = nil;
-    NSString *jsonDate = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadRetry503Key][fileURLString];
+    NSString *jsonDate = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadRetryAfterDelayKey][fileURLString];
     if (jsonDate) {
         retryTime = [NSDate dateWithISO8601String:jsonDate];
     }
@@ -282,30 +282,40 @@ static NSString *kUploadRetry503Key = @"SBBUploadRetry503Key";
     return retryTime;
 }
 
-- (void)setRetryTime:(NSDate *)retryTime forFile:(NSString *)fileURLString
+- (void)setRetryAfterDelayForFile:(NSString *)fileURLString
 {
+    NSTimeInterval delay = 5. * 60.; // at least 5 minutes, actually whenever we get to it after that
+#if DEBUG
+    NSLog(@"Will retry upload of file %@ after %lf seconds.", fileURLString, delay);
+#endif
+    NSDate *retryTime = [NSDate dateWithTimeIntervalSinceNow:delay];
+    
+    [self setRetryTime:retryTime forFile:fileURLString];
+}
+
+- (void)setRetryTime:(NSDate *)retryTime forFile:(NSString *)fileURLString {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    NSMutableDictionary *retry503s = [[defaults dictionaryForKey:kUploadRetry503Key] mutableCopy];
-    if (!retry503s) {
-        retry503s = [NSMutableDictionary dictionary];
+    NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kUploadRetryAfterDelayKey] mutableCopy];
+    if (!retryUploads) {
+        retryUploads = [NSMutableDictionary dictionary];
     }
     if (retryTime) {
-        retry503s[fileURLString] = [retryTime ISO8601String];
+        retryUploads[fileURLString] = [retryTime ISO8601String];
     } else {
-        [retry503s removeObjectForKey:fileURLString];
+        [retryUploads removeObjectForKey:fileURLString];
     }
-    [defaults setObject:retry503s forKey:kUploadRetry503Key];
+    [defaults setObject:retryUploads forKey:kUploadRetryAfterDelayKey];
     [defaults synchronize];
 }
 
-- (void)retry503sAfterDelay
+- (void)retryUploadsAfterDelay
 {
     [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         
-        NSDictionary *retry503s = [[defaults dictionaryForKey:kUploadRetry503Key] mutableCopy];
-        for (NSString *fileURLString in retry503s.allKeys) {
+        NSDictionary *retryUploads = [[defaults dictionaryForKey:kUploadRetryAfterDelayKey] mutableCopy];
+        for (NSString *fileURLString in retryUploads.allKeys) {
             NSDate *retryTime = [self retryTimeForFile:fileURLString];
             if ([retryTime timeIntervalSinceNow] <= 0.) {
                 [self setRetryTime:nil forFile:fileURLString];
@@ -361,12 +371,11 @@ static NSString *kUploadRetry503Key = @"SBBUploadRetry503Key";
         case 503: {
             // 503 means service not available or the requests are coming too fast, so try again after
             // at least a minimum delay
-            NSTimeInterval delay = 5. * 60.; // at least 5 minutes, actually whenever we get to it after that
             
 #if DEBUG
-            NSLog(@"Background file upload to S3 failed with HTTP status 503; will retry some time after %ld seconds have elapsed.", (long)delay);
+            NSLog(@"Background file upload to S3 failed with HTTP status 503.");
 #endif
-            [self setRetryTime:[NSDate dateWithTimeIntervalSinceNow:delay] forFile:filePath];
+            [self setRetryAfterDelayForFile:filePath];
         } break;
             
         default: {
@@ -525,8 +534,8 @@ static NSString *kUploadRetry503Key = @"SBBUploadRetry503Key";
         [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
     }];
     
-    // while we're at it, see if there are any uploads due for a retry after getting a 503 status code from S3.
-    [self retry503sAfterDelay];
+    // while we're at it, see if there are any uploads due for a retry after getting a 503 status code from S3 or an error from Bridge.
+    [self retryUploadsAfterDelay];
 }
 
 // This presumes uploadFileToBridge:contentType:completion: was called to set things up for this file,
@@ -544,13 +553,30 @@ static NSString *kUploadRetry503Key = @"SBBUploadRetry503Key";
     } taskCompletion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
         // We don't care about this unless there was a network error, or an HTTP response indicating an error.
         // Otherwise we'll have gotten and handled the downloaded file url in the downloadCompletion block, above.
-        if (!error && [task.response isKindOfClass:[NSHTTPURLResponse class]]) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
-            error = [NSError generateSBBErrorForStatusCode:httpResponse.statusCode];
-        }
-        
         if (error) {
-            [self completeUploadOfFile:task.taskDescription withError:error];
+            // network error--we'll only get here if the error didn't include resume data
+#if DEBUG
+            NSLog(@"Request to Bridge for UploadSession failed due to network error.");
+#endif
+            [self setRetryAfterDelayForFile:filePath];
+        } else if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
+            NSInteger statusCode = httpResponse.statusCode;
+            error = [NSError generateSBBErrorForStatusCode:statusCode];
+            switch (statusCode) {
+                case 412:
+                    // not consented--don't retry; we shouldn't be uploading data in the first place
+                    [self completeUploadOfFile:task.taskDescription withError:error];
+                    break;
+                    
+                default:
+                    // anything else, retry after a delay
+#if DEBUG
+                    NSLog(@"Request to Bridge for UploadSession failed with HTTP status %ld.", statusCode);
+#endif
+                    [self setRetryAfterDelayForFile:filePath];
+                    break;
+            }
         }
     }];
 }
