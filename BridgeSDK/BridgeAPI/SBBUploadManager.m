@@ -562,6 +562,10 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
         } else if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
             NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
             NSInteger statusCode = httpResponse.statusCode;
+            if (statusCode < 300) {
+                // these are not the codes you're looking for--move along
+                return;
+            }
             error = [NSError generateSBBErrorForStatusCode:statusCode];
             switch (statusCode) {
                 case 412:
