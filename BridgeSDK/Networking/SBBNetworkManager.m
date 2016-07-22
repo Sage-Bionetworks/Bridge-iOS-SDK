@@ -368,7 +368,7 @@ NSString *kAPIPrefix = @"webservices";
     request.HTTPMethod = @"PUT";
     NSURLSessionUploadTask *task = [self.backgroundSession uploadTaskWithRequest:request fromFile:fileUrl];
     
-    [self.backgroundSession.delegateQueue addOperationWithBlock:^{
+    [self performBlockOnBackgroundDelegateQueue:^{
         [self setCompletionBlock:completion forTask:task];
     }];
 
@@ -452,7 +452,7 @@ NSString *kAPIPrefix = @"webservices";
     
     NSURLSessionDownloadTask *task = [self.backgroundSession downloadTaskWithRequest:request];
     
-    [self.backgroundSession.delegateQueue addOperationWithBlock:^{
+    [self performBlockOnBackgroundDelegateQueue:^{
         [self setCompletionBlock:downloadCompletionWithErrorChecking forDownload:task];
         [self setCompletionBlock:taskCompletionWithErrorChecking forTask:task];
     }];
@@ -693,6 +693,17 @@ NSString *kAPIPrefix = @"webservices";
     {
         NSURL * tempURL =[NSURL URLWithString:URLString relativeToURL:[NSURL URLWithString:self.baseURL]];
         return [NSURL URLWithString:[tempURL absoluteString]];
+    }
+}
+
+- (void)performBlockOnBackgroundDelegateQueue:(void (^)(void))block
+{
+    NSOperationQueue *bgQueue = _backgroundSession.delegateQueue;
+    if (bgQueue) {
+        [bgQueue addOperationWithBlock:block];
+    } else {
+        // do it in line
+        block();
     }
 }
 

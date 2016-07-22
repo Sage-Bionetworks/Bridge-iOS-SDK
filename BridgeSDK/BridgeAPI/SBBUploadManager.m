@@ -311,7 +311,7 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
 
 - (void)retryUploadsAfterDelay
 {
-    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+    [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         
         NSDictionary *retryUploads = [[defaults dictionaryForKey:kUploadRetryAfterDelayKey] mutableCopy];
@@ -427,43 +427,51 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
 - (void)downloadedBridgeUploadSessionWithDownloadTask:(NSURLSessionDownloadTask *)downloadTask fileURL:(NSURL *)file
 {
     NSError *error;
+    NSString *uploadFileURL = downloadTask.taskDescription;
+    if ([self uploadSessionForFile:uploadFileURL]) {
+        // already got one--this means we retried requesting the upload session for the file because the initial
+        // Bridge request took too long to respond, but has now responded; but we only need one of these to
+        // go on to attempt the upload to S3, so we'll just ignore this one
+        return;
+    }
+    
     NSData *jsonData = [NSData dataWithContentsOfURL:file options:0 error:&error];
     if (error) {
         NSLog(@"Error reading downloaded UploadSession file into an NSData object:\n%@", error);
-        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+        [self completeUploadOfFile:uploadFileURL withError:error];
         return;
     }
     
     id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&error];
     if (error) {
-        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+        [self completeUploadOfFile:uploadFileURL withError:error];
         NSLog(@"Error deserializing downloaded UploadSession data into objects:\n%@", error);
         return;
     }
     
     SBBUploadSession *uploadSession = [_cleanObjectManager objectFromBridgeJSON:jsonObject];
-    SBBUploadRequest *uploadRequest = [self uploadRequestForFile:downloadTask.taskDescription];
+    SBBUploadRequest *uploadRequest = [self uploadRequestForFile:uploadFileURL];
     if (!uploadRequest || !uploadRequest.contentLength || !uploadRequest.contentType || !uploadRequest.contentMd5) {
-        NSLog(@"Failed to retrieve upload request headers for temp file %@", downloadTask.taskDescription);
-        NSString *desc = [NSString stringWithFormat:@"Error retrieving upload request headers for temp file URL:\n%@", downloadTask.taskDescription];
+        NSLog(@"Failed to retrieve upload request headers for temp file %@", uploadFileURL);
+        NSString *desc = [NSString stringWithFormat:@"Error retrieving upload request headers for temp file URL:\n%@", uploadFileURL];
         error = [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeTempFileError userInfo:@{NSLocalizedDescriptionKey: desc}];
-        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+        [self completeUploadOfFile:uploadFileURL withError:error];
         return;
     }
-    [self setUploadRequestJSON:nil forFile:downloadTask.taskDescription];
+//    [self setUploadRequestJSON:nil forFile:uploadFileURL];
     if ([uploadSession isKindOfClass:[SBBUploadSession class]]) {
 #if DEBUG
         NSLog(@"Successfully obtained upload session with upload ID %@", uploadSession.id);
 #endif
-        [self setUploadSessionJSON:jsonObject forFile:downloadTask.taskDescription];
+        [self setUploadSessionJSON:jsonObject forFile:uploadFileURL];
         NSDictionary *uploadHeaders =
         @{
           @"Content-Length": [uploadRequest.contentLength stringValue],
           @"Content-Type": uploadRequest.contentType,
           @"Content-MD5": uploadRequest.contentMd5
           };
-        NSURL *fileUrl = [NSURL fileURLWithPath:downloadTask.taskDescription];
-        [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:downloadTask.taskDescription completion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
+        NSURL *fileUrl = [NSURL fileURLWithPath:uploadFileURL];
+        [self.networkManager uploadFile:fileUrl httpHeaders:uploadHeaders toUrl:uploadSession.url taskDescription:uploadFileURL completion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
 #if DEBUG
             if (error || response.statusCode >= 300) {
                 NSLog(@"Error uploading to S3 for upload ID %@\nHTTP status: %@\n%@", uploadSession.id, @(response.statusCode), error);
@@ -474,8 +482,8 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
             [self uploadedFileToS3WithTask:(NSURLSessionUploadTask *)task response:response error:error];
         }];
     } else {
-        NSError *error = [NSError generateSBBObjectNotExpectedClassErrorForObject:uploadSession expectedClass:[SBBUploadSession class]];
-        [self completeUploadOfFile:downloadTask.taskDescription withError:error];
+        // the response from Bridge was an error message; we already handled this in the task completion
+        // block for fetching the UploadSession
     }
 }
 
@@ -500,7 +508,7 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
         }
         return;
     }
-    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+    [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         [self setCompletionBlock:completion forFile:[tempFileURL path]];
     }];
     
@@ -530,7 +538,7 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
     // don't use the shared SBBObjectManager--we want to use only SDK default objects for types
     NSDictionary *uploadRequestJSON = [_cleanObjectManager bridgeJSONFromObject:uploadRequest];
     
-    [((SBBNetworkManager *)self.networkManager).backgroundSession.delegateQueue addOperationWithBlock:^{
+    [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
     }];
     
@@ -556,7 +564,7 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
         if (error) {
             // network error--we'll only get here if the error didn't include resume data
 #if DEBUG
-            NSLog(@"Request to Bridge for UploadSession failed due to network error.");
+            NSLog(@"Request to Bridge for UploadSession failed due to network error. Will retry after delay.");
 #endif
             [self setRetryAfterDelayForFile:filePath];
         } else if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
@@ -576,10 +584,73 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
                 default:
                     // anything else, retry after a delay
 #if DEBUG
-                    NSLog(@"Request to Bridge for UploadSession failed with HTTP status %ld.", statusCode);
+                    NSLog(@"Request to Bridge for UploadSession failed with HTTP status %ld. Will retry after delay.", statusCode);
 #endif
                     [self setRetryAfterDelayForFile:filePath];
                     break;
+            }
+        }
+    }];
+}
+
+- (void)checkAndRetryOrphanedUploads
+{
+    [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSFileManager *fileMan = [NSFileManager defaultManager];
+        
+        // assume any outstanding upload requests without corresponding upload sessions whose files are
+        // more than a day old are orphaned (note that under some unusual circumstances this may lead
+        // to duplication of uploads).
+        static const NSTimeInterval oneDay = 24. * 60. * 60.;
+        NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
+        NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
+        for (NSString *filePath in uploadRequests.allKeys) {
+            if (!uploadSessions[filePath]) {
+                // get the modification date of the file, if it still exists
+                NSDictionary *fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
+                if (fileAttrs) {
+                    NSDate *modified = [fileAttrs fileModificationDate];
+                    if ([modified timeIntervalSinceNow] < -oneDay) {
+                        // it's more than a day old, so we will retry now
+                        // but first, if it's in the retry queue, take it out
+                        [self setRetryTime:nil forFile:filePath];
+                        
+                        // ...and update its modification date so we don't keep thinking it's due for a retry
+                        [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
+                        
+                        // ok, now do the retry
+                        NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
+                        [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
+                    }
+                } else {
+                    // it's gone, just delete its upload request etc. so we don't keep seeing it here
+                    [self setUploadRequestJSON:nil forFile:filePath];
+                    [self cleanUpTempFile:filePath];
+                }
+            }
+        }
+        
+        // assume any outstanding upload sessions at or past their expiration date are orphaned
+        for (NSString *filePath in uploadSessions.allKeys) {
+            SBBUploadSession *session = [self uploadSessionForFile:filePath];
+            if ([session.expires timeIntervalSinceNow] <= 0.) {
+                // clear out the old session info
+                [self setUploadSessionJSON:nil forFile:filePath];
+                
+                // if an old upload request still exists for this file, reuse it
+                NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
+                if (uploadRequestJSON) {
+                    // 'touch' the file so it doesn't look orphaned too soon
+                    [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
+                    [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
+                } else {
+                    // earlier version of SDK cleaned up saved UploadRequests prematurely, so just start over
+                    // from scratch if we don't have one, and assume contentType was application/zip
+                    SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
+                    [self uploadFileToBridge:[NSURL fileURLWithPath:filePath] contentType:@"application/zip" completion:completion];
+                }
+
             }
         }
     }];

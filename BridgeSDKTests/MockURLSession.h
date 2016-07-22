@@ -10,6 +10,9 @@
 
 @interface MockURLSession : NSURLSession
 
+@property (nonatomic, weak) id<NSURLSessionTaskDelegate> mockDelegate;
+
 - (void)setJson:(id)jsonObject andResponseCode:(NSInteger)statusCode forEndpoint:(NSString *)endpoint andMethod:(NSString *)HTTPMethod;
+- (void)setDownloadFileURL:(NSURL *)fileURL andError:(NSError *)error forEndpoint:(NSString *)endpoint andMethod:(NSString *)HTTPMethod;
 
 @end
