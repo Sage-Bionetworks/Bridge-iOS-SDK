@@ -30,7 +30,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBUploadManager.h"
+#import "SBBUploadManagerInternal.h"
 #import "NSData+SBBAdditions.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
@@ -46,14 +46,16 @@
 #define UPLOAD_API GLOBAL_API_PREFIX @"/uploads"
 #define UPLOAD_STATUS_API GLOBAL_API_PREFIX @"/uploadstatuses"
 
-static NSString * const kSBBUploadAPI =                 UPLOAD_API;
-static NSString * const kSBBUploadCompleteAPIFormat =   UPLOAD_API @"/%@/complete";
-static NSString * const kSBBUploadStatusAPIFormat =     UPLOAD_STATUS_API @"/%@";
+NSString * const kSBBUploadAPI =                 UPLOAD_API;
+NSString * const kSBBUploadCompleteAPIFormat =   UPLOAD_API @"/%@/complete";
+NSString * const kSBBUploadStatusAPIFormat =     UPLOAD_STATUS_API @"/%@";
 
 static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
 static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
-static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
+NSString * const kSBBUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
+
+NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually whenever we get to it after that
 
 #pragma mark - SBBUploadCompletionWrapper
 
@@ -79,14 +81,6 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
 @end
 
 #pragma mark - SBBUploadManager
-
-@interface SBBUploadManager () <NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
-
-@property (nonatomic, strong) SBBObjectManager *cleanObjectManager;
-
-@property (nonatomic, strong) NSMutableDictionary *uploadCompletionHandlers;
-
-@end
 
 @implementation SBBUploadManager
 @synthesize uploadDelegate = _uploadDelegate;
@@ -274,7 +268,7 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
 - (NSDate *)retryTimeForFile:(NSString *)fileURLString
 {
     NSDate *retryTime = nil;
-    NSString *jsonDate = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadRetryAfterDelayKey][fileURLString];
+    NSString *jsonDate = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kSBBUploadRetryAfterDelayKey][fileURLString];
     if (jsonDate) {
         retryTime = [NSDate dateWithISO8601String:jsonDate];
     }
@@ -296,7 +290,7 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
 - (void)setRetryTime:(NSDate *)retryTime forFile:(NSString *)fileURLString {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kUploadRetryAfterDelayKey] mutableCopy];
+    NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
     if (!retryUploads) {
         retryUploads = [NSMutableDictionary dictionary];
     }
@@ -305,7 +299,7 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
     } else {
         [retryUploads removeObjectForKey:fileURLString];
     }
-    [defaults setObject:retryUploads forKey:kUploadRetryAfterDelayKey];
+    [defaults setObject:retryUploads forKey:kSBBUploadRetryAfterDelayKey];
     [defaults synchronize];
 }
 
@@ -314,7 +308,7 @@ static NSString *kUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         
-        NSDictionary *retryUploads = [[defaults dictionaryForKey:kUploadRetryAfterDelayKey] mutableCopy];
+        NSDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
         for (NSString *fileURLString in retryUploads.allKeys) {
             NSDate *retryTime = [self retryTimeForFile:fileURLString];
             if ([retryTime timeIntervalSinceNow] <= 0.) {

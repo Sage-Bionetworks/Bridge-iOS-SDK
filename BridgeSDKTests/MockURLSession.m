@@ -54,7 +54,6 @@
 - (void)resume
 {
     NSError *error = nil;
-    NSInteger statusCode;
     MockHTTPURLResponse *response;
     NSData *data = [_session dataAndResponse:&response forRequest:_request];
     
@@ -79,9 +78,9 @@
 
 - (void)resume
 {
-    NSError *error = nil;
-    NSInteger statusCode;
-    __unused NSData *data = [_session dataAndResponse:&_mockResponse forRequest:_request];
+    MockHTTPURLResponse *response;
+    __unused NSData *data = [_session dataAndResponse:&response forRequest:_request];
+    _mockResponse = response;
     
     id<NSURLSessionTaskDelegate> delegate = _session.mockDelegate;
     if (delegate && [delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
@@ -110,12 +109,13 @@
 
 - (void)resume
 {
-    NSInteger statusCode;
-    __unused NSData *data = [_session dataAndResponse:&_mockResponse forRequest:_request];
+    MockHTTPURLResponse *response;
+    __unused NSData *data = [_session dataAndResponse:&response forRequest:_request];
+    _mockResponse = response;
     NSError *error;
     NSURL *fileURL = [_session downloadFileURLAndError:&error forRequest:_request];
     
-    id<NSURLSessionDownloadTaskDelegate> delegate = _session.mockDelegate;
+    id<NSURLSessionDownloadDelegate> delegate = (id<NSURLSessionDownloadDelegate>)_session.mockDelegate;
     if (delegate) {
         if ([delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
             [delegate URLSession:_session task:self didCompleteWithError:nil];
@@ -139,7 +139,6 @@
     if (self = [super init]) {
         _jsonForEndpoints = [NSMutableDictionary dictionary];
         _codesForEndpoints = [NSMutableDictionary dictionary];
-        _isBackground = NO;
     }
     
     return self;
@@ -150,28 +149,81 @@
     return [HTTPMethod stringByAppendingString:endpoint];
 }
 
+- (NSMutableArray *)responsesForKey:(NSString *)key
+{
+    NSMutableArray *responses = _jsonForEndpoints[key];
+    if (!responses) {
+        responses = [NSMutableArray array];
+        _jsonForEndpoints[key] = responses;
+    }
+    
+    return responses;
+}
+
+- (NSMutableArray *)codesForKey:(NSString *)key
+{
+    NSMutableArray *codes = _codesForEndpoints[key];
+    if (!codes) {
+        codes = [NSMutableArray array];
+        _codesForEndpoints[key] = codes;
+    }
+    
+    return codes;
+}
+
 - (void)setJson:(id)jsonObject andResponseCode:(NSInteger)statusCode forEndpoint:(NSString *)endpoint andMethod:(NSString *)HTTPMethod
 {
     NSString *key = [self keyForEndpoint:endpoint method:HTTPMethod];
-    [_jsonForEndpoints setValue:jsonObject forKey:key]; // jsonObject can be nil
-    _codesForEndpoints[key] = [NSNumber numberWithInteger:statusCode];
+    NSMutableArray *responses = [self responsesForKey:key];
+    NSMutableArray *codes = [self codesForKey:key];
+    
+    [responses addObject:jsonObject ?: [NSNull null]];
+    [codes addObject:@(statusCode)];
+}
+
+- (id)pullNextResponseForKey:(NSString *)key
+{
+    NSMutableArray *responses = [self responsesForKey:key];
+    id response = [responses firstObject];
+    if (responses.count) {
+        [responses removeObjectAtIndex:0];
+    }
+    
+    if (response == [NSNull null]) {
+        response = nil;
+    }
+    
+    return response;
+}
+
+- (NSInteger)pullNextCodeForKey:(NSString *)key
+{
+    NSMutableArray *codes = [self codesForKey:key];
+    NSNumber *code = [codes firstObject];
+    if (codes.count) {
+        [codes removeObjectAtIndex:0];
+    }
+    
+    return code.integerValue;
 }
 
 - (NSData *)dataAndResponse:(NSHTTPURLResponse *__autoreleasing *)response forRequest:(NSURLRequest *)request
 {
     NSInteger statusCode;
+    id json;
     if ([self headersContainValidAuth:request.allHTTPHeaderFields]) {
         NSString *endpoint = request.URL.path;
         NSString *key = [self keyForEndpoint:endpoint method:request.HTTPMethod];
-        json = _jsonForEndpoints[key];
-        statusCode = [_codesForEndpoints[key] integerValue];
+        json = [self pullNextResponseForKey:key];
+        statusCode = [self pullNextCodeForKey:key];
     } else {
         statusCode = 401;
     }
     
     if (response) {
-        *response = [MockHTTPURLResponse new];
-        (*response).mockStatusCode = statusCode;
+        MockHTTPURLResponse *mockResponse = [MockHTTPURLResponse new];
+        mockResponse.mockStatusCode = statusCode;
+        *response = mockResponse;
     }
     
     NSData *data = nil;
@@ -187,11 +239,66 @@
     return ![headers[@"Bridge-Session"] isEqualToString:@"expired"];
 }
 
+- (NSMutableArray *)fileURLsForKey:(NSString *)key
+{
+    NSMutableArray *fileURLs = _URLSForEndpoints[key];
+    if (!fileURLs) {
+        fileURLs = [NSMutableArray array];
+        _URLSForEndpoints[key] = fileURLs;
+    }
+    
+    return fileURLs;
+}
+
+- (NSMutableArray *)errorsForKey:(NSString *)key
+{
+    NSMutableArray *errors = _errorsForEndpoints[key];
+    if (!errors) {
+        errors = [NSMutableArray array];
+        _errorsForEndpoints[key] = errors;
+    }
+    
+    return errors;
+}
+
 - (void)setDownloadFileURL:(NSURL *)fileURL andError:(NSError *)error forEndpoint:(NSString *)endpoint andMethod:(NSString *)HTTPMethod
 {
     NSString *key = [self keyForEndpoint:endpoint method:HTTPMethod];
-    [_URLSForEndpoints setValue:fileURL forKey:key];
-    [_errorsForEndpoints setValue:error forKey:key];
+    NSMutableArray *fileURLs = [self fileURLsForKey:key];
+    NSMutableArray *errors = [self errorsForKey:key];
+    
+    [fileURLs addObject:fileURL ?: [NSNull null]];
+    [errors addObject:error ?: [NSNull null]];
+}
+
+- (NSURL *)pullNextFileURLForKey:(NSString *)key
+{
+    NSMutableArray *fileURLs = [self fileURLsForKey:key];
+    id fileURL = [fileURLs firstObject];
+    if (fileURLs.count) {
+        [fileURLs removeObjectAtIndex:0];
+    }
+    
+    if (fileURL == [NSNull null]) {
+        fileURL = nil;
+    }
+    
+    return fileURL;
+}
+
+- (NSError *)pullNextErrorForKey:(NSString *)key
+{
+    NSMutableArray *errors = [self errorsForKey:key];
+    id error = [errors firstObject];
+    if (errors.count) {
+        [errors removeObjectAtIndex:0];
+    }
+    
+    if (error == [NSNull null]) {
+        error = nil;
+    }
+    
+    return error;
 }
 
 - (NSURL *)downloadFileURLAndError:(NSError **)error forRequest:(NSURLRequest *)request
@@ -199,10 +306,10 @@
     NSString *endpoint = request.URL.path;
     NSString *key = [self keyForEndpoint:endpoint method:request.HTTPMethod];
     if (error) {
-        *error = _errorsForEndpoints[key];
+        *error = [self pullNextErrorForKey:key];
     }
     
-    return _URLSForEndpoints[key];
+    return [self pullNextFileURLForKey:key];
 }
 
 - (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData *, NSURLResponse *, NSError *))completionHandler
@@ -219,6 +326,7 @@
     MockUploadTask *task = [MockUploadTask new];
     task.request = request;
     task.session = self;
+    return task;
 }
 
 - (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request
@@ -226,6 +334,7 @@
     MockDownloadTask *task = [MockDownloadTask new];
     task.request = request;
     task.session = self;
+    return task;
 }
 
 - (NSOperationQueue *)delegateQueue

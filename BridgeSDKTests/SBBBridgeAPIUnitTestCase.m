@@ -19,6 +19,7 @@
 @interface SBBBridgeAPIUnitTestCase ()
 
 @property (nonatomic, strong) NSURLSession *savedMainSession;
+@property (nonatomic, strong) NSURLSession *savedBackgroundSession;
 @property (nonatomic, strong) SBBCacheManager *cacheManager;
 @property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
 
@@ -37,6 +38,10 @@
     SBBBridgeNetworkManager *bridgeNetMan = (SBBBridgeNetworkManager *)SBBComponent(SBBBridgeNetworkManager);
     _savedMainSession = bridgeNetMan.mainSession;
     bridgeNetMan.mainSession = _mockURLSession;
+    
+    _mockBackgroundURLSession = [MockURLSession new];
+    _savedBackgroundSession = bridgeNetMan.backgroundSession;
+    bridgeNetMan.backgroundSession = _mockBackgroundURLSession;
     
     [SBBComponentManager registerComponent:bridgeNetMan forClass:[SBBBridgeNetworkManager class]];
     id<SBBAuthManagerProtocol> aMan = SBBComponent(SBBAuthManager);
