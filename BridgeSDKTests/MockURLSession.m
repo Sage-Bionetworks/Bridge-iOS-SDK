@@ -11,10 +11,6 @@
 
 @interface MockURLSession ()
 
-@property (nonatomic, strong) NSMutableDictionary *jsonForEndpoints;
-@property (nonatomic, strong) NSMutableDictionary *codesForEndpoints;
-@property (nonatomic, strong) NSMutableDictionary *URLSForEndpoints;
-@property (nonatomic, strong) NSMutableDictionary *errorsForEndpoints;
 @property (nonatomic, strong) NSOperationQueue *mockDelegateQueue;
 
 - (NSData *)dataAndResponse:(NSHTTPURLResponse **)response forRequest:(NSURLRequest *)request;
@@ -76,16 +72,21 @@
 
 @implementation MockUploadTask
 
+@synthesize taskDescription;
+@synthesize taskIdentifier;
+
 - (void)resume
 {
-    MockHTTPURLResponse *response;
-    __unused NSData *data = [_session dataAndResponse:&response forRequest:_request];
-    _mockResponse = response;
-    
-    id<NSURLSessionTaskDelegate> delegate = _session.mockDelegate;
-    if (delegate && [delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
-        [delegate URLSession:_session task:self didCompleteWithError:nil];
-    }
+    [_session.delegateQueue addOperationWithBlock:^{
+        MockHTTPURLResponse *response;
+        __unused NSData *data = [_session dataAndResponse:&response forRequest:_request];
+        _mockResponse = response;
+        
+        id<NSURLSessionTaskDelegate> delegate = (id<NSURLSessionTaskDelegate>)_session.delegate;
+        if (delegate && [delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
+            [delegate URLSession:_session task:self didCompleteWithError:nil];
+        }
+    }];
 }
 
 - (NSURLResponse *)response
@@ -107,26 +108,35 @@
 
 @implementation MockDownloadTask
 
+@synthesize taskDescription;
+@synthesize taskIdentifier;
+
 - (void)resume
 {
-    MockHTTPURLResponse *response;
-    __unused NSData *data = [_session dataAndResponse:&response forRequest:_request];
-    _mockResponse = response;
-    NSError *error;
-    NSURL *fileURL = [_session downloadFileURLAndError:&error forRequest:_request];
-    
-    id<NSURLSessionDownloadDelegate> delegate = (id<NSURLSessionDownloadDelegate>)_session.mockDelegate;
-    if (delegate) {
-        if ([delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
-            [delegate URLSession:_session task:self didCompleteWithError:nil];
-        }
+    [_session.delegateQueue addOperationWithBlock:^{
+        MockHTTPURLResponse *response;
+        __unused NSData *data = [_session dataAndResponse:&response forRequest:_request];
+        _mockResponse = response;
+        NSError *error;
+        NSURL *fileURL = [_session downloadFileURLAndError:&error forRequest:_request];
         
-        if ([delegate respondsToSelector:@selector(URLSession:downloadTask:didFinishDownloadingToURL:)]) {
-            [delegate URLSession:_session downloadTask:self didFinishDownloadingToURL:fileURL];
+        id<NSURLSessionDownloadDelegate> delegate = (id<NSURLSessionDownloadDelegate>)_session.delegate;
+        if (delegate) {
+            if ([delegate respondsToSelector:@selector(URLSession:downloadTask:didFinishDownloadingToURL:)]) {
+                [delegate URLSession:_session downloadTask:self didFinishDownloadingToURL:fileURL];
+            }
+
+            if ([delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
+                [delegate URLSession:_session task:self didCompleteWithError:nil];
+            }
         }
-    }
+    }];
 }
 
+- (NSURLResponse *)response
+{
+    return _mockResponse;
+}
 
 @end
 
@@ -139,6 +149,8 @@
     if (self = [super init]) {
         _jsonForEndpoints = [NSMutableDictionary dictionary];
         _codesForEndpoints = [NSMutableDictionary dictionary];
+        _URLSForEndpoints = [NSMutableDictionary dictionary];
+        _errorsForEndpoints = [NSMutableDictionary dictionary];
     }
     
     return self;
@@ -335,6 +347,11 @@
     task.request = request;
     task.session = self;
     return task;
+}
+
+- (id<NSURLSessionDelegate>)delegate
+{
+    return _mockDelegate;
 }
 
 - (NSOperationQueue *)delegateQueue

@@ -38,10 +38,12 @@
     SBBBridgeNetworkManager *bridgeNetMan = (SBBBridgeNetworkManager *)SBBComponent(SBBBridgeNetworkManager);
     _savedMainSession = bridgeNetMan.mainSession;
     bridgeNetMan.mainSession = _mockURLSession;
+    _mockURLSession.mockDelegate = _savedMainSession.delegate;
     
     _mockBackgroundURLSession = [MockURLSession new];
     _savedBackgroundSession = bridgeNetMan.backgroundSession;
     bridgeNetMan.backgroundSession = _mockBackgroundURLSession;
+    _mockBackgroundURLSession.mockDelegate = _savedBackgroundSession.delegate;
     
     [SBBComponentManager registerComponent:bridgeNetMan forClass:[SBBBridgeNetworkManager class]];
     id<SBBAuthManagerProtocol> aMan = SBBComponent(SBBAuthManager);

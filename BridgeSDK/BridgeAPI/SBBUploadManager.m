@@ -120,7 +120,8 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 {
     NSURL *appSupportDir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] firstObject];
     NSString *bundleName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
-    NSURL *uploadDir = [[appSupportDir URLByAppendingPathComponent:bundleName] URLByAppendingPathComponent:@"SBBUploadManager"];
+    // for unit tests, the main bundle infoDictionary is empty, so...
+    NSURL *uploadDir = [[appSupportDir URLByAppendingPathComponent:bundleName ?: @"__test__"] URLByAppendingPathComponent:@"SBBUploadManager"];
     NSError *error;
     if (![[NSFileManager defaultManager] createDirectoryAtURL:uploadDir withIntermediateDirectories:YES attributes:nil error:&error]) {
         NSLog(@"Error attempting to create uploadDir at path %@:\n%@", uploadDir.absoluteURL, error);
@@ -452,7 +453,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         [self completeUploadOfFile:uploadFileURL withError:error];
         return;
     }
-//    [self setUploadRequestJSON:nil forFile:uploadFileURL];
+    
     if ([uploadSession isKindOfClass:[SBBUploadSession class]]) {
 #if DEBUG
         NSLog(@"Successfully obtained upload session with upload ID %@", uploadSession.id);
@@ -546,6 +547,8 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 - (void)kickOffUploadForFile:(NSString *)filePath uploadRequestJSON:(NSDictionary *)uploadRequestJSON
 {
     // this starts the process by downloading the Bridge UploadSession.
+    // first, make sure we get rid of any existing UploadSession for this file, in case this is a retry.
+    [self setUploadSessionJSON:nil forFile:filePath];
     [self setUploadRequestJSON:uploadRequestJSON forFile:filePath];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
@@ -553,35 +556,37 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     __block NSURLSessionDownloadTask *downloadTask = [self.networkManager downloadFileFromURLString:kSBBUploadAPI method:@"POST" httpHeaders:headers parameters:uploadRequestJSON taskDescription:filePath downloadCompletion:^(NSURL *file) {
         [self downloadedBridgeUploadSessionWithDownloadTask:downloadTask fileURL:file];
     } taskCompletion:^(NSURLSessionTask *task, NSHTTPURLResponse *response, NSError *error) {
-        // We don't care about this unless there was a network error, or an HTTP response indicating an error.
+        // We don't care about this unless there was a network or HTTP error.
         // Otherwise we'll have gotten and handled the downloaded file url in the downloadCompletion block, above.
         if (error) {
-            // network error--we'll only get here if the error didn't include resume data
+            if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
+                NSInteger statusCode = httpResponse.statusCode;
+                if (statusCode < 300) {
+                    // these are not the codes you're looking for--move along
+                    return;
+                }
+                error = [NSError generateSBBErrorForStatusCode:statusCode];
+                switch (statusCode) {
+                    case 412:
+                        // not consented--don't retry; we shouldn't be uploading data in the first place
+                        [self completeUploadOfFile:task.taskDescription withError:error];
+                        break;
+                        
+                    default:
+                        // anything else, retry after a delay
 #if DEBUG
-            NSLog(@"Request to Bridge for UploadSession failed due to network error. Will retry after delay.");
+                        NSLog(@"Request to Bridge for UploadSession failed with HTTP status %ld. Will retry after delay.", statusCode);
 #endif
-            [self setRetryAfterDelayForFile:filePath];
-        } else if ([task.response isKindOfClass:[NSHTTPURLResponse class]]) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
-            NSInteger statusCode = httpResponse.statusCode;
-            if (statusCode < 300) {
-                // these are not the codes you're looking for--move along
-                return;
-            }
-            error = [NSError generateSBBErrorForStatusCode:statusCode];
-            switch (statusCode) {
-                case 412:
-                    // not consented--don't retry; we shouldn't be uploading data in the first place
-                    [self completeUploadOfFile:task.taskDescription withError:error];
-                    break;
-                    
-                default:
-                    // anything else, retry after a delay
-#if DEBUG
-                    NSLog(@"Request to Bridge for UploadSession failed with HTTP status %ld. Will retry after delay.", statusCode);
-#endif
-                    [self setRetryAfterDelayForFile:filePath];
-                    break;
+                        [self setRetryAfterDelayForFile:filePath];
+                        break;
+                }
+            } else {
+                // network error--we'll only get here if the error didn't include resume data
+    #if DEBUG
+                NSLog(@"Request to Bridge for UploadSession failed due to network error. Will retry after delay.");
+    #endif
+                [self setRetryAfterDelayForFile:filePath];
             }
         }
     }];

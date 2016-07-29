@@ -67,6 +67,7 @@
         XCTAssertEqualObjects(testUserProfile.customArrayField, userProfile.customArrayField, @"Custom array field: object equal to JSON");
     }];
     [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
+    [self.mockURLSession setJson:userProfileJSON andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
     [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
     }];

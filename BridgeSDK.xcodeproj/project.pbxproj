@@ -170,6 +170,10 @@
 		8017AF7319DA0359001AF9BA /* UIDevice+Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6F19DA0359001AF9BA /* UIDevice+Hardware.m */; };
 		8017AF7619DA038D001AF9BA /* NSDate+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF7419DA038D001AF9BA /* NSDate+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8017AF7719DA038D001AF9BA /* NSDate+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF7519DA038D001AF9BA /* NSDate+SBBAdditions.m */; };
+		80240AFF1D4AD7B900100F21 /* failed-upload-request-response.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240AFE1D4AD7B900100F21 /* failed-upload-request-response.json */; };
+		80240B041D4AE6DE00100F21 /* upload-request-success.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240B031D4AE6DE00100F21 /* upload-request-success.json */; };
+		80240B061D4AE80000100F21 /* upload-request-expired.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240B051D4AE80000100F21 /* upload-request-expired.json */; };
+		80240B081D4AEC6600100F21 /* empty-response-body.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240B071D4AEC6600100F21 /* empty-response-body.json */; };
 		8026BD1119C7532D0077F3EB /* UICKeyChainStore.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026BD0F19C7532D0077F3EB /* UICKeyChainStore.h */; };
 		8026BD1219C7532D0077F3EB /* UICKeyChainStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026BD1019C7532D0077F3EB /* UICKeyChainStore.m */; };
 		8026BD1E19C883FC0077F3EB /* BridgeSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026BD1D19C883FC0077F3EB /* BridgeSDK.m */; };
@@ -535,6 +539,10 @@
 		8017AF6F19DA0359001AF9BA /* UIDevice+Hardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Hardware.m"; sourceTree = "<group>"; };
 		8017AF7419DA038D001AF9BA /* NSDate+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+SBBAdditions.h"; sourceTree = "<group>"; };
 		8017AF7519DA038D001AF9BA /* NSDate+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+SBBAdditions.m"; sourceTree = "<group>"; };
+		80240AFE1D4AD7B900100F21 /* failed-upload-request-response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "failed-upload-request-response.json"; sourceTree = "<group>"; };
+		80240B031D4AE6DE00100F21 /* upload-request-success.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "upload-request-success.json"; sourceTree = "<group>"; };
+		80240B051D4AE80000100F21 /* upload-request-expired.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "upload-request-expired.json"; sourceTree = "<group>"; };
+		80240B071D4AEC6600100F21 /* empty-response-body.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "empty-response-body.json"; sourceTree = "<group>"; };
 		8026BD0F19C7532D0077F3EB /* UICKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICKeyChainStore.h; sourceTree = "<group>"; };
 		8026BD1019C7532D0077F3EB /* UICKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICKeyChainStore.m; sourceTree = "<group>"; };
 		8026BD1D19C883FC0077F3EB /* BridgeSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BridgeSDK.m; sourceTree = "<group>"; };
@@ -1039,6 +1047,10 @@
 				601E8A0E1B191DAE00BB02FB /* MockURLSession.h */,
 				601E8A0F1B191DAE00BB02FB /* MockURLSession.m */,
 				D4FA38021A2B144000E7CF1E /* sample-signature.png */,
+				80240AFE1D4AD7B900100F21 /* failed-upload-request-response.json */,
+				80240B031D4AE6DE00100F21 /* upload-request-success.json */,
+				80240B051D4AE80000100F21 /* upload-request-expired.json */,
+				80240B071D4AEC6600100F21 /* empty-response-body.json */,
 				80855F5D19BE258C006601C7 /* Supporting Files */,
 				60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */,
 				60FF57281A0AFEA500CE2373 /* _SBBBridgeObject_test.h */,
@@ -1587,8 +1599,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80240B081D4AEC6600100F21 /* empty-response-body.json in Resources */,
+				80240B041D4AE6DE00100F21 /* upload-request-success.json in Resources */,
+				80240AFF1D4AD7B900100F21 /* failed-upload-request-response.json in Resources */,
 				60DF9B961D4977F000E88CF3 /* cat.jpg in Resources */,
 				D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */,
+				80240B061D4AE80000100F21 /* upload-request-expired.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
