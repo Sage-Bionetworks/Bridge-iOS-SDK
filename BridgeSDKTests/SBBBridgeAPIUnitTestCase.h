@@ -14,5 +14,6 @@
 @interface SBBBridgeAPIUnitTestCase : XCTestCase
 
 @property (nonatomic, strong) MockURLSession *mockURLSession;
+@property (nonatomic, strong) MockURLSession *mockBackgroundURLSession;
 
 @end

@@ -65,4 +65,7 @@ extern NSString *kAPIPrefix;
                        background:(BOOL)background
                        completion:(SBBNetworkManagerCompletionBlock)completion;
 
+// so this can be replaced in mock classes for testing
+- (void)performBlockOnBackgroundDelegateQueue:(void (^)(void))block;
+
 @end

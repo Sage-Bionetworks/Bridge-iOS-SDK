@@ -1,0 +1,6 @@
+{
+    "id":"not-a-real-guid",
+    "url":"/not-a-real-pre-signed-S3-url",
+    "expires":"2999-12-31T11:59:59.999Z",
+    "type":"UploadSession"
+}
