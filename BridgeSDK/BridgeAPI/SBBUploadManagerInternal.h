@@ -40,11 +40,20 @@ extern NSString * const kSBBUploadRetryAfterDelayKey;
 extern NSTimeInterval kSBBDelayForRetries;
 
 @class SBBObjectManager;
-@interface SBBUploadManager () <NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
+
+@protocol SBBUploadManagerInternalProtocol <SBBUploadManagerProtocol>
+
+- (void)setUploadRequestJSON:(id)json forFile:(NSString *)fileURLString;
+- (void)setUploadSessionJSON:(id)json forFile:(NSString *)fileURLString;
+- (void)retryUploadsAfterDelay;
+- (void)checkAndRetryOrphanedUploads;
+- (void)cleanUpTempFile:(NSString *)tempFilePath;
+
+@end
+
+@interface SBBUploadManager () <SBBUploadManagerInternalProtocol, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
 
 @property (nonatomic, strong) SBBObjectManager *cleanObjectManager;
 @property (nonatomic, strong) NSMutableDictionary *uploadCompletionHandlers;
-
-- (void)retryUploadsAfterDelay;
 
 @end
