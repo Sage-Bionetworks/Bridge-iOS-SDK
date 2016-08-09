@@ -362,8 +362,10 @@
 
 	}
 
-	[(NSMutableArray *)self.consentStatuses addObject:value_];
-
+    // Consent status can be nil if user withdrew from study and tries to login again with that account
+    if (value_ != nil) {
+        [(NSMutableArray *)self.consentStatuses addObject:value_];
+    }
 }
 - (void)addConsentStatusesObject:(SBBConsentStatus*)value_
 {
