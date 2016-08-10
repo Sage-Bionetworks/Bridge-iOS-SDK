@@ -10,6 +10,7 @@
 @import BridgeSDK;
 #import "MockURLSession.h"
 #import "SBBTestBridgeObject.h"
+#import "SBBComponentManager.h"
 
 @interface SBBBridgeAPIUnitTestCase : XCTestCase
 

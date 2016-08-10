@@ -97,6 +97,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         // check if any uploads that got 503 status codes from S3 or Bridge errors are due for a retry
         // whenever the app comes to the foreground
         [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+            [shared checkAndRetryOrphanedUploads];
             [shared retryUploadsAfterDelay];
         }];
         
@@ -279,7 +280,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)setRetryAfterDelayForFile:(NSString *)fileURLString
 {
-    NSTimeInterval delay = 5. * 60.; // at least 5 minutes, actually whenever we get to it after that
+    NSTimeInterval delay = kSBBDelayForRetries;
 #if DEBUG
     NSLog(@"Will retry upload of file %@ after %lf seconds.", fileURLString, delay);
 #endif
@@ -309,13 +310,20 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         
-        NSDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
+        NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
         for (NSString *fileURLString in retryUploads.allKeys) {
             NSDate *retryTime = [self retryTimeForFile:fileURLString];
             if ([retryTime timeIntervalSinceNow] <= 0.) {
                 [self setRetryTime:nil forFile:fileURLString];
                 NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:fileURLString];
-                [self kickOffUploadForFile:fileURLString uploadRequestJSON:uploadRequestJSON];
+                if (uploadRequestJSON.allKeys.count) {
+                    [self kickOffUploadForFile:fileURLString uploadRequestJSON:uploadRequestJSON];
+                } else {
+                    // if it's missing or empty, just remove and skip it
+                    [retryUploads removeObjectForKey:fileURLString];
+                    [defaults setObject:retryUploads forKey:kSBBUploadRetryAfterDelayKey];
+                    [defaults synchronize];
+                }
             }
         }
     }];
