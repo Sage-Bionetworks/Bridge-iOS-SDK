@@ -610,6 +610,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         // more than a day old are orphaned (note that under some unusual circumstances this may lead
         // to duplication of uploads).
         static const NSTimeInterval oneDay = 24. * 60. * 60.;
+        NSArray *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey].allKeys;
         NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
         NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
         for (NSString *filePath in uploadRequests.allKeys) {
@@ -658,6 +659,22 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                     [self uploadFileToBridge:[NSURL fileURLWithPath:filePath] contentType:@"application/zip" completion:completion];
                 }
 
+            }
+        }
+        
+        // assume any upload files with no upload request and no upload session are orphaned
+        for (NSString *filePath in uploadFiles) {
+            if (!uploadRequests[filePath] && !uploadSessions[filePath]) {
+                if ([fileMan fileExistsAtPath:filePath]) {
+                    // on the slim-to-none chance that the completion block for this upload file still exists...
+                    // also assume contentType was application/zip
+                    SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
+                    [self uploadFileToBridge:[NSURL fileURLWithPath:filePath] contentType:@"application/zip" completion:completion];
+                } else {
+                    // ¯\_(ツ)_/¯
+                    NSLog(@"File %@ no longer exists, removing from upload files", filePath);
+                    [self cleanUpTempFile:filePath];
+                }
             }
         }
     }];

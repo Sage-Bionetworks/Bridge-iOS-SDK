@@ -446,6 +446,51 @@ static NSString *const kSessionType = @"UploadSession";
             NSLog(@"Timeout uploading file: %@", error);
         }
     }];
+}
+
+- (void)testCheckAndRetryOrphanedUploads {
+    // step 1: orphan an upload by failing the initial request and then removing it from the retry queue,
+    // but leaving it in the list of files being uploaded
+    NSDictionary *responseDict = @{@"message": @"try again later"};
+    NSString *endpoint = kSBBUploadAPI;
+    NSURL *downloadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"failed-upload-request-response" withExtension:@"json"];
+    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:500 forEndpoint:endpoint andMethod:@"POST"];
+    [self.mockBackgroundURLSession setDownloadFileURL:downloadFileURL andError:nil forEndpoint:endpoint andMethod:@"POST"];
+    
+    XCTestExpectation *expect500 = [self expectationWithDescription:@"500: internal server error"];
+    NSURL *uploadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cat" withExtension:@"jpg"];
+    [SBBComponent(SBBUploadManager) uploadFileToBridge:uploadFileURL contentType:@"image/jpeg" completion:^(NSError *error) {
+        // won't ever get here because we're going to orphan it
+    }];
+    
+    // queue up a couple of times to make sure the above stuff has actually completed before we check the retry queue
+    [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
+        [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
+            [self checkFile:uploadFileURL willRetry:YES withMessage:@"Would retry after 500 from upload API" cleanUpAfterward:NO];
+            
+            // remove it from the retry queue to 'orphan' it
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            
+            NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
+            [retryUploads removeObjectForKey:uploadFileURL.path];
+            [defaults setValue:retryUploads forKey:kSBBUploadRetryAfterDelayKey];
+            [defaults synchronize];
+        }];
+    }];
+
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout uploading file: %@", error);
+        }
+    }];
+    
+    // step 2: now checkAndRetryOrphanedUploads and make sure it goes into the retry queue, and then uploads
+    
+    // step 3: this time orphan it by getting a 503 from s3 and removing it from the retry queue, because the code
+    // path in checkAndRetryOrphanedUploads will be different
+    
+    // step 4: now checkAndRetryOrphanedUploads and make sure it goes into the retry queue, and then uploads
 
 }
 
