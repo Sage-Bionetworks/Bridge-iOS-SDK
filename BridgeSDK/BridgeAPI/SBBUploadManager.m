@@ -50,7 +50,7 @@ NSString * const kSBBUploadAPI =                 UPLOAD_API;
 NSString * const kSBBUploadCompleteAPIFormat =   UPLOAD_API @"/%@/complete";
 NSString * const kSBBUploadStatusAPIFormat =     UPLOAD_STATUS_API @"/%@";
 
-static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
+NSString * const kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
 static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 NSString * const kSBBUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
@@ -492,6 +492,12 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)uploadFileToBridge:(NSURL *)fileUrl contentType:(NSString *)contentType completion:(SBBUploadManagerCompletionBlock)completion
 {
+    [self tempFileForUploadFileToBridge:fileUrl contentType:contentType completion:completion];
+}
+
+// internal method returns temp file URL for unit tests
+- (NSURL *)tempFileForUploadFileToBridge:(NSURL *)fileUrl contentType:(NSString *)contentType completion:(SBBUploadManagerCompletionBlock)completion
+{
     if (![fileUrl isFileURL] || ![[NSFileManager defaultManager] isReadableFileAtPath:[fileUrl path]]) {
         NSLog(@"Attempting to upload an URL that's not a readable file URL:\n%@", fileUrl);
         if (completion) {
@@ -500,7 +506,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         if (_uploadDelegate) {
             [_uploadDelegate uploadManager:self uploadOfFile:[fileUrl absoluteString] completedWithError:[NSError generateSBBNotAFileURLErrorForURL:fileUrl]];
         }
-        return;
+        return nil;
     }
     
     // make a temp copy with a unique name
@@ -509,7 +515,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         if (completion) {
             completion([NSError generateSBBTempFileErrorForURL:fileUrl]);
         }
-        return;
+        return nil;
     }
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         [self setCompletionBlock:completion forFile:[tempFileURL path]];
@@ -530,7 +536,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         if (completion) {
             completion([NSError generateSBBTempFileReadErrorForURL:fileUrl]);
         }
-        return;
+        return nil;
     }
     SBBUploadRequest *uploadRequest = [SBBUploadRequest new];
     uploadRequest.name = name;
@@ -547,6 +553,8 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     
     // while we're at it, see if there are any uploads due for a retry after getting a 503 status code from S3 or an error from Bridge.
     [self retryUploadsAfterDelay];
+    
+    return tempFileURL;
 }
 
 // This presumes uploadFileToBridge:contentType:completion: was called to set things up for this file,
