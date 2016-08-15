@@ -78,6 +78,7 @@
 /* Begin PBXBuildFile section */
 		600F888A1D42DDC700DAD563 /* SBBUploadManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */; };
 		601E8A101B191DAE00BB02FB /* MockURLSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 601E8A0F1B191DAE00BB02FB /* MockURLSession.m */; };
+		601F7CB51D6246DC00C5FE09 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 601F7CB41D6246DC00C5FE09 /* MobileCoreServices.framework */; };
 		602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */; };
 		602EEE631A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */; };
 		606FDE141A23E84800898466 /* ModelObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE131A23E84800898466 /* ModelObjectInternal.h */; };
@@ -435,6 +436,7 @@
 		600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBUploadManagerUnitTests.m; sourceTree = "<group>"; };
 		601E8A0E1B191DAE00BB02FB /* MockURLSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockURLSession.h; sourceTree = "<group>"; };
 		601E8A0F1B191DAE00BB02FB /* MockURLSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockURLSession.m; sourceTree = "<group>"; };
+		601F7CB41D6246DC00C5FE09 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManagerUnitTests.m; sourceTree = "<group>"; };
 		606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCryptor.xcodeproj; path = Submodules/RNCryptor/RNCryptor.xcodeproj; sourceTree = "<group>"; };
 		606FDE0B1A1D70ED00898466 /* generate_namespace_header.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_namespace_header.sh; sourceTree = "<group>"; };
@@ -760,6 +762,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				601F7CB51D6246DC00C5FE09 /* MobileCoreServices.framework in Frameworks */,
 				8026D6A019EC46E3008942B0 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -971,6 +974,7 @@
 		80855F4619BE258B006601C7 = {
 			isa = PBXGroup;
 			children = (
+				601F7CB41D6246DC00C5FE09 /* MobileCoreServices.framework */,
 				8026D69E19EC465B008942B0 /* libz.dylib */,
 				80C3D07419DCA03C00DEA044 /* BridgeSDK.hdoc */,
 				80E09AD619F8525C00EB5F0B /* hdocExcludes.txt */,
