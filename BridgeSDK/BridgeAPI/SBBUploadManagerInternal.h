@@ -35,6 +35,7 @@ extern NSString * const kSBBUploadAPI;
 extern NSString * const kSBBUploadCompleteAPIFormat;
 extern NSString * const kSBBUploadStatusAPIFormat;
 
+extern NSString * const kUploadFilesKey;
 extern NSString * const kSBBUploadRetryAfterDelayKey;
 
 extern NSTimeInterval kSBBDelayForRetries;
@@ -46,6 +47,7 @@ extern NSTimeInterval kSBBDelayForRetries;
 - (void)setUploadRequestJSON:(id)json forFile:(NSString *)fileURLString;
 - (void)setUploadSessionJSON:(id)json forFile:(NSString *)fileURLString;
 - (void)retryUploadsAfterDelay;
+- (NSURL *)tempFileForUploadFileToBridge:(NSURL *)fileUrl contentType:(NSString *)contentType completion:(SBBUploadManagerCompletionBlock)completion;
 - (void)checkAndRetryOrphanedUploads;
 - (void)cleanUpTempFile:(NSString *)tempFilePath;
 

@@ -42,6 +42,7 @@
 #import "SBBErrors.h"
 #import "BridgeSDKInternal.h"
 #import "NSDate+SBBAdditions.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 #define UPLOAD_API GLOBAL_API_PREFIX @"/uploads"
 #define UPLOAD_STATUS_API GLOBAL_API_PREFIX @"/uploadstatuses"
@@ -50,7 +51,7 @@ NSString * const kSBBUploadAPI =                 UPLOAD_API;
 NSString * const kSBBUploadCompleteAPIFormat =   UPLOAD_API @"/%@/complete";
 NSString * const kSBBUploadStatusAPIFormat =     UPLOAD_STATUS_API @"/%@";
 
-static NSString *kUploadFilesKey = @"SBBUploadFilesKey";
+NSString * const kUploadFilesKey = @"SBBUploadFilesKey";
 static NSString *kUploadRequestsKey = @"SBBUploadRequestsKey";
 static NSString *kUploadSessionsKey = @"SBBUploadSessionsKey";
 NSString * const kSBBUploadRetryAfterDelayKey = @"SBBUploadRetryAfterDelayKey";
@@ -143,11 +144,16 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     }
     
     if (tempFileURL) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSMutableDictionary *filesForTempFiles = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
-        [filesForTempFiles setObject:[fileURL path] forKey:[tempFileURL path]];
-        [defaults setObject:filesForTempFiles forKey:kUploadFilesKey];
-        [defaults synchronize];
+        [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSMutableDictionary *filesForTempFiles = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
+            if (!filesForTempFiles) {
+                filesForTempFiles = [NSMutableDictionary dictionary];
+            }
+            [filesForTempFiles setObject:[fileURL path] forKey:[tempFileURL path]];
+            [defaults setObject:filesForTempFiles forKey:kUploadFilesKey];
+            [defaults synchronize];
+        }];
     }
     
     return tempFileURL;
@@ -163,15 +169,20 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     return file;
 }
 
+- (void)removeFileForTempFile:(NSString *)tempFilePath
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *files = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
+    [files removeObjectForKey:tempFilePath];
+    [defaults setObject:files forKey:kUploadFilesKey];
+    [defaults synchronize];
+}
+
 - (void)cleanUpTempFile:(NSString *)tempFilePath
 {
     if (tempFilePath.length) {
         // remove it from the upload files map
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        NSMutableDictionary *files = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
-        [files removeObjectForKey:tempFilePath];
-        [defaults setObject:files forKey:kUploadFilesKey];
-        [defaults synchronize];
+        [self removeFileForTempFile:tempFilePath];
         
         // delete the temp file
         NSURL *tempFile = [NSURL fileURLWithPath:tempFilePath];
@@ -490,7 +501,25 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     }
 }
 
+- (void)uploadFileToBridge:(NSURL *)fileUrl completion:(SBBUploadManagerCompletionBlock)completion
+{
+    NSString *extension = fileUrl.pathExtension;
+    NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)extension, NULL);
+    NSString *contentType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
+    if (!contentType) {
+        contentType = @"application/octet-stream";
+    }
+    
+    [self uploadFileToBridge:fileUrl contentType:contentType completion:completion];
+}
+
 - (void)uploadFileToBridge:(NSURL *)fileUrl contentType:(NSString *)contentType completion:(SBBUploadManagerCompletionBlock)completion
+{
+    [self tempFileForUploadFileToBridge:fileUrl contentType:contentType completion:completion];
+}
+
+// internal method returns temp file URL for unit tests
+- (NSURL *)tempFileForUploadFileToBridge:(NSURL *)fileUrl contentType:(NSString *)contentType completion:(SBBUploadManagerCompletionBlock)completion
 {
     if (![fileUrl isFileURL] || ![[NSFileManager defaultManager] isReadableFileAtPath:[fileUrl path]]) {
         NSLog(@"Attempting to upload an URL that's not a readable file URL:\n%@", fileUrl);
@@ -500,7 +529,13 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         if (_uploadDelegate) {
             [_uploadDelegate uploadManager:self uploadOfFile:[fileUrl absoluteString] completedWithError:[NSError generateSBBNotAFileURLErrorForURL:fileUrl]];
         }
-        return;
+        return nil;
+    }
+    
+    // if we already "know" about this upload, don't add it again; if it's hung up somehow, the orphaned file checking will catch it
+    NSArray *uploadFiles = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadFilesKey].allValues;
+    if ([uploadFiles containsObject:fileUrl]) {
+        return nil;
     }
     
     // make a temp copy with a unique name
@@ -509,7 +544,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         if (completion) {
             completion([NSError generateSBBTempFileErrorForURL:fileUrl]);
         }
-        return;
+        return nil;
     }
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         [self setCompletionBlock:completion forFile:[tempFileURL path]];
@@ -530,7 +565,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         if (completion) {
             completion([NSError generateSBBTempFileReadErrorForURL:fileUrl]);
         }
-        return;
+        return nil;
     }
     SBBUploadRequest *uploadRequest = [SBBUploadRequest new];
     uploadRequest.name = name;
@@ -545,8 +580,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
     }];
     
-    // while we're at it, see if there are any uploads due for a retry after getting a 503 status code from S3 or an error from Bridge.
-    [self retryUploadsAfterDelay];
+    return tempFileURL;
 }
 
 // This presumes uploadFileToBridge:contentType:completion: was called to set things up for this file,
@@ -600,19 +634,92 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     }];
 }
 
+- (void)retryOrphanedUploadFromScratch:(NSString *)filePath
+{
+    NSFileManager *fileMan = [NSFileManager defaultManager];
+    if ([fileMan fileExistsAtPath:filePath]) {
+        // on the off chance the original completion block is still around...
+        SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
+        
+        // if there's no old completion handler, get the old "original" file and delete it; the temp file is our new original
+        if (!completion) {
+            NSString *originalFile = [self fileForTempFile:filePath];
+            if (originalFile.length) {
+                if  ([fileMan fileExistsAtPath:originalFile]) {
+                    [fileMan removeItemAtPath:originalFile error:nil];
+                }
+                
+                // also remove it from the upload files map
+                [self removeFileForTempFile:filePath];
+            }
+            
+        }
+        
+        // let the SDK figure out the contentType
+        [self uploadFileToBridge:[NSURL fileURLWithPath:filePath] completion:^(NSError *error) {
+            if (!error) {
+                // now that it's been uploaded, delete it
+                NSURL *fileUrl = [NSURL fileURLWithPath:filePath];
+                if  (!fileUrl) {
+                    NSLog(@"Could not create NSURL for file %@", filePath);
+                }
+                NSError *error;
+                if (![fileMan removeItemAtURL:fileUrl error:&error]) {
+                    NSLog(@"Failed to remove file %@, error:\n%@", filePath, error);
+                }
+            }
+            
+            if (completion) {
+                completion(error);
+            }
+        }];
+    } else {
+        // ¯\_(ツ)_/¯
+        NSLog(@"File %@ no longer exists, removing from upload files", filePath);
+        [self cleanUpTempFile:filePath];
+    }
+}
+
+- (NSArray<NSURL *> *)filesUnderDirectory:(NSURL *)baseDir
+{
+    NSFileManager *fileMan = [NSFileManager defaultManager];
+    NSDirectoryEnumerator *directoryEnumerator =
+    [fileMan enumeratorAtURL:baseDir
+  includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey]
+                     options:NSDirectoryEnumerationSkipsHiddenFiles
+                errorHandler:nil];
+    
+    NSMutableArray<NSURL *> *mutableFileURLs = [NSMutableArray array];
+    for (NSURL *fileURL in directoryEnumerator) {
+        NSNumber *isDirectory = nil;
+        [fileURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
+        
+        if (![isDirectory boolValue]) {
+            [mutableFileURLs addObject:fileURL];
+        }
+    }
+    
+    return [mutableFileURLs copy];
+}
+
 - (void)checkAndRetryOrphanedUploads
 {
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSFileManager *fileMan = [NSFileManager defaultManager];
+        NSMutableSet *filesRetrying = [NSMutableSet set];
         
         // assume any outstanding upload requests without corresponding upload sessions whose files are
         // more than a day old are orphaned (note that under some unusual circumstances this may lead
         // to duplication of uploads).
         static const NSTimeInterval oneDay = 24. * 60. * 60.;
+        NSArray *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey].allKeys;
         NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
         NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
         for (NSString *filePath in uploadRequests.allKeys) {
+            if ([filesRetrying containsObject:filePath]) {
+                continue; // skip it, we're already retrying this one
+            }
             if (!uploadSessions[filePath]) {
                 // get the modification date of the file, if it still exists
                 NSDictionary *fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
@@ -628,6 +735,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                         
                         // ok, now do the retry
                         NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
+                        [filesRetrying addObject:filePath];
                         [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
                     }
                 } else {
@@ -640,6 +748,9 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         
         // assume any outstanding upload sessions at or past their expiration date are orphaned
         for (NSString *filePath in uploadSessions.allKeys) {
+            if ([filesRetrying containsObject:filePath]) {
+                continue; // skip it, we're already retrying this one
+            }
             SBBUploadSession *session = [self uploadSessionForFile:filePath];
             if ([session.expires timeIntervalSinceNow] <= 0.) {
                 // clear out the old session info
@@ -653,12 +764,40 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                     [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
                 } else {
                     // earlier version of SDK cleaned up saved UploadRequests prematurely, so just start over
-                    // from scratch if we don't have one, and assume contentType was application/zip
-                    SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
-                    [self uploadFileToBridge:[NSURL fileURLWithPath:filePath] contentType:@"application/zip" completion:completion];
+                    // from scratch if we don't have one
+                    [self retryOrphanedUploadFromScratch:filePath];
                 }
-
+                [filesRetrying addObject:filePath];
             }
+        }
+        
+        // assume any upload files with no upload request and no upload session are orphaned
+        for (NSString *filePath in uploadFiles) {
+            if ([filesRetrying containsObject:filePath]) {
+                continue; // skip it, we're already retrying this one
+            }
+            if (!uploadRequests[filePath] && !uploadSessions[filePath]) {
+                [filesRetrying addObject:filePath];
+                [self retryOrphanedUploadFromScratch:filePath];
+            }
+        }
+        
+        // last but not least, any files lingering in the app support directory that weren't even
+        // in the uploadFiles list (because older versions didn't actually ever put files in that list)
+        // are assumed to be orphaned
+        NSURL *tempDir = [self tempUploadDirURL];
+        NSArray *tempContents = [self filesUnderDirectory:tempDir];
+        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+            return ![uploadFiles containsObject:((NSURL *)evaluatedObject).path];
+        }];
+        
+        NSArray *filesOfInterest = [tempContents filteredArrayUsingPredicate:predicate];
+        for (NSURL *fileURL in filesOfInterest) {
+            if ([filesRetrying containsObject:fileURL.path]) {
+                continue; // skip it, we're already retrying this one
+            }
+            [filesRetrying addObject:fileURL.path];
+            [self retryOrphanedUploadFromScratch:fileURL.path];
         }
     }];
 }
