@@ -33,6 +33,7 @@
 #import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBUploadManagerInternal.h"
 #import "NSDate+SBBAdditions.h"
+#import "NSString+SBBAdditions.h"
 
 static NSString *const kKeySessionId = @"id";
 static NSString *const kKeySessionUrl = @"url";
@@ -62,29 +63,29 @@ static NSString *const kSessionType = @"UploadSession";
 }
 
 - (void)checkFile:(NSURL *)tempFileURL willRetry:(BOOL)willRetryCheck withMessage:(NSString *)message {
-    [self checkFile:tempFileURL willRetry:willRetryCheck withMessage:message cleanUpAfterward:YES];
+    [self checkFile:tempFileURL willRetry:willRetryCheck stillExists:willRetryCheck withMessage:message cleanUpAfterward:YES];
 }
 
-- (void)checkFile:(NSURL *)tempFileURL willRetry:(BOOL)willRetryCheck withMessage:(NSString *)message cleanUpAfterward:(BOOL)cleanUpAfterward {
+- (void)checkFile:(NSURL *)tempFileURL willRetry:(BOOL)willRetryCheck stillExists:(BOOL)stillExists withMessage:(NSString *)message cleanUpAfterward:(BOOL)cleanUpAfterward {
     // make sure this happens on the background session delegate queue
     dispatch_block_t block = ^{
         BOOL willRetry = NO;
-        BOOL fileExists = NO;
+        NSString *tempFilePath = tempFileURL.path;
+        BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:tempFilePath];
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         
         NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
-        NSString *tempFilePath = tempFileURL.path;
-        for (NSString *fileURLString in retryUploads.allKeys) {
-            if ([fileURLString isEqualToString:tempFilePath]) {
+        for (NSString *relativeFilePath in retryUploads.allKeys) {
+            NSString *filePath = [relativeFilePath fullyQualifiedPath];
+            if ([filePath isEqualToString:tempFilePath]) {
                 willRetry = YES;
-                fileExists = [[NSFileManager defaultManager] fileExistsAtPath:fileURLString];
                 if (cleanUpAfterward) {
                     // clean up
                     id <SBBUploadManagerInternalProtocol> uMan = (id <SBBUploadManagerInternalProtocol>)SBBComponent(SBBUploadManager);
-                    [uMan cleanUpTempFile:fileURLString];
-                    [uMan setUploadRequestJSON:nil forFile:fileURLString];
-                    [uMan setUploadSessionJSON:nil forFile:fileURLString];
-                    [retryUploads removeObjectForKey:fileURLString];
+                    [uMan cleanUpTempFile:filePath];
+                    [uMan setUploadRequestJSON:nil forFile:filePath];
+                    [uMan setUploadSessionJSON:nil forFile:filePath];
+                    [retryUploads removeObjectForKey:filePath];
                     [defaults setValue:retryUploads forKey:kSBBUploadRetryAfterDelayKey];
                     [defaults synchronize];
                 }
@@ -93,7 +94,7 @@ static NSString *const kSessionType = @"UploadSession";
             }
         }
         XCTAssert(willRetry == willRetryCheck, @"%@", message);
-        XCTAssert(fileExists == willRetryCheck, @"File for retry exists if retrying, doesn't if not");
+        XCTAssert(fileExists == stillExists, @"%@: File for retry exists if it should, doesn't if not", message);
     };
     
     if ([NSOperationQueue currentQueue] == self.mockBackgroundURLSession.delegateQueue) {
@@ -166,7 +167,7 @@ static NSString *const kSessionType = @"UploadSession";
     // queue up a couple of times to make sure the above stuff has actually completed before we check the retry queue
     [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
         [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
-            [self checkFile:tempFileURL willRetry:YES withMessage:@"Will retry after 503 from upload API" cleanUpAfterward:NO];
+            [self checkFile:tempFileURL willRetry:YES stillExists:YES withMessage:@"Will retry after 503 from upload API" cleanUpAfterward:NO];
             
             // set up mock responses for retry
             // -- set up the UploadRequest response
@@ -455,7 +456,7 @@ static NSString *const kSessionType = @"UploadSession";
 - (void)removeFileURLFromRetryQueue:(NSURL *)fileURL {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
-    [retryUploads removeObjectForKey:fileURL.path];
+    [retryUploads removeObjectForKey:[fileURL.path sandboxRelativePath]];
     [defaults setValue:retryUploads forKey:kSBBUploadRetryAfterDelayKey];
     [defaults synchronize];
 }
@@ -503,12 +504,13 @@ static NSString *const kSessionType = @"UploadSession";
     // queue up a couple of times to make sure the above stuff has actually completed before we check the retry queue
     [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
         [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
-            [self checkFile:tempFileURL willRetry:YES withMessage:@"Would retry after 500 from upload API" cleanUpAfterward:NO];
+            [self checkFile:tempFileURL willRetry:YES stillExists:YES withMessage:@"Would retry after 500 from upload API" cleanUpAfterward:NO];
             
-            // remove it from the retry queue to 'orphan' it
+            // remove it from the retry queue and backdate the file two days to 'orphan' it
             [self removeFileURLFromRetryQueue:tempFileURL];
+            [[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate:[NSDate dateWithTimeIntervalSinceNow:-2.*86400.]} ofItemAtPath:tempFileURL.path error:nil];
             
-            [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully removed file from retry queue" cleanUpAfterward:NO];
+            [self checkFile:tempFileURL willRetry:NO stillExists:YES withMessage:@"Successfully removed file from retry queue" cleanUpAfterward:NO];
             
             // step 2: now checkAndRetryOrphanedUploads and make sure it uploads; we left the saved completion handler
             // in place so we know it's done when it gets there without errors
@@ -599,12 +601,12 @@ static NSString *const kSessionType = @"UploadSession";
     [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
         [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
             [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
-                [self checkFile:tempFileURL willRetry:YES withMessage:@"Would retry after 503 from S3" cleanUpAfterward:NO];
+                [self checkFile:tempFileURL willRetry:YES stillExists:YES withMessage:@"Would retry after 503 from S3" cleanUpAfterward:NO];
                 
                 // remove it from the retry queue to 'orphan' it
                 [self removeFileURLFromRetryQueue:tempFileURL];
                 
-                [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully removed file from retry queue" cleanUpAfterward:NO];
+                [self checkFile:tempFileURL willRetry:NO stillExists:YES withMessage:@"Successfully removed file from retry queue" cleanUpAfterward:NO];
                 
                 // step 2: now checkAndRetryOrphanedUploads and make sure it uploads; we left the saved completion handler
                 // in place so we know it's done when it gets there without errors

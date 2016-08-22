@@ -10,17 +10,6 @@
 
 @implementation NSString (SBBAdditions)
 
-- (NSString *)currentSandboxPath
-{
-    static NSString *currentSandboxPath;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *tmpDirPath = NSTemporaryDirectory();
-        currentSandboxPath = [tmpDirPath stringByDeletingLastPathComponent]; // remove the /tmp to get the sandbox
-    });
-    
-    return currentSandboxPath;
-}
 
 - (NSRegularExpression *)sandboxRegex
 {
@@ -28,8 +17,23 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString *sandboxPath = [self currentSandboxPath];
-        NSString *regexPattern = [NSString stringWithFormat:@"^\Q%@/\E%@", [sandboxPath stringByDeletingLastPathComponent], UUID_REGEX_PATTERN];
+        NSString *sandboxPath = NSHomeDirectory();
+        
+        // simulator and device have the app uuid in a different location in the path,
+        // and it might change in the future, so:
+        NSRegularExpression *findUUIDRegex = [NSRegularExpression regularExpressionWithPattern:UUID_REGEX_PATTERN options:0 error:nil];
+        NSRange rangeOfUUID = [findUUIDRegex rangeOfFirstMatchInString:sandboxPath options:0 range:NSMakeRange(0, sandboxPath.length)];
+        NSString *beforeUUID = [sandboxPath substringToIndex:rangeOfUUID.location];
+        NSString *afterUUID = [sandboxPath substringFromIndex:rangeOfUUID.location + rangeOfUUID.length];
+        NSString *regexPattern = @"^";
+        NSString *quotedFormat = @"\\Q%@\\E";
+        if (beforeUUID.length) {
+            regexPattern = [regexPattern stringByAppendingFormat:quotedFormat, beforeUUID];
+        }
+        regexPattern = [regexPattern stringByAppendingString:UUID_REGEX_PATTERN];
+        if (afterUUID.length) {
+            regexPattern = [regexPattern stringByAppendingFormat:quotedFormat, afterUUID];
+        }
         regex = [NSRegularExpression regularExpressionWithPattern:regexPattern options:0 error:nil];
     });
     
@@ -51,7 +55,7 @@
     if (range.location != NSNotFound) {
         return self;
     }
-    return [[self currentSandboxPath] stringByAppendingPathComponent:self];
+    return [NSHomeDirectory() stringByAppendingPathComponent:self];
 }
 
 - (BOOL)isEquivalentToPath:(NSString *)path
