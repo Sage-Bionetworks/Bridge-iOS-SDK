@@ -79,6 +79,8 @@
 		600F888A1D42DDC700DAD563 /* SBBUploadManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */; };
 		601E8A101B191DAE00BB02FB /* MockURLSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 601E8A0F1B191DAE00BB02FB /* MockURLSession.m */; };
 		601F7CB51D6246DC00C5FE09 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 601F7CB41D6246DC00C5FE09 /* MobileCoreServices.framework */; };
+		601F7D1C1D67C03400C5FE09 /* NSString+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 601F7D1A1D67C03400C5FE09 /* NSString+SBBAdditions.h */; };
+		601F7D1D1D67C03400C5FE09 /* NSString+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */; };
 		602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */; };
 		602EEE631A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */; };
 		606FDE141A23E84800898466 /* ModelObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE131A23E84800898466 /* ModelObjectInternal.h */; };
@@ -437,6 +439,8 @@
 		601E8A0E1B191DAE00BB02FB /* MockURLSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockURLSession.h; sourceTree = "<group>"; };
 		601E8A0F1B191DAE00BB02FB /* MockURLSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockURLSession.m; sourceTree = "<group>"; };
 		601F7CB41D6246DC00C5FE09 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		601F7D1A1D67C03400C5FE09 /* NSString+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBBAdditions.h"; sourceTree = "<group>"; };
+		601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBBAdditions.m"; sourceTree = "<group>"; };
 		602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManagerUnitTests.m; sourceTree = "<group>"; };
 		606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCryptor.xcodeproj; path = Submodules/RNCryptor/RNCryptor.xcodeproj; sourceTree = "<group>"; };
 		606FDE0B1A1D70ED00898466 /* generate_namespace_header.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_namespace_header.sh; sourceTree = "<group>"; };
@@ -888,6 +892,8 @@
 				80D517341CADD0A8002D2C06 /* NSObject+SBBAdditions.m */,
 				80DB99211CC01BD300B56EAE /* NSManagedObject+SBBAdditions.h */,
 				80DB99271CC01BE700B56EAE /* NSManagedObject+SBBAdditions.m */,
+				601F7D1A1D67C03400C5FE09 /* NSString+SBBAdditions.h */,
+				601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -1303,6 +1309,7 @@
 				800E797719ED7BCB00EEE612 /* SBBSurveyRule.h in Headers */,
 				807AE2FA1B62E98C002588BB /* SBBSurveyResponseReference.h in Headers */,
 				807AE2D51B61AE76002588BB /* SBBUserManagerInternal.h in Headers */,
+				601F7D1C1D67C03400C5FE09 /* NSString+SBBAdditions.h in Headers */,
 				800E793319ED740F00EEE612 /* _SBBDurationConstraints.h in Headers */,
 				80BA3D8F1C3F19A100AA70FB /* _SBBConsentSignature.h in Headers */,
 				80C87F0D1C18E61000FE8A63 /* SBBDataGroups.h in Headers */,
@@ -1804,6 +1811,7 @@
 				8026BD1219C7532D0077F3EB /* UICKeyChainStore.m in Sources */,
 				8026D68319E87CF6008942B0 /* NSData+SBBAdditions.m in Sources */,
 				8051DCDC1A1E6FDB0068D06E /* RNCryptor.m in Sources */,
+				601F7D1D1D67C03400C5FE09 /* NSString+SBBAdditions.m in Sources */,
 				80F7C34419E5DC0D00574800 /* _SBBSurvey.m in Sources */,
 				80E8196B1A83E89E00513919 /* _SBBSurveyInfoScreen.m in Sources */,
 				807AE2EB1B62E8C3002588BB /* _SBBSurveyResponseReference.m in Sources */,

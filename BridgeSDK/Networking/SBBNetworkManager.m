@@ -698,7 +698,7 @@ NSString *kAPIPrefix = @"webservices";
 
 - (void)performBlockOnBackgroundDelegateQueue:(void (^)(void))block
 {
-    NSOperationQueue *bgQueue = _backgroundSession.delegateQueue;
+    NSOperationQueue *bgQueue = self.backgroundSession.delegateQueue;
     if (bgQueue) {
         [bgQueue addOperationWithBlock:block];
     } else {
