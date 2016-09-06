@@ -146,7 +146,9 @@
     NSString *appName = [[[NSBundle mainBundle] localizedInfoDictionary]
                          objectForKey:@"CFBundleDisplayName"] ?:
     [mainBundle objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
-    NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSString *version = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *build = NSBundle.mainBundle.appVersion;
+    NSString *appVersion = [NSString stringWithFormat: @"version %@.%@", version, build];
     
     NSString *localizedFormat = NSLocalizedStringWithDefaultValue(@"SBB_ERROR_UNSUPPORTED_APP_VERSION", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Version %1$@ of %2$@ is no longer supported. Please visit the app store to update your app.", @"Error Description: App {version} of {app name} requires upgrade");
     
