@@ -18,6 +18,9 @@
 
 BOOL gSBBUseCache = NO;
 
+NSInteger gSBBCacheDaysAhead = 0;
+NSInteger gSBBCacheDaysBehind = 0;
+
 static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 @interface SBBCacheManager ()<NSCacheDelegate>

@@ -34,6 +34,10 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBCacheManager.h"
 
+const NSInteger SBBDefaultCacheDaysAhead = 4;
+const NSInteger SBBDefaultCacheDaysBehind = 7;
+const NSInteger SBBMaxSupportedCacheDays = 30;
+
 @implementation BridgeSDK
 
 + (void)setupWithStudy:(NSString *)study
@@ -61,6 +65,20 @@
     gSBBAppStudy = study;
     gSBBDefaultEnvironment = environment;
     gSBBUseCache = useCache;
+    gSBBCacheDaysAhead = SBBDefaultCacheDaysAhead;
+    gSBBCacheDaysBehind = SBBDefaultCacheDaysBehind;
+    
+    // make sure the Bridge network manager is set up as the delegate for the background session
+    [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
+}
+
++ (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment
+{
+    gSBBAppStudy = study;
+    gSBBDefaultEnvironment = environment;
+    gSBBUseCache = cacheDaysAhead > 0 || cacheDaysBehind > 0;
+    gSBBCacheDaysAhead = MIN(SBBMaxSupportedCacheDays, cacheDaysAhead);
+    gSBBCacheDaysBehind = MIN(SBBMaxSupportedCacheDays, cacheDaysBehind);
     
     // make sure the Bridge network manager is set up as the delegate for the background session
     [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
