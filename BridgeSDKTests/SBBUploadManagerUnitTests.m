@@ -97,14 +97,7 @@ static NSString *const kSessionType = @"UploadSession";
         XCTAssert(fileExists == stillExists, @"%@: File for retry exists if it should, doesn't if not", message);
     };
     
-    if ([NSOperationQueue currentQueue] == self.mockBackgroundURLSession.delegateQueue) {
-        // already there--just do it
-        block();
-    } else {
-        // toss it in the background session delegate queue and wait for it to finish
-        NSOperation *op = [NSBlockOperation blockOperationWithBlock:block];
-        [self.mockBackgroundURLSession.delegateQueue addOperations:@[op] waitUntilFinished:YES];
-    }
+    [self.mockBackgroundURLSession doSyncInDelegateQueue:block];
 }
 
 - (void)testUploadFileToBridgeWhenUploadRequestFails {
@@ -143,6 +136,22 @@ static NSString *const kSessionType = @"UploadSession";
     tempFileURL = [uMan tempFileForUploadFileToBridge:uploadFileURL contentType:@"image/jpeg" completion:^(NSError *error) {
         XCTAssert(!error, "Completed retry of upload without error");
         [self checkFile:tempFileURL willRetry:NO withMessage:@"No longer in retry queue after successful retry"];
+        
+        // make sure we didn't generate any spurious uploads or retries
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary *retryUploads = [defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey];
+        NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
+        NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
+        NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
+        XCTAssert(retryUploads.count == 0, @"No files left in retry-time map");
+        XCTAssert(uploadFiles.count == 0, @"No files left in temp-file-to-original-file map");
+        XCTAssert(uploadRequests.count == 0, @"No files left in temp-file-to-upload-request map");
+        XCTAssert(uploadSessions.count == 0, @"No files left in temp-file-to-upload-session map");
+        
+        // make sure we didn't leave any unreferenced files lying around in the temp upload dir
+        NSURL *tempDir = [uMan tempUploadDirURL];
+        NSArray *tempContents = [uMan filesUnderDirectory:tempDir];
+        XCTAssert(tempContents.count == 0, @"No files left in temp upload dir");
         
         // make sure all the mock response stuff got "used up"
         for (NSString *key in self.mockBackgroundURLSession.jsonForEndpoints.allKeys) {
@@ -204,81 +213,14 @@ static NSString *const kSessionType = @"UploadSession";
 
 }
 
-- (void)testUploadFileToBridgeWhenS3UploadExpired {
-    // test when the session is expired:
-    // -- set up the mock UploadRequest response
-    NSString *s3url = @"/not-a-real-pre-signed-S3-url";
-    NSString *sessionGuid = @"not-a-real-guid";
-    NSDictionary *responseDict = @{kKeySessionId:sessionGuid, kKeySessionUrl:s3url, kKeySessionExpires:[[NSDate dateWithTimeIntervalSinceNow:-86400] ISO8601String], kKeyType:@"UploadSession"};
-    NSString *endpoint = kSBBUploadAPI;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:201 forEndpoint:endpoint andMethod:@"POST"];
-    NSURL *downloadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"upload-request-expired" withExtension:@"json"];
-    [self.mockBackgroundURLSession setDownloadFileURL:downloadFileURL andError:nil forEndpoint:endpoint andMethod:@"POST"];
-    
-    // -- set up the mock S3 upload timed-out response
-    responseDict = @{};
-    endpoint = s3url;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:403 forEndpoint:endpoint andMethod:@"PUT"];
-    
-    // -- it will immediately retry, so set up the retry UploadRequest response
-    responseDict = @{kKeySessionId:@"not-a-real-guid", kKeySessionUrl:s3url, kKeySessionExpires:[[NSDate dateWithTimeIntervalSinceNow:86400] ISO8601String], kKeyType:@"UploadSession"};
-    endpoint = kSBBUploadAPI;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:201 forEndpoint:endpoint andMethod:@"POST"];
-    downloadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"upload-request-success" withExtension:@"json"];
-    [self.mockBackgroundURLSession setDownloadFileURL:downloadFileURL andError:nil forEndpoint:endpoint andMethod:@"POST"];
-    
-    // -- set up the mock S3 upload success response
-    responseDict = @{};
-    endpoint = s3url;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"PUT"];
-    
-    // -- set up the mock upload completed response
-    responseDict = nil;
-    endpoint = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, sessionGuid];
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
-    downloadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"empty-response-body" withExtension:@"json"];
-    [self.mockBackgroundURLSession setDownloadFileURL:downloadFileURL andError:nil forEndpoint:endpoint andMethod:@"POST"];
-
-    // -- try it
-    XCTestExpectation *expectRetried = [self expectationWithDescription:@"retried immediately after 403"];
-    NSURL *uploadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cat" withExtension:@"jpg"];
-    id<SBBUploadManagerInternalProtocol> uMan = (id<SBBUploadManagerInternalProtocol>)SBBComponent(SBBUploadManager);
-    __block NSURL *tempFileURL = [uMan tempFileForUploadFileToBridge:uploadFileURL contentType:@"image/jpeg" completion:^(NSError *error) {
-        if (error) {
-            NSLog(@"Error uploading file to Bridge:\n%@", error);
-        }
-        XCTAssert(!error, @"No error in completion handler, as expected");
-        
-        [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully retried after 403 from S3 and no longer awaiting retry"];
-        
-        // make sure all the mock response stuff got "used up"
-        for (NSString *key in self.mockBackgroundURLSession.jsonForEndpoints.allKeys) {
-            NSDictionary *jsonForEndpoint = self.mockBackgroundURLSession.jsonForEndpoints[key];
-            XCTAssert(jsonForEndpoint.count == 0, @"Used up all the json for endpoints");
-        }
-        for (NSString *key in self.mockBackgroundURLSession.codesForEndpoints.allKeys) {
-            NSDictionary *codesForEndpoint = self.mockBackgroundURLSession.codesForEndpoints[key];
-            XCTAssert(codesForEndpoint.count == 0, @"Used up all the status codes for endpoints");
-        }
-        for (NSString *key in self.mockBackgroundURLSession.URLSForEndpoints.allKeys) {
-            NSDictionary *URLSForEndpoint = self.mockBackgroundURLSession.URLSForEndpoints[key];
-            XCTAssert(URLSForEndpoint.count == 0, @"Used up all the download file URLs for endpoints");
-        }
-        for (NSString *key in self.mockBackgroundURLSession.errorsForEndpoints.allKeys) {
-            NSDictionary *errorsForEndpoint = self.mockBackgroundURLSession.errorsForEndpoints[key];
-            XCTAssert(errorsForEndpoint.count == 0, @"Used up all the NSErrors for endpoints");
-        }
-        [expectRetried fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:500.0 handler:^(NSError *error) {
-        if (error) {
-            NSLog(@"Timeout uploading file: %@", error);
-        }
-    }];
+- (void)testUploadFileToBridgeWhenS3RespondsWithVariousFailuresThatShouldRetryLater {
+    [self testUploadFileToBridgeWhenS3Responds:403]; // pre-signed url expired
+    [self testUploadFileToBridgeWhenS3Responds:409]; // ?? but should retry
+    [self testUploadFileToBridgeWhenS3Responds:500]; // server error
+    [self testUploadFileToBridgeWhenS3Responds:503]; // too many requests--slow down
 }
 
-- (void)testUploadFileToBridgeWhenS3Responds500 {
+- (void)testUploadFileToBridgeWhenS3Responds:(NSInteger)status {
     // -- set up the mock UploadRequest response
     NSString *s3url = @"/not-a-real-pre-signed-S3-url";
     NSString *sessionGuid = @"not-a-real-guid";
@@ -288,86 +230,13 @@ static NSString *const kSessionType = @"UploadSession";
     NSURL *downloadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"upload-request-expired" withExtension:@"json"];
     [self.mockBackgroundURLSession setDownloadFileURL:downloadFileURL andError:nil forEndpoint:endpoint andMethod:@"POST"];
     
-    // -- set up the mock S3 upload timed-out response
+    // -- set up the mock S3 upload failed response
     responseDict = @{};
     endpoint = s3url;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:500 forEndpoint:endpoint andMethod:@"PUT"];
-    
-    // -- it will immediately retry, so set up the retry UploadRequest response
-    responseDict = @{kKeySessionId:@"not-a-real-guid", kKeySessionUrl:s3url, kKeySessionExpires:[[NSDate dateWithTimeIntervalSinceNow:86400] ISO8601String], kKeyType:@"UploadSession"};
-    endpoint = kSBBUploadAPI;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:201 forEndpoint:endpoint andMethod:@"POST"];
-    downloadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"upload-request-success" withExtension:@"json"];
-    [self.mockBackgroundURLSession setDownloadFileURL:downloadFileURL andError:nil forEndpoint:endpoint andMethod:@"POST"];
-    
-    // -- set up the mock S3 upload success response
-    responseDict = @{};
-    endpoint = s3url;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"PUT"];
-    
-    // -- set up the mock upload completed response
-    responseDict = nil;
-    endpoint = [NSString stringWithFormat:kSBBUploadCompleteAPIFormat, sessionGuid];
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"POST"];
-    downloadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"empty-response-body" withExtension:@"json"];
-    [self.mockBackgroundURLSession setDownloadFileURL:downloadFileURL andError:nil forEndpoint:endpoint andMethod:@"POST"];
+    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:status forEndpoint:endpoint andMethod:@"PUT"];
     
     // -- try it
-    XCTestExpectation *expectRetried = [self expectationWithDescription:@"retried immediately after 403"];
-    NSURL *uploadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cat" withExtension:@"jpg"];
-    id<SBBUploadManagerInternalProtocol> uMan = (id<SBBUploadManagerInternalProtocol>)SBBComponent(SBBUploadManager);
-    __block NSURL *tempFileURL = [uMan tempFileForUploadFileToBridge:uploadFileURL contentType:@"image/jpeg" completion:^(NSError *error) {
-        if (error) {
-            NSLog(@"Error uploading file to Bridge:\n%@", error);
-        }
-        XCTAssert(!error, @"No error in completion handler, as expected");
-        
-        [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully retried after 500 from S3 and no longer awaiting retry"];
-        
-        // make sure all the mock response stuff got "used up"
-        for (NSString *key in self.mockBackgroundURLSession.jsonForEndpoints.allKeys) {
-            NSDictionary *jsonForEndpoint = self.mockBackgroundURLSession.jsonForEndpoints[key];
-            XCTAssert(jsonForEndpoint.count == 0, @"Used up all the json for endpoints");
-        }
-        for (NSString *key in self.mockBackgroundURLSession.codesForEndpoints.allKeys) {
-            NSDictionary *codesForEndpoint = self.mockBackgroundURLSession.codesForEndpoints[key];
-            XCTAssert(codesForEndpoint.count == 0, @"Used up all the status codes for endpoints");
-        }
-        for (NSString *key in self.mockBackgroundURLSession.URLSForEndpoints.allKeys) {
-            NSDictionary *URLSForEndpoint = self.mockBackgroundURLSession.URLSForEndpoints[key];
-            XCTAssert(URLSForEndpoint.count == 0, @"Used up all the download file URLs for endpoints");
-        }
-        for (NSString *key in self.mockBackgroundURLSession.errorsForEndpoints.allKeys) {
-            NSDictionary *errorsForEndpoint = self.mockBackgroundURLSession.errorsForEndpoints[key];
-            XCTAssert(errorsForEndpoint.count == 0, @"Used up all the NSErrors for endpoints");
-        }
-        [expectRetried fulfill];
-    }];
-    
-    [self waitForExpectationsWithTimeout:500.0 handler:^(NSError *error) {
-        if (error) {
-            NSLog(@"Timeout uploading file: %@", error);
-        }
-    }];
-}
-
-- (void)testUploadFileToBridgeWhenS3Responds503 {
-    // -- set up the mock UploadRequest response
-    NSString *s3url = @"/not-a-real-pre-signed-S3-url";
-    NSString *sessionGuid = @"not-a-real-guid";
-    NSDictionary *responseDict = @{kKeySessionId:sessionGuid, kKeySessionUrl:s3url, kKeySessionExpires:[[NSDate dateWithTimeIntervalSinceNow:-86400] ISO8601String], kKeyType:@"UploadSession"};
-    NSString *endpoint = kSBBUploadAPI;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:201 forEndpoint:endpoint andMethod:@"POST"];
-    NSURL *downloadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"upload-request-expired" withExtension:@"json"];
-    [self.mockBackgroundURLSession setDownloadFileURL:downloadFileURL andError:nil forEndpoint:endpoint andMethod:@"POST"];
-    
-    // -- set up the mock S3 upload timed-out response
-    responseDict = @{};
-    endpoint = s3url;
-    [self.mockBackgroundURLSession setJson:responseDict andResponseCode:503 forEndpoint:endpoint andMethod:@"PUT"];
-    
-    // -- try it
-    XCTestExpectation *expect503 = [self expectationWithDescription:@"in retry queue after 503"];
+    XCTestExpectation *expectStatus = [self expectationWithDescription:@"in retry queue after non-success status"];
     NSURL *uploadFileURL = [[NSBundle bundleForClass:[self class]] URLForResource:@"cat" withExtension:@"jpg"];
     id<SBBUploadManagerInternalProtocol> uMan = (id<SBBUploadManagerInternalProtocol>)SBBComponent(SBBUploadManager);
     __block NSURL *tempFileURL = [uMan tempFileForUploadFileToBridge:uploadFileURL contentType:@"image/jpeg" completion:^(NSError *error) {
@@ -378,14 +247,14 @@ static NSString *const kSessionType = @"UploadSession";
     [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
         [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
             [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
-                [expect503 fulfill];
+                [expectStatus fulfill];
             }];
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:1.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
-            NSLog(@"Timeout uploading file: %@", error);
+            NSLog(@"Timeout waiting for upload failure: %@", error);
         }
     }];
     
@@ -426,6 +295,22 @@ static NSString *const kSessionType = @"UploadSession";
         
         [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully uploaded and not awaiting retry"];
         
+        // make sure we didn't generate any spurious uploads or retries
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary *retryUploads = [defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey];
+        NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
+        NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
+        NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
+        XCTAssert(retryUploads.count == 0, @"No files left in retry-time map");
+        XCTAssert(uploadFiles.count == 0, @"No files left in temp-file-to-original-file map");
+        XCTAssert(uploadRequests.count == 0, @"No files left in temp-file-to-upload-request map");
+        XCTAssert(uploadSessions.count == 0, @"No files left in temp-file-to-upload-session map");
+        
+        // make sure we didn't leave any unreferenced files lying around in the temp upload dir
+        NSURL *tempDir = [uMan tempUploadDirURL];
+        NSArray *tempContents = [uMan filesUnderDirectory:tempDir];
+        XCTAssert(tempContents.count == 0, @"No files left in temp upload dir");
+        
         // make sure all the mock response stuff got "used up"
         for (NSString *key in self.mockBackgroundURLSession.jsonForEndpoints.allKeys) {
             NSDictionary *jsonForEndpoint = self.mockBackgroundURLSession.jsonForEndpoints[key];
@@ -446,7 +331,7 @@ static NSString *const kSessionType = @"UploadSession";
         [expectUploaded fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:500.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout uploading file: %@", error);
         }
@@ -480,6 +365,22 @@ static NSString *const kSessionType = @"UploadSession";
         XCTAssert(!error, @"No error in completion handler, as expected");
         
         [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully uploaded and not awaiting retry"];
+        
+        // make sure we didn't generate any spurious uploads or retries
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary *retryUploads = [defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey];
+        NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
+        NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
+        NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
+        XCTAssert(retryUploads.count == 0, @"No files left in retry-time map");
+        XCTAssert(uploadFiles.count == 0, @"No files left in temp-file-to-original-file map");
+        XCTAssert(uploadRequests.count == 0, @"No files left in temp-file-to-upload-request map");
+        XCTAssert(uploadSessions.count == 0, @"No files left in temp-file-to-upload-session map");
+        
+        // make sure we didn't leave any unreferenced files lying around in the temp upload dir
+        NSURL *tempDir = [uMan tempUploadDirURL];
+        NSArray *tempContents = [uMan filesUnderDirectory:tempDir];
+        XCTAssert(tempContents.count == 0, @"No files left in temp upload dir");
         
         // make sure all the mock response stuff got "used up"
         for (NSString *key in self.mockBackgroundURLSession.jsonForEndpoints.allKeys) {
@@ -577,6 +478,22 @@ static NSString *const kSessionType = @"UploadSession";
         
         [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully uploaded and not awaiting retry"];
         
+        // make sure we didn't generate any spurious uploads or retries
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSDictionary *retryUploads = [defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey];
+        NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
+        NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
+        NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
+        XCTAssert(retryUploads.count == 0, @"No files left in retry-time map");
+        XCTAssert(uploadFiles.count == 0, @"No files left in temp-file-to-original-file map");
+        XCTAssert(uploadRequests.count == 0, @"No files left in temp-file-to-upload-request map");
+        XCTAssert(uploadSessions.count == 0, @"No files left in temp-file-to-upload-session map");
+        
+        // make sure we didn't leave any unreferenced files lying around in the temp upload dir
+        NSURL *tempDir = [uMan tempUploadDirURL];
+        NSArray *tempContents = [uMan filesUnderDirectory:tempDir];
+        XCTAssert(tempContents.count == 0, @"No files left in temp upload dir");
+
         // make sure all the mock response stuff got "used up"
         for (NSString *key in self.mockBackgroundURLSession.jsonForEndpoints.allKeys) {
             NSDictionary *jsonForEndpoint = self.mockBackgroundURLSession.jsonForEndpoints[key];
@@ -603,8 +520,9 @@ static NSString *const kSessionType = @"UploadSession";
             [self.mockBackgroundURLSession.delegateQueue addOperationWithBlock:^{
                 [self checkFile:tempFileURL willRetry:YES stillExists:YES withMessage:@"Would retry after 503 from S3" cleanUpAfterward:NO];
                 
-                // remove it from the retry queue to 'orphan' it
+                // remove it from the retry queue and backdate the file two days to 'orphan' it
                 [self removeFileURLFromRetryQueue:tempFileURL];
+                [[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate:[NSDate dateWithTimeIntervalSinceNow:-2.*86400.]} ofItemAtPath:tempFileURL.path error:nil];
                 
                 [self checkFile:tempFileURL willRetry:NO stillExists:YES withMessage:@"Successfully removed file from retry queue" cleanUpAfterward:NO];
                 
