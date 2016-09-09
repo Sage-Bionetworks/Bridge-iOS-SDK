@@ -181,7 +181,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     [self.authManager addAuthHeaderToHeaders:headers];
     
     // If caching, always request the maximum days ahead from the server so we have them cached
-    // and if the desiredDaysAhead is less that the max allowed, then fetch a minimum number of
+    // and if the desiredDaysAhead is more than the max allowed, then fetch a minimum number of
     // items per schedule.
     NSInteger desiredDaysAhead = gSBBUseCache ? gSBBCacheDaysAhead : daysAhead;
     NSInteger fetchDaysAhead = MIN(kMaxAdvance, desiredDaysAhead);
