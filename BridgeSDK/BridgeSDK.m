@@ -63,7 +63,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 + (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment
 {
     NSInteger cacheDaysAhead = useCache ? SBBDefaultCacheDaysAhead : 0;
-    NSInteger cacheDaysBehind = useCache ? SBBDefaultCacheDaysAhead : 0;
+    NSInteger cacheDaysBehind = useCache ? SBBDefaultCacheDaysBehind : 0;
     [self setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:environment];
 }
 
