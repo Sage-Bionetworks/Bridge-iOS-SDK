@@ -44,7 +44,6 @@
 
 NSString * const kSBBActivityAPI =       ACTIVITY_API;
 NSTimeInterval const kSBB24Hours =       86400;
-NSInteger const     kDaysToCache =       7;
 NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 
 @interface SBBActivityManager()<SBBActivityManagerInternalProtocol>
@@ -146,7 +145,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 
 - (NSArray<SBBScheduledActivity *> *)savedTasksFromCachedTasks:(NSArray<SBBScheduledActivity *> *)cachedTasks
 {
-    return [self filterTasks:cachedTasks forDaysAhead:kMaxAdvance andDaysBehind:kDaysToCache excludeStillValid:YES];
+    return [self filterTasks:cachedTasks forDaysAhead:gSBBCacheDaysAhead andDaysBehind:gSBBCacheDaysBehind excludeStillValid:YES];
 }
 
 - (void)addSavedTasks:(NSArray<SBBScheduledActivity *> *)savedTasks toResourceList:(SBBResourceList *)resourceList
@@ -181,9 +180,16 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     
-    // if caching, always request the maximum days ahead from the server so we have them cached
-    NSInteger fetchDaysAhead = gSBBUseCache ? kMaxAdvance : daysAhead;
-    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:@{@"daysAhead": @(fetchDaysAhead), @"offset": [[NSDate date] ISO8601OffsetString]} completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+    // If caching, always request the maximum days ahead from the server so we have them cached
+    // and if the desiredDaysAhead is more than the max allowed, then fetch a minimum number of
+    // items per schedule.
+    NSInteger desiredDaysAhead = gSBBUseCache ? gSBBCacheDaysAhead : daysAhead;
+    NSInteger fetchDaysAhead = MIN(kMaxAdvance, desiredDaysAhead);
+    NSInteger fetchMinimumPerSchedule = (fetchDaysAhead < desiredDaysAhead) ? kMaxAdvance : 0;
+    NSDictionary *parameters = @{@"daysAhead": @(fetchDaysAhead),
+                                 @"minimumPerSchedule": @(fetchMinimumPerSchedule),
+                                 @"offset": [[NSDate date] ISO8601OffsetString]};
+    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (gSBBUseCache) {
             [self.cacheManager.cacheIOContext performBlock:^{
                 SBBResourceList *tasks = [self cachedTasksFromCacheManager:self.cacheManager];

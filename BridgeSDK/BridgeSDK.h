@@ -71,42 +71,36 @@ extern const unsigned char BridgeSDKVersionString[];
 #define kDefaultEnvironment SBBEnvironmentProd
 #endif
 static SBBEnvironment gDefaultEnvironment = kDefaultEnvironment;
+
+// The default number of days to cache
+extern const NSInteger SBBDefaultCacheDaysAhead;
+extern const NSInteger SBBDefaultCacheDaysBehind;
+
+// The maximum number of days that are supported for caching.
+extern const NSInteger SBBMaxSupportedCacheDays;
   
 @interface BridgeSDK : NSObject
 
 /*!
- * Set up the Bridge SDK for the given study and server environment. Usually you would only call this version
- * of the method from test suites, or if you have a non-DEBUG build configuration that you don't want running against
- * the production server environment. Otherwise call the version of the setupWithStudy: method that doesn't
- * take an environment parameter, and let the SDK use the default environment.
- *
- * This will register a default SBBNetworkManager instance conigured correctly for the specified environment and study.
- * If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
- *
- *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
- *  @param useCache A flag indicating whether to use the SDK's built-in persistent caching. Pass NO if you want to handle this yourself.
- *  @param environment Which server environment to run against.
- */
-+ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment;
-
-/*!
- * Convenience method for setting up the study with caching turned off (default).
- */
-+ (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment;
-
-
-/*!
- * For backward compatibility only. Use setupWithStudy:environment: instead (which this method calls).
- */
-+ (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment __deprecated;
-
-/*!
- * Set up the Bridge SDK for the given study and the appropriate server environment based on whether this is
- * a debug or release build. Usually you would call this at the beginning of your AppDelegate's
- * application:didFinishLaunchingWithOptions: method.
+ * Set up the Bridge SDK for the given study and pointing at the production environment.
+ * Usually you would call this at the beginning of your AppDelegate's application:didFinishLaunchingWithOptions: method.
  *
  * This will register a default SBBNetworkManager instance conigured correctly for the specified study and appropriate
  * server environment. If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
+ *
+ * Caching is turned off if `cacheDaysAhead = 0` AND `cacheDaysBehind = 0`
+ *
+ *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
+ *  @param cacheDaysAhead Number of days ahead to cache.
+ *  @param cacheDaysBehind Number of days behind to cache.
+ */
++ (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind;
+
+/*!
+ * Convenience method for setting up the study with default caching for days ahead and days behind.
+ *
+ * If `useCache` is set to `YES` then this method sets up caching using `SBBDefaultCacheDaysAhead` and 
+ * `SBBDefaultCacheDaysBehind`
  *
  *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
  *  @param useCache A flag indicating whether to use the SDK's built-in persistent caching. Pass NO if you want to handle this yourself.
@@ -119,9 +113,42 @@ static SBBEnvironment gDefaultEnvironment = kDefaultEnvironment;
 + (void)setupWithStudy:(NSString *)study;
 
 /*!
+ * Set up the Bridge SDK for the given study and server environment. Usually you would only call this version
+ * of the method from test suites, or if you have a non-DEBUG build configuration that you don't want running against
+ * the production server environment. Otherwise call the version of the setupWithStudy: method that doesn't
+ * take an environment parameter, and let the SDK use the default environment.
+ *
+ * This will register a default SBBNetworkManager instance conigured correctly for the specified environment and study.
+ * If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
+ *
+ * Caching is turned off if `cacheDaysAhead = 0` AND `cacheDaysBehind = 0`
+ *
+ *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
+ *  @param cacheDaysAhead Number of days ahead to cache.
+ *  @param cacheDaysBehind Number of days behind to cache.
+ *  @param environment Which server environment to run against.
+ */
++ (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment;
+
+/*!
+ * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
+ */
++ (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment __deprecated;
+
+/*!
+ * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
+ */
++ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment __deprecated;
+
+/*!
  * For backward compatibility only. Use setupWithStudy: instead (which this method calls).
  */
 + (void)setupWithAppPrefix:(NSString *)appPrefix __deprecated;
+
+/*!
+ * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
+ */
++ (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment __deprecated;
 
 @end
 
