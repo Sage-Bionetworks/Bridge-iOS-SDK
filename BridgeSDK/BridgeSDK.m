@@ -47,7 +47,9 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 
 + (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache
 {
-    [self setupWithStudy:study useCache:useCache environment:gDefaultEnvironment];
+    NSInteger cacheDaysAhead = useCache ? SBBDefaultCacheDaysAhead : 0;
+    NSInteger cacheDaysBehind = useCache ? SBBDefaultCacheDaysBehind : 0;
+    [self setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:gDefaultEnvironment];
 }
 
 + (void)setupWithAppPrefix:(NSString *)appPrefix
@@ -65,6 +67,11 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
     NSInteger cacheDaysAhead = useCache ? SBBDefaultCacheDaysAhead : 0;
     NSInteger cacheDaysBehind = useCache ? SBBDefaultCacheDaysBehind : 0;
     [self setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:environment];
+}
+
++ (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind
+{
+    [self setupWithStudy:study cacheDaysAhead:cacheDaysAhead cacheDaysBehind:cacheDaysBehind environment:gDefaultEnvironment];
 }
 
 + (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment
