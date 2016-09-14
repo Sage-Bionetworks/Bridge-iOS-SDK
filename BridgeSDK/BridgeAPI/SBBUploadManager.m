@@ -706,7 +706,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                     default:
                         // anything else, retry after a delay
 #if DEBUG
-                        NSLog(@"Request to Bridge for UploadSession failed with HTTP status %ld. Will retry after delay.", statusCode);
+                        NSLog(@"Request to Bridge for UploadSession failed with HTTP status %@. Will retry after delay.", @(statusCode));
 #endif
                         [self setRetryAfterDelayForFile:filePath];
                         break;
