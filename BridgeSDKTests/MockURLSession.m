@@ -12,9 +12,12 @@
 @interface MockURLSession ()
 
 @property (nonatomic, strong) NSOperationQueue *mockDelegateQueue;
+@property (nonatomic, strong) NSMutableArray *mockTasks;
 
 - (NSData *)dataAndResponse:(NSHTTPURLResponse **)response forRequest:(NSURLRequest *)request;
 - (NSURL *)downloadFileURLAndError:(NSError **)error forRequest:(NSURLRequest *)request;
+- (void)addMockTask:(NSURLSessionTask *)task;
+- (void)removeMockTask:(NSURLSessionTask *)task;
 
 @end
 
@@ -56,6 +59,8 @@
     if (_completionHandler) {
         _completionHandler(data, response, error);
     }
+    
+    [_session removeMockTask:self];
 }
 
 @end
@@ -86,6 +91,7 @@
         if (delegate && [delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
             [delegate URLSession:_session task:self didCompleteWithError:nil];
         }
+        [_session removeMockTask:self];
     }];
 }
 
@@ -130,6 +136,7 @@
                 [delegate URLSession:_session task:self didCompleteWithError:nil];
             }
         }
+        [_session removeMockTask:self];
     }];
 }
 
@@ -151,6 +158,7 @@
         _codesForEndpoints = [NSMutableDictionary dictionary];
         _URLSForEndpoints = [NSMutableDictionary dictionary];
         _errorsForEndpoints = [NSMutableDictionary dictionary];
+        _mockTasks = [NSMutableArray array];
     }
     
     return self;
@@ -324,9 +332,37 @@
     return [self pullNextFileURLForKey:key];
 }
 
+- (void)doSyncInDelegateQueue:(dispatch_block_t)block
+{
+    if ([NSOperationQueue currentQueue] == self.delegateQueue) {
+        // already there--just do it
+        block();
+    } else {
+        // toss it in the background session delegate queue and wait for it to finish
+        NSOperation *op = [NSBlockOperation blockOperationWithBlock:block];
+        [self.delegateQueue addOperations:@[op] waitUntilFinished:YES];
+    }
+
+}
+
+- (void)addMockTask:(NSURLSessionTask *)task
+{
+    [self doSyncInDelegateQueue:^{
+        [_mockTasks addObject:task];
+    }];
+}
+
+- (void)removeMockTask:(NSURLSessionTask *)task
+{
+    [self doSyncInDelegateQueue:^{
+        [_mockTasks removeObject:task];
+    }];
+}
+
 - (NSURLSessionDataTask *)dataTaskWithRequest:(NSURLRequest *)request completionHandler:(void (^)(NSData *, NSURLResponse *, NSError *))completionHandler
 {
     MockDataTask *task = [MockDataTask new];
+    [self addMockTask:task];
     task.request = request;
     task.completionHandler = completionHandler;
     task.session = self;
@@ -336,6 +372,7 @@
 - (NSURLSessionUploadTask *)uploadTaskWithRequest:(NSURLRequest *)request fromFile:(NSURL *)fileURL
 {
     MockUploadTask *task = [MockUploadTask new];
+    [self addMockTask:task];
     task.request = request;
     task.session = self;
     return task;
@@ -344,9 +381,17 @@
 - (NSURLSessionDownloadTask *)downloadTaskWithRequest:(NSURLRequest *)request
 {
     MockDownloadTask *task = [MockDownloadTask new];
+    [self addMockTask:task];
     task.request = request;
     task.session = self;
     return task;
+}
+
+- (void)getAllTasksWithCompletionHandler:(void (^)(NSArray<__kindof NSURLSessionTask *> * _Nonnull))completionHandler
+{
+    [self.delegateQueue addOperationWithBlock:^{
+        completionHandler(_mockTasks);
+    }];
 }
 
 - (id<NSURLSessionDelegate>)delegate
