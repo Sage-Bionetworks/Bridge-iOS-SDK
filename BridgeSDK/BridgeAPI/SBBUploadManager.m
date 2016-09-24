@@ -123,6 +123,22 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     return self;
 }
 
++ (SBBObjectManager *)cleanObjectManager
+{
+    static SBBObjectManager *om = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        om = [SBBObjectManager objectManager];
+    });
+    
+    return om;
+}
+
+- (SBBObjectManager *)cleanObjectManager
+{
+    return self.class.cleanObjectManager;
+}
+
 - (void)migrateKeysIfNeeded
 {
     // In olden times we used full file paths as keys. Then we discovered the UUID of the app sandbox (which is part
@@ -354,7 +370,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     SBBUploadRequest *uploadRequest = nil;
     id json = [self uploadRequestJSONForFile:fileURLString];
     if (json) {
-        uploadRequest = [_cleanObjectManager objectFromBridgeJSON:json];
+        uploadRequest = [self.cleanObjectManager objectFromBridgeJSON:json];
     }
     
     return uploadRequest;
@@ -382,7 +398,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     SBBUploadSession *uploadSession = nil;
     id json = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadSessionsKey][[fileURLString sandboxRelativePath]];
     if (json) {
-        uploadSession = [_cleanObjectManager objectFromBridgeJSON:json];
+        uploadSession = [self.cleanObjectManager objectFromBridgeJSON:json];
     }
     
     return uploadSession;
@@ -566,7 +582,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         return;
     }
     
-    SBBUploadSession *uploadSession = [_cleanObjectManager objectFromBridgeJSON:jsonObject];
+    SBBUploadSession *uploadSession = [self.cleanObjectManager objectFromBridgeJSON:jsonObject];
     SBBUploadRequest *uploadRequest = [self uploadRequestForFile:uploadFileURL];
     if (!uploadRequest || !uploadRequest.contentLength || !uploadRequest.contentType || !uploadRequest.contentMd5) {
         NSLog(@"Failed to retrieve upload request headers for temp file %@", uploadFileURL);
@@ -663,10 +679,6 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         [self setCompletionBlock:completion forFile:[tempFileURL path]];
     }];
     
-    if (!_cleanObjectManager) {
-        _cleanObjectManager = [SBBObjectManager objectManager];
-    }
-    
     // default to generic binary file if type not specified
     if (!contentType) {
         contentType = @"application/octet-stream";
@@ -687,7 +699,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     uploadRequest.contentMd5 = [fileData contentMD5];
     NSString *filePath = [tempFileURL path];
     // don't use the shared SBBObjectManager--we want to use only SDK default objects for types
-    NSDictionary *uploadRequestJSON = [_cleanObjectManager bridgeJSONFromObject:uploadRequest];
+    NSDictionary *uploadRequestJSON = [self.cleanObjectManager bridgeJSONFromObject:uploadRequest];
     
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
         [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
