@@ -42,18 +42,25 @@
 
 - (NSString *)sandboxRelativePath
 {
-    NSRange range = [[self sandboxRegex] rangeOfFirstMatchInString:self options:0 range:NSMakeRange(0, self.length)];
-    NSString *sandboxRelativePath = [self substringFromIndex:range.length]; // if it doesn't match the sandbox regex, this will give back self
+    // normalize the path--i.e. /private/var-->/var (see docs for URLByResolvingSymlinksInPath, which removes /private as a special case
+    // even though /var is actually a symlink to /private/var in this case)
+    NSString *normalizedSelf = [[NSURL fileURLWithPath:self] URLByResolvingSymlinksInPath].path;
+    NSRange range = [[self sandboxRegex] rangeOfFirstMatchInString:normalizedSelf options:0 range:NSMakeRange(0, normalizedSelf.length)];
+    NSString *sandboxRelativePath = [normalizedSelf substringFromIndex:range.length]; // if it doesn't match the sandbox regex, this will give back normalizedSelf
     
     return sandboxRelativePath;
 }
 
 - (NSString *)fullyQualifiedPath
 {
+    // normalize the path--i.e. /private/var-->/var (see docs for URLByResolvingSymlinksInPath, which removes /private as a special case
+    // even though /var is actually a symlink to /private/var in this case)
+    NSString *normalizedSelf = [[NSURL fileURLWithPath:self] URLByResolvingSymlinksInPath].path;
+    
     // first see if it's already a full path
-    NSRange range = [[self sandboxRegex] rangeOfFirstMatchInString:self options:0 range:NSMakeRange(0, self.length)];
+    NSRange range = [[self sandboxRegex] rangeOfFirstMatchInString:normalizedSelf options:0 range:NSMakeRange(0, normalizedSelf.length)];
     if (range.location != NSNotFound) {
-        return self;
+        return normalizedSelf;
     }
     return [NSHomeDirectory() stringByAppendingPathComponent:self];
 }
