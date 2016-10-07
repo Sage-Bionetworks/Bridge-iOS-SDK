@@ -1,8 +1,8 @@
 //
-//  SBBBridgeAPIManager.m
+//  SBBBridgeAPIManagerInternal.h
 //  BridgeSDK
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2016, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -29,45 +29,14 @@
 //
 
 #import "SBBBridgeAPIManager.h"
-#import "SBBComponentManager.h"
-#import "SBBAuthManager.h"
-#import "SBBObjectManager.h"
-#import "SBBObjectManagerInternal.h"
-#import "SBBBridgeNetworkManager.h"
+#import "SBBCacheManager.h"
 
-@interface SBBBridgeAPIManager ()
+@protocol SBBBridgeAPIManagerInternalProtocol<SBBBridgeAPIManagerProtocol>
 
-@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
-@property (nonatomic, strong) id<SBBAuthManagerProtocol> authManager;
-@property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
+@property (nonatomic, readonly) id<SBBCacheManagerProtocol> cacheManager;
 
 @end
 
-
-@implementation SBBBridgeAPIManager
-
-+ (instancetype)instanceWithRegisteredDependencies
-{
-  return [self managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
-}
-
-+ (instancetype)managerWithAuthManager:(id<SBBAuthManagerProtocol>)authManager networkManager:(id<SBBBridgeNetworkManagerProtocol>)networkManager objectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-  SBBBridgeAPIManager *manager = [[self alloc] init];
-  manager.networkManager = networkManager;
-  manager.authManager = authManager;
-  manager.objectManager = objectManager;
-  
-  return manager;
-}
-
-- (id<SBBCacheManagerProtocol>)cacheManager
-{
-    id<SBBCacheManagerProtocol> cacheManager = nil;
-    if (gSBBUseCache && [self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
-        cacheManager = ((id<SBBObjectManagerInternalProtocol>)self.objectManager).cacheManager;
-    }
-    return cacheManager;
-}
+@interface SBBBridgeAPIManager()<SBBBridgeAPIManagerInternalProtocol>
 
 @end

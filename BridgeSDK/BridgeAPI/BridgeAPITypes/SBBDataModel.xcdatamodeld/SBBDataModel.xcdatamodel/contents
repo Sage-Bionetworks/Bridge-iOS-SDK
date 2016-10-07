@@ -65,6 +65,9 @@
                 <entry key="attributeValueClassName" value="NSSet&lt;NSString *&gt;"/>
             </userInfo>
         </attribute>
+        <userInfo>
+            <entry key="hasClientWritableFields" value="1"/>
+        </userInfo>
     </entity>
     <entity name="DateConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="allowFuture" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>

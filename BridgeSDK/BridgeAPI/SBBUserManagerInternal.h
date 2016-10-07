@@ -2,9 +2,7 @@
 //  SBBUserManagerInternal.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 7/23/15.
-//
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2015-2016, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -32,6 +30,7 @@
 
 #import "SBBUserManager.h"
 #import "SBBActivityManagerInternal.h"
+#import "SBBBridgeAPIManagerInternal.h"
 
 /* CONSTANTS */
 extern NSString * const kSBBUserProfileAPI;
@@ -43,8 +42,14 @@ extern NSString * const kSBBUserDataGroupsAPI;
 extern NSString * const kSBBUserDataSharingScopeKey;
 extern NSString * const kSBBUserDataSharingScopeStrings[];
 
-@protocol SBBUserManagerInternalProtocol <SBBUserManagerProtocol>
+@protocol SBBUserManagerInternalProtocol <SBBUserManagerProtocol, SBBBridgeAPIManagerInternalProtocol>
 
 @property (nonatomic, strong) id<SBBActivityManagerInternalProtocol> activityManager;
+
+- (void)clearUserInfoFromCache;
+
+@end
+
+@interface SBBUserManager(internal)<SBBUserManagerInternalProtocol>
 
 @end

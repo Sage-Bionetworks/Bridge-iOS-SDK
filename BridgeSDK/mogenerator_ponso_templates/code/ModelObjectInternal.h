@@ -28,4 +28,6 @@
 
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context;
 
++ (NSString *)entityName;
+
 @end
