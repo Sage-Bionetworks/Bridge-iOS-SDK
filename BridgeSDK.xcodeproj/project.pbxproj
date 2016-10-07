@@ -227,6 +227,7 @@
 		8053B62F1A00356000A2E6C4 /* _SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */; };
 		8053B6331A00357400A2E6C4 /* SBBResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8053B6311A00357400A2E6C4 /* SBBResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8053B6341A00357400A2E6C4 /* SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B6321A00357400A2E6C4 /* SBBResourceList.m */; };
+		80643BE71DA6E4E900EB91C6 /* _SBBUserProfileInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */; };
 		807AE28C1B603309002588BB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28B1B603309002588BB /* main.m */; };
 		807AE28F1B60330A002588BB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28E1B60330A002588BB /* AppDelegate.m */; };
 		807AE2921B60330A002588BB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE2911B60330A002588BB /* ViewController.m */; };
@@ -604,6 +605,7 @@
 		8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBResourceList.m; sourceTree = "<group>"; };
 		8053B6311A00357400A2E6C4 /* SBBResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBResourceList.h; sourceTree = "<group>"; };
 		8053B6321A00357400A2E6C4 /* SBBResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBResourceList.m; sourceTree = "<group>"; };
+		80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBUserProfileInternal.h; sourceTree = "<group>"; };
 		807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdminAuthDelegate.h; path = ../BridgeSDKTests/TestAdminAuthDelegate.h; sourceTree = "<group>"; };
 		807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestAdminAuthDelegate.m; path = ../BridgeSDKTests/TestAdminAuthDelegate.m; sourceTree = "<group>"; };
 		807AE2811B5F090E002588BB /* cat.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = cat.jpg; path = ../BridgeSDKSample/cat.jpg; sourceTree = "<group>"; };
@@ -1252,6 +1254,7 @@
 				8026D68419E888C3008942B0 /* _SBBUploadSession.h */,
 				8026D68519E888C3008942B0 /* _SBBUploadSession.m */,
 				80F7C33619E5DC0D00574800 /* _SBBUserProfile.h */,
+				80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */,
 				80F7C33719E5DC0D00574800 /* _SBBUserProfile.m */,
 				807AE2E61B62E8C3002588BB /* _SBBUserSessionInfo.h */,
 				807AE2E71B62E8C3002588BB /* _SBBUserSessionInfo.m */,
@@ -1309,6 +1312,7 @@
 				800E797719ED7BCB00EEE612 /* SBBSurveyRule.h in Headers */,
 				807AE2FA1B62E98C002588BB /* SBBSurveyResponseReference.h in Headers */,
 				807AE2D51B61AE76002588BB /* SBBUserManagerInternal.h in Headers */,
+				80643BE71DA6E4E900EB91C6 /* _SBBUserProfileInternal.h in Headers */,
 				601F7D1C1D67C03400C5FE09 /* NSString+SBBAdditions.h in Headers */,
 				800E793319ED740F00EEE612 /* _SBBDurationConstraints.h in Headers */,
 				80BA3D8F1C3F19A100AA70FB /* _SBBConsentSignature.h in Headers */,

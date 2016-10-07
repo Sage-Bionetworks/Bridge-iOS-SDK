@@ -41,6 +41,8 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyRule)
 
+@property (nullable, nonatomic, retain) NSNumber* endSurvey;
+
 @property (nullable, nonatomic, retain) NSString* operator;
 
 @property (nullable, nonatomic, retain) NSString* skipTo;
@@ -65,11 +67,23 @@
 
 #pragma mark Scalar values
 
+- (BOOL)endSurveyValue
+{
+	return [self.endSurvey boolValue];
+}
+
+- (void)setEndSurveyValue:(BOOL)value_
+{
+	self.endSurvey = [NSNumber numberWithBool:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
+
+    self.endSurvey = [dictionary objectForKey:@"endSurvey"];
 
     self.operator = [dictionary objectForKey:@"operator"];
 
@@ -82,6 +96,8 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+
+    [dict setObjectIfNotNil:self.endSurvey forKey:@"endSurvey"];
 
     [dict setObjectIfNotNil:self.operator forKey:@"operator"];
 
@@ -111,6 +127,8 @@
 {
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        self.endSurvey = managedObject.endSurvey;
 
         self.operator = managedObject.operator;
 
@@ -150,6 +168,8 @@
 {
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    managedObject.endSurvey = ((id)self.endSurvey == [NSNull null]) ? nil : self.endSurvey;
 
     managedObject.operator = ((id)self.operator == [NSNull null]) ? nil : self.operator;
 

@@ -55,8 +55,6 @@
 
 @property (nonatomic, strong) NSDate* startedOn;
 
-@property (nonatomic, strong) NSString* status;
-
 @property (nonatomic, strong, readwrite) SBBActivity *activity;
 
 - (void) setActivity: (SBBActivity*) activity_ settingInverse: (BOOL) setInverse;

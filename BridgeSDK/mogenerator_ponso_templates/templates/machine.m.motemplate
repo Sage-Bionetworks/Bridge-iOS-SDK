@@ -82,7 +82,7 @@
 - (void)remove<$Relationship.name.initialCapitalString$>:(NSSet<NSManagedObject *> *)values;
 <$endif$>
 <$endif$>
-<$endif$><$endforeach do$>
+<$endforeach do$>
 @end
 
 @implementation _<$generatedObjectClassName$>

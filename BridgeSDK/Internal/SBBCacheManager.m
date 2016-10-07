@@ -123,6 +123,11 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 - (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create
 {
+    return [self cachedObjectOfType:type withId:objectId createIfMissing:create created:nil];
+}
+
+- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create created:(BOOL *)created
+{
     if (!type.length || !objectId.length) {
         return nil;
     }
@@ -140,6 +145,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     }
     
     __block SBBBridgeObject *fetched = nil;
+    __block BOOL objectCreated = NO;
 
     [context performBlockAndWait:^{
         fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
@@ -161,6 +167,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
                 fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
                 [fetched createInContext:context withObjectManager:om cacheManager:self];
                 [self saveCacheIOContext];
+                objectCreated = YES;
             }
             
             NSString *key = [self inMemoryKeyForType:type andId:objectId];
@@ -172,6 +179,10 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
             }
         }
     }];
+    
+    if (created) {
+        *created = objectCreated;
+    }
    
     return fetched;
 }
@@ -239,11 +250,16 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     }
     
     // Get it from the cache by type & id
-    SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:YES];
+    BOOL created;
+    SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:YES created:&created];
     
     if (object) {
         SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
-        [object updateWithDictionaryRepresentation:json objectManager:om];
+        // don't overwrite an object we already had cached with the latest from the server if it has client-writable fields
+        BOOL updatable = created || !(entity.userInfo[@"hasClientWritableFields"] || entity.userInfo[@"isExtendable"]);
+        if (updatable) {
+            [object updateWithDictionaryRepresentation:json objectManager:om];
+        }
         // Update CoreData cached object too
         [self.cacheIOContext performBlockAndWait:^{
             NSManagedObject *fetchedMO = [self managedObjectOfEntity:entity withId:key atKeyPath:keyPath];

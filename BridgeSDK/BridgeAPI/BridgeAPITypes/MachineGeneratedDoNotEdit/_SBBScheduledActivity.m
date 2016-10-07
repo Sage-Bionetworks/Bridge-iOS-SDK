@@ -55,8 +55,6 @@
 
 @property (nullable, nonatomic, retain) NSDate* startedOn;
 
-@property (nullable, nonatomic, retain) NSString* status;
-
 @property (nullable, nonatomic, retain) NSManagedObject *activity;
 
 @end
@@ -103,8 +101,6 @@
 
     self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
 
-    self.status = [dictionary objectForKey:@"status"];
-
         NSDictionary *activityDict = [dictionary objectForKey:@"activity"];
     if(activityDict != nil)
     {
@@ -130,8 +126,6 @@
     [dict setObjectIfNotNil:[self.scheduledOn ISO8601String] forKey:@"scheduledOn"];
 
     [dict setObjectIfNotNil:[self.startedOn ISO8601String] forKey:@"startedOn"];
-
-    [dict setObjectIfNotNil:self.status forKey:@"status"];
 
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.activity] forKey:@"activity"];
 
@@ -171,8 +165,6 @@
         self.scheduledOn = managedObject.scheduledOn;
 
         self.startedOn = managedObject.startedOn;
-
-        self.status = managedObject.status;
 
             NSManagedObject *activityManagedObj = managedObject.activity;
         Class activityClass = [SBBObjectManager bridgeClassFromType:activityManagedObj.entity.name];
@@ -226,8 +218,6 @@
     managedObject.scheduledOn = ((id)self.scheduledOn == [NSNull null]) ? nil : self.scheduledOn;
 
     managedObject.startedOn = ((id)self.startedOn == [NSNull null]) ? nil : self.startedOn;
-
-    managedObject.status = ((id)self.status == [NSNull null]) ? nil : self.status;
 
     // destination entity Activity is not directly cacheable, so delete it and create the replacement
     if (managedObject.activity) {

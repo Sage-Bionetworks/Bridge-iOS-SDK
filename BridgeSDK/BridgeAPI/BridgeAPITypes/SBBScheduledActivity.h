@@ -29,6 +29,30 @@
 
 #import "_SBBScheduledActivity.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NS_ENUM(NSUInteger, SBBScheduledActivityStatus) {
+    SBBScheduledActivityStatusScheduled = 0,
+    SBBScheduledActivityStatusAvailable,
+    SBBScheduledActivityStatusStarted,
+    SBBScheduledActivityStatusFinished,
+    SBBScheduledActivityStatusExpired,
+    SBBScheduledActivityStatusDeleted
+};
+
+extern NSString * const SBBScheduledActivityStatusStringScheduled;
+extern NSString * const SBBScheduledActivityStatusStringAvailable;
+extern NSString * const SBBScheduledActivityStatusStringStarted;
+extern NSString * const SBBScheduledActivityStatusStringFinished;
+extern NSString * const SBBScheduledActivityStatusStringExpired;
+extern NSString * const SBBScheduledActivityStatusStringDeleted;
+
 @interface SBBScheduledActivity : _SBBScheduledActivity <_SBBScheduledActivity>
 // Custom logic goes here.
+
+@property (nonatomic, readonly) NSString *status;
+@property (nonatomic, readonly) SBBScheduledActivityStatus statusEnum;
+
 @end
+
+NS_ASSUME_NONNULL_END
