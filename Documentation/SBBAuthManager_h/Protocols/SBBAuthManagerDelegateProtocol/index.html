@@ -289,7 +289,9 @@ status code). See the individual method documentation below for details.
 <dl>
 <dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:" target="_top">-authManager:didGetSessionToken:</a></tt></dt>
 <dd></dd>
-<dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:" target="_top">-authManager:didGetSessionToken:forUsername:andPassword:</a></tt></dt>
+<dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:" target="_top">-authManager:didGetSessionToken:forEmail:andPassword:</a></tt></dt>
+<dd></dd>
+<dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager:" target="_top">-emailForAuthManager:</a></tt></dt>
 <dd></dd>
 <dt><tt><a href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/passwordForAuthManager:" target="_top">-passwordForAuthManager:</a></tt></dt>
 <dd></dd>
@@ -332,40 +334,71 @@ can store it appropriately and return it later in sessionTokenForAuthManager: ca
 <div class="note_indent"><p></p></div>
 <!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:;name=end --><!-- end discussion -->
 <hr class="betweenAPIEntries">
-<!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:;   name=SBBAuthManagerDelegateProtocol::authManager:didGetSessionToken:forUsername:andPassword: --><a name="//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:"></a>
-<h3><a name="authManager:didGetSessionToken:forUsername:andPassword:">authManager:didGetSessionToken:forUsername:andPassword:</a></h3>
+<!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:;   name=SBBAuthManagerDelegateProtocol::authManager:didGetSessionToken:forEmail:andPassword: --><a name="//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:"></a>
+<h3><a name="authManager:didGetSessionToken:forEmail:andPassword:">authManager:didGetSessionToken:forEmail:andPassword:</a></h3>
 <hr class="afterName">
 <div class="declaration_indent">
 <pre><tt>@optional</tt>
 <br>- (<!-- a logicalPath="//apple_ref/occ/cl/void //apple_ref/occ/tdef/void //apple_ref/occ/tag/void //apple_ref/occ/struct/void //apple_ref/occ/intf/void //apple_ref/doc/anysymbol/void" machineGenerated="true" --><span class="type">void</span><!-- /a -->)<a machinegenerated="true" href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:" logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/authManager //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/authManager //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/authManager //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager" target="_top"><span class="function">authManager</span></a>:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a -->&lt;<span class="param">SBBAuthManagerProtocol</span>&gt;)<span class="param">authManager</span> 
         <!-- a logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/didGetSessionToken //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/didGetSessionToken //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/didGetSessionToken //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/didGetSessionToken //apple_ref/occ/func/didGetSessionToken //apple_ref/occ/ftmplt/SBBAuthManagerDelegateProtocol/didGetSessionToken //apple_ref/occ/defn/didGetSessionToken //apple_ref/occ/macro/didGetSessionToken //apple_ref/doc/anysymbol/didGetSessionToken" machineGenerated="true" --><span class="function">didGetSessionToken</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">sessionToken</span> 
-        <!-- a logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/forUsername //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/forUsername //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/forUsername //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/forUsername //apple_ref/occ/func/forUsername //apple_ref/occ/ftmplt/SBBAuthManagerDelegateProtocol/forUsername //apple_ref/occ/defn/forUsername //apple_ref/occ/macro/forUsername //apple_ref/doc/anysymbol/forUsername" machineGenerated="true" --><span class="function">forUsername</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">username</span> <!-- a logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/func/andPassword //apple_ref/occ/ftmplt/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/defn/andPassword //apple_ref/occ/macro/andPassword //apple_ref/doc/anysymbol/andPassword" machineGenerated="true" --><span class="function">andPassword</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<!-- a logicalPath="//apple_ref/occ/econst/password //apple_ref/occ/data/SBBAuthManagerDelegateProtocol/password //apple_ref/occ/data/password //apple_ref/occ/clconst/SBBAuthManagerDelegateProtocol/password " machineGenerated="true" --><span class="var">password</span><!-- /a -->; </pre>
+        <!-- a logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/forEmail //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/forEmail //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/forEmail //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/forEmail //apple_ref/occ/func/forEmail //apple_ref/occ/ftmplt/SBBAuthManagerDelegateProtocol/forEmail //apple_ref/occ/defn/forEmail //apple_ref/occ/macro/forEmail //apple_ref/doc/anysymbol/forEmail" machineGenerated="true" --><span class="function">forEmail</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<span class="param">email</span> <!-- a logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/func/andPassword //apple_ref/occ/ftmplt/SBBAuthManagerDelegateProtocol/andPassword //apple_ref/occ/defn/andPassword //apple_ref/occ/macro/andPassword //apple_ref/doc/anysymbol/andPassword" machineGenerated="true" --><span class="function">andPassword</span><!-- /a -->:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<!-- a logicalPath="//apple_ref/occ/econst/password //apple_ref/occ/data/SBBAuthManagerDelegateProtocol/password //apple_ref/occ/data/password //apple_ref/occ/clconst/SBBAuthManagerDelegateProtocol/password " machineGenerated="true" --><span class="var">password</span><!-- /a -->; </pre>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
 <div class="param_indent">
 <dl>
 <dt>
-<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:/authManager;   name=authManager:didGetSessionToken:forUsername:andPassword:::authManager -->
-<a name="//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:/authManager"></a>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:/authManager;   name=authManager:didGetSessionToken:forEmail:andPassword:::authManager -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:/authManager"></a>
 <code>authManager</code>
 </dt>
 <dd><p>The auth manager instance making the delegate request.</p></dd>
 <dt>
-<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:/sessionToken;   name=authManager:didGetSessionToken:forUsername:andPassword:::sessionToken -->
-<a name="//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:/sessionToken"></a>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:/sessionToken;   name=authManager:didGetSessionToken:forEmail:andPassword:::sessionToken -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:/sessionToken"></a>
 <code>sessionToken</code>
 </dt>
 <dd><p>The session token just obtained by the auth manager.</p></dd>
 </dl>
 </div>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:;name=start --><p>If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:;name=start --><p>If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
 when it obtains a new session token, so that the delegate can store the username and password used,
-to be returned later in the usernameForAuthManager: and passwordForAuthManager: calls.
+to be returned later in the emailForAuthManager: and passwordForAuthManager: calls.
 </p>
 <p><b>This method is optional. It provides a convenient interface for keeping track of the auth credentials used in the most recent successful signIn, for re-use when automatically refreshing an expired session token.:</b><br></p>
 <div class="note_indent"><p></p></div>
-<!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forUsername:andPassword:;name=end --><!-- end discussion -->
+<!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:;name=end --><!-- end discussion -->
+<hr class="betweenAPIEntries">
+<!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager:;   name=SBBAuthManagerDelegateProtocol::emailForAuthManager: --><a name="//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager:"></a>
+<h3><a name="emailForAuthManager:">emailForAuthManager:</a></h3>
+<hr class="afterName">
+<div class="declaration_indent">
+<pre><tt>@optional</tt>
+<br>- (<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<a machinegenerated="true" href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager:" logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/emailForAuthManager //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/emailForAuthManager //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/emailForAuthManager //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager" target="_top"><span class="function">emailForAuthManager</span></a>:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a -->&lt;<span class="param">SBBAuthManagerProtocol</span>&gt;)<!-- a logicalPath="//apple_ref/occ/econst/authManager //apple_ref/occ/data/SBBAuthManagerDelegateProtocol/authManager //apple_ref/occ/data/authManager //apple_ref/occ/clconst/SBBAuthManagerDelegateProtocol/authManager " machineGenerated="true" --><span class="var">authManager</span><!-- /a -->; </pre>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
+<div class="param_indent">
+<dl>
+<dt>
+<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/emailForAuthManager:/authManager;   name=emailForAuthManager:::authManager -->
+<a name="//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/emailForAuthManager:/authManager"></a>
+<code>authManager</code>
+</dt>
+<dd><p>The auth manager instance making the delegate request.</p></dd>
+</dl>
+</div>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
+<p><!-- begin return value --></p>
+<p>The username, or nil.
+
+<!-- end return value --></p>
+<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager:;name=start --><p>This delegate method should return the email for the user account last signed up for or signed in to,
+or nil if the user has never signed up or signed in on this device.
+</p>
+<p><b>This method is optional. If both this and passwordForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.:</b><br></p>
+<div class="note_indent"><p></p></div>
+<!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager:;name=end --><!-- end discussion -->
 <hr class="betweenAPIEntries">
 <!-- headerDoc=intfm;  uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/passwordForAuthManager:;   name=SBBAuthManagerDelegateProtocol::passwordForAuthManager: --><a name="//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/passwordForAuthManager:"></a>
 <h3><a name="passwordForAuthManager:">passwordForAuthManager:</a></h3>
@@ -394,7 +427,7 @@ to be returned later in the usernameForAuthManager: and passwordForAuthManager: 
 <!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/passwordForAuthManager:;name=start --><p>This delegate method should return the password for the user account last signed up for or signed in to,
 or nil if the user has never signed up or signed in on this device.
 </p>
-<p><b>This method is optional. If both this and usernameForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.:</b><br></p>
+<p><b>This method is optional. If both this and emailForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.:</b><br></p>
 <div class="note_indent"><p></p></div>
 <!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/passwordForAuthManager:;name=end --><!-- end discussion -->
 <hr class="betweenAPIEntries">
@@ -434,35 +467,16 @@ or nil if not currently signed in to any account.
 <hr class="afterName">
 <div class="declaration_indent">
 <pre><tt>@optional</tt>
-<br>- (<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<a machinegenerated="true" href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager:" logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/usernameForAuthManager //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/usernameForAuthManager //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/usernameForAuthManager //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager" target="_top"><span class="function">usernameForAuthManager</span></a>:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a -->&lt;<span class="param">SBBAuthManagerProtocol</span>&gt;)<!-- a logicalPath="//apple_ref/occ/econst/authManager //apple_ref/occ/data/SBBAuthManagerDelegateProtocol/authManager //apple_ref/occ/data/authManager //apple_ref/occ/clconst/SBBAuthManagerDelegateProtocol/authManager " machineGenerated="true" --><span class="var">authManager</span><!-- /a -->; </pre>
+<br>- (<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/NSString //apple_ref/occ/tdef/NSString //apple_ref/occ/tag/NSString //apple_ref/occ/struct/NSString //apple_ref/occ/intf/NSString //apple_ref/doc/anysymbol/NSString" machineGenerated="true" --><span class="type">NSString</span><!-- /a --> <span class="type">*</span>)<a machinegenerated="true" href="index.html#//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager:" logicalPath="//apple_ref/occ/instm/SBBAuthManagerDelegateProtocol/usernameForAuthManager //apple_ref/occ/clm/SBBAuthManagerDelegateProtocol/usernameForAuthManager //apple_ref/occ/intfcm/SBBAuthManagerDelegateProtocol/usernameForAuthManager //apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager" target="_top"><span class="function">usernameForAuthManager</span></a>:(<!-- a logicalPath="//apple_ref/occ/cl/nullable //apple_ref/occ/tdef/nullable //apple_ref/occ/tag/nullable //apple_ref/occ/struct/nullable //apple_ref/occ/intf/nullable //apple_ref/doc/anysymbol/nullable" machineGenerated="true" --><span class="type">nullable</span><!-- /a --> <!-- a logicalPath="//apple_ref/occ/cl/id //apple_ref/occ/tdef/id //apple_ref/occ/tag/id //apple_ref/occ/struct/id //apple_ref/occ/intf/id //apple_ref/doc/anysymbol/id" machineGenerated="true" --><span class="type">id</span><!-- /a -->&lt;<span class="param">SBBAuthManagerProtocol</span>&gt;)<span class="param">authManager</span> <!-- a logicalPath="//apple_ref/occ/econst/__deprecated //apple_ref/occ/data/SBBAuthManagerDelegateProtocol/__deprecated //apple_ref/occ/data/__deprecated //apple_ref/occ/clconst/SBBAuthManagerDelegateProtocol/__deprecated " machineGenerated="true" --><span class="var">__deprecated</span><!-- /a -->; </pre>
 </div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Parameters</font></h5>
-<div class="param_indent">
-<dl>
-<dt>
-<!-- headerDoc=methodparam;  uid=//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/usernameForAuthManager:/authManager;   name=usernameForAuthManager:::authManager -->
-<a name="//apple_ref/doc/methodparam/SBBAuthManagerDelegateProtocol/usernameForAuthManager:/authManager"></a>
-<code>authManager</code>
-</dt>
-<dd><p>The auth manager instance making the delegate request.</p></dd>
-</dl>
-</div>
-<h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Return Value</font></h5>
-<p><!-- begin return value --></p>
-<p>The username, or nil.
-
-<!-- end return value --></p>
 <h5 class="tight"><font face="Lucida Grande,Helvetica,Arial">Discussion</font></h5>
-<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager:;name=start --><p>This delegate method should return the username for the user account last signed up for or signed in to,
-or nil if the user has never signed up or signed in on this device.
-</p>
-<p><b>This method is optional. If both this and passwordForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.:</b><br></p>
-<div class="note_indent"><p></p></div>
+<!-- begin discussion --><!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager:;name=start --><p>For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this. 
 <!-- headerDoc=discussion;uid=//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager:;name=end --><!-- end discussion -->
+</p>
 <p class="gapBeforeFooter">&nbsp;</p>
 <hr class="afterFooter">
 <div class="hd_copyright_and_timestamp">
-<p class="hd_timestamp">Last Updated: Tuesday, April 19, 2016
+<p class="hd_timestamp">Last Updated: Tuesday, October 18, 2016
 </p>
 </div>
 </td>
