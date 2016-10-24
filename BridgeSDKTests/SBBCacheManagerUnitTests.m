@@ -85,7 +85,7 @@
 
 @interface SBBCacheManagerUnitTests : XCTestCase
 
-@property (nonatomic, strong) NSDictionary *jsonForTests;
+@property (nonatomic, strong) NSMutableDictionary *jsonForTests;
 @property (nonatomic, strong) SBBCacheManager *cacheManager;
 @property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
 
@@ -96,6 +96,10 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    if (!gSBBAppStudy) {
+        gSBBAppStudy = @"ios-sdk-int-tests";
+        gSBBUseCache = YES;
+    }
     id<SBBAuthManagerProtocol> aMan = SBBComponent(SBBAuthManager);
     SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
     delegate.password = @"123456";
@@ -108,22 +112,22 @@
     dispatch_once(&onceToken, ^{
         NSArray *arrayJson =
         @[
-          @{@"type": @"TestBridgeSubObject", @"stringField": @"thing1"},
-          @{@"type": @"TestBridgeCacheableSubObject", @"stringField": @"thing2"},
-          @{@"type": @"TestBridgeSubObject", @"stringField": @"thing3"}
+          @{@"type": [SBBTestBridgeSubObject entityName], @"stringField": @"thing1"},
+          @{@"type": [SBBTestBridgeCacheableSubObject entityName], @"stringField": @"thing2"},
+          @{@"type": [SBBTestBridgeSubObject entityName], @"stringField": @"thing3"}
           ];
         
         NSArray *setJson =
         @[
-          @{@"type": @"TestBridgeCacheableSubObject", @"stringField": @"dingEins"},
-          @{@"type": @"TestBridgeSubObject", @"stringField": @"dingZwei"},
-          @{@"type": @"TestBridgeCacheableSubObject", @"stringField": @"dingDrei"}
+          @{@"type": [SBBTestBridgeCacheableSubObject entityName], @"stringField": @"dingEins"},
+          @{@"type": [SBBTestBridgeSubObject entityName], @"stringField": @"dingZwei"},
+          @{@"type": [SBBTestBridgeCacheableSubObject entityName], @"stringField": @"dingDrei"}
           ];
         
         json =
         @{
-          @"guid": @"NotReallyAGuidButShouldWorkIfThere'sOnlyOne",
-          @"type": @"TestBridgeObject",
+          @"guid": @"placeholder",
+          @"type": [SBBTestBridgeObject entityName],
           @"stringField": @"This is a string",
           @"shortField": @-2,
           @"longField": @-3,
@@ -143,7 +147,10 @@
           };
     });
     
-    _jsonForTests = json;
+    // give each test's json object a unique entity key so they can
+    // run concurrently without tripping over each other
+    _jsonForTests = [json mutableCopy];
+    _jsonForTests[@"guid"] = [NSUUID UUID].UUIDString;
 }
 
 - (void)tearDown {
@@ -219,12 +226,12 @@
     XCTAssert([testObject isKindOfClass:[SBBTestBridgeObject class]], @"Returned NSObject is of expected class");
 
     NSManagedObjectContext *context = _cacheManager.cacheIOContext;
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"TestBridgeObject" inManagedObjectContext:context];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:[SBBTestBridgeObject entityName] inManagedObjectContext:context];
     __block NSManagedObject *fetchedMO = nil;
     [context performBlockAndWait:^{
         fetchedMO = [_cacheManager managedObjectOfEntity:entity withId:_jsonForTests[@"guid"] atKeyPath:@"guid"];
     }];
-    XCTAssert([fetchedMO.bridgeSubObjectField.entity.name isEqualToString:@"TestBridgeSubObject"], @"Cached NSManagedObject's bridgeSubObjectField contains a TestBridgeSubObject entity");
+    XCTAssert([fetchedMO.bridgeSubObjectField.entity.name isEqualToString:[SBBTestBridgeSubObject entityName]], @"Cached NSManagedObject's bridgeSubObjectField contains a TestBridgeSubObject entity");
     XCTAssert([fetchedMO.bridgeObjectArrayField isKindOfClass:[NSOrderedSet class]], @"Cached NSManagedObject's bridgeObjectArrayField contains an ordered set");
     XCTAssert([fetchedMO.bridgeObjectSetField isKindOfClass:[NSSet class]], @"Cached NSManagedObject's bridgeObjectSetField contains an unordered set");
     
@@ -266,7 +273,7 @@
     _cacheManager.persistentStoreName = NSStringFromSelector(_cmd);
     
     // create & cache a directly-cacheable test object
-    id testJSONDirectlyCacheable = @{@"type": @"TestBridgeCacheableSubObject", @"stringField": @"testManagedObjectOfEntitywithIdatKeyPath"};
+    id testJSONDirectlyCacheable = @{@"type": [SBBTestBridgeCacheableSubObject entityName], @"stringField": @"testManagedObjectOfEntitywithIdatKeyPath"};
     NSString *keyPath = @"stringField";
     __unused ModelObject *testObject = [_objectManager objectFromBridgeJSON:testJSONDirectlyCacheable];
     
@@ -288,7 +295,7 @@
     }
     
     // now create a non-directly-cacheable test object
-    id testJSONNonDirectlyCacheable = @{@"type": @"TestBridgeSubObject", @"stringField": @"testManagedObjectOfEntitywithIdatKeyPath"};
+    id testJSONNonDirectlyCacheable = @{@"type": [SBBTestBridgeSubObject entityName], @"stringField": @"testManagedObjectOfEntitywithIdatKeyPath"};
     testObject = [_objectManager objectFromBridgeJSON:testJSONNonDirectlyCacheable];
     
     // now try to get it from the cache and make sure it's not there
@@ -344,7 +351,7 @@
     XCTAssertNil(fetchedMO, @"Test object has been removed from the CoreData cache");
     
     // ...aaand make sure the cache (which was pristine at the start of this test) is now empty
-    NSEntityDescription *baseEntity = [NSEntityDescription entityForName:@"BridgeObject_test" inManagedObjectContext:context];
+    NSEntityDescription *baseEntity = [NSEntityDescription entityForName:[SBBBridgeObject_test entityName] inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:baseEntity];
     
@@ -358,6 +365,74 @@
     
     NSDictionary *memCache = [_cacheManager performSelector:@selector(objectsCachedByTypeAndID)];
     XCTAssert(memCache.count == 0, @"The in-memory cache is empty");
+}
+
+- (void)testWriteableObjectsDontOverwriteFromServer {
+    // make sure each test has a unique persistent store (by using the method name as the store name)
+    // so they can run concurrently without tripping over each other
+    _cacheManager.persistentStoreName = NSStringFromSelector(_cmd);
+    
+    _jsonForTests[@"type"] = [SBBTestBridgeWritableObject entityName];
+    SBBTestBridgeWritableObject *testObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
+    XCTAssert([testObject isKindOfClass:[SBBTestBridgeWritableObject class]], @"Returned NSObject is of expected class");
+    
+    NSString *oldStringField = testObject.stringField;
+    NSString *newStringField = [oldStringField stringByAppendingString:@" too, but not the same string"];
+    testObject.stringField = newStringField;
+    
+    // now "fetch the object from the server" again
+    SBBTestBridgeWritableObject *reTestObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
+    
+    // it should be the same actual object
+    XCTAssertEqual(reTestObject, testObject, @"Object manager returns the same PONSO object for the same guid");
+    
+    // it should still have the new string field even though it was created from JSON with the old
+    XCTAssertEqualObjects(reTestObject.stringField, newStringField, @"Cache manager didn't overwrite object with writable fields");
+}
+
+- (void)testExtendableObjectsDontOverwriteFromServer {
+    // make sure each test has a unique persistent store (by using the method name as the store name)
+    // so they can run concurrently without tripping over each other
+    _cacheManager.persistentStoreName = NSStringFromSelector(_cmd);
+    
+    _jsonForTests[@"type"] = [SBBTestBridgeExtendableObject entityName];
+    SBBTestBridgeExtendableObject *testObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
+    XCTAssert([testObject isKindOfClass:[SBBTestBridgeExtendableObject class]], @"Returned NSObject is of expected class");
+    
+    NSString *oldStringField = testObject.stringField;
+    NSString *newStringField = [oldStringField stringByAppendingString:@" too, but not the same string"];
+    testObject.stringField = newStringField;
+    
+    // now "fetch the object from the server" again
+    SBBTestBridgeExtendableObject *reTestObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
+    
+    // it should be the same actual object
+    XCTAssertEqual(reTestObject, testObject, @"Object manager returns the same PONSO object for the same guid");
+    
+    // it should still have the new string field even though it was created from JSON with the old
+    XCTAssertEqualObjects(reTestObject.stringField, newStringField, @"Cache manager didn't overwrite extendable object");
+}
+
+- (void)testReadonlyObjectsDoOverwriteFromServer {
+    // make sure each test has a unique persistent store (by using the method name as the store name)
+    // so they can run concurrently without tripping over each other
+    _cacheManager.persistentStoreName = NSStringFromSelector(_cmd);
+    
+    SBBTestBridgeObject *testObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
+    XCTAssert([testObject isKindOfClass:[SBBTestBridgeObject class]], @"Returned NSObject is of expected class");
+    
+    NSString *oldStringField = testObject.stringField;
+    NSString *newStringField = [oldStringField stringByAppendingString:@" too, but not the same string"];
+    testObject.stringField = newStringField;
+    
+    // now "fetch the object from the server" again
+    SBBTestBridgeObject *reTestObject = [_objectManager objectFromBridgeJSON:_jsonForTests];
+    
+    // it should be the same actual object
+    XCTAssertEqual(reTestObject, testObject, @"Object manager returns the same PONSO object for the same guid");
+    
+    // it should once again have the old string field
+    XCTAssertEqualObjects(reTestObject.stringField, oldStringField, @"Cache manager did overwrite 'read-only' object");
 }
 
 @end

@@ -1,5 +1,5 @@
 //
-//  SBBUploadRequest.m
+//  _SBBUploadRequest.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBUploadRequest.h instead.
+// Make changes to SBBUploadRequest.m instead.
 //
 
 #import "_SBBUploadRequest.h"
@@ -116,9 +116,9 @@
 
 #pragma mark Core Data cache
 
-- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
++ (NSString *)entityName
 {
-    return [NSEntityDescription entityForName:@"UploadRequest" inManagedObjectContext:context];
+    return @"UploadRequest";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager

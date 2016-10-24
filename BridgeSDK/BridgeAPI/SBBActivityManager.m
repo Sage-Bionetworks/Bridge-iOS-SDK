@@ -31,6 +31,7 @@
 //
 
 #import "SBBActivityManagerInternal.h"
+#import "SBBBridgeAPIManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
@@ -46,7 +47,7 @@ NSString * const kSBBActivityAPI =       ACTIVITY_API;
 NSTimeInterval const kSBB24Hours =       86400;
 NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 
-@interface SBBActivityManager()<SBBActivityManagerInternalProtocol>
+@interface SBBActivityManager()<SBBActivityManagerInternalProtocol, SBBBridgeAPIManagerInternalProtocol>
 
 @end
 

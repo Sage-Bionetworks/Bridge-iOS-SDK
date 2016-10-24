@@ -1,4 +1,6 @@
 #import "SBBBridgeObject_test.h"
 #import "SBBTestBridgeCacheableSubObject.h"
+#import "SBBTestBridgeExtendableObject.h"
 #import "SBBTestBridgeObject.h"
 #import "SBBTestBridgeSubObject.h"
+#import "SBBTestBridgeWritableObject.h"

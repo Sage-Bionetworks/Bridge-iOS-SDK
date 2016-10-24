@@ -15,6 +15,7 @@
 #import "SBBCacheManager.h"
 #import "SBBTestAuthManagerDelegate.h"
 #import "SBBObjectManagerInternal.h"
+#import "ModelObjectInternal.h"
 
 @interface SBBObjectManagerUnitTests : XCTestCase
 
@@ -30,6 +31,10 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    if (!gSBBAppStudy) {
+        gSBBAppStudy = @"ios-sdk-int-tests";
+        gSBBUseCache = YES;
+    }
     static NSDictionary *json;
     static NSDictionary *objectMapping;
     static NSDictionary *subObjectMapping;
@@ -37,15 +42,15 @@
     dispatch_once(&onceToken, ^{
         NSArray *arrayJson =
         @[
-          @{@"type": @"TestBridgeSubObject", @"stringField": @"thing1"},
-          @{@"type": @"TestBridgeSubObject", @"stringField": @"thing2"},
-          @{@"type": @"TestBridgeSubObject", @"stringField": @"thing3"}
+          @{@"type": [SBBTestBridgeSubObject entityName], @"stringField": @"thing1"},
+          @{@"type": [SBBTestBridgeSubObject entityName], @"stringField": @"thing2"},
+          @{@"type": [SBBTestBridgeSubObject entityName], @"stringField": @"thing3"}
           ];
         
         json =
         @{
           @"guid": @"NotReallyAGuidButShouldWorkIfThere'sOnlyOne",
-          @"type": @"TestBridgeObject",
+          @"type": [SBBTestBridgeObject entityName],
           @"stringField": @"This is a string",
           @"shortField": @-2,
           @"longField": @-3,
@@ -103,6 +108,12 @@
     XCTAssert([testObject.bridgeSubObjectField isKindOfClass:[SBBTestBridgeSubObject class]], @"Creates correct subtype for Bridge-object field");
     XCTAssert([testObject.bridgeObjectArrayField[0] isKindOfClass:[SBBTestBridgeSubObject class]], @"Creates correct subtype for Bridge-object array field");
     XCTAssert([testObject.dateField isKindOfClass:[NSDate class]], @"Creates NSDate from string for date field");
+    
+    if (gSBBUseCache) {
+        // now do it again with the same JSON and make sure it gives back the same PONSO object
+        SBBTestBridgeObject *testObject2 = [_objectManager objectFromBridgeJSON:_jsonForTests];
+        XCTAssertEqual(testObject2, testObject, @"Returns same instance from JSON with same entity key");
+    }
 }
 
 - (void)testObjectFromBridgeJSONWithMapping {

@@ -1,5 +1,5 @@
 //
-//  SBBTestBridgeCacheableSubObject.m
+//  _SBBTestBridgeCacheableSubObject.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBTestBridgeCacheableSubObject.h instead.
+// Make changes to SBBTestBridgeCacheableSubObject.m instead.
 //
 
 #import "_SBBTestBridgeCacheableSubObject.h"
@@ -82,9 +82,9 @@
 
 #pragma mark Core Data cache
 
-- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
++ (NSString *)entityName
 {
-    return [NSEntityDescription entityForName:@"TestBridgeCacheableSubObject" inManagedObjectContext:context];
+    return @"TestBridgeCacheableSubObject";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager

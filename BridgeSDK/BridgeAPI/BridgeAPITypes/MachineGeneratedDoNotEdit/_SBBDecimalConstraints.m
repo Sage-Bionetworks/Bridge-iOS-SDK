@@ -1,5 +1,5 @@
 //
-//  SBBDecimalConstraints.m
+//  _SBBDecimalConstraints.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBDecimalConstraints.h instead.
+// Make changes to SBBDecimalConstraints.m instead.
 //
 
 #import "_SBBDecimalConstraints.h"
@@ -136,9 +136,9 @@
 
 #pragma mark Core Data cache
 
-- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
++ (NSString *)entityName
 {
-    return [NSEntityDescription entityForName:@"DecimalConstraints" inManagedObjectContext:context];
+    return @"DecimalConstraints";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager

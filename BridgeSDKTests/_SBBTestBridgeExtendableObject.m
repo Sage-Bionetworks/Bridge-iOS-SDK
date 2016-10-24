@@ -1,5 +1,5 @@
 //
-//  _SBBUserProfile.m
+//  _SBBTestBridgeExtendableObject.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,37 +27,25 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBUserProfile.m instead.
+// Make changes to SBBTestBridgeExtendableObject.m instead.
 //
 
-#import "_SBBUserProfile.h"
-#import "_SBBUserProfileInternal.h"
+#import "_SBBTestBridgeExtendableObject.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-#import "RNEncryptor.h"
-#import "RNDecryptor.h"
-
 @import ObjectiveC;
 
-@interface _SBBUserProfile()
+@interface _SBBTestBridgeExtendableObject()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (UserProfile)
-
-@property (nullable, nonatomic, retain) NSData* ciphertext;
-
-@property (nullable, nonatomic, retain) NSString* email;
-
-@property (nullable, nonatomic, retain) NSString* firstName;
-
-@property (nullable, nonatomic, retain) NSString* lastName;
+@interface NSManagedObject (TestBridgeExtendableObject)
 
 @end
 
-@implementation _SBBUserProfile
+@implementation _SBBTestBridgeExtendableObject
 
 - (instancetype)init
 {
@@ -133,7 +121,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 // This is called by the Objective-C runtime when the object receives a message on a selector it doesn't implement.
 // We're going to take advantage of that to provide setter and getter implementations for @dynamic properties
-// declared in categories of SBBUserProfile, so that all the existing machinery around marshaling and serializing
+// declared in categories of SBBTestBridgeExtendableObject, so that all the existing machinery around marshaling and serializing
 // objects to/from Bridge JSON will just work.
 + (BOOL)resolveInstanceMethod:(SEL)sel
 {
@@ -174,7 +162,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSArray *)originalProperties
 {
-    NSMutableArray *props = [@[@"email", @"firstName", @"lastName", @"type", @"__end_of_properties__"] mutableCopy];
+    NSMutableArray *props = [@[@"dateField", @"doubleField", @"floatField", @"guid", @"jsonArrayField", @"jsonDictField", @"longField", @"longLongField", @"shortField", @"stringField", @"type", @"uLongField", @"uLongLongField", @"uShortField", @"bridgeObjectArrayField", @"bridgeObjectSetField", @"bridgeSubObjectField", @"__end_of_properties__"] mutableCopy];
     [props removeLastObject];
 
     return props;
@@ -183,12 +171,6 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
-
-    self.email = [dictionary objectForKey:@"email"];
-
-    self.firstName = [dictionary objectForKey:@"firstName"];
-
-    self.lastName = [dictionary objectForKey:@"lastName"];
 
     // now update from the custom fields
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.originalProperties];
@@ -224,12 +206,6 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
-    [dict setObjectIfNotNil:self.email forKey:@"email"];
-
-    [dict setObjectIfNotNil:self.firstName forKey:@"firstName"];
-
-    [dict setObjectIfNotNil:self.lastName forKey:@"lastName"];
-
     // add in the custom fields
     NSDictionary *customFields = [self customFields];
     for (NSString *propertyName in [customFields allKeys]) {
@@ -257,19 +233,14 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 + (NSString *)entityName
 {
-    return @"UserProfile";
+    return @"TestBridgeExtendableObject";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    NSString *password = cacheManager.encryptionKey;
-    if (password) {
-        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
-        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
-        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
-    } else {
-        self = nil;
+    if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
     }
 
     return self;
@@ -278,7 +249,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"UserProfile" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"TestBridgeExtendableObject" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -301,16 +272,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
-    NSError *error;
-    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
-    NSString *password = cacheManager.encryptionKey;
-    if (password && !error) {
-        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:&error];
-        if (!error) {
-            managedObject.ciphertext = ciphertext;
-        }
-    }
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
 }

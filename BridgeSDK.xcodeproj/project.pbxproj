@@ -83,6 +83,10 @@
 		601F7D1D1D67C03400C5FE09 /* NSString+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */; };
 		602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */; };
 		602EEE631A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */; };
+		60674D531DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60674D501DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m */; };
+		60674D541DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60674D521DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.m */; };
+		60674D5C1DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60674D591DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.m */; };
+		60674D5D1DBE8A8D00ADF4EE /* SBBTestBridgeWritableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60674D5B1DBE8A8D00ADF4EE /* SBBTestBridgeWritableObject.m */; };
 		606FDE141A23E84800898466 /* ModelObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE131A23E84800898466 /* ModelObjectInternal.h */; };
 		606FDE161A23EB4E00898466 /* SBBObjectManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE151A23EB4E00898466 /* SBBObjectManagerInternal.h */; };
 		606FDE211A2F9DC800898466 /* _SBBIdentifierHolder.h in Headers */ = {isa = PBXBuildFile; fileRef = 606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -444,6 +448,14 @@
 		601F7D1A1D67C03400C5FE09 /* NSString+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBBAdditions.h"; sourceTree = "<group>"; };
 		601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBBAdditions.m"; sourceTree = "<group>"; };
 		602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManagerUnitTests.m; sourceTree = "<group>"; };
+		60674D4F1DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBTestBridgeExtendableObject.h; sourceTree = "<group>"; };
+		60674D501DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBTestBridgeExtendableObject.m; sourceTree = "<group>"; };
+		60674D511DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBTestBridgeWritableObject.h; sourceTree = "<group>"; };
+		60674D521DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBTestBridgeWritableObject.m; sourceTree = "<group>"; };
+		60674D581DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestBridgeExtendableObject.h; sourceTree = "<group>"; };
+		60674D591DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestBridgeExtendableObject.m; sourceTree = "<group>"; };
+		60674D5A1DBE8A8D00ADF4EE /* SBBTestBridgeWritableObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestBridgeWritableObject.h; sourceTree = "<group>"; };
+		60674D5B1DBE8A8D00ADF4EE /* SBBTestBridgeWritableObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestBridgeWritableObject.m; sourceTree = "<group>"; };
 		606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNCryptor.xcodeproj; path = Submodules/RNCryptor/RNCryptor.xcodeproj; sourceTree = "<group>"; };
 		606FDE0B1A1D70ED00898466 /* generate_namespace_header.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = generate_namespace_header.sh; sourceTree = "<group>"; };
 		606FDE131A23E84800898466 /* ModelObjectInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelObjectInternal.h; sourceTree = "<group>"; };
@@ -1075,6 +1087,10 @@
 				60FF572D1A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m */,
 				80D517661CB5BFB3002D2C06 /* _SBBTestBridgeCacheableSubObject.h */,
 				80D517671CB5BFB3002D2C06 /* _SBBTestBridgeCacheableSubObject.m */,
+				60674D4F1DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.h */,
+				60674D501DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m */,
+				60674D511DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.h */,
+				60674D521DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.m */,
 				60FF572E1A0AFEA500CE2373 /* SBBBridgeObject_test.h */,
 				60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */,
 				60FF57301A0AFEA500CE2373 /* SBBTestBridgeObject.h */,
@@ -1083,6 +1099,10 @@
 				60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */,
 				80D517691CB5BFC2002D2C06 /* SBBTestBridgeCacheableSubObject.h */,
 				80D5176A1CB5BFC2002D2C06 /* SBBTestBridgeCacheableSubObject.m */,
+				60674D581DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.h */,
+				60674D591DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.m */,
+				60674D5A1DBE8A8D00ADF4EE /* SBBTestBridgeWritableObject.h */,
+				60674D5B1DBE8A8D00ADF4EE /* SBBTestBridgeWritableObject.m */,
 				60FF57341A0AFEA500CE2373 /* SBBTestObjects.h */,
 			);
 			path = BridgeSDKTests;
@@ -1859,17 +1879,21 @@
 				601E8A101B191DAE00BB02FB /* MockURLSession.m in Sources */,
 				80D517681CB5BFB3002D2C06 /* _SBBTestBridgeCacheableSubObject.m in Sources */,
 				60CAA6F31AFA817D00DE3305 /* SBBActivityManagerUnitTests.m in Sources */,
+				60674D541DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.m in Sources */,
 				8017AF6819D9D909001AF9BA /* SBBObjectManagerUnitTests.m in Sources */,
 				80AF00801CAB267B009A222B /* SBBTestBridgeObjects.m in Sources */,
 				8026D69B19EC3F4A008942B0 /* SBBBridgeAPIUnitTestCase.m in Sources */,
 				8026D6A519EC56E8008942B0 /* SBBSurveyManagerUnitTests.m in Sources */,
 				80E60DAB19FB0D7E0053D166 /* SBBScheduleManagerUnitTests.m in Sources */,
+				60674D5C1DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.m in Sources */,
 				FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */,
 				602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */,
+				60674D5D1DBE8A8D00ADF4EE /* SBBTestBridgeWritableObject.m in Sources */,
 				60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */,
 				60FF57371A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m in Sources */,
 				60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */,
 				60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */,
+				60674D531DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m in Sources */,
 				60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */,
 				60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */,
 				60FF57351A0AFEA500CE2373 /* _SBBBridgeObject_test.m in Sources */,
