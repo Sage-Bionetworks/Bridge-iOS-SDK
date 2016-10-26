@@ -217,6 +217,7 @@
 		8026D69F19EC465B008942B0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8026D69E19EC465B008942B0 /* libz.dylib */; };
 		8026D6A019EC46E3008942B0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8026D69E19EC465B008942B0 /* libz.dylib */; };
 		8026D6A519EC56E8008942B0 /* SBBSurveyManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A419EC56E8008942B0 /* SBBSurveyManagerUnitTests.m */; };
+		8031DB031DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8031DB021DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m */; };
 		804545891A1E78EA001D41D4 /* RNCryptor+Namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */; };
 		8045458D1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch in Headers */ = {isa = PBXBuildFile; fileRef = 8045458C1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch */; };
 		8051DCD91A1E6FDB0068D06E /* RNCryptor+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8051DCCF1A1E6FDB0068D06E /* RNCryptor+Private.h */; };
@@ -604,6 +605,7 @@
 		80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBBridgeAPIIntegrationTestCase.m; path = ../BridgeSDKTests/SBBBridgeAPIIntegrationTestCase.m; sourceTree = "<group>"; };
 		80314E8D1B56FF4700D029D3 /* SBBBridgeAPIIntegrationTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBBBridgeAPIIntegrationTestCase.h; path = ../BridgeSDKTests/SBBBridgeAPIIntegrationTestCase.h; sourceTree = "<group>"; };
 		80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBAuthManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBAuthManagerIntegrationTests.m; sourceTree = "<group>"; };
+		8031DB021DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBCacheManagerIntegrationTests.m; path = BridgeSDKTests/SBBCacheManagerIntegrationTests.m; sourceTree = SOURCE_ROOT; };
 		804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNCryptor+Namespace.h"; sourceTree = SOURCE_ROOT; };
 		8045458C1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeSDKPrefixHeader.pch; sourceTree = "<group>"; };
 		8051DCCF1A1E6FDB0068D06E /* RNCryptor+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNCryptor+Private.h"; sourceTree = "<group>"; };
@@ -971,6 +973,7 @@
 				80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */,
 				80B7868B1B5BF8350029EAE6 /* SBBActivityManagerIntegrationTests.m */,
 				80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */,
+				8031DB021DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m */,
 				80B786811B5AB1DC0029EAE6 /* SBBConsentManagerIntegrationTests.m */,
 				80B786851B5BF7860029EAE6 /* SBBScheduleManagerIntegrationTests.m */,
 				80B786871B5BF79C0029EAE6 /* SBBSurveyManagerIntegrationTests.m */,
@@ -1747,6 +1750,7 @@
 			files = (
 				807AE2BC1B6035FD002588BB /* SBBUserManagerIntegrationTests.m in Sources */,
 				807AE2BB1B6035F8002588BB /* SBBConsentManagerIntegrationTests.m in Sources */,
+				8031DB031DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m in Sources */,
 				807AE2BD1B603601002588BB /* SBBScheduleManagerIntegrationTests.m in Sources */,
 				807AE2C01B60360D002588BB /* SBBUploadManagerIntegrationTests.m in Sources */,
 				807AE2B61B6034AD002588BB /* TestAdminAuthDelegate.m in Sources */,
