@@ -302,17 +302,22 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated. Since client-writable
-    // objects are not updated from the server once first cached, we need to clear this out of our cache before signing back in so
-    // we will get the server-side changes.
-    // TODO: emm 2016-10-07 clear StudyParticipant from cache here when implemented (see BRIDGE-1495)
-    [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
-    
     return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         // Save session token in the keychain
         // ??? Save credentials in the keychain?
         NSString *sessionToken = responseObject[@"sessionToken"];
         if (sessionToken.length) {
+            // Sign-in was successful.
+            
+            // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated.
+            // Since client-writable objects are not updated from the server once first cached, we need to clear this
+            // out of our cache before reading the response object into the cache so we will get the server-side changes.
+            // We wait until now to do it because until sign-in succeeds, to the best of our knowledge what's in
+            // the cache is still valid.
+            
+            // TODO: emm 2016-10-07 clear StudyParticipant from cache here when implemented (see BRIDGE-1495)
+            [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
+            
             if (_authDelegate) {
                 if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)]) {
                     [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
