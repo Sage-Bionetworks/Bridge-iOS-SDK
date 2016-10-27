@@ -29,10 +29,61 @@
 
 #import "SBBScheduledActivity.h"
 
+NSString * const SBBScheduledActivityStatusStringScheduled = @"scheduled";
+NSString * const SBBScheduledActivityStatusStringAvailable = @"available";
+NSString * const SBBScheduledActivityStatusStringStarted = @"started";
+NSString * const SBBScheduledActivityStatusStringFinished = @"finished";
+NSString * const SBBScheduledActivityStatusStringExpired = @"expired";
+NSString * const SBBScheduledActivityStatusStringDeleted = @"deleted";
+
 @implementation SBBScheduledActivity
 
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.
+
+- (SBBScheduledActivityStatus)statusEnum
+{
+    BOOL started = (self.startedOn != nil);
+    BOOL finished = (self.finishedOn != nil);
+    BOOL available = ([self.scheduledOn timeIntervalSinceNow] <= 0);
+    BOOL expired = ([self.expiresOn timeIntervalSinceNow] >= 0);
+    
+    SBBScheduledActivityStatus status = SBBScheduledActivityStatusScheduled;
+    if (started) {
+        if (finished) {
+            status = SBBScheduledActivityStatusFinished;
+        } else {
+            status = SBBScheduledActivityStatusStarted;
+        }
+    } else if (finished) {
+        status = SBBScheduledActivityStatusDeleted;
+    } else if (expired) {
+        status = SBBScheduledActivityStatusExpired;
+    } else if (available) {
+        status = SBBScheduledActivityStatusAvailable;
+    }
+    return status;
+}
+
+- (NSString *)status
+{
+    static NSArray<NSString *> *stringsForStatuses = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        stringsForStatuses =
+        @[
+          SBBScheduledActivityStatusStringScheduled,
+          SBBScheduledActivityStatusStringAvailable,
+          SBBScheduledActivityStatusStringStarted,
+          SBBScheduledActivityStatusStringFinished,
+          SBBScheduledActivityStatusStringExpired,
+          SBBScheduledActivityStatusStringDeleted
+          ];
+
+    });
+    
+    return stringsForStatuses[[self statusEnum]];
+}
 
 @end

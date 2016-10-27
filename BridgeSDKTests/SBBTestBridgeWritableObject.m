@@ -1,7 +1,7 @@
 //
-//  SBBScheduledActivity.h
+//  SBBTestBridgeWritableObject.m
 //
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -27,32 +27,12 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBScheduledActivity.h"
+#import "SBBTestBridgeWritableObject.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation SBBTestBridgeWritableObject
 
-typedef NS_ENUM(NSUInteger, SBBScheduledActivityStatus) {
-    SBBScheduledActivityStatusScheduled = 0,
-    SBBScheduledActivityStatusAvailable,
-    SBBScheduledActivityStatusStarted,
-    SBBScheduledActivityStatusFinished,
-    SBBScheduledActivityStatusExpired,
-    SBBScheduledActivityStatusDeleted
-};
+#pragma mark Abstract method overrides
 
-extern NSString * const SBBScheduledActivityStatusStringScheduled;
-extern NSString * const SBBScheduledActivityStatusStringAvailable;
-extern NSString * const SBBScheduledActivityStatusStringStarted;
-extern NSString * const SBBScheduledActivityStatusStringFinished;
-extern NSString * const SBBScheduledActivityStatusStringExpired;
-extern NSString * const SBBScheduledActivityStatusStringDeleted;
-
-@interface SBBScheduledActivity : _SBBScheduledActivity <_SBBScheduledActivity>
 // Custom logic goes here.
 
-@property (nonatomic, readonly) NSString *status;
-@property (nonatomic, readonly) SBBScheduledActivityStatus statusEnum;
-
 @end
-
-NS_ASSUME_NONNULL_END

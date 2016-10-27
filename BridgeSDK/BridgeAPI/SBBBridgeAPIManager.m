@@ -2,8 +2,6 @@
 //  SBBBridgeAPIManager.m
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 10/10/14.
-//
 //	Copyright (c) 2014, Sage Bionetworks
 //	All rights reserved.
 //
@@ -34,6 +32,7 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
+#import "SBBObjectManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
 
 @interface SBBBridgeAPIManager ()
@@ -60,6 +59,15 @@
   manager.objectManager = objectManager;
   
   return manager;
+}
+
+- (id<SBBCacheManagerProtocol>)cacheManager
+{
+    id<SBBCacheManagerProtocol> cacheManager = nil;
+    if (gSBBUseCache && [self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
+        cacheManager = ((id<SBBObjectManagerInternalProtocol>)self.objectManager).cacheManager;
+    }
+    return cacheManager;
 }
 
 @end

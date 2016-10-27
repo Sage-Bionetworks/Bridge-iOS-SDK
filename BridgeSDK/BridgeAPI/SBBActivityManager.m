@@ -31,6 +31,7 @@
 //
 
 #import "SBBActivityManagerInternal.h"
+#import "SBBBridgeAPIManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
@@ -46,15 +47,11 @@ NSString * const kSBBActivityAPI =       ACTIVITY_API;
 NSTimeInterval const kSBB24Hours =       86400;
 NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 
-@interface SBBActivityManager()<SBBActivityManagerInternalProtocol>
-
-@property (nonatomic, readonly) id<SBBCacheManagerProtocol> cacheManager;
+@interface SBBActivityManager()<SBBActivityManagerInternalProtocol, SBBBridgeAPIManagerInternalProtocol>
 
 @end
 
 @implementation SBBActivityManager
-
-@synthesize cacheManager = _cacheManager;
 
 + (instancetype)defaultComponent
 {
@@ -124,14 +121,6 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
             taskList[i] = [((id<SBBObjectManagerInternalProtocol>)self.objectManager) mappedObjectForBridgeObject:taskList[i]];
         }
     }
-}
-
-- (id<SBBCacheManagerProtocol>)cacheManager
-{
-    if (!_cacheManager && gSBBUseCache && [self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
-        _cacheManager = ((id<SBBObjectManagerInternalProtocol>)self.objectManager).cacheManager;
-    }
-    return _cacheManager;
 }
 
 // make sure to be on the cache IO queue before calling these next three methods, and stay there until after

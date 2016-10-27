@@ -1,5 +1,5 @@
 //
-//  SBBConsentStatus.m
+//  _SBBConsentStatus.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBConsentStatus.h instead.
+// Make changes to SBBConsentStatus.m instead.
 //
 
 #import "_SBBConsentStatus.h"
@@ -144,9 +144,9 @@
 
 #pragma mark Core Data cache
 
-- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
++ (NSString *)entityName
 {
-    return [NSEntityDescription entityForName:@"ConsentStatus" inManagedObjectContext:context];
+    return @"ConsentStatus";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager

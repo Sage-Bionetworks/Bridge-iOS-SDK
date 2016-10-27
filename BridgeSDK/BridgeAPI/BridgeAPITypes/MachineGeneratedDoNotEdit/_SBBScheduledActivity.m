@@ -1,5 +1,5 @@
 //
-//  SBBScheduledActivity.m
+//  _SBBScheduledActivity.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBScheduledActivity.h instead.
+// Make changes to SBBScheduledActivity.m instead.
 //
 
 #import "_SBBScheduledActivity.h"
@@ -54,8 +54,6 @@
 @property (nullable, nonatomic, retain) NSDate* scheduledOn;
 
 @property (nullable, nonatomic, retain) NSDate* startedOn;
-
-@property (nullable, nonatomic, retain) NSString* status;
 
 @property (nullable, nonatomic, retain) NSManagedObject *activity;
 
@@ -103,8 +101,6 @@
 
     self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
 
-    self.status = [dictionary objectForKey:@"status"];
-
         NSDictionary *activityDict = [dictionary objectForKey:@"activity"];
     if(activityDict != nil)
     {
@@ -131,8 +127,6 @@
 
     [dict setObjectIfNotNil:[self.startedOn ISO8601String] forKey:@"startedOn"];
 
-    [dict setObjectIfNotNil:self.status forKey:@"status"];
-
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.activity] forKey:@"activity"];
 
 	return [dict copy];
@@ -150,9 +144,9 @@
 
 #pragma mark Core Data cache
 
-- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
++ (NSString *)entityName
 {
-    return [NSEntityDescription entityForName:@"ScheduledActivity" inManagedObjectContext:context];
+    return @"ScheduledActivity";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
@@ -171,8 +165,6 @@
         self.scheduledOn = managedObject.scheduledOn;
 
         self.startedOn = managedObject.startedOn;
-
-        self.status = managedObject.status;
 
             NSManagedObject *activityManagedObj = managedObject.activity;
         Class activityClass = [SBBObjectManager bridgeClassFromType:activityManagedObj.entity.name];
@@ -226,8 +218,6 @@
     managedObject.scheduledOn = ((id)self.scheduledOn == [NSNull null]) ? nil : self.scheduledOn;
 
     managedObject.startedOn = ((id)self.startedOn == [NSNull null]) ? nil : self.startedOn;
-
-    managedObject.status = ((id)self.status == [NSNull null]) ? nil : self.status;
 
     // destination entity Activity is not directly cacheable, so delete it and create the replacement
     if (managedObject.activity) {

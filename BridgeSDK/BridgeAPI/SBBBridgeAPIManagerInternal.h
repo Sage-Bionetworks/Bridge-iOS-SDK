@@ -1,7 +1,8 @@
 //
-//  SBBScheduledActivity.h
+//  SBBBridgeAPIManagerInternal.h
+//  BridgeSDK
 //
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2016, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -27,32 +28,15 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBScheduledActivity.h"
+#import "SBBBridgeAPIManager.h"
+#import "SBBCacheManager.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@protocol SBBBridgeAPIManagerInternalProtocol<SBBBridgeAPIManagerProtocol>
 
-typedef NS_ENUM(NSUInteger, SBBScheduledActivityStatus) {
-    SBBScheduledActivityStatusScheduled = 0,
-    SBBScheduledActivityStatusAvailable,
-    SBBScheduledActivityStatusStarted,
-    SBBScheduledActivityStatusFinished,
-    SBBScheduledActivityStatusExpired,
-    SBBScheduledActivityStatusDeleted
-};
-
-extern NSString * const SBBScheduledActivityStatusStringScheduled;
-extern NSString * const SBBScheduledActivityStatusStringAvailable;
-extern NSString * const SBBScheduledActivityStatusStringStarted;
-extern NSString * const SBBScheduledActivityStatusStringFinished;
-extern NSString * const SBBScheduledActivityStatusStringExpired;
-extern NSString * const SBBScheduledActivityStatusStringDeleted;
-
-@interface SBBScheduledActivity : _SBBScheduledActivity <_SBBScheduledActivity>
-// Custom logic goes here.
-
-@property (nonatomic, readonly) NSString *status;
-@property (nonatomic, readonly) SBBScheduledActivityStatus statusEnum;
+@property (nonatomic, readonly) id<SBBCacheManagerProtocol> cacheManager;
 
 @end
 
-NS_ASSUME_NONNULL_END
+@interface SBBBridgeAPIManager()<SBBBridgeAPIManagerInternalProtocol>
+
+@end

@@ -39,6 +39,10 @@
 
 @interface _SBBSurveyRule : SBBBridgeObject
 
+@property (nonatomic, strong) NSNumber* endSurvey;
+
+@property (nonatomic, assign) BOOL endSurveyValue;
+
 @property (nonatomic, strong) NSString* operator;
 
 @property (nonatomic, strong) NSString* skipTo;

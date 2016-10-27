@@ -1,5 +1,5 @@
 //
-//  _SBBTaskReference.m
+//  _SBBTestBridgeWritableObject.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,27 +27,23 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBTaskReference.m instead.
+// Make changes to SBBTestBridgeWritableObject.m instead.
 //
 
-#import "_SBBTaskReference.h"
+#import "_SBBTestBridgeWritableObject.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBTaskReference()
+@interface _SBBTestBridgeWritableObject()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (TaskReference)
-
-@property (nullable, nonatomic, retain) NSString* identifier;
-
-@property (nullable, nonatomic, retain) NSManagedObject *activityForTask;
+@interface NSManagedObject (TestBridgeWritableObject)
 
 @end
 
-@implementation _SBBTaskReference
+@implementation _SBBTestBridgeWritableObject
 
 - (instancetype)init
 {
@@ -67,15 +63,11 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.identifier = [dictionary objectForKey:@"identifier"];
-
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
-
-    [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
 	return [dict copy];
 }
@@ -92,15 +84,13 @@
 
 + (NSString *)entityName
 {
-    return @"TaskReference";
+    return @"TestBridgeWritableObject";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
-
-        self.identifier = managedObject.identifier;
 
     }
 
@@ -110,7 +100,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"TaskReference" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"TestBridgeWritableObject" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -134,8 +124,6 @@
 {
 
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
-
-    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
 
     // Calling code will handle saving these changes to cacheContext.
 }

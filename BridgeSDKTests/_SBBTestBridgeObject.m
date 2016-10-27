@@ -1,5 +1,5 @@
 //
-//  SBBTestBridgeObject.m
+//  _SBBTestBridgeObject.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBTestBridgeObject.h instead.
+// Make changes to SBBTestBridgeObject.m instead.
 //
 
 #import "_SBBTestBridgeObject.h"
@@ -318,25 +318,25 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for(SBBBridgeObject_test *bridgeObjectArrayFieldObj in self.bridgeObjectArrayField)
-	{
-		[bridgeObjectArrayFieldObj awakeFromDictionaryRepresentationInit];
-	}
-
 	for(SBBTestBridgeSubObject *bridgeObjectSetFieldObj in self.bridgeObjectSetField)
 	{
 		[bridgeObjectSetFieldObj awakeFromDictionaryRepresentationInit];
 	}
 	[self.bridgeSubObjectField awakeFromDictionaryRepresentationInit];
 
+	for(SBBBridgeObject_test *bridgeObjectArrayFieldObj in self.bridgeObjectArrayField)
+	{
+		[bridgeObjectArrayFieldObj awakeFromDictionaryRepresentationInit];
+	}
+
 	[super awakeFromDictionaryRepresentationInit];
 }
 
 #pragma mark Core Data cache
 
-- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
++ (NSString *)entityName
 {
-    return [NSEntityDescription entityForName:@"TestBridgeObject" inManagedObjectContext:context];
+    return @"TestBridgeObject";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager

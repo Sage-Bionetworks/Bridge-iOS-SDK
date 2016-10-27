@@ -1,5 +1,5 @@
 //
-//  <$generatedObjectClassName$>.m
+//  _<$generatedObjectClassName$>.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to <$generatedObjectClassName$>.h instead.
+// Make changes to <$generatedObjectClassName$>.m instead.
 //
 
 #import "_<$generatedObjectClassName$>.h"<$if needsInternalHeader$>
@@ -82,7 +82,7 @@
 - (void)remove<$Relationship.name.initialCapitalString$>:(NSSet<NSManagedObject *> *)values;
 <$endif$>
 <$endif$>
-<$endif$><$endforeach do$>
+<$endforeach do$>
 @end
 
 @implementation _<$generatedObjectClassName$>
@@ -284,12 +284,20 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     NSPredicate *pred = [NSPredicate predicateWithFormat:@"NOT (SELF IN %@)", self.originalProperties];
     NSArray *customProperties = [dictionary.allKeys filteredArrayUsingPredicate:pred];
     for (NSString *propertyName in customProperties) {
+        if (class_getProperty([self class], [propertyName UTF8String]) == NULL) {
+            // we don't know about this property (probably a new base property added on the server) so ignore it
+            continue;
+        }
+        
         // Assuming custom properties are not readonly, and why would they be, after all?
         // ...also assume they are JSON types (NSString, NSNumber, NSNull, NSArray<JSON-types>, NSDictionary<JSON-types>)
         // ...and that they are not using custom setter names.
         id value = [dictionary objectForKey:propertyName];
         if (![self typeIsNSString:propertyName]) {
-            // Custom properties are always serialized as JSON NSStrings.
+            // Custom properties are always serialized as JSON NSStrings. If it's not an NSString, assume it's not one of our known custom ones and just ignore it.
+            if (![value isKindOfClass:[NSString class]]) {
+                continue;
+            }
             value = [NSJSONSerialization JSONObjectWithData:[value dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
         }
         NSString *camelizedProp = [[[propertyName substringToIndex:1] uppercaseString] stringByAppendingString:[propertyName substringFromIndex:1]];
@@ -385,9 +393,9 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 #pragma mark Core Data cache
 
-- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
++ (NSString *)entityName
 {
-    return [NSEntityDescription entityForName:@"<$name$>" inManagedObjectContext:context];
+    return @"<$name$>";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager

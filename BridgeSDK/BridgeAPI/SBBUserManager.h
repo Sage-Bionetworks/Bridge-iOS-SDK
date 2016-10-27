@@ -2,8 +2,6 @@
 //  SBBUserManager.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/23/14.
-//
 //	Copyright (c) 2014-2015, Sage Bionetworks
 //	All rights reserved.
 //

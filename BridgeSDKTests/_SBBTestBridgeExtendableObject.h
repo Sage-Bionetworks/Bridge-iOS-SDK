@@ -1,7 +1,7 @@
 //
-//  SBBScheduledActivity.h
+//  _SBBTestBridgeExtendableObject.h
 //
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,17 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBTestBridgeExtendableObject.h instead.
+//
 
-#import "_SBBScheduledActivity.h"
+#import <Foundation/Foundation.h>
+#import "SBBTestBridgeObject.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_ENUM(NSUInteger, SBBScheduledActivityStatus) {
-    SBBScheduledActivityStatusScheduled = 0,
-    SBBScheduledActivityStatusAvailable,
-    SBBScheduledActivityStatusStarted,
-    SBBScheduledActivityStatusFinished,
-    SBBScheduledActivityStatusExpired,
-    SBBScheduledActivityStatusDeleted
-};
-
-extern NSString * const SBBScheduledActivityStatusStringScheduled;
-extern NSString * const SBBScheduledActivityStatusStringAvailable;
-extern NSString * const SBBScheduledActivityStatusStringStarted;
-extern NSString * const SBBScheduledActivityStatusStringFinished;
-extern NSString * const SBBScheduledActivityStatusStringExpired;
-extern NSString * const SBBScheduledActivityStatusStringDeleted;
-
-@interface SBBScheduledActivity : _SBBScheduledActivity <_SBBScheduledActivity>
-// Custom logic goes here.
-
-@property (nonatomic, readonly) NSString *status;
-@property (nonatomic, readonly) SBBScheduledActivityStatus statusEnum;
+@protocol _SBBTestBridgeExtendableObject
 
 @end
 
-NS_ASSUME_NONNULL_END
+@interface _SBBTestBridgeExtendableObject : SBBTestBridgeObject
+
+@end

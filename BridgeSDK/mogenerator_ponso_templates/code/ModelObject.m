@@ -170,10 +170,15 @@
     return (entityIDKeyPath.length > 0);
 }
 
++ (NSString *)entityName
+{
+    // generated subclasses will override this
+    return nil;
+}
+
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
 {
-    // will be overridden in generated classes that have an entityIDKeyPath defined in their userInfo in the model
-    return nil;
+    return [NSEntityDescription entityForName:self.class.entityName inManagedObjectContext:context];
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
