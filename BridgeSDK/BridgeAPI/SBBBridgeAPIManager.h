@@ -37,6 +37,7 @@
 
 typedef NS_ENUM(NSUInteger, SBBCachingPolicy) {
     SBBCachingPolicyNoCaching = 0,
+    SBBCachingPolicyCheckCacheFirst,
     SBBCachingPolicyFallBackToCached,
     SBBCachingPolicyCachedOnly
 };

@@ -2,9 +2,7 @@
 //  SBBTaskManager.m
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 5/5/15.
-//
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2015-2016, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -35,7 +33,6 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
-#import "SBBObjectManagerInternal.h"
 #import "SBBBridgeObjects.h"
 #import "NSDate+SBBAdditions.h"
 #import "NSError+SBBAdditions.h"
@@ -73,11 +70,6 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 - (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     return [self getScheduledActivitiesForDaysAhead:daysAhead daysBehind:1 cachingPolicy:policy withCompletion:completion];
-}
-
-- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
-{
-    return [self getScheduledActivitiesForDaysAhead:daysAhead daysBehind:daysBehind cachingPolicy:policy andWait:NO withCompletion:completion];
 }
 
 - (NSArray *)filterTasks:(NSArray *)tasks forDaysAhead:(NSInteger)daysAhead andDaysBehind:(NSInteger)daysBehind excludeStillValid:(BOOL)excludeValid
@@ -151,7 +143,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     [resourceList saveToCoreDataCacheWithObjectManager:self.objectManager];
 }
 
-- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy andWait:(BOOL)wait withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     // if we're going straight to cache, just get it and get out
     if (policy == SBBCachingPolicyCachedOnly) {

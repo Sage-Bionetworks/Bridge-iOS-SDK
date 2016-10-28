@@ -2,8 +2,6 @@
 //  SBBActivityManager.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 5/5/15.
-//
 //	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //

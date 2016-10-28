@@ -35,7 +35,6 @@
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBSurveyReference.h"
-#import "SBBSurveyResponseReference.h"
 #import "SBBTaskReference.h"
 
 @interface _SBBActivity()
@@ -58,8 +57,6 @@
 @property (nullable, nonatomic, retain) NSManagedObject *scheduledActivity;
 
 @property (nullable, nonatomic, retain) NSManagedObject *survey;
-
-@property (nullable, nonatomic, retain) NSManagedObject *surveyResponse;
 
 @property (nullable, nonatomic, retain) NSManagedObject *task;
 
@@ -100,13 +97,6 @@
         self.survey = surveyObj;
 
     }
-        NSDictionary *surveyResponseDict = [dictionary objectForKey:@"surveyResponse"];
-    if(surveyResponseDict != nil)
-    {
-        SBBSurveyResponseReference *surveyResponseObj = [objectManager objectFromBridgeJSON:surveyResponseDict];
-        self.surveyResponse = surveyResponseObj;
-
-    }
         NSDictionary *taskDict = [dictionary objectForKey:@"task"];
     if(taskDict != nil)
     {
@@ -131,8 +121,6 @@
 
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.surveyResponse] forKey:@"surveyResponse"];
-
 	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
 
 	return [dict copy];
@@ -143,9 +131,8 @@
 	if(self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	[self.task awakeFromDictionaryRepresentationInit];
 	[self.survey awakeFromDictionaryRepresentationInit];
-	[self.surveyResponse awakeFromDictionaryRepresentationInit];
+	[self.task awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -176,13 +163,6 @@
         if(surveyObj != nil)
         {
           self.survey = surveyObj;
-        }
-            NSManagedObject *surveyResponseManagedObj = managedObject.surveyResponse;
-        Class surveyResponseClass = [SBBObjectManager bridgeClassFromType:surveyResponseManagedObj.entity.name];
-        SBBSurveyResponseReference *surveyResponseObj = [[surveyResponseClass alloc] initWithManagedObject:surveyResponseManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(surveyResponseObj != nil)
-        {
-          self.surveyResponse = surveyResponseObj;
         }
             NSManagedObject *taskManagedObj = managedObject.task;
         Class taskClass = [SBBObjectManager bridgeClassFromType:taskManagedObj.entity.name];
@@ -241,14 +221,6 @@
 
     [managedObject setSurvey:relMoSurvey];
 
-    // destination entity SurveyResponseReference is not directly cacheable, so delete it and create the replacement
-    if (managedObject.surveyResponse) {
-        [cacheContext deleteObject:managedObject.surveyResponse];
-    }
-    NSManagedObject *relMoSurveyResponse = [self.surveyResponse createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
-
-    [managedObject setSurveyResponse:relMoSurveyResponse];
-
     // destination entity TaskReference is not directly cacheable, so delete it and create the replacement
     if (managedObject.task) {
         [cacheContext deleteObject:managedObject.task];
@@ -279,23 +251,6 @@
     return _survey;
 }
 
-- (void) setSurveyResponse: (SBBSurveyResponseReference*) surveyResponse_ settingInverse: (BOOL) setInverse
-{
-
-    _surveyResponse = surveyResponse_;
-
-}
-
-- (void) setSurveyResponse: (SBBSurveyResponseReference*) surveyResponse_
-{
-    [self setSurveyResponse: surveyResponse_ settingInverse: YES];
-}
-
-- (SBBSurveyResponseReference*) surveyResponse
-{
-    return _surveyResponse;
-}
-
 - (void) setTask: (SBBTaskReference*) task_ settingInverse: (BOOL) setInverse
 {
 
@@ -313,6 +268,6 @@
     return _task;
 }
 
-@synthesize survey = _survey;@synthesize surveyResponse = _surveyResponse;@synthesize task = _task;
+@synthesize survey = _survey;@synthesize task = _task;
 
 @end
