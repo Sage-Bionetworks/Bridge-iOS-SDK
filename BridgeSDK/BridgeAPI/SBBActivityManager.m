@@ -33,6 +33,7 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
+#import "SBBObjectManagerInternal.h"
 #import "SBBBridgeObjects.h"
 #import "NSDate+SBBAdditions.h"
 #import "NSError+SBBAdditions.h"

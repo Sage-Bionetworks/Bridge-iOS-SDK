@@ -10,6 +10,7 @@
 #import "NSDate+SBBAdditions.h"
 #import "SBBSurveyManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
+#import "SBBBridgeAPIManager.h"
 
 @interface SBBSurveyManagerUnitTests : SBBBridgeAPIUnitTestCase
 
@@ -237,9 +238,24 @@
 
 - (void)testGetSurveyByRef {
     NSString *ref = @"/v3/surveys/55d9973d-1092-42b0-81e2-bbfb86f483c0/revisions/2014-10-09T23:30:44.747Z";
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
+    
+    // first check for it in cache only--it shouldn't be there yet
+    XCTestExpectation *expectNoCachedSurveyYet = [self expectationWithDescription:@"survey not yet in cache"];
+    [sMan getSurveyByRef:ref cachingPolicy:SBBCachingPolicyCachedOnly completion:^(id survey, NSError *error) {
+        XCTAssert(survey == nil, @"Survey not found in cache");
+        XCTAssert(error == nil, @"There was no error, i.e. it didn't try (and fail) to fetch from mock Bridge server");
+        [expectNoCachedSurveyYet fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to get survey from cache by ref:\n%@", error);
+        }
+    }];
+    
+    // now check for it in cache first, and fall back to server if not found (we already know it's not in cache; we want to test that this works in that case)
     [self.mockURLSession setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:ref andMethod:@"GET"];
-    SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     XCTestExpectation *expectGotSurvey = [self expectationWithDescription:@"got survey by ref"];
     [sMan getSurveyByRef:ref completion:^(id survey, NSError *error) {
         XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
@@ -257,6 +273,28 @@
             NSLog(@"Time out error trying to get survey by ref:\n%@", error);
         }
     }];
+    
+    // now do that again, making sure this time it comes from the cache and doesn't try to hit the server
+    // we do this by setting up a mock survey JSON response with the same ref but a different type for the first element;
+    // if we get this modified version of the survey back, we'll know it hit the server
+    NSMutableDictionary *differentSurveyJSONWithSameRef = [_sampleSurveyJSON mutableCopy];
+    NSArray *elements = _sampleSurveyJSON[@"elements"];
+    differentSurveyJSONWithSameRef[@"elements"] = [elements subarrayWithRange:NSMakeRange(1, elements.count - 1)];
+    [self.mockURLSession setJson:differentSurveyJSONWithSameRef andResponseCode:200 forEndpoint:ref andMethod:@"GET"];
+    XCTestExpectation *expectGotSurveyFromCache = [self expectationWithDescription:@"got survey by ref from cache"];
+    [sMan getSurveyByRef:ref completion:^(id survey, NSError *error) {
+        XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Retrieved an SBBSurvey");
+        SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
+        XCTAssert([info0 isKindOfClass:[SBBSurveyInfoScreen class]], @"First element is still SurveyInfoScreen, so it's from cache, not server");
+        [expectGotSurveyFromCache fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to get survey by ref from cache:\n%@", error);
+        }
+    }];
+    
 }
 
 - (void)testGetSurveyByGuidCreatedOn {
@@ -264,9 +302,24 @@
     NSString *createdOnISO8601 = @"2014-10-09T23:30:44.747Z";
     NSDate *createdOn = [NSDate dateWithISO8601String:createdOnISO8601];
     NSString *endpoint = [NSString stringWithFormat:kSBBSurveyAPIFormat, guid, createdOnISO8601];
+    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
+
+    // first check for it in cache only--it shouldn't be there yet
+    XCTestExpectation *expectNoCachedSurveyYet = [self expectationWithDescription:@"survey not yet in cache"];
+    [sMan getSurveyByGuid:guid createdOn:createdOn cachingPolicy:SBBCachingPolicyCachedOnly completion:^(id survey, NSError *error) {
+        XCTAssert(survey == nil, @"Survey not found in cache");
+        XCTAssert(error == nil, @"There was no error, i.e. it didn't try (and fail) to fetch from mock Bridge server");
+        [expectNoCachedSurveyYet fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to get survey from cache by guid/createdOn:\n%@", error);
+        }
+    }];
+    
+    // now check for it in cache first, and fall back to server if not found (we already know it's not in cache; we want to test that this works in that case)
     [self.mockURLSession setJson:_sampleSurveyJSON andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
-    SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBSurveyManager *sMan = [SBBSurveyManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
     XCTestExpectation *expectGotSurvey = [self expectationWithDescription:@"got survey by guid/createdOn"];
     [sMan getSurveyByGuid:guid createdOn:createdOn completion:^(id survey, NSError *error) {
         XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Converted incoming json to SBBSurvey");
@@ -282,6 +335,27 @@
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error trying to get survey by guid/createdOn:\n%@", error);
+        }
+    }];
+
+    // now do that again, making sure this time it comes from the cache and doesn't try to hit the server
+    // we do this by setting up a mock survey JSON response with the same ref but a different type for the first element;
+    // if we get this modified version of the survey back, we'll know it hit the server
+    NSMutableDictionary *differentSurveyJSONWithSameRef = [_sampleSurveyJSON mutableCopy];
+    NSArray *elements = _sampleSurveyJSON[@"elements"];
+    differentSurveyJSONWithSameRef[@"elements"] = [elements subarrayWithRange:NSMakeRange(1, elements.count - 1)];
+    [self.mockURLSession setJson:differentSurveyJSONWithSameRef andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    XCTestExpectation *expectGotSurveyFromCache = [self expectationWithDescription:@"got survey by guid/createdOn from cache"];
+    [sMan getSurveyByGuid:guid createdOn:createdOn completion:^(id survey, NSError *error) {
+        XCTAssert([survey isKindOfClass:[SBBSurvey class]], @"Retrieved an SBBSurvey");
+        SBBSurveyInfoScreen *info0 = ((SBBSurvey *)survey).elements[0];
+        XCTAssert([info0 isKindOfClass:[SBBSurveyInfoScreen class]], @"First element is still SurveyInfoScreen, so it's from cache, not server");
+        [expectGotSurveyFromCache fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to get survey by guid/createdOn from cache:\n%@", error);
         }
     }];
 }

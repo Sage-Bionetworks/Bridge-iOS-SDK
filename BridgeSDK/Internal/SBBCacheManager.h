@@ -51,7 +51,9 @@ extern  NSInteger gSBBCacheDaysBehind;
 
 - (SBBBridgeObject *)cachedSingletonObjectOfType:(NSString *)type createIfMissing:(BOOL)create;
 
-- (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json;
+- (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json; // creates if missing
+
+- (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json createIfMissing:(BOOL)create;
 
 // use ModelObject as the parameter type because test case classes don't derive from SBBBridgeObject
 // (because they're generated from a separate test data model)

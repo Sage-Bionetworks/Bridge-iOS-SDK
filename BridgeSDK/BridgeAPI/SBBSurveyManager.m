@@ -34,6 +34,8 @@
 #import "SBBObjectManager.h"
 #import "NSDate+SBBAdditions.h"
 #import "BridgeSDKInternal.h"
+#import "ModelObjectInternal.h"
+#import "SBBErrors.h"
 
 #define SURVEY_API_FORMAT GLOBAL_API_PREFIX @"/surveys/%@/revisions/%@"
 
@@ -60,38 +62,77 @@ NSString * const kSBBSurveyAPIFormat =                          SURVEY_API_FORMA
 
 - (NSURLSessionTask *)getSurveyByRef:(NSString *)ref cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
-    // if we're going straight to cache, just get it and get out
-    if (policy == SBBCachingPolicyCachedOnly) {
-        SBBSurvey *survey = [self.cacheManager cachedObjectOfType:@"Survey" withId:@"ScheduledActivity" createIfMissing:NO]];
-        
+    // parse the guid and createdOn out of the ref string
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^.*/surveys/([^/]*)/revisions/(.*)$" options:0 error:&error];
+    NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:ref options:0 range:NSMakeRange(0, ref.length)];
+    // match[0].range is the range of the entire regex match, the capture ones are index 1 and 2
+    if (matches.count != 1 || matches[0].numberOfRanges != 3) {
         if (completion) {
-            NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
-            [self mapSubObjectsInTaskList:requestedTasks];
-            completion(requestedTasks, nil);
+            completion(nil, [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeNotAValidSurveyRef userInfo:@{@"ref": ref}]);
+        }
+        return nil;
+    }
+    
+    NSTextCheckingResult *match = matches[0];
+    NSString *guid = [ref substringWithRange:[match rangeAtIndex:1]];
+    NSString *createdOnString = [ref substringWithRange:[match rangeAtIndex:2]];
+    return [self getSurveyWithGuid:guid createdOnString:createdOnString ref:ref cachingPolicy:policy completion:completion];
+
+}
+
+- (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerGetCompletionBlock)completion
+{
+    return [self getSurveyByGuid:guid createdOn:createdOn cachingPolicy:SBBCachingPolicyCheckCacheFirst completion:completion];
+}
+
+- (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion
+{
+    // build a ref string from guid and createdOn
+    NSString *revision = [createdOn ISO8601StringUTC];
+    NSString *ref = [NSString stringWithFormat:kSBBSurveyAPIFormat, guid, revision];
+    return [self getSurveyWithGuid:guid createdOnString:revision ref:ref cachingPolicy:policy completion:completion];
+}
+
+// internal methods
+- (SBBSurvey *)fetchSurveyFromCacheWithGuid:(NSString *)guid createdOnString:(NSString *)createdOnString
+{
+    NSString *surveyId = [guid stringByAppendingString:createdOnString];
+    SBBSurvey *survey = (SBBSurvey *)[self.cacheManager cachedObjectOfType:[SBBSurvey entityName] withId:surveyId createIfMissing:NO];
+    return survey;
+}
+
+- (NSURLSessionTask *)getSurveyWithGuid:(NSString *)guid createdOnString:(NSString *)createdOnString ref:(NSString *)ref cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion
+{
+    // fetch from cache
+    SBBSurvey *cachedSurvey = [self fetchSurveyFromCacheWithGuid:guid createdOnString:createdOnString];
+    
+    // if we're going straight to cache, just pass it along and get out
+    // if we're checking the cache first, and it's there, also just pass it along and get out
+    if (policy == SBBCachingPolicyCachedOnly ||
+        (policy == SBBCachingPolicyCheckCacheFirst && cachedSurvey != nil)) {
+        if (completion) {
+            completion(cachedSurvey, nil);
         }
         
         return nil;
     }
     
+    // now try the server
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         id survey = [self.objectManager objectFromBridgeJSON:responseObject];
+        
+        // if we're falling back to cache and we didn't get it back, pass along the previously cached version
+        if (!survey) {
+            survey = cachedSurvey;
+        }
+        
         if (completion) {
             completion(survey, error);
         }
     }];
-}
-
-- (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerGetCompletionBlock)completion
-{
-}
-
-- (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion
-{
-    NSString *version = [createdOn ISO8601StringUTC];
-    NSString *ref = [NSString stringWithFormat:kSBBSurveyAPIFormat, guid, version];
-    return [self getSurveyByRef:ref cachingPolicy:policy completion:completion];
 }
 
 @end

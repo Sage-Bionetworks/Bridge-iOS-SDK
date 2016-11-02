@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSDictionary *jsonForTests;
 @property (nonatomic, strong) NSDictionary *mappingForObject;
 @property (nonatomic, strong) NSDictionary *mappingForSubObject;
+@property (nonatomic, strong) SBBCacheManager *cacheManager;
 @property (nonatomic, strong) SBBObjectManager *objectManager;
 
 @end
@@ -55,9 +56,9 @@
           @"shortField": @-2,
           @"longField": @-3,
           @"longLongField": @-4444444444444444,
-          @"uShortField": @USHRT_MAX,
-          @"uLongField": @0xffffffff,
-          @"uLongLongField": @ULLONG_MAX,
+          @"uShortField": @SHRT_MAX,
+          @"uLongField": @0x7fffffff,
+          @"uLongLongField": @LLONG_MAX,
           @"floatField": @3.7e-3,
           @"doubleField": @6.022e123,
           @"dateField": @"2011-12-03T22:11:34.554Z",
@@ -90,8 +91,11 @@
     SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
     delegate.password = @"123456";
     aMan.authDelegate = delegate;
-    SBBCacheManager *cMan = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
-    _objectManager = [SBBObjectManager objectManagerWithCacheManager:cMan];
+    _cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
+    // make sure each test has a unique persistent store (by using the object instance ptr's hex representation as the store name)
+    // so they can run concurrently without tripping over each other
+    _cacheManager.persistentStoreName = [NSString stringWithFormat:@"%p", self];
+    _objectManager = [SBBObjectManager objectManagerWithCacheManager:_cacheManager];
 }
 
 - (void)tearDown {
