@@ -65,8 +65,6 @@
 
 @property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *elements;
 
-@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *surveyResponses;
-
 - (void)addElementsObject:(NSManagedObject *)value;
 - (void)removeElementsObject:(NSManagedObject *)value;
 - (void)addElements:(NSOrderedSet<NSManagedObject *> *)values;
@@ -78,18 +76,6 @@
 - (void)removeElementsAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInElementsAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
 - (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray<NSManagedObject *> *)values;
-
-- (void)addSurveyResponsesObject:(NSManagedObject *)value;
-- (void)removeSurveyResponsesObject:(NSManagedObject *)value;
-- (void)addSurveyResponses:(NSOrderedSet<NSManagedObject *> *)values;
-- (void)removeSurveyResponses:(NSOrderedSet<NSManagedObject *> *)values;
-
-- (void)insertObject:(NSManagedObject *)value inSurveyResponsesAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromSurveyResponsesAtIndex:(NSUInteger)idx;
-- (void)insertSurveyResponses:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeSurveyResponsesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInSurveyResponsesAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
-- (void)replaceSurveyResponsesAtIndexes:(NSIndexSet *)indexes withSurveyResponses:(NSArray<NSManagedObject *> *)values;
 
 @end
 

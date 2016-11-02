@@ -2,9 +2,7 @@
 //  SBBSurveyManager.m
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 10/9/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2016, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -36,119 +34,105 @@
 #import "SBBObjectManager.h"
 #import "NSDate+SBBAdditions.h"
 #import "BridgeSDKInternal.h"
+#import "ModelObjectInternal.h"
+#import "SBBErrors.h"
 
 #define SURVEY_API_FORMAT GLOBAL_API_PREFIX @"/surveys/%@/revisions/%@"
-#define SURVEY_RESPONSE_API GLOBAL_API_PREFIX @"/surveyresponses"
 
 NSString * const kSBBSurveyAPIFormat =                          SURVEY_API_FORMAT;
-NSString * const kSBBSurveyResponseAPIFormat =                  SURVEY_RESPONSE_API @"/%@";
-NSString * const kSBBSurveyResponseSubmitAPIFormat =            SURVEY_RESPONSE_API @"/%@/revisions/%@";
-NSString * const kSBBSurveyResponseSubmitIdentifierAPIFormat =  SURVEY_RESPONSE_API @"/%@/revisions/%@/%@";
 
 @implementation SBBSurveyManager
 
 + (instancetype)defaultComponent
 {
-  static SBBSurveyManager *shared;
-  
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    shared = [self instanceWithRegisteredDependencies];
-  });
-  
-  return shared;
+    static SBBSurveyManager *shared;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        shared = [self instanceWithRegisteredDependencies];
+    });
+    
+    return shared;
 }
 
 - (NSURLSessionTask *)getSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    id survey = [self.objectManager objectFromBridgeJSON:responseObject];
-    if (completion) {
-      completion(survey, error);
+    return [self getSurveyByRef:ref cachingPolicy:SBBCachingPolicyCheckCacheFirst completion:completion];
+}
+
+- (NSURLSessionTask *)getSurveyByRef:(NSString *)ref cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion
+{
+    // parse the guid and createdOn out of the ref string
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^.*/surveys/([^/]*)/revisions/(.*)$" options:0 error:&error];
+    NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:ref options:0 range:NSMakeRange(0, ref.length)];
+    // match[0].range is the range of the entire regex match, the capture ones are index 1 and 2
+    if (matches.count != 1 || matches[0].numberOfRanges != 3) {
+        if (completion) {
+            completion(nil, [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeNotAValidSurveyRef userInfo:@{@"ref": ref}]);
+        }
+        return nil;
     }
-  }];
+    
+    NSTextCheckingResult *match = matches[0];
+    NSString *guid = [ref substringWithRange:[match rangeAtIndex:1]];
+    NSString *createdOnString = [ref substringWithRange:[match rangeAtIndex:2]];
+    return [self getSurveyWithGuid:guid createdOnString:createdOnString ref:ref cachingPolicy:policy completion:completion];
+
 }
 
 - (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
-  NSString *version = [createdOn ISO8601StringUTC];
-  NSString *ref = [NSString stringWithFormat:kSBBSurveyAPIFormat, guid, version];
-  return [self getSurveyByRef:ref completion:completion];
+    return [self getSurveyByGuid:guid createdOn:createdOn cachingPolicy:SBBCachingPolicyCheckCacheFirst completion:completion];
 }
 
-- (NSURLSessionTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+- (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
-    return [self submitAnswers:surveyAnswers toSurvey:survey withResponseIdentifier:nil completion:completion];
+    // build a ref string from guid and createdOn
+    NSString *revision = [createdOn ISO8601StringUTC];
+    NSString *ref = [NSString stringWithFormat:kSBBSurveyAPIFormat, guid, revision];
+    return [self getSurveyWithGuid:guid createdOnString:revision ref:ref cachingPolicy:policy completion:completion];
 }
 
-- (NSURLSessionTask *)submitAnswers:(NSArray *)surveyAnswers toSurvey:(SBBSurvey *)survey withResponseIdentifier:(NSString *)identifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+// internal methods
+- (SBBSurvey *)fetchSurveyFromCacheWithGuid:(NSString *)guid createdOnString:(NSString *)createdOnString
 {
-    return [self submitAnswers:surveyAnswers toSurveyByGuid:survey.guid createdOn:survey.createdOn withResponseIdentifier:identifier completion:completion];
+    NSString *surveyId = [guid stringByAppendingString:createdOnString];
+    SBBSurvey *survey = (SBBSurvey *)[self.cacheManager cachedObjectOfType:[SBBSurvey entityName] withId:surveyId createIfMissing:NO];
+    return survey;
 }
 
-- (NSURLSessionTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
+- (NSURLSessionTask *)getSurveyWithGuid:(NSString *)guid createdOnString:(NSString *)createdOnString ref:(NSString *)ref cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
-    return [self submitAnswers:surveyAnswers toSurveyByGuid:guid createdOn:createdOn withResponseIdentifier:nil completion:completion];
-}
-
-- (NSURLSessionTask *)submitAnswers:(NSArray *)surveyAnswers toSurveyByGuid:(NSString *)surveyGuid createdOn:(NSDate *)createdOn withResponseIdentifier:(NSString *)responseIdentifier completion:(SBBSurveyManagerSubmitAnswersCompletionBlock)completion
-{
-    NSString *createdOnISO8601 = [createdOn ISO8601StringUTC];
+    // fetch from cache
+    SBBSurvey *cachedSurvey = [self fetchSurveyFromCacheWithGuid:guid createdOnString:createdOnString];
+    
+    // if we're going straight to cache, just pass it along and get out
+    // if we're checking the cache first, and it's there, also just pass it along and get out
+    if (policy == SBBCachingPolicyCachedOnly ||
+        (policy == SBBCachingPolicyCheckCacheFirst && cachedSurvey != nil)) {
+        if (completion) {
+            completion(cachedSurvey, nil);
+        }
+        
+        return nil;
+    }
+    
+    // now try the server
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    NSString *endpoint = nil;
-    if (responseIdentifier.length) {
-        endpoint = [NSString stringWithFormat:kSBBSurveyResponseSubmitIdentifierAPIFormat, surveyGuid, createdOnISO8601, responseIdentifier];
-    } else {
-        endpoint = [NSString stringWithFormat:kSBBSurveyResponseSubmitAPIFormat, surveyGuid, createdOnISO8601];
-    }
-    id jsonAnswers = [self.objectManager bridgeJSONFromObject:surveyAnswers];
-    return [self.networkManager post:endpoint headers:headers parameters:jsonAnswers completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        id identifierHolder = [self.objectManager objectFromBridgeJSON:responseObject];
+    return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        id survey = [self.objectManager objectFromBridgeJSON:responseObject];
+        
+        // if we're falling back to cache and we didn't get it back, pass along the previously cached version
+        if (!survey) {
+            survey = cachedSurvey;
+        }
+        
         if (completion) {
-            completion(identifierHolder, error);
+            completion(survey, error);
         }
     }];
-}
-
-- (NSURLSessionTask *)getSurveyResponse:(NSString *)identifier completion:(SBBSurveyManagerGetResponseCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *ref = [NSString stringWithFormat:kSBBSurveyResponseAPIFormat, identifier];
-  return [self.networkManager get:ref headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    id surveyResponse = [self.objectManager objectFromBridgeJSON:responseObject];
-    if (completion) {
-      completion(surveyResponse, error);
-    }
-  }];
-}
-
-- (NSURLSessionTask *)addAnswers:(NSArray *)surveyAnswers toSurveyResponse:(NSString *)guid completion:(SBBSurveyManagerEditResponseCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  id jsonAnswers = [self.objectManager bridgeJSONFromObject:surveyAnswers];
-  NSString *ref = [NSString stringWithFormat:kSBBSurveyResponseAPIFormat, guid];
-  return [self.networkManager post:ref headers:headers parameters:jsonAnswers completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    if (completion) {
-      completion(responseObject, error);
-    }
-  }];
-}
-
-- (NSURLSessionTask *)deleteSurveyResponse:(NSString *)guid completion:(SBBSurveyManagerEditResponseCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  NSString *ref = [NSString stringWithFormat:kSBBSurveyResponseAPIFormat, guid];
-  return [self.networkManager delete:ref headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    if (completion) {
-      completion(responseObject, error);
-    }
-  }];
 }
 
 @end

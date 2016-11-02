@@ -2,8 +2,6 @@
 //  SBBSurveyManagerInternal.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 7/24/15.
-//
 //	Copyright (c) 2015, Sage Bionetworks
 //	All rights reserved.
 //
@@ -31,9 +29,7 @@
 //
 
 #import "SBBSurveyManager.h"
+#import "SBBBridgeAPIManagerInternal.h"
 
 /* CONSTANTS */
 extern NSString * const kSBBSurveyAPIFormat;
-extern NSString * const kSBBSurveyResponseAPIFormat;
-extern NSString * const kSBBSurveyResponseSubmitAPIFormat;
-extern NSString * const kSBBSurveyResponseSubmitIdentifierAPIFormat;

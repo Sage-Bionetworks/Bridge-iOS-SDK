@@ -9,6 +9,7 @@
 #import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBUserManagerInternal.h"
 #import "SBBUserProfile.h"
+#import "SBBBridgeNetworkManager.h"
 
 @interface SBBUserProfile (customFields)
 
@@ -53,20 +54,19 @@
     testUserProfile.customDictField = @{@"customDictFieldKey": @"customDictFieldValue"};
     testUserProfile.customArrayField = @[@"customArrayFieldValue1", @"customArrayFieldValue2"];
     
-    SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    NSDictionary *userProfileJSON = [oMan bridgeJSONFromObject:testUserProfile];
+    NSDictionary *userProfileJSON = [self.objectManager bridgeJSONFromObject:testUserProfile];
     XCTAssert([[userProfileJSON objectForKey:@"customStringField"] isKindOfClass:[NSString class]], @"Custom string field serializes to NSString");
     XCTAssert([[userProfileJSON objectForKey:@"customDictField"] isKindOfClass:[NSString class]], @"Custom dictionary field serializes to NSString");
     XCTAssert([[userProfileJSON objectForKey:@"customArrayField"] isKindOfClass:[NSString class]], @"Custom array field serializes to NSString");
     [self.mockURLSession setJson:userProfileJSON andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
-    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
+    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
     [uMan getUserProfileWithCompletion:^(SBBUserProfile *userProfile, NSError *error) {
         XCTAssert([userProfile isKindOfClass:[SBBUserProfile class]], @"Converted incoming json to SBBUserProfile");
         XCTAssertEqualObjects(testUserProfile.customStringField, userProfile.customStringField, @"Custom string field: object equal to JSON");
         XCTAssertEqualObjects(testUserProfile.customDictField, userProfile.customDictField, @"Custom dict field: object equal to JSON");
         XCTAssertEqualObjects(testUserProfile.customArrayField, userProfile.customArrayField, @"Custom array field: object equal to JSON");
     }];
-    [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
+    [self.objectManager setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"username": @"stringField"}];
     [self.mockURLSession setJson:userProfileJSON andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
     [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
@@ -81,9 +81,8 @@
       @"dataGroups": @[@"group1", @"group2", @"group3"]
       };
     [self.mockURLSession setJson:dataGroups andResponseCode:200 forEndpoint:kSBBUserDataGroupsAPI andMethod:@"GET"];
-    SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:oMan];
-    [oMan setupMappingForType:@"DataGroups" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"dataGroups": @"jsonArrayField"}];
+    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
+    [self.objectManager setupMappingForType:@"DataGroups" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"dataGroups": @"jsonArrayField"}];
     [uMan getDataGroupsWithCompletion:^(id dataGroups, NSError *error) {
         XCTAssert([dataGroups isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
     }];

@@ -150,6 +150,10 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 - (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create created:(BOOL *)created
 {
+    if (created) {
+        *created = NO;
+    }
+    
     if (!type.length || !objectId.length) {
         return nil;
     }
@@ -217,6 +221,11 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 
 - (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json
 {
+    return [self cachedObjectFromBridgeJSON:json createIfMissing:YES];
+}
+
+- (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json createIfMissing:(BOOL)create
+{
     NSString *type = [json objectForKey:@"type"];
     if (!type.length) {
         return nil;
@@ -273,7 +282,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     
     // Get it from the cache by type & id
     BOOL created;
-    SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:YES created:&created];
+    SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:create created:&created];
     
     if (object) {
         SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];

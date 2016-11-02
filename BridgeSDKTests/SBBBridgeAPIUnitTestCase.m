@@ -20,8 +20,6 @@
 
 @property (nonatomic, strong) NSURLSession *savedMainSession;
 @property (nonatomic, strong) NSURLSession *savedBackgroundSession;
-@property (nonatomic, strong) SBBCacheManager *cacheManager;
-@property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
 
 @end
 
@@ -50,8 +48,9 @@
     SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
     delegate.password = @"123456";
     aMan.authDelegate = delegate;
-    _cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
-    // make sure each test has a unique persistent store (by using the object instance ptr's hex representation as the store name)
+    // use the "real" Bridge data model for cache managers for tests that access Bridge APIs...
+    _cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"SBBDataModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
+    // ...but make sure each test has a unique persistent store (by using the object instance ptr's hex representation as the store name)
     // so they can run concurrently without tripping over each other
     _cacheManager.persistentStoreName = [NSString stringWithFormat:@"%p", self];
     _objectManager = [SBBObjectManager objectManagerWithCacheManager:_cacheManager];
