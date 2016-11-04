@@ -101,12 +101,12 @@
 
     self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
 
-        NSDictionary *activityDict = [dictionary objectForKey:@"activity"];
+    NSDictionary *activityDict = [dictionary objectForKey:@"activity"];
+
     if(activityDict != nil)
     {
         SBBActivity *activityObj = [objectManager objectFromBridgeJSON:activityDict];
         self.activity = activityObj;
-
     }
 
 }
@@ -127,7 +127,7 @@
 
     [dict setObjectIfNotNil:[self.startedOn ISO8601String] forKey:@"startedOn"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.activity] forKey:@"activity"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.activity] forKey:@"activity"];
 
 	return [dict copy];
 }

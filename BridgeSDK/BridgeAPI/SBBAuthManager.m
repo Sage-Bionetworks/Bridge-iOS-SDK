@@ -38,6 +38,7 @@
 #import "BridgeSDKInternal.h"
 #import "SBBUserManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
+#import "SBBParticipantManagerInternal.h"
 
 #define AUTH_API GLOBAL_API_PREFIX @"/auth"
 
@@ -111,6 +112,17 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     dispatch_sync(KeychainQueue(), dispatchBlock);
 }
+
+
+@implementation SBBSignUp
+
+- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    // stub this out to prevent attempting to save non-cacheable object to CoreData cache
+    return;
+}
+
+@end
 
 
 @interface SBBAuthManager()
@@ -277,18 +289,34 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }
 }
 
+- (NSURLSessionTask *)signUpWithJSON:(NSDictionary *)json completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:json completion:completion];
+}
+
+- (NSURLSessionTask *)signUpStudyParticipant:(SBBSignUp *)signUp completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSMutableDictionary *json = [[signUp dictionaryRepresentation] mutableCopy];
+    json[@"study"] = gSBBAppStudy;
+    return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:json completion:completion];
+}
+
 - (NSURLSessionTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password dataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    NSMutableDictionary *params = [@{@"study":gSBBAppStudy, @"email":email, @"username":username, @"password":password, @"type":@"SignUp"} mutableCopy];
-    if (dataGroups) {
-        [params setObject:dataGroups forKey:@"dataGroups"];
-    }
-    return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:params completion:completion];
+    SBBSignUp *signUp = [[SBBSignUp alloc] init];
+    signUp.email = email;
+    // username is long-since deprecated on Bridge server; ignore
+    signUp.password = password;
+    signUp.dataGroups = [NSSet setWithArray:dataGroups];
+    return [self signUpStudyParticipant:signUp completion:completion];
 }
 
 - (NSURLSessionTask *)signUpWithEmail:(NSString *)email username:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     return [self signUpWithEmail:email username:username password:password dataGroups:nil completion:completion];
+#pragma clang diagnostic pop
 }
 
 - (NSURLSessionTask *)resendEmailVerification:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
@@ -325,8 +353,15 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             // We wait until now to do it because until sign-in succeeds, to the best of our knowledge what's in
             // the cache is still valid.
             
-            // TODO: emm 2016-10-07 clear StudyParticipant from cache here when implemented (see BRIDGE-1495)
             [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
+            [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
+            
+            // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
+            // (which UserSessionInfo now extends). Even though we can't return the values from here, though, we do
+            // want to update them in the cache, which calling objectFromBridgeJSON: will do.
+            if (gSBBUseCache) {
+                [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
+            }
             
             if (_authDelegate) {
                 if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)]) {

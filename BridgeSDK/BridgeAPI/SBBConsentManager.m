@@ -70,7 +70,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
 - (NSURLSessionTask *)consentSignature:(NSString *)name
                              birthdate:(NSDate *)date
                         signatureImage:(UIImage*)signatureImage
-                           dataSharing:(SBBUserDataSharingScope)scope
+                           dataSharing:(SBBParticipantDataSharingScope)scope
                             completion:(SBBConsentManagerCompletionBlock)completion
 {
     return [self consentSignature:name forSubpopulationGuid:gSBBAppStudy birthdate:date signatureImage:signatureImage dataSharing:scope completion:completion];
@@ -80,7 +80,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
                   forSubpopulationGuid:(NSString *)subpopGuid
                              birthdate:(NSDate *)date
                         signatureImage:(UIImage*)signatureImage
-                           dataSharing:(SBBUserDataSharingScope)scope
+                           dataSharing:(SBBParticipantDataSharingScope)scope
                             completion:(SBBConsentManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];

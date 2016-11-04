@@ -11,31 +11,14 @@
 #import "_<$generatedObjectClassName$>.h"
 
 @interface _<$generatedObjectClassName$> ()
-<$if ! TemplateVar.arc$>
-{
-	<$foreach Attribute noninheritedAttributes do$>
-    <$if Attribute.hasDefinedAttributeType$><$if Attribute.userInfo.notInPONSODictionary $>
-    <$Attribute.objectAttributeType$> _<$Attribute.name$>;
-    <$endif$><$endif$>
-	<$endforeach do$>
-}
-<$endif$>
 
 <$foreach Attribute noninheritedAttributes do$>
 <$if Attribute.userInfo.notInPONSODictionary $>
 <$if Attribute.isReadonly$>
-<$if TemplateVar.arc$>
 <$if Attribute.hasDefinedAttributeType$>@property (nonatomic, strong, readonly) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
-<$else$>
-<$if Attribute.hasDefinedAttributeType$>@property (nonatomic, retain, readonly) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
-<$endif$>
 <$if Attribute.hasScalarAttributeType$>@property (nonatomic, assign, readonly) <$Attribute.scalarAttributeType$> <$Attribute.name$>Value;<$endif$>
 <$else$>
-<$if TemplateVar.arc$>
 <$if Attribute.hasDefinedAttributeType$>@property (nonatomic, strong) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
-<$else$>
-<$if Attribute.hasDefinedAttributeType$>@property (nonatomic, retain) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
-<$endif$>
 <$if Attribute.hasScalarAttributeType$>@property (nonatomic, assign) <$Attribute.scalarAttributeType$> <$Attribute.name$>Value;<$endif$>
 <$endif$>
 <$endif$>

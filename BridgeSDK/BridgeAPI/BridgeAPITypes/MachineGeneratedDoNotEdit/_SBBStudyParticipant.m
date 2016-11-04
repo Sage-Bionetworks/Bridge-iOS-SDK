@@ -1,5 +1,5 @@
 //
-//  SBBStudyParticipant.m
+//  _SBBStudyParticipant.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBStudyParticipant.h instead.
+// Make changes to SBBStudyParticipant.m instead.
 //
 
 #import "_SBBStudyParticipant.h"
@@ -45,7 +45,7 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (StudyParticipant)
 
-@property (nullable, nonatomic, retain) NSDictionary<NSString *, NSString *>* attributes;
+@property (nullable, nonatomic, retain) SBBStudyParticipantCustomAttributes* attributes;
 
 @property (nullable, nonatomic, retain) NSData* ciphertext;
 
@@ -67,9 +67,13 @@
 
 @property (nullable, nonatomic, retain) NSNumber* notifyByEmail;
 
+@property (nullable, nonatomic, retain) NSArray<NSString *>* roles;
+
 @property (nullable, nonatomic, retain) NSString* sharingScope;
 
 @property (nullable, nonatomic, retain) NSString* status;
+
+@property (nullable, nonatomic, retain) NSManagedObject *userSessionInfo;
 
 @end
 
@@ -103,7 +107,9 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.attributes = [dictionary objectForKey:@"attributes"];
+    if ([SBBStudyParticipantCustomAttributes instancesRespondToSelector:@selector(initWithDictionaryRepresentation:)]) {
+        self.attributes = [[SBBStudyParticipantCustomAttributes alloc] initWithDictionaryRepresentation:[dictionary objectForKey:@"attributes"]];
+    }
 
     self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
 
@@ -122,6 +128,8 @@
     self.lastName = [dictionary objectForKey:@"lastName"];
 
     self.notifyByEmail = [dictionary objectForKey:@"notifyByEmail"];
+
+    self.roles = [dictionary objectForKey:@"roles"];
 
     self.sharingScope = [dictionary objectForKey:@"sharingScope"];
 
@@ -154,6 +162,8 @@
 
     [dict setObjectIfNotNil:self.notifyByEmail forKey:@"notifyByEmail"];
 
+    [dict setObjectIfNotNil:self.roles forKey:@"roles"];
+
     [dict setObjectIfNotNil:self.sharingScope forKey:@"sharingScope"];
 
     [dict setObjectIfNotNil:self.status forKey:@"status"];
@@ -171,9 +181,9 @@
 
 #pragma mark Core Data cache
 
-- (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
++ (NSString *)entityName
 {
-    return [NSEntityDescription entityForName:@"StudyParticipant" inManagedObjectContext:context];
+    return @"StudyParticipant";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager

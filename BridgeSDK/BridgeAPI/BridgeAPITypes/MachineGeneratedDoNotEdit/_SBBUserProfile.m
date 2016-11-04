@@ -174,8 +174,13 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSArray *)originalProperties
 {
-    NSMutableArray *props = [@[@"email", @"firstName", @"lastName", @"type", @"__end_of_properties__"] mutableCopy];
-    [props removeLastObject];
+    static NSArray *props;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableArray *localProps = [@[@"email", @"firstName", @"lastName", @"type", @"__end_of_properties__"] mutableCopy];
+        [localProps removeLastObject];
+        props = [localProps copy];
+    });
 
     return props;
 }

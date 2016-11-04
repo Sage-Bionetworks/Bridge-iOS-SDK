@@ -31,15 +31,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ModelObject.h"
+#import "SBBBridgeObject.h"
+
+#import "SBBStudyParticipantCustomAttributes.h"
 
 @protocol _SBBStudyParticipant
 
 @end
 
-@interface _SBBStudyParticipant : ModelObject
+@interface _SBBStudyParticipant : SBBBridgeObject
 
-@property (nonatomic, strong) NSDictionary<NSString *, NSString *>* attributes;
+@property (nonatomic, strong) SBBStudyParticipantCustomAttributes* attributes;
 
 @property (nonatomic, strong) NSDate* createdOn;
 
@@ -60,6 +62,8 @@
 @property (nonatomic, strong) NSNumber* notifyByEmail;
 
 @property (nonatomic, assign) BOOL notifyByEmailValue;
+
+@property (nonatomic, strong) NSArray<NSString *>* roles;
 
 @property (nonatomic, strong) NSString* sharingScope;
 

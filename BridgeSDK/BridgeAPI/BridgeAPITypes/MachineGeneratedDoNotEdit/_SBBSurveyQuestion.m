@@ -71,12 +71,12 @@
 
     self.uiHint = [dictionary objectForKey:@"uiHint"];
 
-        NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
+    NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
+
     if(constraintsDict != nil)
     {
         SBBSurveyConstraints *constraintsObj = [objectManager objectFromBridgeJSON:constraintsDict];
         self.constraints = constraintsObj;
-
     }
 
 }
@@ -87,7 +87,7 @@
 
     [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.constraints] forKey:@"constraints"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.constraints] forKey:@"constraints"];
 
 	return [dict copy];
 }

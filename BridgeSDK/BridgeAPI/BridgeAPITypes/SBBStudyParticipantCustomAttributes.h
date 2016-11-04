@@ -27,8 +27,10 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBStudyParticipantCustomAttributes.h"
+@import Foundation;
 
-@interface SBBStudyParticipantCustomAttributes : _SBBStudyParticipantCustomAttributes <_SBBStudyParticipantCustomAttributes>
-// Custom logic goes here.
+@interface SBBStudyParticipantCustomAttributes : NSObject
+
+- (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary;
+
 @end

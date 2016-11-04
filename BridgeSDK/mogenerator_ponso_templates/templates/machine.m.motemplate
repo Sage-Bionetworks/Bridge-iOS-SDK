@@ -214,11 +214,17 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 {
     return [[self typeEncodingForPropertyName:propertyName] isEqualToString:@"@\"NSString\""];
 }
-
+<$endif$>
+<$if userInfo.isExtendable or userInfo.includesSubobject$>
 - (NSArray *)originalProperties
 {
-    NSMutableArray *props = [@[<$foreach Attribute allAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>@"<$Attribute.name$>", <$endif$><$endif$><$endforeach do$><$if userInfo.syntheticKeyComponentPaths.length$><$if userInfo.entityIDKeyPath.length$><$userInfo.entityIDKeyPath$>, <$endif$><$endif$><$foreach Relationship allRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$>@"<$Relationship.name$>", <$endif$><$endif$><$endif$><$endforeach do$>@"__end_of_properties__"] mutableCopy];
-    [props removeLastObject];
+    static NSArray *props;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableArray *localProps = [@[<$foreach Attribute allAttributes do$><$if Attribute.hasDefinedAttributeType$><$if ! Attribute.userInfo.notInPONSODictionary $>@"<$Attribute.name$>", <$endif$><$endif$><$endforeach do$><$if userInfo.syntheticKeyComponentPaths.length$><$if userInfo.entityIDKeyPath.length$><$userInfo.entityIDKeyPath$>, <$endif$><$endif$><$foreach Relationship allRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$>@"<$Relationship.name$>", <$endif$><$endif$><$endif$><$endforeach do$>@"__end_of_properties__"] mutableCopy];
+        [localProps removeLastObject];
+        props = [localProps copy];
+    });
 
     return props;
 }
@@ -233,6 +239,14 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     _<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
     <$elseif Attribute.hasSetAttributeType$>
     _<$Attribute.name$> = [NSSet setWithArray:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$elseif Attribute.hasJSONAttributeType$>
+    _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+    <$elseif Attribute.hasIdAttributeType$>
+    _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+    <$elseif Attribute.hasTransformableAttributeType$>
+    if ([<$Attribute.objectAttributeClassName$> instancesRespondToSelector:@selector(initWithDictionaryRepresentation:)]) {
+        _<$Attribute.name$> = [[<$Attribute.objectAttributeClassName$> alloc] initWithDictionaryRepresentation:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    }
     <$else$>
     _<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
     <$endif$>
@@ -241,6 +255,14 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     self.<$Attribute.name$> = [NSDate dateWithISO8601String:[dictionary objectForKey:@"<$Attribute.name$>"]];
     <$elseif Attribute.hasSetAttributeType$>
     self.<$Attribute.name$> = [NSSet setWithArray:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    <$elseif Attribute.hasJSONAttributeType$>
+    self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+    <$elseif Attribute.hasIdAttributeType$>
+    self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
+    <$elseif Attribute.hasTransformableAttributeType$>
+    if ([<$Attribute.objectAttributeClassName$> instancesRespondToSelector:@selector(initWithDictionaryRepresentation:)]) {
+        self.<$Attribute.name$> = [[<$Attribute.objectAttributeClassName$> alloc] initWithDictionaryRepresentation:[dictionary objectForKey:@"<$Attribute.name$>"]];
+    }
     <$else$>
     self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
     <$endif$>
@@ -268,16 +290,25 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
     for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
     {
-        <$if TemplateVar.arc$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
-        <$else$><$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectManager objectFromBridgeJSON:objectRepresentationForDict] autorelease];
-        <$endif$>
+        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+
         [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
-    }<$else$>NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
+    }<$else$>
+    <$if Relationship.userInfo.includedAsSubobject$>
+    // <$Relationship.name$> is included as a subobject, meaning its fields are mingled with ours in the Bridge JSON,
+    // rather than being in their own JSON dictionary under the appropriate key. So we'll create the necessary
+    // JSON dictionary by copying ours, removing our own fields, and setting the type appropriately.
+    NSMutableDictionary *<$Relationship.name$>Dict = [dictionary mutableCopy];
+    NSArray *myProps = [self originalProperties];
+    [<$Relationship.name$>Dict removeObjectsForKeys:myProps];
+    <$Relationship.name$>Dict[@"type"] = @"<$Relationship.destinationEntity.generatedObjectClassName$>";
+    <$else$>
+    NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
+    <$endif$>
     if(<$Relationship.name$>Dict != nil)
     {
         <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:<$Relationship.name$>Dict];
         self.<$Relationship.name$> = <$Relationship.name$>Obj;
-        <$if ! TemplateVar.arc$>[<$Relationship.name$>Obj release];<$endif$>
     }<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
     <$if userInfo.isExtendable$>
     // now update from the custom fields
@@ -337,7 +368,18 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 	}
 	<$else$>
 	<$if Relationship.userInfo.destinationEntityIDKeyPath $>[dict setObjectIfNotNil:[self.<$Relationship.name$> valueForKeyPath:@"<$Relationship.userInfo.destinationEntityIDKeyPath$>"] forKey:@"<$Relationship.name$>"];
-	<$else$><$if ! Relationship.isTransient $>[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.<$Relationship.name$>] forKey:@"<$Relationship.name$>"];
+	<$else$>
+    <$if ! Relationship.isTransient $>
+    <$if Relationship.userInfo.includedAsSubobject$>
+    // <$Relationship.name$> is included as a subobject, meaning its fields are mingled with ours in the Bridge JSON,
+    // rather than being in their own JSON dictionary under the appropriate key. So we'll fetch the Bridge JSON for
+    // the subobject, and then overwrite it with ours (that way the "type" key will be correct).
+    NSMutableDictionary *<$Relationship.name$>JSON = [[objectManager bridgeJSONFromObject:self.<$Relationship.name$>] mutableCopy];
+    [<$Relationship.name$>JSON addEntriesFromDictionary:dict];
+    dict = <$Relationship.name$>JSON;
+    <$else$>
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.<$Relationship.name$>] forKey:@"<$Relationship.name$>"];
+    <$endif$>
 	<$endif$>
 	<$endif$>
 	<$endif$>
@@ -572,11 +614,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 	{
 	    <$if Relationship.isTransient$>
 	    CFArrayCallBacks callbacks = {0, NULL, NULL, CFCopyDescription, CFEqual};
-      <$if TemplateVar.arc$>
       self.<$Relationship.name$> = (NSMutableArray*)CFArrayCreateMutable(0, 0, &callbacks);
-      <$else$>
-	    self.<$Relationship.name$> = [(NSMutableArray*) CFArrayCreateMutable(0, 0, &callbacks) autorelease];
-      <$endif$>
 	    <$else$>
 		self.<$Relationship.name$> = [NSMutableArray array];
 		<$endif$>
@@ -596,11 +634,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 {
 	<$if Relationship.isTransient$>
     CFArrayCallBacks callbacks = {0, NULL, NULL, CFCopyDescription, CFEqual};
-      <$if TemplateVar.arc$>
       self.<$Relationship.name$> = (NSMutableArray*)CFArrayCreateMutable(0, 0, &callbacks);
-      <$else$>
-	    self.<$Relationship.name$> = [(NSMutableArray*) CFArrayCreateMutable(0, 0, &callbacks) autorelease];
-      <$endif$>
     <$else$>
 	self.<$Relationship.name$> = [NSMutableArray array];
 	<$endif$>
@@ -708,14 +742,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
         [_<$Relationship.name$> set<$Relationship.inverseRelationship.name.initialCapitalString$>: nil settingInverse: NO];
     }
     <$endif$><$endif$><$endif$>
-    <$if TemplateVar.arc$>
     _<$Relationship.name$> = <$Relationship.name$>_;
-    <$else$>
-    <$if Relationship.isTransient$>_<$Relationship.name$> = <$Relationship.name$>_;<$else$>if (_<$Relationship.name$> != <$Relationship.name$>_) {
-        [_<$Relationship.name$> release];
-        _<$Relationship.name$> = [<$Relationship.name$>_ retain];
-    }<$endif$>
-    <$endif$>
 
     <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
         [_<$Relationship.name$> add<$Relationship.inverseRelationship.name.initialCapitalString$>Object: (<$generatedObjectClassName$>*)self settingInverse: NO];
@@ -736,24 +763,6 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 <$endif$><$endif$><$endforeach do$>
 
-<$if TemplateVar.arc$>
 <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isToMany$>@synthesize <$Relationship.name$> = _<$Relationship.name$>;<$endif$><$endif$><$endforeach do$>
-<$else$>
-- (void)dealloc
-{
-    <$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>self.<$Attribute.name$> = nil;
-    <$endif$><$endforeach do$>
-    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>self.<$Relationship.name$> = nil;
-    <$endif$><$endforeach do$>
-    [super dealloc];
-}
-
-#pragma mark Synthesizes
-
-<$foreach Attribute noninheritedAttributes do$>@synthesize <$Attribute.name$> = _<$Attribute.name$>;
-<$endforeach do$>
-<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>@synthesize <$Relationship.name$> = _<$Relationship.name$>;
-<$endif$><$endforeach do$>
-<$endif$>
 
 @end

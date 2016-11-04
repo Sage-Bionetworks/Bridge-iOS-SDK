@@ -33,7 +33,7 @@
 #import <Foundation/Foundation.h>
 @import UIKit;
 #import "SBBBridgeAPIManager.h"
-#import "SBBUserManager.h"
+#import "SBBParticipantManager.h"
 
 /*!
  Completion block for SBBConsentManagerProtocol methods.
@@ -86,8 +86,8 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
 - (nonnull NSURLSessionTask *)consentSignature:(nonnull NSString *)name
                                      birthdate:(nonnull NSDate *)date
                                 signatureImage:(nullable UIImage*)signatureImage
-                                   dataSharing:(SBBUserDataSharingScope)scope
-                                    completion:(nullable SBBConsentManagerCompletionBlock)completion __deprecated;
+                                   dataSharing:(SBBParticipantDataSharingScope)scope
+                                    completion:(nullable SBBConsentManagerCompletionBlock)completion __attribute__((deprecated("use consentSignature:forSubpopulationGuid:birthdate:signatureImage:dataSharing:completion: instead")));
 
 /*!
  *  Submit the user's "signature" and birthdate to indicate consent to participate in this research project.
@@ -105,7 +105,7 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
                           forSubpopulationGuid:(nonnull NSString *)subpopGuid
                                      birthdate:(nonnull NSDate *)date
                                 signatureImage:(nullable UIImage*)signatureImage
-                                   dataSharing:(SBBUserDataSharingScope)scope
+                                   dataSharing:(SBBParticipantDataSharingScope)scope
                                     completion:(nullable SBBConsentManagerCompletionBlock)completion;
 
 /*!
@@ -118,7 +118,7 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *
  *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionTask *)retrieveConsentSignatureWithCompletion:(nullable SBBConsentManagerRetrieveCompletionBlock)completion __deprecated;
+- (nonnull NSURLSessionTask *)retrieveConsentSignatureWithCompletion:(nullable SBBConsentManagerRetrieveCompletionBlock)completion __attribute__((deprecated("use getConsentSignatureWithCompletion:notConsented: instead")));
 
 /*!
  Get the user's consent signature as previously submitted. If the user has not submitted a required consent
@@ -143,7 +143,7 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *
  *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionTask *)withdrawConsentWithReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion __deprecated;
+- (nonnull NSURLSessionTask *)withdrawConsentWithReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion __attribute__((deprecated("use withdrawConsentForSubpopulation:withReason: instead")));
 
 /*!
  Withdraw the user's consent signature previously submitted for a specific subpopulation.

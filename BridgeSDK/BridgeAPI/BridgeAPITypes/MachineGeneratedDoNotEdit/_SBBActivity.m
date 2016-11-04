@@ -90,19 +90,20 @@
 
     self.labelDetail = [dictionary objectForKey:@"labelDetail"];
 
-        NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
+    NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
+
     if(surveyDict != nil)
     {
         SBBSurveyReference *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
         self.survey = surveyObj;
-
     }
-        NSDictionary *taskDict = [dictionary objectForKey:@"task"];
+
+    NSDictionary *taskDict = [dictionary objectForKey:@"task"];
+
     if(taskDict != nil)
     {
         SBBTaskReference *taskObj = [objectManager objectFromBridgeJSON:taskDict];
         self.task = taskObj;
-
     }
 
 }
@@ -119,9 +120,9 @@
 
     [dict setObjectIfNotNil:self.labelDetail forKey:@"labelDetail"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
 
 	return [dict copy];
 }

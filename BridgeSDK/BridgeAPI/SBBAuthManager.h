@@ -33,9 +33,16 @@
 #import <Foundation/Foundation.h>
 #import "SBBComponent.h"
 #import "SBBNetworkManager.h"
+#import "SBBStudyParticipant.h"
 
 /// Global study identifier, specific to each app. Must be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy: or setupWithStudy:useCache: class method.
 extern  NSString * _Nonnull gSBBAppStudy;
+
+@interface SBBSignUp : SBBStudyParticipant
+
+@property (nonatomic, strong) NSString * _Nullable password;
+
+@end
 
 @protocol SBBAuthManagerProtocol;
 
@@ -109,7 +116,7 @@ extern  NSString * _Nonnull gSBBAppStudy;
 /*!
  * For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this. 
  */
-- (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager __deprecated;
+- (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager __attribute__((deprecated("implement emailForAuthManager: instead")));
 
 
 /*!
@@ -137,9 +144,24 @@ extern  NSString * _Nonnull gSBBAppStudy;
 @property (nonatomic, weak) id<SBBAuthManagerDelegateProtocol> _Nullable authDelegate;
 
 /*!
+ Sign up for an account using a SignUp record, which is basically a StudyParticipant object with a password field.
+ At minimum, the email and password fields must be filled in; in general, you would also want to fill in any of the following
+ information available at sign-up time: firstName, lastName, sharingScope, externalId (if used), dataGroups, notifyByEmail,
+ and any custom attributes you've defined for the attributes field.
+ 
+ @param signUp A SBBSignUp object representing the participant signing up.
+ @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ 
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nonnull NSURLSessionTask *)signUpStudyParticipant:(nonnull SBBSignUp *)signUp completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
  * Sign up for an account with an email address, userName, password, and an optional list of data group tags. 
  * An email will be sent to the specified email address containing a link to verify that this is indeed that
  * person's email. The userName and password won't be valid for signing in until the email has been verified.
+ *
+ * @deprecated Use signUpStudyParticipant:withPassword:completion: instead.
  *
  * @param email The email address to be associated with the account.
  * @param username The username to use for the account.
@@ -148,11 +170,13 @@ extern  NSString * _Nonnull gSBBAppStudy;
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
  * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signUpStudyParticipant:withPassword:completion: instead")));
 
 /*!
  * Sign up for an account with an email address, userName, and password. This is a convenience method
  * that calls signUpWithEmail:username:password:dataGroups:completion: with dataGroups set to nil.
+ *
+ * @deprecated Use signUpStudyParticipant:withPassword:completion: instead.
  *
  * @param email The email address to be associated with the account.
  * @param username The username to use for the account.
@@ -160,7 +184,7 @@ extern  NSString * _Nonnull gSBBAppStudy;
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
  * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signUpStudyParticipant:withPassword:completion: instead")));
 
 /*!
  Request Bridge to re-send the email verification link to the specified email address.
@@ -236,7 +260,7 @@ extern  NSString * _Nonnull gSBBAppStudy;
 /*!
  * For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).
  */
-- (nonnull NSURLSessionTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __deprecated;
+- (nonnull NSURLSessionTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signInWithEmail:password:completion instead")));
 
 @end
 

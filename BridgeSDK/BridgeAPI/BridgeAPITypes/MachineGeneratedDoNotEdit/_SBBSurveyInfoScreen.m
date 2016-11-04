@@ -71,12 +71,12 @@
 
     self.title = [dictionary objectForKey:@"title"];
 
-        NSDictionary *imageDict = [dictionary objectForKey:@"image"];
+    NSDictionary *imageDict = [dictionary objectForKey:@"image"];
+
     if(imageDict != nil)
     {
         SBBImage *imageObj = [objectManager objectFromBridgeJSON:imageDict];
         self.image = imageObj;
-
     }
 
 }
@@ -87,7 +87,7 @@
 
     [dict setObjectIfNotNil:self.title forKey:@"title"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.image] forKey:@"image"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.image] forKey:@"image"];
 
 	return [dict copy];
 }
