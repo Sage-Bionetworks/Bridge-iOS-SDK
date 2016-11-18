@@ -122,6 +122,14 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return;
 }
 
+- (NSDictionary *)dictionaryRepresentation
+{
+    NSMutableDictionary *dict = [[super dictionaryRepresentation] mutableCopy];
+    [dict setObjectIfNotNil:self.password forKey:@"password"];
+    
+    return dict;
+}
+
 @end
 
 

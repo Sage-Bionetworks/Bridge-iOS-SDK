@@ -345,7 +345,11 @@
         <attribute name="environment" optional="YES" attributeType="String" regularExpressionString="^(local|develop|staging|production)$" syncable="YES"/>
         <attribute name="sessionToken" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="signedMostRecentConsent" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="consentStatuses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConsentStatus" inverseName="userSessionInfo" inverseEntity="ConsentStatus" syncable="YES"/>
+        <relationship name="consentStatuses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConsentStatus" inverseName="userSessionInfo" inverseEntity="ConsentStatus" syncable="YES">
+            <userInfo>
+                <entry key="isDictionaryJSON" value="1"/>
+            </userInfo>
+        </relationship>
         <relationship name="studyParticipant" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="StudyParticipant" inverseName="userSessionInfo" inverseEntity="StudyParticipant" syncable="YES">
             <userInfo>
                 <entry key="includedAsSubobject" value="1"/>

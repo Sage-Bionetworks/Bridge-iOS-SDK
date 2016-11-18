@@ -37,6 +37,9 @@
 #import "SBBBridgeObject.h"
 
 @interface _SBBResourceList()
+
+// redefine relationships internally as readwrite
+
 @property (nonatomic, strong, readwrite) NSArray *items;
 
 @end
@@ -66,7 +69,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -95,11 +98,11 @@
     self.total = [dictionary objectForKey:@"total"];
 
     // overwrite the old items relationship entirely rather than adding to it
-    self.items = [NSMutableArray array];
+    [self removeItemsObjects];
 
-    for(id objectRepresentationForDict in [dictionary objectForKey:@"items"])
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"items"])
     {
-        SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        SBBBridgeObject *itemsObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
         [self addItemsObject:itemsObj];
     }
@@ -112,13 +115,14 @@
 
     [dict setObjectIfNotNil:self.total forKey:@"total"];
 
-    if([self.items count] > 0)
+    if ([self.items count] > 0)
 	{
 
 		NSMutableArray *itemsRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.items count]];
-		for(SBBBridgeObject *obj in self.items)
-		{
-			[itemsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+
+		for (SBBBridgeObject *obj in self.items)
+        {
+            [itemsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:itemsRepresentationsForDictionary forKey:@"items"];
 
@@ -129,10 +133,10 @@
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for(SBBBridgeObject *itemsObj in self.items)
+	for (SBBBridgeObject *itemsObj in self.items)
 	{
 		[itemsObj awakeFromDictionaryRepresentationInit];
 	}
@@ -154,11 +158,11 @@
 
         self.total = managedObject.total;
 
-		for(NSManagedObject *itemsManagedObj in managedObject.items)
+		for (NSManagedObject *itemsManagedObj in managedObject.items)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:itemsManagedObj.entity.name];
             SBBBridgeObject *itemsObj = [[objectClass alloc] initWithManagedObject:itemsManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if(itemsObj != nil)
+            if (itemsObj != nil)
             {
                 [self addItemsObject:itemsObj];
             }
@@ -193,23 +197,20 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.total = ((id)self.total == [NSNull null]) ? nil : self.total;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id itemsCopy = managedObject.items;
+    NSOrderedSet *itemsCopy = [managedObject.items copy];
 
     // now remove all items from the existing relationship
-    NSMutableOrderedSet *itemsSet = [managedObject.items mutableCopy];
-    [itemsSet removeAllObjects];
-    managedObject.items = itemsSet;
+    [managedObject removeItems:managedObject.items];
 
     // now put the "new" items, if any, into the relationship
-    if([self.items count] > 0) {
-		for(SBBBridgeObject *obj in self.items) {
+    if ([self.items count] > 0) {
+		for (SBBBridgeObject *obj in self.items) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -219,10 +220,7 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            NSMutableOrderedSet *itemsSet = [managedObject mutableOrderedSetValueForKey:@"items"];
-            [itemsSet addObject:relMo];
-            managedObject.items = itemsSet;
-
+            [managedObject addItemsObject:relMo];
         }
 	}
 
@@ -243,7 +241,7 @@
 
 - (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.items == nil)
+    if (self.items == nil)
 	{
 
 		self.items = [NSMutableArray array];
@@ -253,6 +251,7 @@
 	[(NSMutableArray *)self.items addObject:value_];
 
 }
+
 - (void)addItemsObject:(SBBBridgeObject*)value_
 {
     [self addItemsObject:(SBBBridgeObject*)value_ settingInverse: YES];
@@ -261,7 +260,7 @@
 - (void)removeItemsObjects
 {
 
-	self.items = [NSMutableArray array];
+    self.items = [NSMutableArray array];
 
 }
 
@@ -269,6 +268,7 @@
 {
 
     [(NSMutableArray *)self.items removeObject:value_];
+
 }
 
 - (void)removeItemsObject:(SBBBridgeObject*)value_

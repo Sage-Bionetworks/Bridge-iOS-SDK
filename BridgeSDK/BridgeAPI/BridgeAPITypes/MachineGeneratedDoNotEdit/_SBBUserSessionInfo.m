@@ -38,7 +38,10 @@
 #import "SBBStudyParticipant.h"
 
 @interface _SBBUserSessionInfo()
-@property (nonatomic, strong, readwrite) NSArray *consentStatuses;
+
+// redefine relationships internally as readwrite
+
+@property (nonatomic, strong, readwrite) NSDictionary *consentStatuses;
 
 @end
 
@@ -73,7 +76,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -155,11 +158,12 @@
     self.signedMostRecentConsent = [dictionary objectForKey:@"signedMostRecentConsent"];
 
     // overwrite the old consentStatuses relationship entirely rather than adding to it
-    self.consentStatuses = [NSMutableArray array];
+    [self removeConsentStatusesObjects];
 
-    for(id objectRepresentationForDict in [dictionary objectForKey:@"consentStatuses"])
+    NSDictionary *dictionaryJSON = [dictionary objectForKey:@"consentStatuses"];
+    for (id dictRepresentationForObject in dictionaryJSON.allValues)
     {
-        SBBConsentStatus *consentStatusesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        SBBConsentStatus *consentStatusesObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
         [self addConsentStatusesObject:consentStatusesObj];
     }
@@ -172,7 +176,7 @@
     [studyParticipantDict removeObjectsForKeys:myProps];
     studyParticipantDict[@"type"] = @"SBBStudyParticipant";
 
-    if(studyParticipantDict != nil)
+    if (studyParticipantDict != nil)
     {
         SBBStudyParticipant *studyParticipantObj = [objectManager objectFromBridgeJSON:studyParticipantDict];
         self.studyParticipant = studyParticipantObj;
@@ -196,13 +200,14 @@
 
     [dict setObjectIfNotNil:self.signedMostRecentConsent forKey:@"signedMostRecentConsent"];
 
-    if([self.consentStatuses count] > 0)
+    if ([self.consentStatuses count] > 0)
 	{
 
-		NSMutableArray *consentStatusesRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.consentStatuses count]];
-		for(SBBConsentStatus *obj in self.consentStatuses)
-		{
-			[consentStatusesRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+        NSMutableDictionary *consentStatusesRepresentationsForDictionary = [NSMutableDictionary dictionaryWithCapacity:[self.consentStatuses count]];
+
+		for (SBBConsentStatus *obj in self.consentStatuses.allValues)
+        {
+            [consentStatusesRepresentationsForDictionary setObject:[objectManager bridgeJSONFromObject:obj] forKey:[obj valueForKeyPath:@"subpopulationGuid"]];
 		}
 		[dict setObjectIfNotNil:consentStatusesRepresentationsForDictionary forKey:@"consentStatuses"];
 
@@ -220,10 +225,10 @@
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for(SBBConsentStatus *consentStatusesObj in self.consentStatuses)
+	for (SBBConsentStatus *consentStatusesObj in self.consentStatuses)
 	{
 		[consentStatusesObj awakeFromDictionaryRepresentationInit];
 	}
@@ -256,11 +261,11 @@
 
         self.signedMostRecentConsent = managedObject.signedMostRecentConsent;
 
-		for(NSManagedObject *consentStatusesManagedObj in managedObject.consentStatuses)
+		for (NSManagedObject *consentStatusesManagedObj in managedObject.consentStatuses)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:consentStatusesManagedObj.entity.name];
             SBBConsentStatus *consentStatusesObj = [[objectClass alloc] initWithManagedObject:consentStatusesManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if(consentStatusesObj != nil)
+            if (consentStatusesObj != nil)
             {
                 [self addConsentStatusesObject:consentStatusesObj];
             }
@@ -268,7 +273,7 @@
             NSManagedObject *studyParticipantManagedObj = managedObject.studyParticipant;
         Class studyParticipantClass = [SBBObjectManager bridgeClassFromType:studyParticipantManagedObj.entity.name];
         SBBStudyParticipant *studyParticipantObj = [[studyParticipantClass alloc] initWithManagedObject:studyParticipantManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(studyParticipantObj != nil)
+        if (studyParticipantObj != nil)
         {
           self.studyParticipant = studyParticipantObj;
         }
@@ -302,7 +307,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
@@ -319,16 +323,14 @@
     managedObject.signedMostRecentConsent = ((id)self.signedMostRecentConsent == [NSNull null]) ? nil : self.signedMostRecentConsent;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id consentStatusesCopy = managedObject.consentStatuses;
+    NSSet *consentStatusesCopy = [managedObject.consentStatuses copy];
 
     // now remove all items from the existing relationship
-    NSMutableSet *consentStatusesSet = [managedObject.consentStatuses mutableCopy];
-    [consentStatusesSet removeAllObjects];
-    managedObject.consentStatuses = consentStatusesSet;
+    [managedObject removeConsentStatuses:managedObject.consentStatuses];
 
     // now put the "new" items, if any, into the relationship
-    if([self.consentStatuses count] > 0) {
-		for(SBBConsentStatus *obj in self.consentStatuses) {
+    if ([self.consentStatuses count] > 0) {
+		for (SBBConsentStatus *obj in self.consentStatuses.allValues) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -339,7 +341,6 @@
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
             [managedObject addConsentStatusesObject:relMo];
-
         }
 	}
 
@@ -365,16 +366,17 @@
 
 - (void)addConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.consentStatuses == nil)
+    if (self.consentStatuses == nil)
 	{
 
-		self.consentStatuses = [NSMutableArray array];
+        self.consentStatuses = [NSMutableDictionary dictionary];
 
 	}
 
-	[(NSMutableArray *)self.consentStatuses addObject:value_];
+    [(NSMutableDictionary *)self.consentStatuses setObject:value_ forKey:[value_ valueForKeyPath:@"subpopulationGuid"]];
 
 }
+
 - (void)addConsentStatusesObject:(SBBConsentStatus*)value_
 {
     [self addConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: YES];
@@ -383,14 +385,15 @@
 - (void)removeConsentStatusesObjects
 {
 
-	self.consentStatuses = [NSMutableArray array];
+    self.consentStatuses = [NSMutableDictionary dictionary];
 
 }
 
 - (void)removeConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse
 {
 
-    [(NSMutableArray *)self.consentStatuses removeObject:value_];
+    [(NSMutableDictionary *)self.consentStatuses removeObjectForKey:[value_ valueForKeyPath:@"subpopulationGuid"]];
+
 }
 
 - (void)removeConsentStatusesObject:(SBBConsentStatus*)value_

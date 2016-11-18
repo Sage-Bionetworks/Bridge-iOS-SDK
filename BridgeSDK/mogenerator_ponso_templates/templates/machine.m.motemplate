@@ -46,8 +46,18 @@
 <$endif$><$endforeach do$>
 
 @interface _<$generatedObjectClassName$>()
-<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if Relationship.isToMany$>@property (nonatomic, strong, readwrite) NSArray *<$Relationship.name$>;
-<$endif$><$endif$><$endforeach do$>
+<$foreach Relationship noninheritedRelationships do$>
+<$if ! Relationship.userInfo.notInPONSODictionary $>
+<$if Relationship.isToMany$>
+// redefine relationships internally as readwrite
+<$if Relationship.userInfo.isDictionaryJSON$>
+@property (nonatomic, strong, readwrite) NSDictionary *<$Relationship.name$>;
+<$else$>
+@property (nonatomic, strong, readwrite) NSArray *<$Relationship.name$>;
+<$endif$>
+<$endif$>
+<$endif$>
+<$endforeach do$>
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
@@ -89,7 +99,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$><$if Attribute.hasScalarAttributeType$><$if ! Attribute.isOptional$><$if Attribute.defaultValue$>self.<$Attribute.name$> = [NSNumber <$Attribute.scalarFactoryMethodName$><$Attribute.defaultValue$>];
 		<$else$>self.<$Attribute.name$> = [NSNumber <$Attribute.scalarFactoryMethodName$>0];
@@ -286,11 +296,13 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
         <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
     // overwrite the old <$Relationship.name$> relationship entirely rather than adding to it
-    self.<$Relationship.name$> = [NSMutableArray array];
+    [self remove<$Relationship.name.initialCapitalString$>Objects];
 
-    for(id objectRepresentationForDict in [dictionary objectForKey:@"<$Relationship.name$>"])
+    <$if Relationship.userInfo.isDictionaryJSON$>NSDictionary *dictionaryJSON = [dictionary objectForKey:@"<$Relationship.name$>"];
+    for (id dictRepresentationForObject in dictionaryJSON.allValues)<$else$>
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"<$Relationship.name$>"])<$endif$>
     {
-        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
         [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
     }<$else$>
@@ -305,7 +317,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     <$else$>
     NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
     <$endif$>
-    if(<$Relationship.name$>Dict != nil)
+    if (<$Relationship.name$>Dict != nil)
     {
         <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [objectManager objectFromBridgeJSON:<$Relationship.name$>Dict];
         self.<$Relationship.name$> = <$Relationship.name$>Obj;
@@ -354,14 +366,19 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     [dict setObjectIfNotNil:self.<$Attribute.name$> forKey:@"<$Attribute.name$>"];
     <$endif$><$endif$><$endif$><$endforeach do$>
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
-    <$if Relationship.isToMany$>if([self.<$Relationship.name$> count] > 0)
+    <$if Relationship.isToMany$>if ([self.<$Relationship.name$> count] > 0)
 	{
 		<$if (! Relationship.isTransient) or (Relationship.userInfo.destinationEntityIDKeyPath) $>
+        <$if Relationship.userInfo.isDictionaryJSON and ! Relationship.userInfo.destinationEntityIDKeyPath$>
+        NSMutableDictionary *<$Relationship.name$>RepresentationsForDictionary = [NSMutableDictionary dictionaryWithCapacity:[self.<$Relationship.name$> count]];
+        <$else$>
 		NSMutableArray *<$Relationship.name$>RepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.<$Relationship.name$> count]];
-		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>)
-		{
-			<$if Relationship.userInfo.destinationEntityIDKeyPath $>[<$Relationship.name$>RepresentationsForDictionary addObject:[obj valueForKeyPath:@"<$Relationship.userInfo.destinationEntityIDKeyPath$>"]];
-			<$else$>[<$Relationship.name$>RepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];<$endif$>
+        <$endif$>
+		for (<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$><$if Relationship.userInfo.isDictionaryJSON$>.allValues<$endif$>)
+        {<$if Relationship.userInfo.destinationEntityIDKeyPath $>
+            [<$Relationship.name$>RepresentationsForDictionary addObject:[obj valueForKeyPath:@"<$Relationship.userInfo.destinationEntityIDKeyPath$>"]];<$else$><$if Relationship.userInfo.isDictionaryJSON$>
+            [<$Relationship.name$>RepresentationsForDictionary setObject:[objectManager bridgeJSONFromObject:obj] forKey:[obj valueForKeyPath:@"<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>"]];<$else$>
+            [<$Relationship.name$>RepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];<$endif$><$endif$>
 		}
 		[dict setObjectIfNotNil:<$Relationship.name$>RepresentationsForDictionary forKey:@"<$Relationship.name$>"];
 		<$endif$>
@@ -405,14 +422,14 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 	
 	<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if Relationship.userInfo.destinationEntityIDKeyPath $><$if Relationship.isToMany$>NSArray *<$generatedObjectClassName$>_<$Relationship.name$>IDs = [self.sourceDictionaryRepresentation objectForKey:@"<$generatedObjectClassName$>.<$Relationship.name$>"];
-	for(id <$generatedObjectClassName$>_<$Relationship.name$>ID in <$generatedObjectClassName$>_<$Relationship.name$>IDs)
+	for (id <$generatedObjectClassName$>_<$Relationship.name$>ID in <$generatedObjectClassName$>_<$Relationship.name$>IDs)
 	{
 		<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [(_<$generatedObjectClassName$><_<$generatedObjectClassName$>> *)self fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:<$generatedObjectClassName$>_<$Relationship.name$>ID];
-		if(<$Relationship.name$>Obj != nil)
+		if (<$Relationship.name$>Obj != nil)
 			[self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
 	}
 	<$else$>self.<$Relationship.name$> = [(_<$generatedObjectClassName$><_<$generatedObjectClassName$>> *)self fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:[self.sourceDictionaryRepresentation objectForKey:@"<$generatedObjectClassName$>.<$Relationship.name$>"]];
@@ -423,7 +440,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 
 	<$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isTransient$><$if Relationship.destinationEntity != Relationship.entity $><$if Relationship.isToMany$>
-	for(<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj in self.<$Relationship.name$>)
+	for (<$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj in self.<$Relationship.name$>)
 	{
 		[<$Relationship.name$>Obj awakeFromDictionaryRepresentationInit];
 	}
@@ -479,18 +496,18 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 		<$endif$><$endforeach do$>
 		<$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
             <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
-		for(NSManagedObject *<$Relationship.name$>ManagedObj in managedObject.<$Relationship.name$>)
+		for (NSManagedObject *<$Relationship.name$>ManagedObj in managedObject.<$Relationship.name$>)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:<$Relationship.name$>ManagedObj.entity.name];
             <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[objectClass alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if(<$Relationship.name$>Obj != nil)
+            if (<$Relationship.name$>Obj != nil)
             {
                 [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
             }
 		}<$else$>NSManagedObject *<$Relationship.name$>ManagedObj = managedObject.<$Relationship.name$>;
         Class <$Relationship.name$>Class = [SBBObjectManager bridgeClassFromType:<$Relationship.name$>ManagedObj.entity.name];
         <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>Obj = [[<$Relationship.name$>Class alloc] initWithManagedObject:<$Relationship.name$>ManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(<$Relationship.name$>Obj != nil)
+        if (<$Relationship.name$>Obj != nil)
         {
           self.<$Relationship.name$> = <$Relationship.name$>Obj;
         }<$endif$><$endif$><$endif$><$endif$><$endforeach do$>
@@ -526,8 +543,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    <$if userInfo.encrypted$>
-    NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
+    <$if userInfo.encrypted$>NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
     NSError *error;
     NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
     NSString *password = cacheManager.encryptionKey;
@@ -537,8 +553,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
             managedObject.ciphertext = ciphertext;
         }
     }
-    <$else$>
-    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    <$else$>[super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;<$break$><$endif$><$endforeach do$>
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     managedObject.<$Attribute.name$> = ((id)self.<$Attribute.name$> == [NSNull null]) ? nil : self.<$Attribute.name$>;
@@ -547,16 +562,14 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     <$if ! Relationship.userInfo.notInPONSODictionary $>
     <$if Relationship.isToMany$>
     <$if ! Relationship.isTransient $>// first make a copy of the existing relationship collection, to iterate through while mutating original
-    id <$Relationship.name$>Copy = managedObject.<$Relationship.name$>;
+    <$if Relationship.isOrdered$>NSOrderedSet<$else$>NSSet<$endif$> *<$Relationship.name$>Copy = [managedObject.<$Relationship.name$> copy];
 
     // now remove all items from the existing relationship
-    <$if Relationship.isOrdered$>NSMutableOrderedSet<$else$>NSMutableSet<$endif$> *<$Relationship.name$>Set = [managedObject.<$Relationship.name$> mutableCopy];
-    [<$Relationship.name$>Set removeAllObjects];
-    managedObject.<$Relationship.name$> = <$Relationship.name$>Set;
+    [managedObject remove<$Relationship.name.initialCapitalString$>:managedObject.<$Relationship.name$>];
 
     // now put the "new" items, if any, into the relationship
-    if([self.<$Relationship.name$> count] > 0) {
-		for(<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$>) {
+    if ([self.<$Relationship.name$> count] > 0) {
+		for (<$Relationship.destinationEntity.generatedObjectClassName$> *obj in self.<$Relationship.name$><$if Relationship.userInfo.isDictionaryJSON$>.allValues<$endif$>) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -566,11 +579,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            <$if Relationship.isOrdered$>NSMutableOrderedSet *<$Relationship.name$>Set = [managedObject mutableOrderedSetValueForKey:@"<$Relationship.name$>"];
-            [<$Relationship.name$>Set addObject:relMo];
-            managedObject.<$Relationship.name$> = <$Relationship.name$>Set;
-            <$else$>[managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
-            <$endif$>
+            [managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
         }
 	}
 
@@ -610,21 +619,30 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if Relationship.isToMany$>
 - (void)add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.<$Relationship.name$> == nil)
+    if (self.<$Relationship.name$> == nil)
 	{
 	    <$if Relationship.isTransient$>
 	    CFArrayCallBacks callbacks = {0, NULL, NULL, CFCopyDescription, CFEqual};
       self.<$Relationship.name$> = (NSMutableArray*)CFArrayCreateMutable(0, 0, &callbacks);
 	    <$else$>
+        <$if Relationship.userInfo.isDictionaryJSON$>
+        self.<$Relationship.name$> = [NSMutableDictionary dictionary];
+        <$else$>
 		self.<$Relationship.name$> = [NSMutableArray array];
+        <$endif$>
 		<$endif$>
 	}
 		
+    <$if Relationship.userInfo.isDictionaryJSON$>
+    [(NSMutableDictionary *)self.<$Relationship.name$> setObject:value_ forKey:[value_ valueForKeyPath:@"<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>"]];
+    <$else$>
 	[(NSMutableArray *)self.<$Relationship.name$> addObject:value_];
+    <$endif$>
 	<$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
 	    [value_ set<$Relationship.inverseRelationship.name.initialCapitalString$>: (<$generatedObjectClassName$>*)self settingInverse: NO];
 	}<$endif$><$endif$><$endif$>
 }
+
 - (void)add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_
 {
     [self add<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_ settingInverse: YES];
@@ -636,7 +654,11 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     CFArrayCallBacks callbacks = {0, NULL, NULL, CFCopyDescription, CFEqual};
       self.<$Relationship.name$> = (NSMutableArray*)CFArrayCreateMutable(0, 0, &callbacks);
     <$else$>
-	self.<$Relationship.name$> = [NSMutableArray array];
+    <$if Relationship.userInfo.isDictionaryJSON$>
+    self.<$Relationship.name$> = [NSMutableDictionary dictionary];
+    <$else$>
+    self.<$Relationship.name$> = [NSMutableArray array];
+    <$endif$>
 	<$endif$>
 }
 
@@ -645,7 +667,11 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     <$if Relationship.inverseRelationship$><$if ! Relationship.inverseRelationship.userInfo.notInPONSODictionary $><$if ! Relationship.inverseRelationship.isToMany$>if (setInverse == YES) {
         [value_ set<$Relationship.inverseRelationship.name.initialCapitalString$>: nil settingInverse: NO];
     }<$endif$><$endif$><$endif$>
+<$if Relationship.userInfo.isDictionaryJSON$>
+    [(NSMutableDictionary *)self.<$Relationship.name$> removeObjectForKey:[value_ valueForKeyPath:@"<$Relationship.destinationEntity.userInfo.entityIDKeyPath$>"]];
+<$else$>
     [(NSMutableArray *)self.<$Relationship.name$> removeObject:value_];
+<$endif$>
 }
 
 - (void)remove<$Relationship.name.initialCapitalString$>Object:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value_
@@ -657,6 +683,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     [self insertObject:value in<$Relationship.name.initialCapitalString$>AtIndex:idx settingInverse:YES];
 }
 
+<$if ! Relationship.userInfo.isDictionaryJSON$>
 - (void)insertObject:(<$Relationship.destinationEntity.generatedObjectClassName$>*)value in<$Relationship.name.initialCapitalString$>AtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
 
     [(NSMutableArray *)self.<$Relationship.name$> insertObject:value atIndex:idx];
@@ -730,6 +757,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     }<$endif$><$endif$><$endif$>
     [(NSMutableArray *)self.<$Relationship.name$> replaceObjectsAtIndexes:indexes withObjects:value];
 }
+<$endif$>
 <$endif$>
 <$endif$><$endif$><$endforeach do$>
 

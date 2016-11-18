@@ -49,7 +49,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -162,8 +162,13 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSArray *)originalProperties
 {
-    NSMutableArray *props = [@[@"dateField", @"doubleField", @"floatField", @"guid", @"jsonArrayField", @"jsonDictField", @"longField", @"longLongField", @"shortField", @"stringField", @"type", @"uLongField", @"uLongLongField", @"uShortField", @"bridgeObjectArrayField", @"bridgeObjectSetField", @"bridgeSubObjectField", @"__end_of_properties__"] mutableCopy];
-    [props removeLastObject];
+    static NSArray *props;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableArray *localProps = [@[@"dateField", @"doubleField", @"floatField", @"guid", @"jsonArrayField", @"jsonDictField", @"longField", @"longLongField", @"shortField", @"stringField", @"type", @"uLongField", @"uLongLongField", @"uShortField", @"bridgeObjectArrayField", @"bridgeObjectSetField", @"bridgeSubObjectField", @"__end_of_properties__"] mutableCopy];
+        [localProps removeLastObject];
+        props = [localProps copy];
+    });
 
     return props;
 }
@@ -223,7 +228,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
@@ -271,7 +276,6 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.

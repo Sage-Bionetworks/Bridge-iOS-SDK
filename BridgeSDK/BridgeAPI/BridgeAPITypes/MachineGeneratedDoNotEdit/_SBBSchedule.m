@@ -37,6 +37,9 @@
 #import "SBBActivity.h"
 
 @interface _SBBSchedule()
+
+// redefine relationships internally as readwrite
+
 @property (nonatomic, strong, readwrite) NSArray *activities;
 
 @end
@@ -86,7 +89,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -135,11 +138,11 @@
     self.times = [dictionary objectForKey:@"times"];
 
     // overwrite the old activities relationship entirely rather than adding to it
-    self.activities = [NSMutableArray array];
+    [self removeActivitiesObjects];
 
-    for(id objectRepresentationForDict in [dictionary objectForKey:@"activities"])
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"activities"])
     {
-        SBBActivity *activitiesObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        SBBActivity *activitiesObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
         [self addActivitiesObject:activitiesObj];
     }
@@ -172,13 +175,14 @@
 
     [dict setObjectIfNotNil:self.times forKey:@"times"];
 
-    if([self.activities count] > 0)
+    if ([self.activities count] > 0)
 	{
 
 		NSMutableArray *activitiesRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.activities count]];
-		for(SBBActivity *obj in self.activities)
-		{
-			[activitiesRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+
+		for (SBBActivity *obj in self.activities)
+        {
+            [activitiesRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:activitiesRepresentationsForDictionary forKey:@"activities"];
 
@@ -189,10 +193,10 @@
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for(SBBActivity *activitiesObj in self.activities)
+	for (SBBActivity *activitiesObj in self.activities)
 	{
 		[activitiesObj awakeFromDictionaryRepresentationInit];
 	}
@@ -234,11 +238,11 @@
 
         self.times = managedObject.times;
 
-		for(NSManagedObject *activitiesManagedObj in managedObject.activities)
+		for (NSManagedObject *activitiesManagedObj in managedObject.activities)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:activitiesManagedObj.entity.name];
             SBBActivity *activitiesObj = [[objectClass alloc] initWithManagedObject:activitiesManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if(activitiesObj != nil)
+            if (activitiesObj != nil)
             {
                 [self addActivitiesObject:activitiesObj];
             }
@@ -273,7 +277,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
@@ -300,16 +303,14 @@
     managedObject.times = ((id)self.times == [NSNull null]) ? nil : self.times;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id activitiesCopy = managedObject.activities;
+    NSOrderedSet *activitiesCopy = [managedObject.activities copy];
 
     // now remove all items from the existing relationship
-    NSMutableOrderedSet *activitiesSet = [managedObject.activities mutableCopy];
-    [activitiesSet removeAllObjects];
-    managedObject.activities = activitiesSet;
+    [managedObject removeActivities:managedObject.activities];
 
     // now put the "new" items, if any, into the relationship
-    if([self.activities count] > 0) {
-		for(SBBActivity *obj in self.activities) {
+    if ([self.activities count] > 0) {
+		for (SBBActivity *obj in self.activities) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -319,10 +320,7 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            NSMutableOrderedSet *activitiesSet = [managedObject mutableOrderedSetValueForKey:@"activities"];
-            [activitiesSet addObject:relMo];
-            managedObject.activities = activitiesSet;
-
+            [managedObject addActivitiesObject:relMo];
         }
 	}
 
@@ -343,7 +341,7 @@
 
 - (void)addActivitiesObject:(SBBActivity*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.activities == nil)
+    if (self.activities == nil)
 	{
 
 		self.activities = [NSMutableArray array];
@@ -353,6 +351,7 @@
 	[(NSMutableArray *)self.activities addObject:value_];
 
 }
+
 - (void)addActivitiesObject:(SBBActivity*)value_
 {
     [self addActivitiesObject:(SBBActivity*)value_ settingInverse: YES];
@@ -361,7 +360,7 @@
 - (void)removeActivitiesObjects
 {
 
-	self.activities = [NSMutableArray array];
+    self.activities = [NSMutableArray array];
 
 }
 
@@ -369,6 +368,7 @@
 {
 
     [(NSMutableArray *)self.activities removeObject:value_];
+
 }
 
 - (void)removeActivitiesObject:(SBBActivity*)value_

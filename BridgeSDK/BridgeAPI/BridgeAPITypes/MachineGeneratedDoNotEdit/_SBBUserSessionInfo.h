@@ -62,7 +62,7 @@
 
 @property (nonatomic, assign) BOOL signedMostRecentConsentValue;
 
-@property (nonatomic, strong, readonly) NSArray *consentStatuses;
+@property (nonatomic, strong, readonly) NSDictionary *consentStatuses;
 
 @property (nonatomic, strong, readwrite) SBBStudyParticipant *studyParticipant;
 
