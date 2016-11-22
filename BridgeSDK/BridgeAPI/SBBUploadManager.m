@@ -1065,6 +1065,38 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     if (completion) {
         completion(error);
     }
+    
+#if DEBUG
+    NSFileManager *fileMan = [NSFileManager defaultManager];
+    NSURL *homeDir = [NSURL URLWithString:NSHomeDirectory()];
+    NSDirectoryEnumerator *directoryEnumerator =
+    [fileMan enumeratorAtURL:homeDir
+  includingPropertiesForKeys:@[NSURLNameKey, NSURLIsDirectoryKey, NSURLFileSizeKey]
+                     options:0
+                errorHandler:nil];
+    
+    NSMutableDictionary<NSURL *, NSNumber *> *mutableFileInfo = [NSMutableDictionary dictionary];
+    for (NSURL *fileURL in directoryEnumerator) {
+        NSNumber *isDirectory = nil;
+        [fileURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
+        
+        if (![isDirectory boolValue]) {
+            // normalize the url and add to the list
+            NSNumber *fileSize = nil;
+            [fileURL getResourceValue:&fileSize forKey:NSURLFileSizeKey error:nil];
+            if (!fileSize) {
+                fileSize = @(-1);
+            }
+            [mutableFileInfo setObject:fileSize forKey:[fileURL URLByResolvingSymlinksInPath]];
+        }
+    }
+    
+    NSLog(@"%@ files left in our sandbox:", @(mutableFileInfo.count));
+    for (NSURL *fileURL in mutableFileInfo.allKeys) {
+        NSNumber *fileSize = mutableFileInfo[fileURL];
+        NSLog(@"%@ size:%@", [fileURL.path sandboxRelativePath], fileSize);
+    };
+#endif
 }
 
 - (void)URLSession:(NSURLSession *)session didBecomeInvalidWithError:(NSError *)error
