@@ -22,9 +22,10 @@
         // simulator and device have the app uuid in a different location in the path,
         // and it might change in the future, so:
         NSRegularExpression *findUUIDRegex = [NSRegularExpression regularExpressionWithPattern:UUID_REGEX_PATTERN options:0 error:nil];
-        NSRange rangeOfUUID = [findUUIDRegex rangeOfFirstMatchInString:sandboxPath options:0 range:NSMakeRange(0, sandboxPath.length)];
-        NSString *beforeUUID = [sandboxPath substringToIndex:rangeOfUUID.location];
-        NSString *afterUUID = [sandboxPath substringFromIndex:rangeOfUUID.location + rangeOfUUID.length];
+        NSArray<NSTextCheckingResult *> *UUIDmatches = [findUUIDRegex matchesInString:sandboxPath options:0 range:NSMakeRange(0, sandboxPath.length)];
+        NSRange rangeOfLastUUID = [UUIDmatches lastObject].range;
+        NSString *beforeUUID = [sandboxPath substringToIndex:rangeOfLastUUID.location];
+        NSString *afterUUID = [sandboxPath substringFromIndex:rangeOfLastUUID.location + rangeOfLastUUID.length];
         NSString *regexPattern = @"^";
         NSString *quotedFormat = @"\\Q%@\\E";
         if (beforeUUID.length) {
