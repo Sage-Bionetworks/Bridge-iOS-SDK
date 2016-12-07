@@ -415,7 +415,7 @@ NSString *kAPIPrefix = @"webservices";
         localRetryObject.completionBlock = taskCompletion;
         localRetryObject.retryBlock = ^ {
             __strong SBBNetworkRetryObject *strongLocalRetryObject = weakLocalRetryObject; //To break retain cycle
-            [self downloadFileFromURLString:urlString retryObject:strongLocalRetryObject method:httpMethod httpHeaders:headers parameters:parameters taskDescription:description downloadCompletion:downloadCompletion taskCompletion:taskCompletion];
+            [self downloadFileFromURLString:urlString retryObject:strongLocalRetryObject method:httpMethod httpHeaders:[self headersPreparedForRetry:headers] parameters:parameters taskDescription:description downloadCompletion:downloadCompletion taskCompletion:taskCompletion];
         };
     }
     else
