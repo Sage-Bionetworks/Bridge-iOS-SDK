@@ -34,6 +34,8 @@
 
 @protocol SBBBridgeNetworkManagerProtocol <SBBNetworkManagerProtocol>
 
+- (BOOL)checkForAndHandleUnsupportedAppVersionHTTPError:(NSError *)error;
+
 @end
 
 
