@@ -37,6 +37,7 @@
 #import "SBBComponentManager.h"
 #import "BridgeSDKInternal.h"
 #import "SBBUserManagerInternal.h"
+#import "SBBBridgeNetworkManager.h"
 
 #define AUTH_API GLOBAL_API_PREFIX @"/auth"
 
@@ -303,6 +304,15 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (NSURLSessionTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
     return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        // check for and handle app version out of date error (n.b.: our networkManager instance is a vanilla one, and we need
+        // a Bridge network manager for this)
+        id<SBBBridgeNetworkManagerProtocol> bridgeNetworkManager = (id<SBBBridgeNetworkManagerProtocol>)SBBComponent(SBBBridgeNetworkManager);
+        BOOL handledUnsupportedAppVersionError = [bridgeNetworkManager checkForAndHandleUnsupportedAppVersionHTTPError:error];
+        if (handledUnsupportedAppVersionError) {
+            // don't call the completion handler, just bail
+            return;
+        }
+        
         // Save session token in the keychain
         // ??? Save credentials in the keychain?
         NSString *sessionToken = responseObject[@"sessionToken"];

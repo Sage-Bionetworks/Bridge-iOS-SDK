@@ -149,7 +149,7 @@
     }
 }
 
-- (void)checkForAndHandleUnsupportedAppVersionHTTPError:(NSError *)error
+- (BOOL)checkForAndHandleUnsupportedAppVersionHTTPError:(NSError *)error
 {
     // Set flag that blocks attempting further retries once this error has been received.
     // All future attempts to access services will fail.
@@ -183,6 +183,8 @@
             [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alertController animated:YES completion:nil];
         }
     }
+    
+    return _unsupportedAppVersion;
 }
 
 - (void)checkForAndHandleServerPreconditionNotMetHTTPError:(NSError *)error task:(NSURLSessionTask *)task responseObject:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
