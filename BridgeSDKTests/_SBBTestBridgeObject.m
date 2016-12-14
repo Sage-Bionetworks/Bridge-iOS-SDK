@@ -471,12 +471,10 @@
     managedObject.uShortField = ((id)self.uShortField == [NSNull null]) ? nil : self.uShortField;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id bridgeObjectArrayFieldCopy = managedObject.bridgeObjectArrayField;
+    NSOrderedSet *bridgeObjectArrayFieldCopy = [managedObject.bridgeObjectArrayField copy];
 
     // now remove all items from the existing relationship
-    NSMutableOrderedSet *bridgeObjectArrayFieldSet = [managedObject.bridgeObjectArrayField mutableCopy];
-    [bridgeObjectArrayFieldSet removeAllObjects];
-    managedObject.bridgeObjectArrayField = bridgeObjectArrayFieldSet;
+    [managedObject removeBridgeObjectArrayField:managedObject.bridgeObjectArrayField];
 
     // now put the "new" items, if any, into the relationship
     if ([self.bridgeObjectArrayField count] > 0) {
@@ -490,10 +488,7 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            NSMutableOrderedSet *bridgeObjectArrayFieldSet = [managedObject mutableOrderedSetValueForKey:@"bridgeObjectArrayField"];
-            [bridgeObjectArrayFieldSet addObject:relMo];
-            managedObject.bridgeObjectArrayField = bridgeObjectArrayFieldSet;
-
+            [managedObject addBridgeObjectArrayFieldObject:relMo];
         }
 	}
 
@@ -508,12 +503,10 @@
     bridgeObjectArrayFieldCopy = nil;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id bridgeObjectSetFieldCopy = managedObject.bridgeObjectSetField;
+    NSSet *bridgeObjectSetFieldCopy = [managedObject.bridgeObjectSetField copy];
 
     // now remove all items from the existing relationship
-    NSMutableSet *bridgeObjectSetFieldSet = [managedObject.bridgeObjectSetField mutableCopy];
-    [bridgeObjectSetFieldSet removeAllObjects];
-    managedObject.bridgeObjectSetField = bridgeObjectSetFieldSet;
+    [managedObject removeBridgeObjectSetField:managedObject.bridgeObjectSetField];
 
     // now put the "new" items, if any, into the relationship
     if ([self.bridgeObjectSetField count] > 0) {
@@ -528,7 +521,6 @@
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
             [managedObject addBridgeObjectSetFieldObject:relMo];
-
         }
 	}
 
