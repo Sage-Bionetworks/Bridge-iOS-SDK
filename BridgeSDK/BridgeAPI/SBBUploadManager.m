@@ -734,19 +734,21 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                     return;
                 }
                 error = [NSError generateSBBErrorForStatusCode:statusCode];
-                switch (statusCode) {
-                    case 412:
-                        // not consented--don't retry; we shouldn't be uploading data in the first place
-                        [self completeUploadOfFile:task.taskDescription withError:error];
-                        break;
-                        
-                    default:
-                        // anything else, retry after a delay
+                if (error.code == SBBErrorCodeUnsupportedAppVersion) {
+                    // 410 app version not supported--set it for delayed retry so it will go through after they upgrade the app
+                    [self setRetryAfterDelayForFile:filePath];
+                } else if (error.code == SBBErrorCodeServerPreconditionNotMet) {
+                    // 412 not consented--don't retry; we shouldn't be uploading data in the first place
+                    [self completeUploadOfFile:task.taskDescription withError:error];
+                } else if (statusCode >= 500) {
+                    // server issue--retry after a bit to give it a chance to clear up
 #if DEBUG
-                        NSLog(@"Request to Bridge for UploadSession failed with HTTP status %@. Will retry after delay.", @(statusCode));
+                    NSLog(@"Request to Bridge for UploadSession failed with HTTP status %@. Will retry after delay.", @(statusCode));
 #endif
-                        [self setRetryAfterDelayForFile:filePath];
-                        break;
+                    [self setRetryAfterDelayForFile:filePath];
+                } else {
+                    // other 4xx--not client-recoverable, so just fail gracefully-ish
+                    [self completeUploadOfFile:task.taskDescription withError:error];
                 }
             } else {
                 // network error--we'll only get here if the error didn't include resume data

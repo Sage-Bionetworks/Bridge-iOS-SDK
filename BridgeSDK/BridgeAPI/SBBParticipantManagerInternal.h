@@ -35,7 +35,6 @@
 /* CONSTANTS */
 extern NSString * const kSBBParticipantAPI;
 
-extern NSString * const kSBBParticipantDataSharingScopeKey;
 extern NSString * const kSBBParticipantDataSharingScopeStrings[];
 
 @protocol SBBParticipantManagerInternalProtocol <SBBParticipantManagerProtocol, SBBBridgeAPIManagerInternalProtocol>

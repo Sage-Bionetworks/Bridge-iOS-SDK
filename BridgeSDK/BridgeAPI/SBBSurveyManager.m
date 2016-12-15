@@ -104,18 +104,21 @@ NSString * const kSBBSurveyAPIFormat =                          SURVEY_API_FORMA
 
 - (NSURLSessionTask *)getSurveyWithGuid:(NSString *)guid createdOnString:(NSString *)createdOnString ref:(NSString *)ref cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion
 {
-    // fetch from cache
-    SBBSurvey *cachedSurvey = [self fetchSurveyFromCacheWithGuid:guid createdOnString:createdOnString];
-    
-    // if we're going straight to cache, just pass it along and get out
-    // if we're checking the cache first, and it's there, also just pass it along and get out
-    if (policy == SBBCachingPolicyCachedOnly ||
-        (policy == SBBCachingPolicyCheckCacheFirst && cachedSurvey != nil)) {
-        if (completion) {
-            completion(cachedSurvey, nil);
-        }
+    SBBSurvey *cachedSurvey = nil;
+    if (gSBBUseCache) {
+        // fetch from cache
+        cachedSurvey = [self fetchSurveyFromCacheWithGuid:guid createdOnString:createdOnString];
         
-        return nil;
+        // if we're going straight to cache, just pass it along and get out
+        // if we're checking the cache first, and it's there, also just pass it along and get out
+        if (policy == SBBCachingPolicyCachedOnly ||
+            (policy == SBBCachingPolicyCheckCacheFirst && cachedSurvey != nil)) {
+            if (completion) {
+                completion(cachedSurvey, nil);
+            }
+            
+            return nil;
+        }
     }
     
     // now try the server
