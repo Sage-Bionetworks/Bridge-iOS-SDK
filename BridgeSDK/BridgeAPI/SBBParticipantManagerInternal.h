@@ -42,6 +42,7 @@ extern NSString * const kSBBParticipantDataSharingScopeStrings[];
 @property (nonatomic, strong) id<SBBActivityManagerInternalProtocol> activityManager;
 
 - (void)clearUserInfoFromCache;
+- (NSURLSessionTask *)getParticipantRecordFromBridgeWithCompletion:(SBBParticipantManagerGetRecordCompletionBlock)completion;
 
 @end
 

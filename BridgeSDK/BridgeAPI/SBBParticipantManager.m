@@ -9,6 +9,9 @@
 #import "SBBParticipantManagerInternal.h"
 #import "ModelObjectInternal.h"
 #import "SBBObjectManagerInternal.h"
+#import "SBBUserSessionInfo.h"
+#import "SBBUserManagerInternal.h"
+#import "SBBComponentManager.h"
 
 #define PARTICIPANT_API GLOBAL_API_PREFIX @"/participants/self"
 
@@ -22,6 +25,8 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 
 @implementation SBBParticipantManager
 
+@synthesize activityManager = _activityManager;
+
 + (instancetype)defaultComponent
 {
     static SBBParticipantManager *shared;
@@ -34,6 +39,15 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     return shared;
 }
 
+- (id<SBBActivityManagerInternalProtocol>)activityManager
+{
+    if (!_activityManager) {
+        _activityManager = (id<SBBActivityManagerInternalProtocol>)SBBComponent(SBBActivityManager);
+    }
+    
+    return _activityManager;
+}
+
 - (void)clearUserInfoFromCache
 {
     NSString *participantType = [SBBStudyParticipant entityName];
@@ -43,12 +57,25 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     [self.cacheManager removeFromCacheObjectOfType:participantType withId:participantType];
 }
 
+- (NSURLSessionTask *)getParticipantRecordFromBridgeWithCompletion:(SBBParticipantManagerGetRecordCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    return [self.networkManager get:kSBBParticipantAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        id participant = [self.objectManager objectFromBridgeJSON:responseObject];
+        
+        if (completion) {
+            completion(participant, error);
+        }
+    }];
+}
+
 - (NSURLSessionTask *)getParticipantRecordWithCompletion:(SBBParticipantManagerGetRecordCompletionBlock)completion
 {
     if (gSBBUseCache) {
         // fetch from cache
         NSString *participantType = [SBBStudyParticipant entityName];
-        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedObjectOfType:participantType withId:participantType createIfMissing:NO];
+        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
         id participant = [(id<SBBObjectManagerInternalProtocol>)self.objectManager mappedObjectForBridgeObject:cachedParticipant];
         
         if (completion) {
@@ -58,15 +85,7 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         return nil;
     } else {
         // fetch from the server
-        NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-        [self.authManager addAuthHeaderToHeaders:headers];
-        return [self.networkManager get:kSBBParticipantAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-            id participant = [self.objectManager objectFromBridgeJSON:responseObject];
-            
-            if (completion) {
-                completion(participant, error);
-            }
-        }];
+        return [self getParticipantRecordFromBridgeWithCompletion:completion];
     }
 }
 
@@ -75,6 +94,14 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     return [self.networkManager post:kSBBParticipantAPI headers:headers parameters:json background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        if (!error && [responseObject[NSStringFromSelector(@selector(type))] isEqualToString:[SBBUserSessionInfo entityName]]) {
+            // successfully updated the participant object to Bridge; now clear it from cache...
+            [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
+            [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
+            
+            // ...and re-create it from the UserSessionInfo in the response
+            __unused id info = [self.objectManager objectFromBridgeJSON:responseObject];
+        }
         if (completion) {
             completion(responseObject, error);
         }
@@ -86,9 +113,9 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     id participantJSON = [self.objectManager bridgeJSONFromObject:participant];
     if (gSBBUseCache) {
         if (!participant) {
-            // sync the cached StudyParticipant object to Bridge
+            // nil parameter means sync the cached StudyParticipant object to Bridge
             NSString *participantType = [SBBStudyParticipant entityName];
-            SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedObjectOfType:participantType withId:participantType createIfMissing:NO];
+            SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
             participantJSON = [self.objectManager bridgeJSONFromObject:cachedParticipant];
         }
     }
@@ -112,7 +139,7 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     if (gSBBUseCache) {
         // set it on the cached object first
         NSString *participantType = [SBBStudyParticipant entityName];
-        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedObjectOfType:participantType withId:participantType createIfMissing:NO];
+        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
         [cachedParticipant setValue:value forKey:fieldName];
         [cachedParticipant saveToCoreDataCacheWithObjectManager:self.objectManager];
         bridgeJSON = [self.objectManager bridgeJSONFromObject:cachedParticipant];
@@ -150,7 +177,7 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     if (gSBBUseCache) {
         // get the data groups from the cached StudyParticipant
         NSString *participantType = [SBBStudyParticipant entityName];
-        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedObjectOfType:participantType withId:participantType createIfMissing:NO];
+        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
         dataGroups = cachedParticipant.dataGroups;
         completion(dataGroups, nil);
     } else {

@@ -7,6 +7,7 @@
 //
 
 #import "SBBCacheManager.h"
+#import "SBBObjectManager.h"
 
 @protocol SBBObjectManagerInternalProtocol <SBBObjectManagerProtocol>
 
