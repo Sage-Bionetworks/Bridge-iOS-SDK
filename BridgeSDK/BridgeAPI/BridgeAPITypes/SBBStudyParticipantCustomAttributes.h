@@ -32,5 +32,6 @@
 @interface SBBStudyParticipantCustomAttributes : NSObject
 
 - (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary;
+- (NSDictionary *)dictionaryRepresentation;
 
 @end

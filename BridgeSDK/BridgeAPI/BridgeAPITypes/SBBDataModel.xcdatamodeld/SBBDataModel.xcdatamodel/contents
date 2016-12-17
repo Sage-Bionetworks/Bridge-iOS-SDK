@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11542" systemVersion="16B2555" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16B2555" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" regularExpressionString="^(task|survey)$" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -206,7 +206,7 @@
         </relationship>
         <userInfo>
             <entry key="additionalHeaderFileName" value="SBBStudyParticipantCustomAttributes.h"/>
-            <entry key="encrypted" value="1"/>
+            <entry key="encrypted" value="ciphertext"/>
             <entry key="entityIDKeyPath" value="type"/>
         </userInfo>
     </entity>
@@ -333,7 +333,7 @@
         <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
         <userInfo>
-            <entry key="encrypted" value="1"/>
+            <entry key="encrypted" value="ciphertext"/>
             <entry key="entityIDKeyPath" value="type"/>
             <entry key="isExtendable" value="1"/>
         </userInfo>

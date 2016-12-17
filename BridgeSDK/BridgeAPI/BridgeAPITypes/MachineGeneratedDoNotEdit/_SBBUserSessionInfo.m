@@ -174,7 +174,7 @@
     NSMutableDictionary *studyParticipantDict = [dictionary mutableCopy];
     NSArray *myProps = [self originalProperties];
     [studyParticipantDict removeObjectsForKeys:myProps];
-    studyParticipantDict[@"type"] = @"SBBStudyParticipant";
+    studyParticipantDict[@"type"] = @"StudyParticipant";
 
     if (studyParticipantDict != nil)
     {

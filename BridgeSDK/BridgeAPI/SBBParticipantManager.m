@@ -8,6 +8,7 @@
 
 #import "SBBParticipantManagerInternal.h"
 #import "ModelObjectInternal.h"
+#import "SBBObjectManagerInternal.h"
 
 #define PARTICIPANT_API GLOBAL_API_PREFIX @"/participants/self"
 
@@ -48,9 +49,10 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         // fetch from cache
         NSString *participantType = [SBBStudyParticipant entityName];
         SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedObjectOfType:participantType withId:participantType createIfMissing:NO];
+        id participant = [(id<SBBObjectManagerInternalProtocol>)self.objectManager mappedObjectForBridgeObject:cachedParticipant];
         
         if (completion) {
-            completion(cachedParticipant, nil);
+            completion(participant, nil);
         }
         
         return nil;

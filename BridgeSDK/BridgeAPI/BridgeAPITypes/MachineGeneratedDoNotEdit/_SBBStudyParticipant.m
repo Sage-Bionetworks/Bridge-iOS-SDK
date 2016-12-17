@@ -141,7 +141,9 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
-    [dict setObjectIfNotNil:self.attributes forKey:@"attributes"];
+    if ([SBBStudyParticipantCustomAttributes instancesRespondToSelector:@selector(dictionaryRepresentation)]) {
+        [dict setObjectIfNotNil:[self.attributes dictionaryRepresentation] forKey:@"attributes"];
+    }
 
     [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 

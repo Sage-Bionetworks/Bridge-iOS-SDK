@@ -34,9 +34,5 @@
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.
-- (void)setAttributes:(NSDictionary<NSString *,NSString *> *)attributes
-{
-    
-}
 
 @end

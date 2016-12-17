@@ -32,6 +32,7 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
+#import "SBBObjectManagerInternal.h"
 #import "NSDate+SBBAdditions.h"
 #import "BridgeSDKInternal.h"
 #import "ModelObjectInternal.h"
@@ -114,7 +115,8 @@ NSString * const kSBBSurveyAPIFormat =                          SURVEY_API_FORMA
         if (policy == SBBCachingPolicyCachedOnly ||
             (policy == SBBCachingPolicyCheckCacheFirst && cachedSurvey != nil)) {
             if (completion) {
-                completion(cachedSurvey, nil);
+                id survey = [(id<SBBObjectManagerInternalProtocol>)self.objectManager mappedObjectForBridgeObject:cachedSurvey];
+                completion(survey, nil);
             }
             
             return nil;

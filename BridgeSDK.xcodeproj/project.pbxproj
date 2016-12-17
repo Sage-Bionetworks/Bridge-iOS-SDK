@@ -118,6 +118,7 @@
 		60F1E4171A420E96009B380E /* _SBBActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E4151A420E96009B380E /* _SBBActivity.m */; };
 		60F1E41F1A420EE4009B380E /* SBBActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E41D1A420EE4009B380E /* SBBActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60F1E4201A420EE4009B380E /* SBBActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 60F1E41E1A420EE4009B380E /* SBBActivity.m */; };
+		60FD2AF41E04775F00BB725F /* SBBUserManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FD2AF31E04775F00BB725F /* SBBUserManagerUnitTests.m */; };
 		60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */; };
 		60FF57351A0AFEA500CE2373 /* _SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */; };
 		60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572B1A0AFEA500CE2373 /* _SBBTestBridgeObject.m */; };
@@ -294,7 +295,7 @@
 		80C87F0A1C18E55A00FE8A63 /* _SBBDataGroups.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */; };
 		80C87F0D1C18E61000FE8A63 /* SBBDataGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C87F0B1C18E61000FE8A63 /* SBBDataGroups.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80C87F0E1C18E61000FE8A63 /* SBBDataGroups.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C87F0C1C18E61000FE8A63 /* SBBDataGroups.m */; };
-		80D517311CADCA08002D2C06 /* SBBUserManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D69C19EC4025008942B0 /* SBBUserManagerUnitTests.m */; };
+		80D517311CADCA08002D2C06 /* SBBParticipantManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D69C19EC4025008942B0 /* SBBParticipantManagerUnitTests.m */; };
 		80D517321CADCA16002D2C06 /* SBBAuthManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */; };
 		80D517351CADD0A8002D2C06 /* NSObject+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D517331CADD0A8002D2C06 /* NSObject+SBBAdditions.h */; };
 		80D517361CADD0A8002D2C06 /* NSObject+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 80D517341CADD0A8002D2C06 /* NSObject+SBBAdditions.m */; };
@@ -490,6 +491,7 @@
 		60F1E4151A420E96009B380E /* _SBBActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBActivity.m; sourceTree = "<group>"; };
 		60F1E41D1A420EE4009B380E /* SBBActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBActivity.h; sourceTree = "<group>"; };
 		60F1E41E1A420EE4009B380E /* SBBActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBActivity.m; sourceTree = "<group>"; };
+		60FD2AF31E04775F00BB725F /* SBBUserManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBUserManagerUnitTests.m; sourceTree = "<group>"; };
 		60FF571F1A0AF87C00CE2373 /* TestModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TestModel.xcdatamodel; sourceTree = "<group>"; };
 		60FF57281A0AFEA500CE2373 /* _SBBBridgeObject_test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObject_test.h; sourceTree = "<group>"; };
 		60FF57291A0AFEA500CE2373 /* _SBBBridgeObject_test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBridgeObject_test.m; sourceTree = "<group>"; };
@@ -597,7 +599,7 @@
 		8026D69019E892B5008942B0 /* SBBUploadRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBUploadRequest.h; sourceTree = "<group>"; };
 		8026D69119E892B5008942B0 /* SBBUploadRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBUploadRequest.m; sourceTree = "<group>"; };
 		8026D69A19EC3F4A008942B0 /* SBBBridgeAPIUnitTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeAPIUnitTestCase.m; sourceTree = "<group>"; };
-		8026D69C19EC4025008942B0 /* SBBUserManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBUserManagerUnitTests.m; sourceTree = "<group>"; };
+		8026D69C19EC4025008942B0 /* SBBParticipantManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBParticipantManagerUnitTests.m; sourceTree = "<group>"; };
 		8026D69E19EC465B008942B0 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		8026D6A119EC49E1008942B0 /* SBBBridgeAPIUnitTestCase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAPIUnitTestCase.h; sourceTree = "<group>"; };
 		8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBAuthManagerUnitTests.m; sourceTree = "<group>"; };
@@ -854,8 +856,8 @@
 				800E796119ED74B600EEE612 /* SBBStringConstraints.h */,
 				800E796219ED74B600EEE612 /* SBBStringConstraints.m */,
 				6056DE161CF61F4000C21E82 /* SBBStudyParticipant.h */,
-				6056DE171CF61F4000C21E82 /* SBBStudyParticipant.m */,
 				6056DE1B1CF61F4000C21E82 /* SBBStudyParticipantInternal.h */,
+				6056DE171CF61F4000C21E82 /* SBBStudyParticipant.m */,
 				6056DE181CF61F4000C21E82 /* SBBStudyParticipantCustomAttributes.h */,
 				6056DE191CF61F4000C21E82 /* SBBStudyParticipantCustomAttributes.m */,
 				6056DE1C1CF61F4000C21E82 /* SBBSurveyInternal.h */,
@@ -1065,7 +1067,8 @@
 				8026D6A419EC56E8008942B0 /* SBBSurveyManagerUnitTests.m */,
 				60CAA6F21AFA817D00DE3305 /* SBBActivityManagerUnitTests.m */,
 				600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */,
-				8026D69C19EC4025008942B0 /* SBBUserManagerUnitTests.m */,
+				60FD2AF31E04775F00BB725F /* SBBUserManagerUnitTests.m */,
+				8026D69C19EC4025008942B0 /* SBBParticipantManagerUnitTests.m */,
 				80C3D07719DDE94A00DEA044 /* SBBTestAuthManagerDelegate.h */,
 				80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */,
 				8017AF6219D9C3AF001AF9BA /* SBBTestBridgeObjects.h */,
@@ -1250,8 +1253,8 @@
 				800E793919ED744000EEE612 /* _SBBStringConstraints.h */,
 				800E793A19ED744000EEE612 /* _SBBStringConstraints.m */,
 				6056DE051CF61ECD00C21E82 /* _SBBStudyParticipant.h */,
-				6056DE061CF61ECD00C21E82 /* _SBBStudyParticipant.m */,
 				6056DE0A1CF61ECD00C21E82 /* _SBBStudyParticipantInternal.h */,
+				6056DE061CF61ECD00C21E82 /* _SBBStudyParticipant.m */,
 				80F7C33019E5DC0D00574800 /* _SBBSurvey.h */,
 				80D517491CAF4453002D2C06 /* _SBBSurveyInternal.h */,
 				80F7C33119E5DC0D00574800 /* _SBBSurvey.m */,
@@ -1869,7 +1872,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80D517311CADCA08002D2C06 /* SBBUserManagerUnitTests.m in Sources */,
+				80D517311CADCA08002D2C06 /* SBBParticipantManagerUnitTests.m in Sources */,
 				80D517321CADCA16002D2C06 /* SBBAuthManagerUnitTests.m in Sources */,
 				80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */,
 				80D5176B1CB5BFC2002D2C06 /* SBBTestBridgeCacheableSubObject.m in Sources */,
@@ -1879,6 +1882,7 @@
 				D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m in Sources */,
 				601E8A101B191DAE00BB02FB /* MockURLSession.m in Sources */,
 				80D517681CB5BFB3002D2C06 /* _SBBTestBridgeCacheableSubObject.m in Sources */,
+				60FD2AF41E04775F00BB725F /* SBBUserManagerUnitTests.m in Sources */,
 				60CAA6F31AFA817D00DE3305 /* SBBActivityManagerUnitTests.m in Sources */,
 				60674D541DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.m in Sources */,
 				8017AF6819D9D909001AF9BA /* SBBObjectManagerUnitTests.m in Sources */,
