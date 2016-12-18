@@ -467,6 +467,23 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return password;
 }
 
+- (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSString *email = [self savedEmail];
+    NSString *password = [self savedPassword];
+    
+    if (!email.length || !password.length) {
+        if (completion) {
+            completion(nil, nil, [NSError SBBNoCredentialsError]);
+        }
+        return nil;
+    }
+    else
+    {
+        return [self signInWithEmail:email password:password completion:completion];
+    }
+}
+
 - (void)ensureSignedInWithCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
     if ([self isAuthenticated]) {
@@ -476,18 +493,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }
     else
     {
-        NSString *email = [self savedEmail];
-        NSString *password = [self savedPassword];
-        
-        if (!email.length || !password.length) {
-            if (completion) {
-                completion(nil, nil, [NSError SBBNoCredentialsError]);
-            }
-        }
-        else
-        {
-            [self signInWithEmail:email password:password completion:completion];
-        }
+        [self attemptSignInWithStoredCredentialsWithCompletion:completion];
     }
 }
 

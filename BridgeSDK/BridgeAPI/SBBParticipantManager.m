@@ -12,6 +12,7 @@
 #import "SBBUserSessionInfo.h"
 #import "SBBUserManagerInternal.h"
 #import "SBBComponentManager.h"
+#import "SBBAuthManagerInternal.h"
 
 #define PARTICIPANT_API GLOBAL_API_PREFIX @"/participants/self"
 
@@ -70,13 +71,40 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     }];
 }
 
+- (id)mappedCachedParticipant
+{
+    NSString *participantType = [SBBStudyParticipant entityName];
+    SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
+    id participant = [(id<SBBObjectManagerInternalProtocol>)self.objectManager mappedObjectForBridgeObject:cachedParticipant];
+    return participant;
+}
+
 - (NSURLSessionTask *)getParticipantRecordWithCompletion:(SBBParticipantManagerGetRecordCompletionBlock)completion
 {
     if (gSBBUseCache) {
         // fetch from cache
-        NSString *participantType = [SBBStudyParticipant entityName];
-        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
-        id participant = [(id<SBBObjectManagerInternalProtocol>)self.objectManager mappedObjectForBridgeObject:cachedParticipant];
+        __block id participant = [self mappedCachedParticipant];
+        
+        id<SBBAuthManagerInternalProtocol> iAM = (id<SBBAuthManagerInternalProtocol>)self.authManager;
+        if ([iAM conformsToProtocol:@protocol(SBBAuthManagerInternalProtocol)] &&
+            iAM.isAuthenticated &&
+            !participant) {
+            // if we're signed in but the participant record is missing from cache, most likely this
+            // means we've just upgraded to the version of this framework that supports StudyParticipant
+            // records and we need to go fetch it. We could just specifically get the participant record
+            // from Bridge as below in the non-caching case, but if in fact we've just upgraded to this
+            // version, we also need to make sure the UserSessionInfo is up-to-date, so we'll re-sign-in
+            // using the saved credentials.
+            return [iAM attemptSignInWithStoredCredentialsWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+                if (!error) {
+                    participant = [self mappedCachedParticipant];
+                }
+                
+                if (completion) {
+                    completion(participant, error);
+                }
+            }];
+        }
         
         if (completion) {
             completion(participant, nil);

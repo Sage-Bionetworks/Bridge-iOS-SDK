@@ -259,6 +259,11 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
         if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
             [self.cacheManager.cacheIOContext performBlockAndWait:^{
                 SBBResourceList *cachedTasks = [self cachedTasksFromCacheManager:self.cacheManager];
+                if (!cachedTasks) {
+                    // nothing to do here
+                    return;
+                }
+                
                 NSArray<SBBScheduledActivity *> *savedTasks = [self savedTasksFromCachedTasks:cachedTasks.items];
                 
                 // clear out all its items and just add back the ones we saved
