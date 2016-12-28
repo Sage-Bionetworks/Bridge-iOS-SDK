@@ -16,6 +16,7 @@
 #import "SBBSchedule.h"
 #import "SBBScheduledActivity.h"
 #import "SBBStringConstraints.h"
+#import "SBBStudyParticipant.h"
 #import "SBBSurvey.h"
 #import "SBBSurveyConstraints.h"
 #import "SBBSurveyElement.h"

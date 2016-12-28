@@ -53,7 +53,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -71,12 +71,12 @@
 
     self.title = [dictionary objectForKey:@"title"];
 
-        NSDictionary *imageDict = [dictionary objectForKey:@"image"];
-    if(imageDict != nil)
+    NSDictionary *imageDict = [dictionary objectForKey:@"image"];
+
+    if (imageDict != nil)
     {
         SBBImage *imageObj = [objectManager objectFromBridgeJSON:imageDict];
         self.image = imageObj;
-
     }
 
 }
@@ -87,14 +87,14 @@
 
     [dict setObjectIfNotNil:self.title forKey:@"title"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.image] forKey:@"image"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.image] forKey:@"image"];
 
 	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[self.image awakeFromDictionaryRepresentationInit];
@@ -119,7 +119,7 @@
             NSManagedObject *imageManagedObj = managedObject.image;
         Class imageClass = [SBBObjectManager bridgeClassFromType:imageManagedObj.entity.name];
         SBBImage *imageObj = [[imageClass alloc] initWithManagedObject:imageManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(imageObj != nil)
+        if (imageObj != nil)
         {
           self.image = imageObj;
         }
@@ -153,7 +153,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 

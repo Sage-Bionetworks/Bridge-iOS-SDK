@@ -37,6 +37,9 @@
 #import "SBBSurveyQuestionOption.h"
 
 @interface _SBBMultiValueConstraints()
+
+// redefine relationships internally as readwrite
+
 @property (nonatomic, strong, readwrite) NSArray *enumeration;
 
 @end
@@ -68,7 +71,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -109,11 +112,11 @@
     self.allowOther = [dictionary objectForKey:@"allowOther"];
 
     // overwrite the old enumeration relationship entirely rather than adding to it
-    self.enumeration = [NSMutableArray array];
+    [self removeEnumerationObjects];
 
-    for(id objectRepresentationForDict in [dictionary objectForKey:@"enumeration"])
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"enumeration"])
     {
-        SBBSurveyQuestionOption *enumerationObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        SBBSurveyQuestionOption *enumerationObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
         [self addEnumerationObject:enumerationObj];
     }
@@ -128,13 +131,14 @@
 
     [dict setObjectIfNotNil:self.allowOther forKey:@"allowOther"];
 
-    if([self.enumeration count] > 0)
+    if ([self.enumeration count] > 0)
 	{
 
 		NSMutableArray *enumerationRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.enumeration count]];
-		for(SBBSurveyQuestionOption *obj in self.enumeration)
-		{
-			[enumerationRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+
+		for (SBBSurveyQuestionOption *obj in self.enumeration)
+        {
+            [enumerationRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:enumerationRepresentationsForDictionary forKey:@"enumeration"];
 
@@ -145,10 +149,10 @@
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for(SBBSurveyQuestionOption *enumerationObj in self.enumeration)
+	for (SBBSurveyQuestionOption *enumerationObj in self.enumeration)
 	{
 		[enumerationObj awakeFromDictionaryRepresentationInit];
 	}
@@ -172,11 +176,11 @@
 
         self.allowOther = managedObject.allowOther;
 
-		for(NSManagedObject *enumerationManagedObj in managedObject.enumeration)
+		for (NSManagedObject *enumerationManagedObj in managedObject.enumeration)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:enumerationManagedObj.entity.name];
             SBBSurveyQuestionOption *enumerationObj = [[objectClass alloc] initWithManagedObject:enumerationManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if(enumerationObj != nil)
+            if (enumerationObj != nil)
             {
                 [self addEnumerationObject:enumerationObj];
             }
@@ -211,7 +215,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
@@ -220,16 +223,14 @@
     managedObject.allowOther = ((id)self.allowOther == [NSNull null]) ? nil : self.allowOther;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id enumerationCopy = managedObject.enumeration;
+    NSOrderedSet *enumerationCopy = [managedObject.enumeration copy];
 
     // now remove all items from the existing relationship
-    NSMutableOrderedSet *enumerationSet = [managedObject.enumeration mutableCopy];
-    [enumerationSet removeAllObjects];
-    managedObject.enumeration = enumerationSet;
+    [managedObject removeEnumeration:managedObject.enumeration];
 
     // now put the "new" items, if any, into the relationship
-    if([self.enumeration count] > 0) {
-		for(SBBSurveyQuestionOption *obj in self.enumeration) {
+    if ([self.enumeration count] > 0) {
+		for (SBBSurveyQuestionOption *obj in self.enumeration) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -239,10 +240,7 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            NSMutableOrderedSet *enumerationSet = [managedObject mutableOrderedSetValueForKey:@"enumeration"];
-            [enumerationSet addObject:relMo];
-            managedObject.enumeration = enumerationSet;
-
+            [managedObject addEnumerationObject:relMo];
         }
 	}
 
@@ -263,7 +261,7 @@
 
 - (void)addEnumerationObject:(SBBSurveyQuestionOption*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.enumeration == nil)
+    if (self.enumeration == nil)
 	{
 
 		self.enumeration = [NSMutableArray array];
@@ -273,6 +271,7 @@
 	[(NSMutableArray *)self.enumeration addObject:value_];
 
 }
+
 - (void)addEnumerationObject:(SBBSurveyQuestionOption*)value_
 {
     [self addEnumerationObject:(SBBSurveyQuestionOption*)value_ settingInverse: YES];
@@ -281,7 +280,7 @@
 - (void)removeEnumerationObjects
 {
 
-	self.enumeration = [NSMutableArray array];
+    self.enumeration = [NSMutableArray array];
 
 }
 
@@ -289,6 +288,7 @@
 {
 
     [(NSMutableArray *)self.enumeration removeObject:value_];
+
 }
 
 - (void)removeEnumerationObject:(SBBSurveyQuestionOption*)value_

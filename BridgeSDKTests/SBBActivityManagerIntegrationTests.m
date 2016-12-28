@@ -9,6 +9,10 @@
 #import "SBBBridgeAPIIntegrationTestCase.h"
 #import "SBBAuthManagerInternal.h"
 #import "SBBTestAuthManagerDelegate.h"
+#import "SBBComponentManager.h"
+#import "SBBActivityManager.h"
+#import "SBBScheduledActivity.h"
+#import "SBBActivity.h"
 
 #define TASKS_ADMIN_API @"/v3/scheduleplans"
 
@@ -169,7 +173,7 @@
                 countMyActivities++;
             }
         }
-        XCTAssert(countMyActivities == daysAhead + 1, @"Server returned a list that actually contains one item from test schedule per day requested");
+        XCTAssert(countMyActivities == daysAhead + 1, @"Expected returned list to contain %@ items, actually contains %@", @(daysAhead + 1), @(countMyActivities));
         
         [expectTasks fulfill];
     }];

@@ -61,7 +61,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -174,8 +174,13 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (NSArray *)originalProperties
 {
-    NSMutableArray *props = [@[@"email", @"firstName", @"lastName", @"type", @"__end_of_properties__"] mutableCopy];
-    [props removeLastObject];
+    static NSArray *props;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableArray *localProps = [@[@"email", @"firstName", @"lastName", @"type", @"__end_of_properties__"] mutableCopy];
+        [localProps removeLastObject];
+        props = [localProps copy];
+    });
 
     return props;
 }
@@ -247,7 +252,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[super awakeFromDictionaryRepresentationInit];
@@ -300,7 +305,6 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
     NSError *error;
     NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];

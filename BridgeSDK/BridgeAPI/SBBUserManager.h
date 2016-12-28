@@ -32,7 +32,7 @@
 #import "SBBBridgeAPIManager.h"
 
 /*!
- * @typedef SBBUserDataShareScope
+ * @typedef SBBUserDataSharingScope
  * @brief An enumeration of the choices for the scope of sharing collected data.
  * @constant SBBUserDataSharingScopeNone The user has not consented to sharing their data.
  * @constant SBBUserDataSharingScopeStudy The user has consented only to sharing their de-identified data with the sponsors and partners of the current research study.
@@ -42,7 +42,7 @@ typedef NS_ENUM(NSInteger, SBBUserDataSharingScope) {
     SBBUserDataSharingScopeNone = 0,
     SBBUserDataSharingScopeStudy,
     SBBUserDataSharingScopeAll
-};
+} __attribute__((deprecated("use SBBParticipantDataSharingScope instead")));
 
 /*!
  Completion block called when retrieving user profile from the API.
@@ -81,7 +81,7 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *
  *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion;
+- (NSURLSessionTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion __attribute__((deprecated("use SBBParticipantManager getParticipantRecordWithCompletion: instead")));
 
 /*!
  *  Update the UserProfile to the Bridge API.
@@ -91,7 +91,7 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *
  *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion;
+- (NSURLSessionTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion __attribute__((deprecated("use SBBParticipantManager updateParticipantRecordWithRecord:completion: instead")));
 
 /*!
  *  Add an external identifier for a participant.
@@ -108,7 +108,7 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *
  *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion;
+- (NSURLSessionTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion __attribute__((deprecated("use SBBParticipantManager setExternalIdentifier:completion: instead")));
 
 /*!
  *  Email the user's study data in the specified date range to the email address associated with their account.
@@ -129,8 +129,11 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  *
  *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion;
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+- (NSURLSessionTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion __attribute__((deprecated("use SBBParticipantManager setSharingScope:completion: instead")));
+#pragma clang diagnostic pop
+                                                                                                                                    
 /*!
  Fetch the data groups to which this user belongs from the Bridge API.
  
@@ -138,7 +141,7 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion;
+- (NSURLSessionTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion __attribute__((deprecated("use SBBParticipantManager getDataGroupsWithCompletion: instead")));
 
 /*!
  Update the user's dataGroups to the Bridge API.
@@ -150,7 +153,7 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion;
+- (NSURLSessionTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion __attribute__((deprecated("use SBBParticipantManager updateDataGroupsWithGroups:completion: instead")));
 
 /*!
  Add the user to the specified data groups (tags).
@@ -158,7 +161,7 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  @param dataGroups  The data groups to which to add the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, adds the specified groups to the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user's existing dataGroups, that error will be passed to the completion handler. If an attempt is made to add a user to one or more data groups that haven't first been defined in the study, the Bridge API will respond with 400 (Bad Request) with an error message detailing the problem in the body of the response.
  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  */
-- (void)addToDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBUserManagerCompletionBlock)completion;
+- (void)addToDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBUserManagerCompletionBlock)completion __attribute__((deprecated("use SBBParticipantManager addToDataGroups:completion: instead")));
 
 /*!
  Remove the user from the specified data groups (tags).
@@ -166,7 +169,7 @@ typedef void (^SBBUserManagerCompletionBlock)(id responseObject, NSError *error)
  @param dataGroups  The data groups from which to remove the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, removes the specified groups from the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user's existing dataGroups, that error will be passed to the completion handler. If the fetch succeeds but the user is not a member of one or more of these data groups, whether because they haven't been added or because they don't exist in the study, this method will complete without updating the user's dataGroups and without an error.
  @param completion An SBBUserManagerCompletionBlock to be called upon completion.
  */
-- (void)removeFromDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBUserManagerCompletionBlock)completion;
+- (void)removeFromDataGroups:(NSArray<NSString *> *)dataGroups completion:(SBBUserManagerCompletionBlock)completion __attribute__((deprecated("use SBBParticipantManager removeFromDataGroups:completion: instead")));
 
 @end
 

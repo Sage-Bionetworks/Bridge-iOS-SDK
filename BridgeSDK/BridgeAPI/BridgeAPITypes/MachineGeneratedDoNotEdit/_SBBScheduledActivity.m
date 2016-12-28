@@ -63,7 +63,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -101,12 +101,12 @@
 
     self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
 
-        NSDictionary *activityDict = [dictionary objectForKey:@"activity"];
-    if(activityDict != nil)
+    NSDictionary *activityDict = [dictionary objectForKey:@"activity"];
+
+    if (activityDict != nil)
     {
         SBBActivity *activityObj = [objectManager objectFromBridgeJSON:activityDict];
         self.activity = activityObj;
-
     }
 
 }
@@ -127,14 +127,14 @@
 
     [dict setObjectIfNotNil:[self.startedOn ISO8601String] forKey:@"startedOn"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.activity] forKey:@"activity"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.activity] forKey:@"activity"];
 
 	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[self.activity awakeFromDictionaryRepresentationInit];
@@ -169,7 +169,7 @@
             NSManagedObject *activityManagedObj = managedObject.activity;
         Class activityClass = [SBBObjectManager bridgeClassFromType:activityManagedObj.entity.name];
         SBBActivity *activityObj = [[activityClass alloc] initWithManagedObject:activityManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(activityObj != nil)
+        if (activityObj != nil)
         {
           self.activity = activityObj;
         }
@@ -203,7 +203,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 

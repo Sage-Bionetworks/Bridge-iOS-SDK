@@ -53,7 +53,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -71,12 +71,12 @@
 
     self.uiHint = [dictionary objectForKey:@"uiHint"];
 
-        NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
-    if(constraintsDict != nil)
+    NSDictionary *constraintsDict = [dictionary objectForKey:@"constraints"];
+
+    if (constraintsDict != nil)
     {
         SBBSurveyConstraints *constraintsObj = [objectManager objectFromBridgeJSON:constraintsDict];
         self.constraints = constraintsObj;
-
     }
 
 }
@@ -87,14 +87,14 @@
 
     [dict setObjectIfNotNil:self.uiHint forKey:@"uiHint"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.constraints] forKey:@"constraints"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.constraints] forKey:@"constraints"];
 
 	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[self.constraints awakeFromDictionaryRepresentationInit];
@@ -119,7 +119,7 @@
             NSManagedObject *constraintsManagedObj = managedObject.constraints;
         Class constraintsClass = [SBBObjectManager bridgeClassFromType:constraintsManagedObj.entity.name];
         SBBSurveyConstraints *constraintsObj = [[constraintsClass alloc] initWithManagedObject:constraintsManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(constraintsObj != nil)
+        if (constraintsObj != nil)
         {
           self.constraints = constraintsObj;
         }
@@ -153,7 +153,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 

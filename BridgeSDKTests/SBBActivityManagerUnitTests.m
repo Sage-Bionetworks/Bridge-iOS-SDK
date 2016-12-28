@@ -75,6 +75,8 @@
     [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:kSBBActivityAPI andMethod:@"GET"];
     id<SBBActivityManagerProtocol> tMan = SBBComponent(SBBActivityManager);
     
+    XCTestExpectation *expectGotActivities = [self expectationWithDescription:@"Got scheduled activities"];
+
     [tMan getScheduledActivitiesForDaysAhead:0 withCompletion:^(NSArray *tasks, NSError *error) {
         XCTAssert([tasks isKindOfClass:[NSArray class]], @"Converted incoming object to NSArray");
         XCTAssert(tasks.count, @"Converted object to non-empty NSArray");
@@ -89,6 +91,13 @@
             XCTAssert([activity1 isKindOfClass:[SBBActivity class]], @"Activity of second task is also an SBBActivity object");
             XCTAssert([activity1.activityType isEqualToString:@"task"], @"Put tasks into array in correct order");
             XCTAssert([activity1.task isKindOfClass:[SBBTaskReference class]], @"Converted 'task' json to SBBTaskReference object");
+        }
+        [expectGotActivities fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout getting scheduled activities: %@", error);
         }
     }];
 }

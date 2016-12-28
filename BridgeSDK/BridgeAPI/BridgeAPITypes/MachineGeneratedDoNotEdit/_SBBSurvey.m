@@ -38,6 +38,9 @@
 #import "SBBSurveyElement.h"
 
 @interface _SBBSurvey()
+
+// redefine relationships internally as readwrite
+
 @property (nonatomic, strong, readwrite) NSArray *elements;
 
 @end
@@ -83,7 +86,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -160,11 +163,11 @@
     self.guidAndCreatedOn = key;
 
     // overwrite the old elements relationship entirely rather than adding to it
-    self.elements = [NSMutableArray array];
+    [self removeElementsObjects];
 
-    for(id objectRepresentationForDict in [dictionary objectForKey:@"elements"])
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"elements"])
     {
-        SBBSurveyElement *elementsObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        SBBSurveyElement *elementsObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
         [self addElementsObject:elementsObj];
     }
@@ -191,13 +194,14 @@
 
     [dict setObjectIfNotNil:self.version forKey:@"version"];
 
-    if([self.elements count] > 0)
+    if ([self.elements count] > 0)
 	{
 
 		NSMutableArray *elementsRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.elements count]];
-		for(SBBSurveyElement *obj in self.elements)
-		{
-			[elementsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+
+		for (SBBSurveyElement *obj in self.elements)
+        {
+            [elementsRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:elementsRepresentationsForDictionary forKey:@"elements"];
 
@@ -208,10 +212,10 @@
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for(SBBSurveyElement *elementsObj in self.elements)
+	for (SBBSurveyElement *elementsObj in self.elements)
 	{
 		[elementsObj awakeFromDictionaryRepresentationInit];
 	}
@@ -249,11 +253,11 @@
 
         self.version = managedObject.version;
 
-		for(NSManagedObject *elementsManagedObj in managedObject.elements)
+		for (NSManagedObject *elementsManagedObj in managedObject.elements)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:elementsManagedObj.entity.name];
             SBBSurveyElement *elementsObj = [[objectClass alloc] initWithManagedObject:elementsManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if(elementsObj != nil)
+            if (elementsObj != nil)
             {
                 [self addElementsObject:elementsObj];
             }
@@ -288,7 +292,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
@@ -311,16 +314,14 @@
     managedObject.version = ((id)self.version == [NSNull null]) ? nil : self.version;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id elementsCopy = managedObject.elements;
+    NSOrderedSet *elementsCopy = [managedObject.elements copy];
 
     // now remove all items from the existing relationship
-    NSMutableOrderedSet *elementsSet = [managedObject.elements mutableCopy];
-    [elementsSet removeAllObjects];
-    managedObject.elements = elementsSet;
+    [managedObject removeElements:managedObject.elements];
 
     // now put the "new" items, if any, into the relationship
-    if([self.elements count] > 0) {
-		for(SBBSurveyElement *obj in self.elements) {
+    if ([self.elements count] > 0) {
+		for (SBBSurveyElement *obj in self.elements) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -330,10 +331,7 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            NSMutableOrderedSet *elementsSet = [managedObject mutableOrderedSetValueForKey:@"elements"];
-            [elementsSet addObject:relMo];
-            managedObject.elements = elementsSet;
-
+            [managedObject addElementsObject:relMo];
         }
 	}
 
@@ -354,7 +352,7 @@
 
 - (void)addElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.elements == nil)
+    if (self.elements == nil)
 	{
 
 		self.elements = [NSMutableArray array];
@@ -364,6 +362,7 @@
 	[(NSMutableArray *)self.elements addObject:value_];
 
 }
+
 - (void)addElementsObject:(SBBSurveyElement*)value_
 {
     [self addElementsObject:(SBBSurveyElement*)value_ settingInverse: YES];
@@ -372,7 +371,7 @@
 - (void)removeElementsObjects
 {
 
-	self.elements = [NSMutableArray array];
+    self.elements = [NSMutableArray array];
 
 }
 
@@ -380,6 +379,7 @@
 {
 
     [(NSMutableArray *)self.elements removeObject:value_];
+
 }
 
 - (void)removeElementsObject:(SBBSurveyElement*)value_

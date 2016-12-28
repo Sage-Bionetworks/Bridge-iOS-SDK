@@ -133,22 +133,22 @@ extern const NSInteger SBBMaxSupportedCacheDays;
 /*!
  * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
  */
-+ (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment __deprecated;
++ (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead")));
 
 /*!
  * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
  */
-+ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment __deprecated;
++ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead")));
 
 /*!
  * For backward compatibility only. Use setupWithStudy: instead (which this method calls).
  */
-+ (void)setupWithAppPrefix:(NSString *)appPrefix __deprecated;
++ (void)setupWithAppPrefix:(NSString *)appPrefix __attribute__((deprecated("use setupWithStudy: instead")));
 
 /*!
  * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
  */
-+ (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment __deprecated;
++ (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead")));
 
 @end
 

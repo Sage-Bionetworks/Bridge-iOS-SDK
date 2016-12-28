@@ -45,6 +45,7 @@ extern SBBEnvironment gSBBDefaultEnvironment;
 @protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>
 
 - (BOOL)isAuthenticated;
+- (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
 - (void)setSessionToken:(NSString *)sessionToken;
 - (void)clearSessionToken;
 

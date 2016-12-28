@@ -66,7 +66,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -90,19 +90,20 @@
 
     self.labelDetail = [dictionary objectForKey:@"labelDetail"];
 
-        NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
-    if(surveyDict != nil)
+    NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
+
+    if (surveyDict != nil)
     {
         SBBSurveyReference *surveyObj = [objectManager objectFromBridgeJSON:surveyDict];
         self.survey = surveyObj;
-
     }
-        NSDictionary *taskDict = [dictionary objectForKey:@"task"];
-    if(taskDict != nil)
+
+    NSDictionary *taskDict = [dictionary objectForKey:@"task"];
+
+    if (taskDict != nil)
     {
         SBBTaskReference *taskObj = [objectManager objectFromBridgeJSON:taskDict];
         self.task = taskObj;
-
     }
 
 }
@@ -119,16 +120,16 @@
 
     [dict setObjectIfNotNil:self.labelDetail forKey:@"labelDetail"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
 
 	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[self.survey awakeFromDictionaryRepresentationInit];
@@ -160,14 +161,14 @@
             NSManagedObject *surveyManagedObj = managedObject.survey;
         Class surveyClass = [SBBObjectManager bridgeClassFromType:surveyManagedObj.entity.name];
         SBBSurveyReference *surveyObj = [[surveyClass alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(surveyObj != nil)
+        if (surveyObj != nil)
         {
           self.survey = surveyObj;
         }
             NSManagedObject *taskManagedObj = managedObject.task;
         Class taskClass = [SBBObjectManager bridgeClassFromType:taskManagedObj.entity.name];
         SBBTaskReference *taskObj = [[taskClass alloc] initWithManagedObject:taskManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(taskObj != nil)
+        if (taskObj != nil)
         {
           self.task = taskObj;
         }
@@ -201,7 +202,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 

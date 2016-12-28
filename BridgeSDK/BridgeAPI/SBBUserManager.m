@@ -64,6 +64,9 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
 
 @synthesize activityManager = _activityManager;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 + (instancetype)defaultComponent
 {
   static SBBUserManager *shared;
@@ -251,5 +254,7 @@ NSString* const kSBBUserDataSharingScopeStrings[] = {
     [self.cacheManager removeFromCacheObjectOfType:profileType withId:profileType];
     [self.cacheManager removeFromCacheObjectOfType:dataGroupsType withId:dataGroupsType];
 }
+
+#pragma clang diagnostic pop
 
 @end

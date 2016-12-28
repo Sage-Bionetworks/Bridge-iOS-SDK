@@ -39,7 +39,13 @@
 #import "SBBTestBridgeSubObject.h"
 
 @interface _SBBTestBridgeObject()
+
+// redefine relationships internally as readwrite
+
 @property (nonatomic, strong, readwrite) NSArray *bridgeObjectArrayField;
+
+// redefine relationships internally as readwrite
+
 @property (nonatomic, strong, readwrite) NSArray *bridgeObjectSetField;
 
 @end
@@ -103,7 +109,7 @@
 
 - (instancetype)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 
 	}
@@ -226,30 +232,31 @@
     self.uShortField = [dictionary objectForKey:@"uShortField"];
 
     // overwrite the old bridgeObjectArrayField relationship entirely rather than adding to it
-    self.bridgeObjectArrayField = [NSMutableArray array];
+    [self removeBridgeObjectArrayFieldObjects];
 
-    for(id objectRepresentationForDict in [dictionary objectForKey:@"bridgeObjectArrayField"])
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"bridgeObjectArrayField"])
     {
-        SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        SBBBridgeObject_test *bridgeObjectArrayFieldObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
         [self addBridgeObjectArrayFieldObject:bridgeObjectArrayFieldObj];
     }
 
     // overwrite the old bridgeObjectSetField relationship entirely rather than adding to it
-    self.bridgeObjectSetField = [NSMutableArray array];
+    [self removeBridgeObjectSetFieldObjects];
 
-    for(id objectRepresentationForDict in [dictionary objectForKey:@"bridgeObjectSetField"])
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"bridgeObjectSetField"])
     {
-        SBBTestBridgeSubObject *bridgeObjectSetFieldObj = [objectManager objectFromBridgeJSON:objectRepresentationForDict];
+        SBBTestBridgeSubObject *bridgeObjectSetFieldObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
         [self addBridgeObjectSetFieldObject:bridgeObjectSetFieldObj];
     }
-        NSDictionary *bridgeSubObjectFieldDict = [dictionary objectForKey:@"bridgeSubObjectField"];
-    if(bridgeSubObjectFieldDict != nil)
+
+    NSDictionary *bridgeSubObjectFieldDict = [dictionary objectForKey:@"bridgeSubObjectField"];
+
+    if (bridgeSubObjectFieldDict != nil)
     {
         SBBTestBridgeSubObject *bridgeSubObjectFieldObj = [objectManager objectFromBridgeJSON:bridgeSubObjectFieldDict];
         self.bridgeSubObjectField = bridgeSubObjectFieldObj;
-
     }
 
 }
@@ -284,47 +291,49 @@
 
     [dict setObjectIfNotNil:self.uShortField forKey:@"uShortField"];
 
-    if([self.bridgeObjectArrayField count] > 0)
+    if ([self.bridgeObjectArrayField count] > 0)
 	{
 
 		NSMutableArray *bridgeObjectArrayFieldRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.bridgeObjectArrayField count]];
-		for(SBBBridgeObject_test *obj in self.bridgeObjectArrayField)
-		{
-			[bridgeObjectArrayFieldRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+
+		for (SBBBridgeObject_test *obj in self.bridgeObjectArrayField)
+        {
+            [bridgeObjectArrayFieldRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:bridgeObjectArrayFieldRepresentationsForDictionary forKey:@"bridgeObjectArrayField"];
 
 	}
 
-    if([self.bridgeObjectSetField count] > 0)
+    if ([self.bridgeObjectSetField count] > 0)
 	{
 
 		NSMutableArray *bridgeObjectSetFieldRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.bridgeObjectSetField count]];
-		for(SBBTestBridgeSubObject *obj in self.bridgeObjectSetField)
-		{
-			[bridgeObjectSetFieldRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+
+		for (SBBTestBridgeSubObject *obj in self.bridgeObjectSetField)
+        {
+            [bridgeObjectSetFieldRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
 		[dict setObjectIfNotNil:bridgeObjectSetFieldRepresentationsForDictionary forKey:@"bridgeObjectSetField"];
 
 	}
 
-	[dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.bridgeSubObjectField] forKey:@"bridgeSubObjectField"];
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.bridgeSubObjectField] forKey:@"bridgeSubObjectField"];
 
 	return [dict copy];
 }
 
 - (void)awakeFromDictionaryRepresentationInit
 {
-	if(self.sourceDictionaryRepresentation == nil)
+	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for(SBBTestBridgeSubObject *bridgeObjectSetFieldObj in self.bridgeObjectSetField)
+	for (SBBTestBridgeSubObject *bridgeObjectSetFieldObj in self.bridgeObjectSetField)
 	{
 		[bridgeObjectSetFieldObj awakeFromDictionaryRepresentationInit];
 	}
 	[self.bridgeSubObjectField awakeFromDictionaryRepresentationInit];
 
-	for(SBBBridgeObject_test *bridgeObjectArrayFieldObj in self.bridgeObjectArrayField)
+	for (SBBBridgeObject_test *bridgeObjectArrayFieldObj in self.bridgeObjectArrayField)
 	{
 		[bridgeObjectArrayFieldObj awakeFromDictionaryRepresentationInit];
 	}
@@ -376,21 +385,21 @@
 
         self.uShortFieldValue = [managedObject.uShortField unsignedShortValue];
 
-		for(NSManagedObject *bridgeObjectArrayFieldManagedObj in managedObject.bridgeObjectArrayField)
+		for (NSManagedObject *bridgeObjectArrayFieldManagedObj in managedObject.bridgeObjectArrayField)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:bridgeObjectArrayFieldManagedObj.entity.name];
             SBBBridgeObject_test *bridgeObjectArrayFieldObj = [[objectClass alloc] initWithManagedObject:bridgeObjectArrayFieldManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if(bridgeObjectArrayFieldObj != nil)
+            if (bridgeObjectArrayFieldObj != nil)
             {
                 [self addBridgeObjectArrayFieldObject:bridgeObjectArrayFieldObj];
             }
 		}
 
-		for(NSManagedObject *bridgeObjectSetFieldManagedObj in managedObject.bridgeObjectSetField)
+		for (NSManagedObject *bridgeObjectSetFieldManagedObj in managedObject.bridgeObjectSetField)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:bridgeObjectSetFieldManagedObj.entity.name];
             SBBTestBridgeSubObject *bridgeObjectSetFieldObj = [[objectClass alloc] initWithManagedObject:bridgeObjectSetFieldManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if(bridgeObjectSetFieldObj != nil)
+            if (bridgeObjectSetFieldObj != nil)
             {
                 [self addBridgeObjectSetFieldObject:bridgeObjectSetFieldObj];
             }
@@ -398,7 +407,7 @@
             NSManagedObject *bridgeSubObjectFieldManagedObj = managedObject.bridgeSubObjectField;
         Class bridgeSubObjectFieldClass = [SBBObjectManager bridgeClassFromType:bridgeSubObjectFieldManagedObj.entity.name];
         SBBTestBridgeSubObject *bridgeSubObjectFieldObj = [[bridgeSubObjectFieldClass alloc] initWithManagedObject:bridgeSubObjectFieldManagedObj objectManager:objectManager cacheManager:cacheManager];
-        if(bridgeSubObjectFieldObj != nil)
+        if (bridgeSubObjectFieldObj != nil)
         {
           self.bridgeSubObjectField = bridgeSubObjectFieldObj;
         }
@@ -432,7 +441,6 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
@@ -463,16 +471,14 @@
     managedObject.uShortField = ((id)self.uShortField == [NSNull null]) ? nil : self.uShortField;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id bridgeObjectArrayFieldCopy = managedObject.bridgeObjectArrayField;
+    NSOrderedSet *bridgeObjectArrayFieldCopy = [managedObject.bridgeObjectArrayField copy];
 
     // now remove all items from the existing relationship
-    NSMutableOrderedSet *bridgeObjectArrayFieldSet = [managedObject.bridgeObjectArrayField mutableCopy];
-    [bridgeObjectArrayFieldSet removeAllObjects];
-    managedObject.bridgeObjectArrayField = bridgeObjectArrayFieldSet;
+    [managedObject removeBridgeObjectArrayField:managedObject.bridgeObjectArrayField];
 
     // now put the "new" items, if any, into the relationship
-    if([self.bridgeObjectArrayField count] > 0) {
-		for(SBBBridgeObject_test *obj in self.bridgeObjectArrayField) {
+    if ([self.bridgeObjectArrayField count] > 0) {
+		for (SBBBridgeObject_test *obj in self.bridgeObjectArrayField) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -482,10 +488,7 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            NSMutableOrderedSet *bridgeObjectArrayFieldSet = [managedObject mutableOrderedSetValueForKey:@"bridgeObjectArrayField"];
-            [bridgeObjectArrayFieldSet addObject:relMo];
-            managedObject.bridgeObjectArrayField = bridgeObjectArrayFieldSet;
-
+            [managedObject addBridgeObjectArrayFieldObject:relMo];
         }
 	}
 
@@ -500,16 +503,14 @@
     bridgeObjectArrayFieldCopy = nil;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    id bridgeObjectSetFieldCopy = managedObject.bridgeObjectSetField;
+    NSSet *bridgeObjectSetFieldCopy = [managedObject.bridgeObjectSetField copy];
 
     // now remove all items from the existing relationship
-    NSMutableSet *bridgeObjectSetFieldSet = [managedObject.bridgeObjectSetField mutableCopy];
-    [bridgeObjectSetFieldSet removeAllObjects];
-    managedObject.bridgeObjectSetField = bridgeObjectSetFieldSet;
+    [managedObject removeBridgeObjectSetField:managedObject.bridgeObjectSetField];
 
     // now put the "new" items, if any, into the relationship
-    if([self.bridgeObjectSetField count] > 0) {
-		for(SBBTestBridgeSubObject *obj in self.bridgeObjectSetField) {
+    if ([self.bridgeObjectSetField count] > 0) {
+		for (SBBTestBridgeSubObject *obj in self.bridgeObjectSetField) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -520,7 +521,6 @@
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
             [managedObject addBridgeObjectSetFieldObject:relMo];
-
         }
 	}
 
@@ -549,7 +549,7 @@
 
 - (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.bridgeObjectArrayField == nil)
+    if (self.bridgeObjectArrayField == nil)
 	{
 
 		self.bridgeObjectArrayField = [NSMutableArray array];
@@ -559,6 +559,7 @@
 	[(NSMutableArray *)self.bridgeObjectArrayField addObject:value_];
 
 }
+
 - (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_
 {
     [self addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: YES];
@@ -567,7 +568,7 @@
 - (void)removeBridgeObjectArrayFieldObjects
 {
 
-	self.bridgeObjectArrayField = [NSMutableArray array];
+    self.bridgeObjectArrayField = [NSMutableArray array];
 
 }
 
@@ -575,6 +576,7 @@
 {
 
     [(NSMutableArray *)self.bridgeObjectArrayField removeObject:value_];
+
 }
 
 - (void)removeBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_
@@ -639,7 +641,7 @@
 
 - (void)addBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_ settingInverse: (BOOL) setInverse
 {
-    if(self.bridgeObjectSetField == nil)
+    if (self.bridgeObjectSetField == nil)
 	{
 
 		self.bridgeObjectSetField = [NSMutableArray array];
@@ -649,6 +651,7 @@
 	[(NSMutableArray *)self.bridgeObjectSetField addObject:value_];
 
 }
+
 - (void)addBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_
 {
     [self addBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_ settingInverse: YES];
@@ -657,7 +660,7 @@
 - (void)removeBridgeObjectSetFieldObjects
 {
 
-	self.bridgeObjectSetField = [NSMutableArray array];
+    self.bridgeObjectSetField = [NSMutableArray array];
 
 }
 
@@ -665,6 +668,7 @@
 {
 
     [(NSMutableArray *)self.bridgeObjectSetField removeObject:value_];
+
 }
 
 - (void)removeBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_
