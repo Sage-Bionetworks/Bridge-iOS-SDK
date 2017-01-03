@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/BridgeSDK.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/BridgeSDK</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+            
+			
+			<NodeRef refid="1"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/BridgeSDK/setupWithStudy:cacheDaysAhead:cacheDaysBehind:</TokenIdentifier>
+			<Abstract type="html">Set up the Bridge SDK for the given study and pointing at the production environment.
+Usually you would call this at the beginning of your AppDelegate&apos;s application:didFinishLaunchingWithOptions: method.</Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+			
+			<Declaration>+ (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>study</Name>
+					<Abstract type="html">A string identifier for your app&apos;s Bridge study, assigned to you by Sage Bionetworks.</Abstract>
+				</Parameter><Parameter>
+					<Name>cacheDaysAhead</Name>
+					<Abstract type="html">Number of days ahead to cache.</Abstract>
+				</Parameter><Parameter>
+					<Name>cacheDaysBehind</Name>
+					<Abstract type="html">Number of days behind to cache.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/setupWithStudy:cacheDaysAhead:cacheDaysBehind:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/BridgeSDK/setupWithStudy:useCache:</TokenIdentifier>
+			<Abstract type="html">Convenience method for setting up the study with default caching for days ahead and days behind.</Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+			
+			<Declaration>+ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>study</Name>
+					<Abstract type="html">A string identifier for your app&apos;s Bridge study, assigned to you by Sage Bionetworks.</Abstract>
+				</Parameter><Parameter>
+					<Name>useCache</Name>
+					<Abstract type="html">A flag indicating whether to use the SDK&apos;s built-in persistent caching. Pass NO if you want to handle this yourself.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/setupWithStudy:useCache:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/BridgeSDK/setupWithStudy:</TokenIdentifier>
+			<Abstract type="html">Convenience method for setting up the study with caching turned off (default).</Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+			
+			<Declaration>+ (void)setupWithStudy:(NSString *)study</Declaration>
+			
+			
+			<Anchor>//api/name/setupWithStudy:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/BridgeSDK/setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment:</TokenIdentifier>
+			<Abstract type="html">Set up the Bridge SDK for the given study and server environment. Usually you would only call this version
+of the method from test suites, or if you have a non-DEBUG build configuration that you don&apos;t want running against
+the production server environment. Otherwise call the version of the setupWithStudy: method that doesn&apos;t
+take an environment parameter, and let the SDK use the default environment.</Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+			
+			<Declaration>+ (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>study</Name>
+					<Abstract type="html">A string identifier for your app&apos;s Bridge study, assigned to you by Sage Bionetworks.</Abstract>
+				</Parameter><Parameter>
+					<Name>cacheDaysAhead</Name>
+					<Abstract type="html">Number of days ahead to cache.</Abstract>
+				</Parameter><Parameter>
+					<Name>cacheDaysBehind</Name>
+					<Abstract type="html">Number of days behind to cache.</Abstract>
+				</Parameter><Parameter>
+					<Name>environment</Name>
+					<Abstract type="html">Which server environment to run against.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/BridgeSDK/setupWithStudy:environment:</TokenIdentifier>
+			<Abstract type="html">For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).</Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+			
+			<Declaration>+ (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment</Declaration>
+			
+			
+			<Anchor>//api/name/setupWithStudy:environment:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/BridgeSDK/setupWithStudy:useCache:environment:</TokenIdentifier>
+			<Abstract type="html">For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).</Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+			
+			<Declaration>+ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment</Declaration>
+			
+			
+			<Anchor>//api/name/setupWithStudy:useCache:environment:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/BridgeSDK/setupWithAppPrefix:</TokenIdentifier>
+			<Abstract type="html">For backward compatibility only. Use setupWithStudy: instead (which this method calls).</Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+			
+			<Declaration>+ (void)setupWithAppPrefix:(NSString *)appPrefix</Declaration>
+			
+			
+			<Anchor>//api/name/setupWithAppPrefix:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/BridgeSDK/setupWithAppPrefix:environment:</TokenIdentifier>
+			<Abstract type="html">For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).</Abstract>
+			<DeclaredIn>BridgeSDK.h</DeclaredIn>
+			
+			<Declaration>+ (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment</Declaration>
+			
+			
+			<Anchor>//api/name/setupWithAppPrefix:environment:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

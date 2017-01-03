@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>SBBActivityManagerProtocol Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">BridgeSDK </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Sage Bionetworks</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/deleteScheduledActivity:withCompletion:">- deleteScheduledActivity:withCompletion:</option>
+		
+		<option value="//api/name/finishScheduledActivity:asOf:withCompletion:">- finishScheduledActivity:asOf:withCompletion:</option>
+		
+		<option value="//api/name/getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:">- getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:</option>
+		
+		<option value="//api/name/getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:">- getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:</option>
+		
+		<option value="//api/name/getScheduledActivitiesForDaysAhead:withCompletion:">- getScheduledActivitiesForDaysAhead:withCompletion:</option>
+		
+		<option value="//api/name/startScheduledActivity:asOf:withCompletion:">- startScheduledActivity:asOf:withCompletion:</option>
+		
+		<option value="//api/name/updateScheduledActivities:withCompletion:">- updateScheduledActivities:withCompletion:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">SBBActivityManagerProtocol Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td><a href="../Protocols/SBBBridgeAPIManagerProtocol.html">SBBBridgeAPIManagerProtocol</a></td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>SBBActivityManager.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>This protocol defines the interface to the SBBActivityManager&rsquo;s non-constructor, non-initializer methods. The interface is
+abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:" title="getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:">&ndash;&nbsp;getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Gets all available, started, or scheduled activities for a user. The &ldquo;daysAhead&rdquo; parameter allows you to retrieve activities that are scheduled in the future for the indicated number of days past today (to a maximum of four days, at this time). This allows certain kinds of UIs (e.g. &ldquo;You have N activities tomorrow&rdquo; or &ldquo;You have completed N of X activities today&rdquo;, even when the activities are not yet to be performed). A &ldquo;daysBehind&rdquo; parameter allows you to retain previously-cached activities that have not yet been completed that expired within the indicated number of days in the past. This allows UIs that say, e.g., &ldquo;You left N activities uncompleted yesterday.&rdquo; Scheduled activities will be returned in the timezone of the device at the time of the request. Once a task is finished, or expires (the time has passed for it to be started), or becomes invalid due to a schedule change on the server, it will be removed from the list of scheduled activities returned from Bridge, and (except for previously-fetched but unfinished tasks within daysBehind) will also be removed from the list passed to this method&rsquo;s completion handler.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)<em>daysAhead</em> daysBehind:(NSInteger)<em>daysBehind</em> cachingPolicy:(SBBCachingPolicy)<em>policy</em> withCompletion:(SBBActivityManagerGetCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>daysAhead</code></th>
+						<td><p>A number of days in the future (0-4) for which to retrieve available/started/scheduled activities.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>daysBehind</code></th>
+						<td><p>A number of days in the past (no limit) for which to include previously-cached but expired and unfinished activities (ignored if the SDK was initialized with useCache=NO).</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>policy</code></th>
+						<td><p>Caching policy to use (ignored if the SDK was initialized with useCache=NO).</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBActivityManagerGetCompletionBlock.html">SBBActivityManagerGetCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBActivityManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:" title="getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:">&ndash;&nbsp;getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This is a convenience method that assumes a default value of 1 for daysBehind.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)<em>daysAhead</em> cachingPolicy:(SBBCachingPolicy)<em>policy</em> withCompletion:(SBBActivityManagerGetCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBActivityManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getScheduledActivitiesForDaysAhead:withCompletion:" title="getScheduledActivitiesForDaysAhead:withCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getScheduledActivitiesForDaysAhead:withCompletion:">&ndash;&nbsp;getScheduledActivitiesForDaysAhead:withCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyFallBackToCache,
+if caching is enabled. Also implies a default value of 1 for daysBehind.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)<em>daysAhead</em> withCompletion:(SBBActivityManagerGetCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBActivityManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/startScheduledActivity:asOf:withCompletion:" title="startScheduledActivity:asOf:withCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/startScheduledActivity:asOf:withCompletion:">&ndash;&nbsp;startScheduledActivity:asOf:withCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Mark a ScheduledActivity as started, as of the time this method is called.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)startScheduledActivity:(SBBScheduledActivity *)<em>scheduledActivity</em> asOf:(NSDate *)<em>startDate</em> withCompletion:(SBBActivityManagerUpdateCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scheduledActivity</code></th>
+						<td><p>The ScheduledActivity to be marked as started.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>startDate</code></th>
+						<td><p>The date/time as of which the Task was started.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBActivityManagerUpdateCompletionBlock.html">SBBActivityManagerUpdateCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method notifies the server API that the activity was started, and calls the completion block upon success (or failure) of that notification.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBActivityManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/finishScheduledActivity:asOf:withCompletion:" title="finishScheduledActivity:asOf:withCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/finishScheduledActivity:asOf:withCompletion:">&ndash;&nbsp;finishScheduledActivity:asOf:withCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Mark a ScheduledActivity as finished, as of the time this method is called.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)finishScheduledActivity:(SBBScheduledActivity *)<em>scheduledActivity</em> asOf:(NSDate *)<em>finishDate</em> withCompletion:(SBBActivityManagerUpdateCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scheduledActivity</code></th>
+						<td><p>The ScheduledActivity to be marked as started.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>finishDate</code></th>
+						<td><p>The date/time as of which the Task was finished.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBActivityManagerUpdateCompletionBlock.html">SBBActivityManagerUpdateCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Marking a ScheduledActivity as finished without first marking it as having been started tells the server to just delete the scheduled activity.</p>
+
+<p>This method notifies the server API that the scheduled activity was finished, and calls the completion block upon success (or failure) of that notification.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBActivityManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/deleteScheduledActivity:withCompletion:" title="deleteScheduledActivity:withCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/deleteScheduledActivity:withCompletion:">&ndash;&nbsp;deleteScheduledActivity:withCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Delete a ScheduledActivity from the list of available/started/scheduled activities.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)deleteScheduledActivity:(SBBScheduledActivity *)<em>scheduledActivity</em> withCompletion:(SBBActivityManagerUpdateCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scheduledActivity</code></th>
+						<td><p>The ScheduledActivity to be deleted.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBActivityManagerUpdateCompletionBlock.html">SBBActivityManagerUpdateCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method is equivalent to marking the scheduled activity as finished as of the time the method is called, which has the effect of removing it from the list of available/started/scheduled activities whether or not it had been previously marked as started, but does not actually delete it from the server if it had previously been marked as started. It is provided as a convenience method.</p>
+
+<p>This method notifies the server API to delete the scheduled activity, and calls the completion block upon success (or failure) of that notification.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBActivityManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/updateScheduledActivities:withCompletion:" title="updateScheduledActivities:withCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateScheduledActivities:withCompletion:">&ndash;&nbsp;updateScheduledActivities:withCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Update multiple scheduled activities' statuses with the API at one time.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)updateScheduledActivities:(NSArray *)<em>scheduledActivities</em> withCompletion:(SBBActivityManagerUpdateCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scheduledActivities</code></th>
+						<td><p>The list of ScheduledActivity objects whose statuses are to be updated to the API.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBActivityManagerUpdateCompletionBlock.html">SBBActivityManagerUpdateCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Only the startedOn and finishedOn fields of ScheduledActivity are user-writable, so only changes to those fields will have any effect on the server state.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBActivityManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2016 Sage Bionetworks. All rights reserved. Updated: 2016-12-29</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

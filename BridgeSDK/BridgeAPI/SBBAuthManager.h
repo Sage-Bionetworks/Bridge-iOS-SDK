@@ -35,9 +35,10 @@
 #import "SBBNetworkManager.h"
 #import "SBBStudyParticipant.h"
 
-/// Global study identifier, specific to each app. Must be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy: or setupWithStudy:useCache: class method.
+// Global study identifier, specific to each app. Must be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy: or setupWithStudy:useCache: class method.
 extern  NSString * _Nonnull gSBBAppStudy;
 
+/// A class derived from SBBStudyParticipant which includes a password field. Use this object when signing up to set any StudyParticipant fields or custom attributes at that time.
 @interface SBBSignUp : SBBStudyParticipant
 
 @property (nonatomic, strong) NSString * _Nullable password;
@@ -91,13 +92,15 @@ extern  NSString * _Nonnull gSBBAppStudy;
 
 /*!
  *  If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
- *  when it obtains a new session token, so that the delegate can store the username and password used,
+ *  when it obtains a new session token, so that the delegate can store the email and password used,
  *  to be returned later in the emailForAuthManager: and passwordForAuthManager: calls.
  *
  *  @note This method is optional. It provides a convenient interface for keeping track of the auth credentials used in the most recent successful signIn, for re-use when automatically refreshing an expired session token.
  *
  *  @param authManager The auth manager instance making the delegate request.
  *  @param sessionToken The session token just obtained by the auth manager.
+ *  @param email The email used when signing in to obtain this session token.
+ *  @param password The password used when signing in to obtain this session token.
  */
 - (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken forEmail:(nullable NSString *)email andPassword:(nullable NSString *)password;
 
@@ -114,7 +117,11 @@ extern  NSString * _Nonnull gSBBAppStudy;
 - (nullable NSString *)emailForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
 
 /*!
- * For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this. 
+ *  For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this.
+ *
+ *  @param authManager The auth manager instance making the delegate request.
+ *
+ *  @return The username, or nil.
  */
 - (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager __attribute__((deprecated("implement emailForAuthManager: instead")));
 

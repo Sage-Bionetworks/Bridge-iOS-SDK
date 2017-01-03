@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/SBBBridgeAPIManagerProtocol.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBBridgeAPIManagerProtocol</TokenIdentifier>
+			<Abstract type="html">This is the &quot;base protocol&quot; for Bridge API Managers.</Abstract>
+			<DeclaredIn>SBBBridgeAPIManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="21"/>
+		</Token>
+		
+		
+        
+        
+	</File>
+</Tokens>

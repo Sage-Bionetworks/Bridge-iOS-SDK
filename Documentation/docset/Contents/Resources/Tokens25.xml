@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/SBBObjectManagerProtocol.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBObjectManagerProtocol</TokenIdentifier>
+			<Abstract type="html">This protocol defines the interface to the SBBObjectManager&apos;s non-constructor, non-initializer methods. The interface is
+abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</Abstract>
+			<DeclaredIn>SBBObjectManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="25"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBObjectManagerProtocol/objectFromBridgeJSON:</TokenIdentifier>
+			<Abstract type="html">Create a client object from JSON obtained via the Bridge API.</Abstract>
+			<DeclaredIn>SBBObjectManager.h</DeclaredIn>
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/intfm/SBBObjectManagerProtocol/bridgeJSONFromObject:</TokenIdentifier>
+		<TokenIdentifier>//apple_ref/occ/intfm/SBBObjectManagerProtocol/setupMappingForType:toClass:fieldToPropertyMappings:</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<Declaration>- (id)objectFromBridgeJSON:(id)json</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>json</Name>
+					<Abstract type="html">A JSON object from the Bridge API.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">A client object (built-in or custom) representing that Bridge API object.</Abstract></ReturnValue>
+			<Anchor>//api/name/objectFromBridgeJSON:</Anchor>
+            <NodeRef refid="25"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBObjectManagerProtocol/bridgeJSONFromObject:</TokenIdentifier>
+			<Abstract type="html">Create a Bridge JSON object (or array) from a client object.</Abstract>
+			<DeclaredIn>SBBObjectManager.h</DeclaredIn>
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/intfm/SBBObjectManagerProtocol/objectFromBridgeJSON:</TokenIdentifier>
+		<TokenIdentifier>//apple_ref/occ/intfm/SBBObjectManagerProtocol/setupMappingForType:toClass:fieldToPropertyMappings:</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<Declaration>- (id)bridgeJSONFromObject:(id)object</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>object</Name>
+					<Abstract type="html">The client object to convert to JSON for the Bridge API.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">JSON representing that client object.</Abstract></ReturnValue>
+			<Anchor>//api/name/bridgeJSONFromObject:</Anchor>
+            <NodeRef refid="25"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBObjectManagerProtocol/setupMappingForType:toClass:fieldToPropertyMappings:</TokenIdentifier>
+			<Abstract type="html">Set up an SDK-wide mapping between Bridge API objects of a specified type and a particular client class, with
+Bridge object field names mapped to class properties according to a given dictionary.</Abstract>
+			<DeclaredIn>SBBObjectManager.h</DeclaredIn>
+			
+			<Declaration>- (void)setupMappingForType:(NSString *)type toClass:(Class)mapToClass fieldToPropertyMappings:(NSDictionary *)mappings</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>type</Name>
+					<Abstract type="html">The Bridge API type being mapped.</Abstract>
+				</Parameter><Parameter>
+					<Name>mapToClass</Name>
+					<Abstract type="html">The client class to which it is to be mapped.</Abstract>
+				</Parameter><Parameter>
+					<Name>mappings</Name>
+					<Abstract type="html">Keys are Bridge API field names; values are the corresponding class property names. A nil value for this parameter will cause the SDK to use the Bridge API field names as the corresponding class property names.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/setupMappingForType:toClass:fieldToPropertyMappings:</Anchor>
+            <NodeRef refid="25"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBObjectManagerProtocol/clearMappingForType:</TokenIdentifier>
+			<Abstract type="html">Clear any previously set up SDK-wide mapping of Bridge API objects of the specified type.</Abstract>
+			<DeclaredIn>SBBObjectManager.h</DeclaredIn>
+			
+			<Declaration>- (void)clearMappingForType:(NSString *)type</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>type</Name>
+					<Abstract type="html">The Bridge API type being un-mapped.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/clearMappingForType:</Anchor>
+            <NodeRef refid="25"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

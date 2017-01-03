@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBBBridgeNetworkManager.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBBBridgeNetworkManager</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBBBridgeNetworkManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="5"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBBridgeNetworkManager/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBBBridgeNetworkManager.m</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion</Declaration>
+			
+			
+			<Anchor>//api/name/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:</Anchor>
+            <NodeRef refid="5"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

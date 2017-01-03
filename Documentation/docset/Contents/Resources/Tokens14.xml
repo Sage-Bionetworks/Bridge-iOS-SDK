@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBBSignUp.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBBSignUp</TokenIdentifier>
+			<Abstract type="html">A class derived from SBBStudyParticipant which includes a password field. Use this object when signing up to set any StudyParticipant fields or custom attributes at that time.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="14"/>
+		</Token>
+		
+		
+        
+        
+	</File>
+</Tokens>

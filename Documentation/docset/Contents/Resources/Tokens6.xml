@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBBComponentManager.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBBComponentManager</TokenIdentifier>
+			<Abstract type="html">This class provides a central point for managing singleton components, to simplify use of dependency injection
+in the default case, when needing runtime selection between two or more implementations, and mocking for testing.</Abstract>
+			<DeclaredIn>SBBComponentManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="6"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/SBBComponentManager/registerComponent:forClass:</TokenIdentifier>
+			<Abstract type="html">Register a specific component instance to be returned by requests for components registered to a given class.</Abstract>
+			<DeclaredIn>SBBComponentManager.h</DeclaredIn>
+			
+			<Declaration>+ (id)registerComponent:(id)componentInstance forClass:(Class)componentClass</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>componentInstance</Name>
+					<Abstract type="html">The component instance to register for the given componentClass.</Abstract>
+				</Parameter><Parameter>
+					<Name>componentClass</Name>
+					<Abstract type="html">The class for which to register the given component.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The component instance, if any, previously registered for the given componentClass.</Abstract></ReturnValue>
+			<Anchor>//api/name/registerComponent:forClass:</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/SBBComponentManager/component:</TokenIdentifier>
+			<Abstract type="html">Return the registered instance of the component for the given class.</Abstract>
+			<DeclaredIn>SBBComponentManager.h</DeclaredIn>
+			
+			<Declaration>+ (id)component:(Class)componentClass</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>componentClass</Name>
+					<Abstract type="html">The class for which to get (or instantiate and register) the registered component instance.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The registered instance for the given componentClass.</Abstract></ReturnValue>
+			<Anchor>//api/name/component:</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/clm/SBBComponentManager/reset</TokenIdentifier>
+			<Abstract type="html">Clear all registered components and start fresh. Used for unit testing.</Abstract>
+			<DeclaredIn>SBBComponentManager.h</DeclaredIn>
+			
+			<Declaration>+ (void)reset</Declaration>
+			
+			
+			<Anchor>//api/name/reset</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

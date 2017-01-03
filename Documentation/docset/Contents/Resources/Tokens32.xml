@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Constants/SBBCachingPolicy.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/c/tdef/SBBCachingPolicy</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBBBridgeAPIManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="32"/>
+		</Token>
+		
+		
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SBBCachingPolicyNoCaching</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>SBBCachingPolicyNoCaching</Declaration>
+            
+            <DeclaredIn>SBBBridgeAPIManager.h</DeclaredIn>
+            
+            <NodeRef refid="32"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SBBCachingPolicyCheckCacheFirst</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>SBBCachingPolicyCheckCacheFirst</Declaration>
+            
+            <DeclaredIn>SBBBridgeAPIManager.h</DeclaredIn>
+            
+            <NodeRef refid="32"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SBBCachingPolicyFallBackToCached</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>SBBCachingPolicyFallBackToCached</Declaration>
+            
+            <DeclaredIn>SBBBridgeAPIManager.h</DeclaredIn>
+            
+            <NodeRef refid="32"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SBBCachingPolicyCachedOnly</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>SBBCachingPolicyCachedOnly</Declaration>
+            
+            <DeclaredIn>SBBBridgeAPIManager.h</DeclaredIn>
+            
+            <NodeRef refid="32"/>
+        </Token>
+        
+        
+	</File>
+</Tokens>

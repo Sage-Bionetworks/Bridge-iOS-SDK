@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>SBBAuthManagerProtocol Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">BridgeSDK </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Sage Bionetworks</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/addAuthHeaderToHeaders:">- addAuthHeaderToHeaders:</option>
+		
+		<option value="//api/name/ensureSignedInWithCompletion:">- ensureSignedInWithCompletion:</option>
+		
+		<option value="//api/name/requestPasswordResetForEmail:completion:">- requestPasswordResetForEmail:completion:</option>
+		
+		<option value="//api/name/resendEmailVerification:completion:">- resendEmailVerification:completion:</option>
+		
+		<option value="//api/name/resetPasswordToNewPassword:resetToken:completion:">- resetPasswordToNewPassword:resetToken:completion:</option>
+		
+		<option value="//api/name/signInWithEmail:password:completion:">- signInWithEmail:password:completion:</option>
+		
+		<option value="//api/name/signInWithUsername:password:completion:">- signInWithUsername:password:completion:</option>
+		
+		<option value="//api/name/signOutWithCompletion:">- signOutWithCompletion:</option>
+		
+		<option value="//api/name/signUpStudyParticipant:completion:">- signUpStudyParticipant:completion:</option>
+		
+		<option value="//api/name/signUpWithEmail:username:password:completion:">- signUpWithEmail:username:password:completion:</option>
+		
+		<option value="//api/name/signUpWithEmail:username:password:dataGroups:completion:">- signUpWithEmail:username:password:dataGroups:completion:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">SBBAuthManagerProtocol Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>SBBAuthManager.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>This protocol defines the interface to the SBBAuthManager&rsquo;s non-constructor, non-initializer methods. The interface is
+abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/signUpStudyParticipant:completion:" title="signUpStudyParticipant:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpStudyParticipant:completion:">&ndash;&nbsp;signUpStudyParticipant:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Sign up for an account using a SignUp record, which is basically a StudyParticipant object with a password field.
+At minimum, the email and password fields must be filled in; in general, you would also want to fill in any of the following
+information available at sign-up time: firstName, lastName, sharingScope, externalId (if used), dataGroups, notifyByEmail,
+and any custom attributes you&rsquo;ve defined for the attributes field.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)signUpStudyParticipant:(nonnull SBBSignUp *)<em>signUp</em> completion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>signUp</code></th>
+						<td><p>A <a href="../Classes/SBBSignUp.html">SBBSignUp</a> object representing the participant signing up.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a> to be called upon completion. Optional.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpWithEmail:username:password:dataGroups:completion:" title="signUpWithEmail:username:password:dataGroups:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpWithEmail:username:password:dataGroups:completion:">&ndash;&nbsp;signUpWithEmail:username:password:dataGroups:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Sign up for an account with an email address, userName, password, and an optional list of data group tags.
+An email will be sent to the specified email address containing a link to verify that this is indeed that
+person&rsquo;s email. The userName and password won&rsquo;t be valid for signing in until the email has been verified. (<b class="deprecated">Deprecated:</b><span class="deprecated"> Use signUpStudyParticipant:withPassword:completion: instead.</span>)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)<em>email</em> username:(nonnull NSString *)<em>username</em> password:(nonnull NSString *)<em>password</em> dataGroups:(nullable NSArray&lt;NSString*&gt; *)<em>dataGroups</em> completion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>The email address to be associated with the account.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>username</code></th>
+						<td><p>The username to use for the account.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>The password to use for the account.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>dataGroups</code></th>
+						<td><p>An array of dataGroup tags to assign to the user at signup. Optional.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a> to be called upon completion. Optional.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signUpWithEmail:username:password:completion:" title="signUpWithEmail:username:password:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signUpWithEmail:username:password:completion:">&ndash;&nbsp;signUpWithEmail:username:password:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Sign up for an account with an email address, userName, and password. This is a convenience method
+that calls <a href="../Protocols/SBBAuthManagerProtocol.html#//api/name/signUpWithEmail:username:password:dataGroups:completion:">signUpWithEmail:username:password:dataGroups:completion:</a> with dataGroups set to nil. (<b class="deprecated">Deprecated:</b><span class="deprecated"> Use signUpStudyParticipant:withPassword:completion: instead.</span>)</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)<em>email</em> username:(nonnull NSString *)<em>username</em> password:(nonnull NSString *)<em>password</em> completion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>The email address to be associated with the account.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>username</code></th>
+						<td><p>The username to use for the account.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>The password to use for the account.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a> to be called upon completion. Optional.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/resendEmailVerification:completion:" title="resendEmailVerification:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/resendEmailVerification:completion:">&ndash;&nbsp;resendEmailVerification:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Request Bridge to re-send the email verification link to the specified email address.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)resendEmailVerification:(nonnull NSString *)<em>email</em> completion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>The email address for which to re-send the verification link.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>A 404 Not Found HTTP status indicates there is no pending verification for that email address,
+either because it was not used to sign up for an account, or because it has already been verified.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signInWithEmail:password:completion:" title="signInWithEmail:password:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signInWithEmail:password:completion:">&ndash;&nbsp;signInWithEmail:password:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Sign in to an existing account with an email and password.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)signInWithEmail:(nonnull NSString *)<em>email</em> password:(nonnull NSString *)<em>password</em> completion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>The email address of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>The password of the account.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="[https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo](https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo)"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you&rsquo;ve mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of id<a href="../Protocols/SBBObjectManagerProtocol.html">SBBObjectManagerProtocol</a> if you&rsquo;ve set one up).</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signOutWithCompletion:" title="signOutWithCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signOutWithCompletion:">&ndash;&nbsp;signOutWithCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Sign out of the user&rsquo;s Bridge account.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)signOutWithCompletion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/ensureSignedInWithCompletion:" title="ensureSignedInWithCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/ensureSignedInWithCompletion:">&ndash;&nbsp;ensureSignedInWithCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Call this at app launch to ensure the user is logged in to their account (if any).</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)ensureSignedInWithCompletion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>The completion block should check for error code kSBBNoCredentialsAvailable and ask the user to sign up/sign in.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/requestPasswordResetForEmail:completion:" title="requestPasswordResetForEmail:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/requestPasswordResetForEmail:completion:">&ndash;&nbsp;requestPasswordResetForEmail:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Request that the password be reset for the account associated with the given email address. An email will be sent
+to that address with instructions for choosing a new password.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)requestPasswordResetForEmail:(nonnull NSString *)<em>email</em> completion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>email</code></th>
+						<td><p>The email address associated with the account whose password is to be reset.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/resetPasswordToNewPassword:resetToken:completion:" title="resetPasswordToNewPassword:resetToken:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/resetPasswordToNewPassword:resetToken:completion:">&ndash;&nbsp;resetPasswordToNewPassword:resetToken:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Reset the password for this user&rsquo;s account.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)resetPasswordToNewPassword:(nonnull NSString *)<em>password</em> resetToken:(nonnull NSString *)<em>token</em> completion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>password</code></th>
+						<td><p>The new password for this user&rsquo;s account.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>token</code></th>
+						<td><p>The sptoken sent to the user&rsquo;s email address in response to a requestPasswordResetForEmail: call.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addAuthHeaderToHeaders:" title="addAuthHeaderToHeaders:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addAuthHeaderToHeaders:">&ndash;&nbsp;addAuthHeaderToHeaders:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This method is used by other API manager components to inject the session token header for authentication.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)addAuthHeaderToHeaders:(nonnull NSMutableDictionary *)<em>headers</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>headers</code></th>
+						<td><p>A mutable dictionary containing HTTP header key-value (string) pairs, to which to add the auth header.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signInWithUsername:password:completion:" title="signInWithUsername:password:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signInWithUsername:password:completion:">&ndash;&nbsp;signInWithUsername:password:completion:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nonnull NSURLSessionTask *)signInWithUsername:(nonnull NSString *)<em>username</em> password:(nonnull NSString *)<em>password</em> completion:(nullable SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBAuthManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2016 Sage Bionetworks. All rights reserved. Updated: 2016-12-29</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
