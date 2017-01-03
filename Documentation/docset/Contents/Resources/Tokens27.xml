@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/SBBScheduleManagerProtocol.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBScheduleManagerProtocol</TokenIdentifier>
+			<Abstract type="html">This protocol defines the interface to the SBBScheduleManager&apos;s non-constructor, non-initializer methods. The interface is
+abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</Abstract>
+			<DeclaredIn>SBBScheduleManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="27"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBScheduleManagerProtocol/getSchedulesWithCompletion:</TokenIdentifier>
+			<Abstract type="html">Fetch the list of Schedules for the user from the Bridge API.</Abstract>
+			<DeclaredIn>SBBScheduleManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBScheduleManagerGetCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getSchedulesWithCompletion:</Anchor>
+            <NodeRef refid="27"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

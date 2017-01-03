@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBBSageNetworkManager.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBBSageNetworkManager</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBBSageNetworkManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="12"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBSageNetworkManager/initWithBaseURL:</TokenIdentifier>
+			<Abstract type="html">If you want to use SBBNetworkManager&apos;s features to access a different REST API, you can create an instance
+using this initializer, with the scheme and host part of that API&apos;s URL as the baseURL.</Abstract>
+			<DeclaredIn>SBBSageNetworkManager.m</DeclaredIn>
+			
+			<Declaration>- (instancetype)initWithBaseURL:(NSString *)baseURL</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>baseURL</Name>
+					<Abstract type="html">The scheme and host part of a third-party REST API, e.g. https://webapi.somecompany.com . The urlString parameter of the put, get, etc. methods could then either be the fully-qualified URL of the endpoint you are accessing, or just the path part.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An initialized SBBNetworkManager instance with the given baseURL.</Abstract></ReturnValue>
+			<Anchor>//api/name/initWithBaseURL:</Anchor>
+            <NodeRef refid="12"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

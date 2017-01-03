@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/SBBBridgeAppDelegate.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBBridgeAppDelegate</TokenIdentifier>
+			<Abstract type="html">If the app delegate conforms to this protocol then the methods included will be called as appropriate.</Abstract>
+			<DeclaredIn>SBBBridgeAppDelegate.h</DeclaredIn>
+            
+			
+			<NodeRef refid="22"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBBridgeAppDelegate/handleUnsupportedAppVersionError:networkManager:</TokenIdentifier>
+			<Abstract type="html">Method called when the Bridge services return an error code that this version of the app is no longer supported.
+If not implemented or returns @NO then the BridgeNetworkManager will handle the error with a general message.
+In any case it will also pass the error through to the completion handler of the call that triggered the error.
+This method will only be called once per app launch.</Abstract>
+			<DeclaredIn>SBBBridgeAppDelegate.h</DeclaredIn>
+			
+			<Declaration>- (BOOL)handleUnsupportedAppVersionError:(NSError *)error networkManager:(id&lt;SBBNetworkManagerProtocol&gt; _Nullable)networkManager</Declaration>
+			
+			<ReturnValue><Abstract type="html">@YES if the error has been handled by the delegate.</Abstract></ReturnValue>
+			<Anchor>//api/name/handleUnsupportedAppVersionError:networkManager:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBBridgeAppDelegate/handleUserNotConsentedError:sessionInfo:networkManager:</TokenIdentifier>
+			<Abstract type="html">Method called when the Bridge services return an error code that the user has not consented.
+If not implemented or returns @NO then the BridgeNetworkManager will just log the error to the console.
+In any case it will also pass the error through to the completion handler of the call that triggered the error.</Abstract>
+			<DeclaredIn>SBBBridgeAppDelegate.h</DeclaredIn>
+			
+			<Declaration>- (BOOL)handleUserNotConsentedError:(NSError *)error sessionInfo:(id)sessionInfo networkManager:(id&lt;SBBNetworkManagerProtocol&gt; _Nullable)networkManager</Declaration>
+			
+			<ReturnValue><Abstract type="html">@YES if the error has been handled by the delegate.</Abstract></ReturnValue>
+			<Anchor>//api/name/handleUserNotConsentedError:sessionInfo:networkManager:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

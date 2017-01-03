@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SBBSurveyManager.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SBBSurveyManager</TokenIdentifier>
+			<Abstract type="html">This class handles communication with the Bridge surveys API.</Abstract>
+			<DeclaredIn>SBBSurveyManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="15"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBSurveyManager/getSurveyByRef:completion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyCheckCacheFirst,
+if caching is enabled.</Abstract>
+			<DeclaredIn>SBBSurveyManager.m</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerGetCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/getSurveyByRef:completion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBSurveyManager/getSurveyByRef:cachingPolicy:completion:</TokenIdentifier>
+			<Abstract type="html">Fetch a survey from the Bridge API via an activityRef (href).</Abstract>
+			<DeclaredIn>SBBSurveyManager.m</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getSurveyByRef:(NSString *)ref cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>ref</Name>
+					<Abstract type="html">The href identifying the desired survey, obtained e.g. from the Schedules or Activities API.</Abstract>
+				</Parameter><Parameter>
+					<Name>policy</Name>
+					<Abstract type="html">Caching policy to use (ignored if the SDK was initialized with useCache=NO).</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBSurveyManagerGetCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getSurveyByRef:cachingPolicy:completion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

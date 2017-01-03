@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/SBBSurveyManagerProtocol.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBSurveyManagerProtocol</TokenIdentifier>
+			<Abstract type="html">This protocol defines the interface to the SBBSurveyManager&apos;s non-constructor, non-initializer methods. The interface is
+abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</Abstract>
+			<DeclaredIn>SBBSurveyManager.h</DeclaredIn>
+            
+			
+			<NodeRef refid="28"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBSurveyManagerProtocol/getSurveyByRef:cachingPolicy:completion:</TokenIdentifier>
+			<Abstract type="html">Fetch a survey from the Bridge API via an activityRef (href).</Abstract>
+			<DeclaredIn>SBBSurveyManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getSurveyByRef:(NSString *)ref cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>ref</Name>
+					<Abstract type="html">The href identifying the desired survey, obtained e.g. from the Schedules or Activities API.</Abstract>
+				</Parameter><Parameter>
+					<Name>policy</Name>
+					<Abstract type="html">Caching policy to use (ignored if the SDK was initialized with useCache=NO).</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBSurveyManagerGetCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getSurveyByRef:cachingPolicy:completion:</Anchor>
+            <NodeRef refid="28"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBSurveyManagerProtocol/getSurveyByRef:completion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyCheckCacheFirst,
+if caching is enabled.</Abstract>
+			<DeclaredIn>SBBSurveyManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerGetCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/getSurveyByRef:completion:</Anchor>
+            <NodeRef refid="28"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBSurveyManagerProtocol/getSurveyByGuid:createdOn:cachingPolicy:completion:</TokenIdentifier>
+			<Abstract type="html">Fetch a survey from the Bridge API by guid and version number.</Abstract>
+			<DeclaredIn>SBBSurveyManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>guid</Name>
+					<Abstract type="html">The survey&apos;s guid.</Abstract>
+				</Parameter><Parameter>
+					<Name>createdOn</Name>
+					<Abstract type="html">The creation date and time of the version of the survey to fetch.</Abstract>
+				</Parameter><Parameter>
+					<Name>policy</Name>
+					<Abstract type="html">Caching policy to use (ignored if the SDK was initialized with useCache=NO).</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBSurveyManagerGetCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getSurveyByGuid:createdOn:cachingPolicy:completion:</Anchor>
+            <NodeRef refid="28"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBSurveyManagerProtocol/getSurveyByGuid:createdOn:completion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyCheckCacheFirst,
+if caching is enabled.</Abstract>
+			<DeclaredIn>SBBSurveyManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getSurveyByGuid:(NSString *)guid createdOn:(NSDate *)createdOn completion:(SBBSurveyManagerGetCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/getSurveyByGuid:createdOn:completion:</Anchor>
+            <NodeRef refid="28"/>
+		</Token>
+		
+        
+        
+	</File>
+</Tokens>

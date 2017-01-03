@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>SBBParticipantManagerProtocol Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">BridgeSDK </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Sage Bionetworks</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/addToDataGroups:completion:">- addToDataGroups:completion:</option>
+		
+		<option value="//api/name/getDataGroupsWithCompletion:">- getDataGroupsWithCompletion:</option>
+		
+		<option value="//api/name/getParticipantRecordWithCompletion:">- getParticipantRecordWithCompletion:</option>
+		
+		<option value="//api/name/removeFromDataGroups:completion:">- removeFromDataGroups:completion:</option>
+		
+		<option value="//api/name/setExternalIdentifier:completion:">- setExternalIdentifier:completion:</option>
+		
+		<option value="//api/name/setSharingScope:completion:">- setSharingScope:completion:</option>
+		
+		<option value="//api/name/updateDataGroupsWithGroups:completion:">- updateDataGroupsWithGroups:completion:</option>
+		
+		<option value="//api/name/updateParticipantRecordWithRecord:completion:">- updateParticipantRecordWithRecord:completion:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">SBBParticipantManagerProtocol Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td><a href="../Protocols/SBBBridgeAPIManagerProtocol.html">SBBBridgeAPIManagerProtocol</a></td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>SBBParticipantManager.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/getParticipantRecordWithCompletion:" title="getParticipantRecordWithCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getParticipantRecordWithCompletion:">&ndash;&nbsp;getParticipantRecordWithCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Fetch the StudyParticipant record from cache if caching is turned on, otherwise from the Bridge API.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSURLSessionTask *)getParticipantRecordWithCompletion:(nullable SBBParticipantManagerGetRecordCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBParticipantManagerGetRecordCompletionBlock.html">SBBParticipantManagerGetRecordCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>Note that if <a href="../Classes/BridgeSDK.html">BridgeSDK</a> was initialized with caching, the StudyParticipant record will always exist in the cache
+once the client has signed in for the first time, and since StudyParticipant is client-updatable, the cached copy
+would take priority over whatever Bridge responded with, so with caching turned on, this method will never try to
+retrieve the StudyParticipant from Bridge.</p>
+
+<p>Note also that the UserSessionInfo object received from Bridge on signIn is a superset of StudyParticipant, and
+upon successful signIn, any existing StudyParticipant object is deleted from cache and re-created from the
+UserSessionInfo. If any changes are made to the StudyParticipant on the Bridge server that didn&rsquo;t come from this
+client, the client&rsquo;s sessionToken should be invalidated, forcing the client to sign back in and thus update its
+cached StudyParticipant from the server.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBParticipantManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/updateParticipantRecordWithRecord:completion:" title="updateParticipantRecordWithRecord:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateParticipantRecordWithRecord:completion:">&ndash;&nbsp;updateParticipantRecordWithRecord:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Update the StudyParticipant record to the Bridge API.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSURLSessionTask *)updateParticipantRecordWithRecord:(nullable id)<em>participant</em> completion:(nullable SBBParticipantManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>participant</code></th>
+						<td><p>A client object representing the StudyParticipant record as it should be updated. If caching is enabled and you want to sync changes you&rsquo;ve made to the local (cached) SBBStudyParticipant to Bridge, pass nil for this parameter.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBParticipantManagerCompletionBlock.html">SBBParticipantManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBParticipantManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setExternalIdentifier:completion:" title="setExternalIdentifier:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setExternalIdentifier:completion:">&ndash;&nbsp;setExternalIdentifier:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Add an external identifier for a participant.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSURLSessionTask *)setExternalIdentifier:(nullable NSString *)<em>externalID</em> completion:(nullable SBBParticipantManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>externalID</code></th>
+						<td><p>An external identifier to allow this participant to be tracked outside of the Bridge-specific study.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBParticipantManagerCompletionBlock.html">SBBParticipantManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This is a convenience method that sets the participant record&rsquo;s externalId field and updates it to Bridge.</p><div class="note"><p><strong>Note:</strong> Mainly intended as a quick replacement for the deprecated <a href="../Classes/SBBUserManager.html">SBBUserManager</a> addExternalIdentifier:completion: method. Generally you would have the participant enter their externalId during the onboarding process and include it when calling <a href="../Classes/SBBAuthManager.html">SBBAuthManager</a> signUpStudyParticipant:withPassword:completion:.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBParticipantManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/setSharingScope:completion:" title="setSharingScope:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/setSharingScope:completion:">&ndash;&nbsp;setSharingScope:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Change the scope of data sharing for this user.
+This is a convenience method that sets the participant record&rsquo;s sharingScope field and updates it to Bridge.
+This should only be done in response to an explicit choice on the part of the user to change the sharing scope.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSURLSessionTask *)setSharingScope:(SBBParticipantDataSharingScope)<em>scope</em> completion:(nullable SBBParticipantManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>scope</code></th>
+						<td><p>The scope of data sharing to set for this user.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBParticipantManagerCompletionBlock.html">SBBParticipantManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="note"><p><strong>Note:</strong> Replaces deprecated <a href="../Classes/SBBUserManager.html">SBBUserManager</a> dataSharing:completion: method.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBParticipantManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getDataGroupsWithCompletion:" title="getDataGroupsWithCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getDataGroupsWithCompletion:">&ndash;&nbsp;getDataGroupsWithCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Fetch the data groups to which this user belongs from the Bridge API.
+This is a convenience method which fetches the StudyParticipant record (from cache, if available, otherwise from Bridge)
+and passes its dataGroups to the completion handler.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSURLSessionTask *)getDataGroupsWithCompletion:(nonnull SBBParticipantManagerGetGroupsCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBParticipantManagerGetGroupsCompletionBlock.html">SBBParticipantManagerGetGroupsCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBParticipantManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/updateDataGroupsWithGroups:completion:" title="updateDataGroupsWithGroups:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/updateDataGroupsWithGroups:completion:">&ndash;&nbsp;updateDataGroupsWithGroups:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Update the user&rsquo;s dataGroups to the Bridge API.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSURLSessionTask *)updateDataGroupsWithGroups:(nonnull NSSet&lt;NSString*&gt; *)<em>dataGroups</em> completion:(nullable SBBParticipantManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>dataGroups</code></th>
+						<td><p>An NSSet of strings representing the dataGroups as they should be updated.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBParticipantManagerCompletionBlock.html">SBBParticipantManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>An NSURLSessionTask object so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>This method writes a StudyParticipant record consisting of just the dataGroups field to the Bridge server.
+You may set the dataGroups directly as part of the StudyParticipant record when signing up for a Bridge account,
+but afterward should always update them via this method or one of the convenience methods that calls it</p><div class="note"><p><strong>Note:</strong> If using caching, be aware that calling this method (or any of the convenience methods which call it) will remove unexpired, unfinished scheduled activities from the cache. The next call to get scheduled activities will replace them with the correct schedule going forward for the new set of data groups. If you&rsquo;re not using the SDK&rsquo;s built-in caching, you will need to take care of this yourself.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBParticipantManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/addToDataGroups:completion:" title="addToDataGroups:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/addToDataGroups:completion:">&ndash;&nbsp;addToDataGroups:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Add the user to the specified data groups (tags).</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSURLSessionTask *)addToDataGroups:(nonnull NSSet&lt;NSString*&gt; *)<em>dataGroups</em> completion:(nullable SBBParticipantManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>dataGroups</code></th>
+						<td><p>The data groups to which to add the user. This is a convenience method which first calls <a href="../Protocols/SBBParticipantManagerProtocol.html#//api/name/getDataGroupsWithCompletion:">getDataGroupsWithCompletion:</a>, and in its completion handler, adds the specified groups to the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user&rsquo;s existing dataGroups, that error will be passed to the completion handler. If an attempt is made to add a user to one or more data groups that haven&rsquo;t first been defined in the study, the Bridge API will respond with 400 (Bad Request) with an error message detailing the problem in the body of the response.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBUserManagerCompletionBlock.html">SBBUserManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBParticipantManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/removeFromDataGroups:completion:" title="removeFromDataGroups:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/removeFromDataGroups:completion:">&ndash;&nbsp;removeFromDataGroups:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Remove the user from the specified data groups (tags).</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (nullable NSURLSessionTask *)removeFromDataGroups:(nonnull NSSet&lt;NSString*&gt; *)<em>dataGroups</em> completion:(nullable SBBParticipantManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>dataGroups</code></th>
+						<td><p>The data groups from which to remove the user. This is a convenience method which first calls <a href="../Protocols/SBBParticipantManagerProtocol.html#//api/name/getDataGroupsWithCompletion:">getDataGroupsWithCompletion:</a>, and in its completion handler, removes the specified groups from the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user&rsquo;s existing dataGroups, that error will be passed to the completion handler. If the fetch succeeds but the user is not a member of one or more of these data groups, whether because they haven&rsquo;t been added or because they don&rsquo;t exist in the study, this method will complete without updating the user&rsquo;s dataGroups and without an error.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>An <a href="../Blocks/SBBUserManagerCompletionBlock.html">SBBUserManagerCompletionBlock</a> to be called upon completion.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBParticipantManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2016 Sage Bionetworks. All rights reserved. Updated: 2016-12-29</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>

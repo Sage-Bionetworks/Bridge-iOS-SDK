@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>SBBNetworkManagerProtocol Protocol Reference</title>
+
+	<link rel="stylesheet" href="../css/style.css">
+	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
+	<meta name="generator" content="appledoc 2.2.1 (build 1334)">
+</head>
+<body class="appledoc">
+	<header>
+		<div class="container" class="hide-in-xcode">
+			
+			<h1 id="library-title">
+				<a href="../index.html">BridgeSDK </a>
+			</h1>
+
+			<p id="developer-home">
+				<a href="../index.html">Sage Bionetworks</a>
+			</p>
+			
+		</div>
+	</header>
+
+	<aside>
+		<div class="container">
+			<nav>
+				<ul id="header-buttons" role="toolbar">
+					<li><a href="../index.html">Index</a></li>
+<li><a href="../hierarchy.html">Hierarchy</a></li>
+
+					<li id="on-this-page" role="navigation">
+						<label>
+							On This Page
+
+							<div class="chevron">
+								<div class="chevy chevron-left"></div>
+								<div class="chevy chevron-right"></div>
+							</div>
+
+							<select id="jump-to">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+
+	
+	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/sendCookies">sendCookies</option>
+		
+	</optgroup>
+	
+
+	
+
+	
+	<optgroup label="Instance Methods">
+		
+		<option value="//api/name/delete:headers:parameters:background:completion:">- delete:headers:parameters:background:completion:</option>
+		
+		<option value="//api/name/delete:headers:parameters:completion:">- delete:headers:parameters:completion:</option>
+		
+		<option value="//api/name/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:">- downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:</option>
+		
+		<option value="//api/name/get:headers:parameters:background:completion:">- get:headers:parameters:background:completion:</option>
+		
+		<option value="//api/name/get:headers:parameters:completion:">- get:headers:parameters:completion:</option>
+		
+		<option value="//api/name/post:headers:parameters:background:completion:">- post:headers:parameters:background:completion:</option>
+		
+		<option value="//api/name/post:headers:parameters:completion:">- post:headers:parameters:completion:</option>
+		
+		<option value="//api/name/put:headers:parameters:background:completion:">- put:headers:parameters:background:completion:</option>
+		
+		<option value="//api/name/put:headers:parameters:completion:">- put:headers:parameters:completion:</option>
+		
+		<option value="//api/name/restoreBackgroundSession:completionHandler:">- restoreBackgroundSession:completionHandler:</option>
+		
+		<option value="//api/name/uploadFile:httpHeaders:toUrl:taskDescription:completion:">- uploadFile:httpHeaders:toUrl:taskDescription:completion:</option>
+		
+	</optgroup>
+	
+	
+</select>
+						</label>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
+
+	<article>
+		<div id="overview_contents" class="container">
+			<div id="content">
+				<main role="main">
+					<h1 class="title">SBBNetworkManagerProtocol Protocol Reference</h1>
+
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<th>Conforms to</th>
+	<td>NSObject</td>
+</tr><tr>
+	<th>Declared in</th>
+	<td>SBBNetworkManager.h</td>
+</tr>
+						</tbody></table></div>
+					
+
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>This protocol defines the interface to the SBBNetworkManager&rsquo;s non-constructor, non-initializer methods. The interface is
+abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</p>
+					</div>
+					
+					
+
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						
+
+						
+						
+
+						<div class="task-list">
+							<div class="section-method">
+	<a name="//api/name/sendCookies" title="sendCookies"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendCookies">&nbsp;&nbsp;sendCookies</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This property tells the network manager whether it should send cookies with its requests.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, assign) BOOL sendCookies</code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>For network managers communicating with Bridge servers, this should be set to NO. Otherwise defaults to YES.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/get:headers:parameters:background:completion:" title="get:headers:parameters:background:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/get:headers:parameters:background:completion:">&ndash;&nbsp;get:headers:parameters:background:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Perform an HTTP GET with the specified URL, HTTP headers, parameters, and completion handler.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)get:(NSString *)<em>URLString</em> headers:(NSDictionary *)<em>headers</em> parameters:(id)<em>parameters</em> background:(BOOL)<em>background</em> completion:(SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>URLString</code></th>
+						<td><p>The URL to which you are making this HTTP request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>headers</code></th>
+						<td><p>The HTTP headers for this request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>parameters</code></th>
+						<td><p>The parameters for this request, to be passed in the query portion of the request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>background</code></th>
+						<td><p>A BOOL flag indicating whether the request should be performed as a background download.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A block to be executed on completion of the request (successful or otherwise), of type <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a>.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/get:headers:parameters:completion:" title="get:headers:parameters:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/get:headers:parameters:completion:">&ndash;&nbsp;get:headers:parameters:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This is a convenience method that assumes a default value of NO for background.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)get:(NSString *)<em>URLString</em> headers:(NSDictionary *)<em>headers</em> parameters:(id)<em>parameters</em> completion:(SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/post:headers:parameters:background:completion:" title="post:headers:parameters:background:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/post:headers:parameters:background:completion:">&ndash;&nbsp;post:headers:parameters:background:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Perform an HTTP POST with the specified URL, HTTP headers, parameters, and completion handler.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)post:(NSString *)<em>URLString</em> headers:(NSDictionary *)<em>headers</em> parameters:(id)<em>parameters</em> background:(BOOL)<em>background</em> completion:(SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>URLString</code></th>
+						<td><p>The URL to which you are making this HTTP request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>headers</code></th>
+						<td><p>The HTTP headers for this request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>parameters</code></th>
+						<td><p>The parameters for this request, to be passed in the request body as JSON. May be nil.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>background</code></th>
+						<td><p>A BOOL flag indicating whether the request should be performed as a background download.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A block to be executed on completion of the request (successful or otherwise), of type <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a>.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/post:headers:parameters:completion:" title="post:headers:parameters:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/post:headers:parameters:completion:">&ndash;&nbsp;post:headers:parameters:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This is a convenience method that assumes a default value of NO for background.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)post:(NSString *)<em>URLString</em> headers:(NSDictionary *)<em>headers</em> parameters:(id)<em>parameters</em> completion:(SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/put:headers:parameters:background:completion:" title="put:headers:parameters:background:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/put:headers:parameters:background:completion:">&ndash;&nbsp;put:headers:parameters:background:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Perform an HTTP PUT with the specified URL, HTTP headers, parameters, and completion handler.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)put:(NSString *)<em>URLString</em> headers:(NSDictionary *)<em>headers</em> parameters:(id)<em>parameters</em> background:(BOOL)<em>background</em> completion:(SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>URLString</code></th>
+						<td><p>The URL to which you are making this HTTP request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>headers</code></th>
+						<td><p>The HTTP headers for this request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>parameters</code></th>
+						<td><p>The parameters for this request, to be passed in the request body as JSON. May be nil.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>background</code></th>
+						<td><p>A BOOL flag indicating whether the request should be performed as a background download.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A block to be executed on completion of the request (successful or otherwise), of type <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a>.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/put:headers:parameters:completion:" title="put:headers:parameters:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/put:headers:parameters:completion:">&ndash;&nbsp;put:headers:parameters:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This is a convenience method that assumes a default value of NO for background.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)put:(NSString *)<em>URLString</em> headers:(NSDictionary *)<em>headers</em> parameters:(id)<em>parameters</em> completion:(SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/delete:headers:parameters:background:completion:" title="delete:headers:parameters:background:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/delete:headers:parameters:background:completion:">&ndash;&nbsp;delete:headers:parameters:background:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Perform an HTTP DELETE with the specified URL, HTTP headers, parameters, and completion handler.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)delete:(NSString *)<em>URLString</em> headers:(NSDictionary *)<em>headers</em> parameters:(id)<em>parameters</em> background:(BOOL)<em>background</em> completion:(SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>URLString</code></th>
+						<td><p>The URL to which you are making this HTTP request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>headers</code></th>
+						<td><p>The HTTP headers for this request.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>parameters</code></th>
+						<td><p>The parameters for this request, to be passed in the request body as JSON. Usually for a DELETE this will be nil.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>background</code></th>
+						<td><p>A BOOL flag indicating whether the request should be performed as a background download.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p>A block to be executed on completion of the request (successful or otherwise), of type <a href="../Blocks/SBBNetworkManagerCompletionBlock.html">SBBNetworkManagerCompletionBlock</a>.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="note"><p><strong>Note:</strong> Since delete is a C++ keyword, when calling this method from Objective-C++ you must use the selector delete_:headers:parameters:background:completion: instead of delete:headers:parameters:background:completion:.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/delete:headers:parameters:completion:" title="delete:headers:parameters:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/delete:headers:parameters:completion:">&ndash;&nbsp;delete:headers:parameters:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This is a convenience method that assumes a default value of NO for background.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionTask *)delete:(NSString *)<em>URLString</em> headers:(NSDictionary *)<em>headers</em> parameters:(id)<em>parameters</em> completion:(SBBNetworkManagerCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<div class="note"><p><strong>Note:</strong> Since delete is a C++ keyword, when calling this method from Objective-C++ you must use the selector delete_:headers:parameters:completion: instead of delete:headers:parameters:completion:.</p></div>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/uploadFile:httpHeaders:toUrl:taskDescription:completion:" title="uploadFile:httpHeaders:toUrl:taskDescription:completion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/uploadFile:httpHeaders:toUrl:taskDescription:completion:">&ndash;&nbsp;uploadFile:httpHeaders:toUrl:taskDescription:completion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>Perform a background upload of a file to a given URL with provided HTTP headers.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionUploadTask *)uploadFile:(NSURL *)<em>fileUrl</em> httpHeaders:(NSDictionary *)<em>headers</em> toUrl:(NSString *)<em>urlString</em> taskDescription:(NSString *)<em>description</em> completion:(SBBNetworkManagerTaskCompletionBlock)<em>completion</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>fileUrl</code></th>
+						<td><p>The URL of the file to be uploaded.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>headers</code></th>
+						<td><p>An NSDictionary containing the HTTP headers as key-value pairs.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>urlString</code></th>
+						<td><p>The URL (as a string) to which to upload the file.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>description</code></th>
+						<td><p>A string to associate with this task.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completion</code></th>
+						<td><p><a href="../Blocks/SBBNetworkManagerTaskCompletionBlock.html">SBBNetworkManagerTaskCompletionBlock</a> to be called upon completion of the upload.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+			<div class="method-subsection return">
+				<h4 class="method-subtitle parameter-title">Return Value</h4>
+				<p>The NSURLSessionUploadTask used to make the request, so you can cancel or suspend/resume the request.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:" title="downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:">&ndash;&nbsp;downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)<em>urlString</em> method:(NSString *)<em>httpMethod</em> httpHeaders:(NSDictionary *)<em>headers</em> parameters:(NSDictionary *)<em>parameters</em> taskDescription:(NSString *)<em>description</em> downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)<em>downloadCompletion</em> taskCompletion:(SBBNetworkManagerTaskCompletionBlock)<em>taskCompletion</em></code></div>
+
+		    
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/restoreBackgroundSession:completionHandler:" title="restoreBackgroundSession:completionHandler:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/restoreBackgroundSession:completionHandler:">&ndash;&nbsp;restoreBackgroundSession:completionHandler:</a></code>
+<span class="task-item-suffix">required method</span></h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+			
+			<div class="method-subsection brief-description">
+				<p>This method should be called from your app delegate&rsquo;s
+application:handleEventsForBackgroundURLSession:completionHandler: method when the identifier passed in there matches
+kBackgroundSessionIdentifier.</p>
+			</div>
+			
+		    
+
+			<div class="method-subsection method-declaration"><code>- (void)restoreBackgroundSession:(NSString *)<em>identifier</em> completionHandler:(void ( ^ ) ( void ))<em>completionHandler</em></code></div>
+
+		    
+			
+			<div class="method-subsection arguments-section parameters">
+				<h4 class="method-subtitle parameter-title">Parameters</h4>
+				<table class="argument-def parameter-def">
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>identifier</code></th>
+						<td><p>The session identifier, as passed in to your app delegate&rsquo;s
+application:handleEventsForBackgroundURLSession:completionHandler: method.</p></td>
+					</tr>
+				
+					<tr>
+						<th scope="row" class="argument-name"><code>completionHandler</code></th>
+						<td><p>The completion handler, as passed in to your app delegate&rsquo;s
+application:handleEventsForBackgroundURLSession:completionHandler: method.</p></td>
+					</tr>
+				
+				</table>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection discussion-section">
+				<h4 class="method-subtitle">Discussion</h4>
+				<p>If you are setting up and registering your own custom NetworkManager instance rather than using one of the BridgeSDK&rsquo;s
++setupWithAppPrefix: methods, you will also need to call this from your app delegate&rsquo;s
+application:didFinishLaunchingWithOptions: method with kBackgroundSessionIdentifier as the identifier, and nil for the
+completion handler.</p>
+			</div>
+			
+
+			
+
+			
+
+			
+			<div class="method-subsection declared-in-section">
+				<h4 class="method-subtitle">Declared In</h4>
+				<p><code class="declared-in-ref">SBBNetworkManager.h</code></p>
+			</div>
+			
+			
+		</div>
+	</div>
+</div>
+						</div>
+						
+					</div>
+					
+					
+
+                    
+                    
+          
+				</main>
+
+				<footer>
+					<div class="footer-copyright">
+						
+						<p class="copyright">Copyright &copy; 2016 Sage Bionetworks. All rights reserved. Updated: 2016-12-29</p>
+						
+						
+						<p class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2.1 (build 1334)</a>.</p>
+						
+					</div>
+				</footer>
+			</div>
+		</div>
+	</article>
+
+	<script src="../js/script.js"></script>
+</body>
+</html>
