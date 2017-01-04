@@ -168,7 +168,7 @@ extern  NSString * _Nonnull gSBBAppStudy;
  * An email will be sent to the specified email address containing a link to verify that this is indeed that
  * person's email. The userName and password won't be valid for signing in until the email has been verified.
  *
- * @deprecated Use signUpStudyParticipant:withPassword:completion: instead.
+ * @deprecated Use signUpStudyParticipant:completion: instead.
  *
  * @param email The email address to be associated with the account.
  * @param username The username to use for the account.
@@ -177,7 +177,7 @@ extern  NSString * _Nonnull gSBBAppStudy;
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
  * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signUpStudyParticipant:withPassword:completion: instead")));
+- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signUpStudyParticipant:completion: instead")));
 
 /*!
  * Sign up for an account with an email address, userName, and password. This is a convenience method
