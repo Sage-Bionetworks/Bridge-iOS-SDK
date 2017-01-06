@@ -1,136 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Protocols/SBBAuthManagerDelegateProtocol.html">
+	<File path="Protocols/SBBBridgeAPIManagerProtocol.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intf/SBBAuthManagerDelegateProtocol</TokenIdentifier>
-			<Abstract type="html">This protocol defines the interfaces for the Auth Manager delegate.</Abstract>
-			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBBridgeAPIManagerProtocol</TokenIdentifier>
+			<Abstract type="html">This is the &quot;base protocol&quot; for Bridge API Managers.</Abstract>
+			<DeclaredIn>SBBBridgeAPIManager.h</DeclaredIn>
             
 			
 			<NodeRef refid="19"/>
 		</Token>
 		
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/sessionTokenForAuthManager:</TokenIdentifier>
-			<Abstract type="html">This delegate method should return the session token for the current signed-in user session,
-or nil if not currently signed in to any account.</Abstract>
-			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
-			
-			<Declaration>- (nullable NSString *)sessionTokenForAuthManager:(nonnull id&lt;SBBAuthManagerProtocol&gt;)authManager</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>authManager</Name>
-					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">The session token, or nil.</Abstract></ReturnValue>
-			<Anchor>//api/name/sessionTokenForAuthManager:</Anchor>
-            <NodeRef refid="19"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:</TokenIdentifier>
-			<Abstract type="html">The auth manager will call this delegate method when it obtains a new session token, so that the delegate
-can store it appropriately and return it later in sessionTokenForAuthManager: calls.</Abstract>
-			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
-			
-			<Declaration>- (void)authManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager didGetSessionToken:(nullable NSString *)sessionToken</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>authManager</Name>
-					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
-				</Parameter><Parameter>
-					<Name>sessionToken</Name>
-					<Abstract type="html">The session token just obtained by the auth manager.</Abstract>
-				</Parameter>
-			</Parameters>
-			
-			<Anchor>//api/name/authManager:didGetSessionToken:</Anchor>
-            <NodeRef refid="19"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:</TokenIdentifier>
-			<Abstract type="html">If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
-when it obtains a new session token, so that the delegate can store the email and password used,
-to be returned later in the emailForAuthManager: and passwordForAuthManager: calls.</Abstract>
-			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
-			
-			<Declaration>- (void)authManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager didGetSessionToken:(nullable NSString *)sessionToken forEmail:(nullable NSString *)email andPassword:(nullable NSString *)password</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>authManager</Name>
-					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
-				</Parameter><Parameter>
-					<Name>sessionToken</Name>
-					<Abstract type="html">The session token just obtained by the auth manager.</Abstract>
-				</Parameter><Parameter>
-					<Name>email</Name>
-					<Abstract type="html">The email used when signing in to obtain this session token.</Abstract>
-				</Parameter><Parameter>
-					<Name>password</Name>
-					<Abstract type="html">The password used when signing in to obtain this session token.</Abstract>
-				</Parameter>
-			</Parameters>
-			
-			<Anchor>//api/name/authManager:didGetSessionToken:forEmail:andPassword:</Anchor>
-            <NodeRef refid="19"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager:</TokenIdentifier>
-			<Abstract type="html">This delegate method should return the email for the user account last signed up for or signed in to,
-or nil if the user has never signed up or signed in on this device.</Abstract>
-			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
-			
-			<Declaration>- (nullable NSString *)emailForAuthManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>authManager</Name>
-					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">The username, or nil.</Abstract></ReturnValue>
-			<Anchor>//api/name/emailForAuthManager:</Anchor>
-            <NodeRef refid="19"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager:</TokenIdentifier>
-			<Abstract type="html">For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this.</Abstract>
-			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
-			
-			<Declaration>- (nullable NSString *)usernameForAuthManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>authManager</Name>
-					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">The username, or nil.</Abstract></ReturnValue>
-			<Anchor>//api/name/usernameForAuthManager:</Anchor>
-            <NodeRef refid="19"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/passwordForAuthManager:</TokenIdentifier>
-			<Abstract type="html">This delegate method should return the password for the user account last signed up for or signed in to,
-or nil if the user has never signed up or signed in on this device.</Abstract>
-			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
-			
-			<Declaration>- (nullable NSString *)passwordForAuthManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>authManager</Name>
-					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">The password, or nil.</Abstract></ReturnValue>
-			<Anchor>//api/name/passwordForAuthManager:</Anchor>
-            <NodeRef refid="19"/>
-		</Token>
 		
         
         

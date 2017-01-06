@@ -1,77 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Constants/SBBScheduledActivityStatus.html">
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/c/tdef/SBBScheduledActivityStatus</TokenIdentifier>
-			<Abstract type="html"></Abstract>
-			<DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
-            
-			
-			<NodeRef refid="37"/>
-		</Token>
+	<File path="">
 		
 		
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusScheduled</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBScheduledActivityStatusScheduled</Declaration>
-            
-            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
-            
-            <NodeRef refid="37"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusAvailable</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBScheduledActivityStatusAvailable</Declaration>
-            
-            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
-            
-            <NodeRef refid="37"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusStarted</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBScheduledActivityStatusStarted</Declaration>
-            
-            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
-            
-            <NodeRef refid="37"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusFinished</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBScheduledActivityStatusFinished</Declaration>
-            
-            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
-            
-            <NodeRef refid="37"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusExpired</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBScheduledActivityStatusExpired</Declaration>
-            
-            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
-            
-            <NodeRef refid="37"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusDeleted</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBScheduledActivityStatusDeleted</Declaration>
-            
-            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
-            
-            <NodeRef refid="37"/>
-        </Token>
         
         
 	</File>

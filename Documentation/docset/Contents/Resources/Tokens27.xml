@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Protocols/SBBScheduleManagerProtocol.html">
+	<File path="Protocols/SBBUploadManagerDelegate.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intf/SBBScheduleManagerProtocol</TokenIdentifier>
-			<Abstract type="html">This protocol defines the interface to the SBBScheduleManager&apos;s non-constructor, non-initializer methods. The interface is
-abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</Abstract>
-			<DeclaredIn>SBBScheduleManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBUploadManagerDelegate</TokenIdentifier>
+			<Abstract type="html">This protocol defines the interface to the upload manager delegate.</Abstract>
+			<DeclaredIn>SBBUploadManager.h</DeclaredIn>
             
 			
 			<NodeRef refid="27"/>
@@ -14,19 +13,50 @@ abstracted out for use in mock objects for testing, and to allow selecting among
 		
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBScheduleManagerProtocol/getSchedulesWithCompletion:</TokenIdentifier>
-			<Abstract type="html">Fetch the list of Schedules for the user from the Bridge API.</Abstract>
-			<DeclaredIn>SBBScheduleManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithError:</TokenIdentifier>
+			<Abstract type="html">Required delegate method that gets called when a background file upload task finishes, successfully or otherwise.</Abstract>
+			<DeclaredIn>SBBUploadManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion</Declaration>
+			<Declaration>- (void)uploadManager:(SBBUploadManager *)manager uploadOfFile:(NSString *)file completedWithError:(NSError *)error</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBScheduleManagerGetCompletionBlock to be called upon completion.</Abstract>
+					<Name>manager</Name>
+					<Abstract type="html">The upload manager instance making the call.</Abstract>
+				</Parameter><Parameter>
+					<Name>file</Name>
+					<Abstract type="html">The path to the file whose upload task finished or failed.</Abstract>
+				</Parameter><Parameter>
+					<Name>error</Name>
+					<Abstract type="html">If the upload task failed, this will describe the cause.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/getSchedulesWithCompletion:</Anchor>
+			
+			<Anchor>//api/name/uploadManager:uploadOfFile:completedWithError:</Anchor>
+            <NodeRef refid="27"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBUploadManagerDelegate/uploadManager:uploadOfFile:completedWithVerificationURL:</TokenIdentifier>
+			<Abstract type="html">Optional delegate method available only in debug builds.
+Called when a background file upload task finishes, successfully or otherwise in debug builds.
+Provides a URL that can be called for more information about the post-upload status of the data.</Abstract>
+			<DeclaredIn>SBBUploadManager.h</DeclaredIn>
+			
+			<Declaration>- (void)uploadManager:(SBBUploadManager *)manager uploadOfFile:(NSString *)file completedWithVerificationURL:(NSURL *)url</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>manager</Name>
+					<Abstract type="html">The upload manager instance making the call.</Abstract>
+				</Parameter><Parameter>
+					<Name>file</Name>
+					<Abstract type="html">The path to the file whose upload task finished or failed.</Abstract>
+				</Parameter><Parameter>
+					<Name>url</Name>
+					<Abstract type="html">The url to call to get more information about the post-upload status of the data.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/uploadManager:uploadOfFile:completedWithVerificationURL:</Anchor>
             <NodeRef refid="27"/>
 		</Token>
 		

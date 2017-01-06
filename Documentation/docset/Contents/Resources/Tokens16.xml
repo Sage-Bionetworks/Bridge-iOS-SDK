@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Classes/SBBUploadManager.html">
+	<File path="Protocols/SBBActivityManagerProtocol.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/cl/SBBUploadManager</TokenIdentifier>
-			<Abstract type="html">This class handles communication with the Bridge file upload API.</Abstract>
-			<DeclaredIn>SBBUploadManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBActivityManagerProtocol</TokenIdentifier>
+			<Abstract type="html">This protocol defines the interface to the SBBActivityManager&apos;s non-constructor, non-initializer methods. The interface is
+abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</Abstract>
+			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
             
 			
 			<NodeRef refid="16"/>
@@ -13,51 +14,140 @@
 		
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUploadManager/uploadFileToBridge:completion:</TokenIdentifier>
-			<Abstract type="html">This is a convenience method that determines the appropriate content-type based on the file extension and calls through to
-uploadFileToBridge:contentType:completion:.</Abstract>
-			<DeclaredIn>SBBUploadManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:</TokenIdentifier>
+			<Abstract type="html">Gets all available, started, or scheduled activities for a user. The &quot;daysAhead&quot; parameter allows you to retrieve activities that are scheduled in the future for the indicated number of days past today (to a maximum of four days, at this time). This allows certain kinds of UIs (e.g. &quot;You have N activities tomorrow&quot; or &quot;You have completed N of X activities today&quot;, even when the activities are not yet to be performed). A &quot;daysBehind&quot; parameter allows you to retain previously-cached activities that have not yet been completed that expired within the indicated number of days in the past. This allows UIs that say, e.g., &quot;You left N activities uncompleted yesterday.&quot; Scheduled activities will be returned in the timezone of the device at the time of the request. Once a task is finished, or expires (the time has passed for it to be started), or becomes invalid due to a schedule change on the server, it will be removed from the list of scheduled activities returned from Bridge, and (except for previously-fetched but unfinished tasks within daysBehind) will also be removed from the list passed to this method&apos;s completion handler.
+  </Abstract>
+			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
 			
-	<RelatedTokens>
-		<TokenIdentifier>//apple_ref/occ/intfm/SBBUploadManagerProtocol/uploadFileToBridge:contentType:completion:</TokenIdentifier>
-		
-	</RelatedTokens>
-	
-			<Declaration>- (void)uploadFileToBridge:(NSURL *)fileUrl completion:(SBBUploadManagerCompletionBlock)completion</Declaration>
-			
-			
-			<Anchor>//api/name/uploadFileToBridge:completion:</Anchor>
+			<Declaration>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>daysAhead</Name>
+					<Abstract type="html">A number of days in the future (0-4) for which to retrieve available/started/scheduled activities.</Abstract>
+				</Parameter><Parameter>
+					<Name>daysBehind</Name>
+					<Abstract type="html">A number of days in the past (no limit) for which to include previously-cached but expired and unfinished activities (ignored if the SDK was initialized with useCache=NO).</Abstract>
+				</Parameter><Parameter>
+					<Name>policy</Name>
+					<Abstract type="html">Caching policy to use (ignored if the SDK was initialized with useCache=NO).</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBActivityManagerGetCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:</Anchor>
             <NodeRef refid="16"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUploadManager/uploadFileToBridge:contentType:completion:</TokenIdentifier>
-			<Abstract type="html">Upload a file to the Bridge server on behalf of the authenticated user, via the NSURLSessionUploadTask so it can proceed
-even if the app is suspended or killed. Requesting the pre-signed URL for the upload from the Bridge API happens in a
-background download task so that the whole process can be initiated regardless of current network connectivity, and will
-proceed as and when possible.</Abstract>
-			<DeclaredIn>SBBUploadManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes a default value of 1 for daysBehind.</Abstract>
+			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
 			
-	<RelatedTokens>
-		<TokenIdentifier>//apple_ref/occ/intfp/SBBUploadManagerProtocol/uploadDelegate</TokenIdentifier>
+			<Declaration>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:</Anchor>
+            <NodeRef refid="16"/>
+		</Token>
 		
-	</RelatedTokens>
-	
-			<Declaration>- (void)uploadFileToBridge:(NSURL *)fileUrl contentType:(NSString *)contentType completion:(SBBUploadManagerCompletionBlock)completion</Declaration>
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/getScheduledActivitiesForDaysAhead:withCompletion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyFallBackToCache,
+if caching is enabled. Also implies a default value of 1 for daysBehind.</Abstract>
+			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/getScheduledActivitiesForDaysAhead:withCompletion:</Anchor>
+            <NodeRef refid="16"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/startScheduledActivity:asOf:withCompletion:</TokenIdentifier>
+			<Abstract type="html">Mark a ScheduledActivity as started, as of the time this method is called.</Abstract>
+			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>fileUrl</Name>
-					<Abstract type="html">The file to upload.</Abstract>
+					<Name>scheduledActivity</Name>
+					<Abstract type="html">The ScheduledActivity to be marked as started.</Abstract>
 				</Parameter><Parameter>
-					<Name>contentType</Name>
-					<Abstract type="html">The MIME type of the file (defaults to &quot;application/octet-stream&quot; if nil).</Abstract>
+					<Name>startDate</Name>
+					<Abstract type="html">The date/time as of which the Task was started.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">A completion block to be called when the upload finishes (or fails). Note that this will never be called if the app has to be relaunched to respond to the background session delegate events; blocks cannot be persisted across app launches. If you need to be sure to get the call upon completion (successful or otherwise), set an uploadDelegate.</Abstract>
+					<Abstract type="html">An SBBActivityManagerUpdateCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/startScheduledActivity:asOf:withCompletion:</Anchor>
+            <NodeRef refid="16"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/finishScheduledActivity:asOf:withCompletion:</TokenIdentifier>
+			<Abstract type="html">Mark a ScheduledActivity as finished, as of the time this method is called.</Abstract>
+			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
 			
-			<Anchor>//api/name/uploadFileToBridge:contentType:completion:</Anchor>
+			<Declaration>- (NSURLSessionTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>scheduledActivity</Name>
+					<Abstract type="html">The ScheduledActivity to be marked as started.</Abstract>
+				</Parameter><Parameter>
+					<Name>finishDate</Name>
+					<Abstract type="html">The date/time as of which the Task was finished.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBActivityManagerUpdateCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/finishScheduledActivity:asOf:withCompletion:</Anchor>
+            <NodeRef refid="16"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/deleteScheduledActivity:withCompletion:</TokenIdentifier>
+			<Abstract type="html">Delete a ScheduledActivity from the list of available/started/scheduled activities.</Abstract>
+			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>scheduledActivity</Name>
+					<Abstract type="html">The ScheduledActivity to be deleted.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBActivityManagerUpdateCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/deleteScheduledActivity:withCompletion:</Anchor>
+            <NodeRef refid="16"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/updateScheduledActivities:withCompletion:</TokenIdentifier>
+			<Abstract type="html">Update multiple scheduled activities&apos; statuses with the API at one time.</Abstract>
+			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>scheduledActivities</Name>
+					<Abstract type="html">The list of ScheduledActivity objects whose statuses are to be updated to the API.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBActivityManagerUpdateCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/updateScheduledActivities:withCompletion:</Anchor>
             <NodeRef refid="16"/>
 		</Token>
 		

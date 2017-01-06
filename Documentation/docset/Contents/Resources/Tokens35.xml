@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Constants/SBBErrorCodes.html">
+	<File path="Constants/SBBScheduledActivityStatus.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/c/tdef/SBBErrorCodes</TokenIdentifier>
-			<Abstract type="html">DEPRECATED</Abstract>
-			<DeclaredIn>SBBErrors.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/c/tdef/SBBScheduledActivityStatus</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
             
 			
 			<NodeRef refid="35"/>
@@ -14,131 +14,61 @@
 		
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBUnknownError</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusScheduled</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>kSBBUnknownError</Declaration>
+            <Declaration>SBBScheduledActivityStatusScheduled</Declaration>
             
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
             
             <NodeRef refid="35"/>
         </Token>
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBInternetNotConnected</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusAvailable</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>kSBBInternetNotConnected</Declaration>
+            <Declaration>SBBScheduledActivityStatusAvailable</Declaration>
             
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
             
             <NodeRef refid="35"/>
         </Token>
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBServerNotReachable</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusStarted</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>kSBBServerNotReachable</Declaration>
+            <Declaration>SBBScheduledActivityStatusStarted</Declaration>
             
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
             
             <NodeRef refid="35"/>
         </Token>
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBServerUnderMaintenance</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusFinished</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>kSBBServerUnderMaintenance</Declaration>
+            <Declaration>SBBScheduledActivityStatusFinished</Declaration>
             
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
             
             <NodeRef refid="35"/>
         </Token>
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBServerNotAuthenticated</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusExpired</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>kSBBServerNotAuthenticated</Declaration>
+            <Declaration>SBBScheduledActivityStatusExpired</Declaration>
             
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
             
             <NodeRef refid="35"/>
         </Token>
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBServerPreconditionNotMet</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/SBBScheduledActivityStatusDeleted</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>kSBBServerPreconditionNotMet</Declaration>
+            <Declaration>SBBScheduledActivityStatusDeleted</Declaration>
             
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
-            
-            <NodeRef refid="35"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBNoCredentialsAvailable</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>kSBBNoCredentialsAvailable</Declaration>
-            
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
-            
-            <NodeRef refid="35"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBUnsupportedAppVersion</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>kSBBUnsupportedAppVersion</Declaration>
-            
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
-            
-            <NodeRef refid="35"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBS3UploadErrorResponse</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>kSBBS3UploadErrorResponse</Declaration>
-            
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
-            
-            <NodeRef refid="35"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBNotAFileURL</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>kSBBNotAFileURL</Declaration>
-            
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
-            
-            <NodeRef refid="35"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBObjectNotExpectedClass</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>kSBBObjectNotExpectedClass</Declaration>
-            
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
-            
-            <NodeRef refid="35"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBTempFileError</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>kSBBTempFileError</Declaration>
-            
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
-            
-            <NodeRef refid="35"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/kSBBTempFileReadError</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>kSBBTempFileReadError</Declaration>
-            
-            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            <DeclaredIn>SBBScheduledActivity.h</DeclaredIn>
             
             <NodeRef refid="35"/>
         </Token>
