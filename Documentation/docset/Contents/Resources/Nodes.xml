@@ -26,8 +26,6 @@
 						<NodeRef refid="13"/>
 						<NodeRef refid="14"/>
 						<NodeRef refid="15"/>
-						<NodeRef refid="16"/>
-						<NodeRef refid="17"/>
 						
 					</Subnodes>
 				</Node>
@@ -38,6 +36,8 @@
 					<Name>Protocols</Name>
 					<Path>index.html</Path>
 					<Subnodes>
+						<NodeRef refid="16"/>
+						<NodeRef refid="17"/>
 						<NodeRef refid="18"/>
 						<NodeRef refid="19"/>
 						<NodeRef refid="20"/>
@@ -50,8 +50,6 @@
 						<NodeRef refid="27"/>
 						<NodeRef refid="28"/>
 						<NodeRef refid="29"/>
-						<NodeRef refid="30"/>
-						<NodeRef refid="31"/>
 						
 					</Subnodes>
 				</Node>
@@ -61,13 +59,13 @@
 					<Name>Constants</Name>
 					<Path>index.html</Path>
 					<Subnodes>
+						<NodeRef refid="30"/>
+						<NodeRef refid="31"/>
 						<NodeRef refid="32"/>
 						<NodeRef refid="33"/>
 						<NodeRef refid="34"/>
 						<NodeRef refid="35"/>
 						<NodeRef refid="36"/>
-						<NodeRef refid="37"/>
-						<NodeRef refid="38"/>
 						
 					</Subnodes>
 				</Node>
@@ -77,6 +75,8 @@
                     <Name>Blocks</Name>
                     <Path>index.html</Path>
                     <Subnodes>
+                        <NodeRef refid="37"/>
+                        <NodeRef refid="38"/>
                         <NodeRef refid="39"/>
                         <NodeRef refid="40"/>
                         <NodeRef refid="41"/>
@@ -95,8 +95,6 @@
                         <NodeRef refid="54"/>
                         <NodeRef refid="55"/>
                         <NodeRef refid="56"/>
-                        <NodeRef refid="57"/>
-                        <NodeRef refid="58"/>
                         
                     </Subnodes>
                 </Node>
@@ -221,33 +219,6 @@
             
         </Node>
 		<Node id="5" type="file" documentType="reference">
-            <Name>SBBBridgeNetworkManager</Name>
-            <Path>Classes/SBBBridgeNetworkManager.html</Path>
-            
-                <Subnodes>
-                <Node type="section">
-                    <Path>Classes/SBBBridgeNetworkManager.html</Path>
-                    <Name>Overview</Name>
-                    <Anchor>overview</Anchor>
-                </Node>
-                <Node type="section">
-                    <Path>Classes/SBBBridgeNetworkManager.html</Path>
-                    <Name>Tasks</Name>
-                    <Anchor>tasks</Anchor>
-                </Node>
-                
-                
-                
-                <Node type="section">
-                    <Path>Classes/SBBBridgeNetworkManager.html</Path>
-                    <Name>Instance Methods</Name>
-                    <Anchor>instance_methods</Anchor>
-                </Node>
-                
-            </Subnodes>
-            
-        </Node>
-		<Node id="6" type="file" documentType="reference">
             <Name>SBBComponentManager</Name>
             <Path>Classes/SBBComponentManager.html</Path>
             
@@ -274,7 +245,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="7" type="file" documentType="reference">
+		<Node id="6" type="file" documentType="reference">
             <Name>SBBConsentManager</Name>
             <Path>Classes/SBBConsentManager.html</Path>
             
@@ -301,7 +272,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="8" type="file" documentType="reference">
+		<Node id="7" type="file" documentType="reference">
             <Name>SBBConsentSignature</Name>
             <Path>Classes/SBBConsentSignature.html</Path>
             
@@ -328,7 +299,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="9" type="file" documentType="reference">
+		<Node id="8" type="file" documentType="reference">
             <Name>SBBNetworkManager</Name>
             <Path>Classes/SBBNetworkManager.html</Path>
             
@@ -355,7 +326,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="10" type="file" documentType="reference">
+		<Node id="9" type="file" documentType="reference">
             <Name>SBBObjectManager</Name>
             <Path>Classes/SBBObjectManager.html</Path>
             
@@ -388,7 +359,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="11" type="file" documentType="reference">
+		<Node id="10" type="file" documentType="reference">
             <Name>SBBParticipantManager</Name>
             <Path>Classes/SBBParticipantManager.html</Path>
             
@@ -415,34 +386,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="12" type="file" documentType="reference">
-            <Name>SBBSageNetworkManager</Name>
-            <Path>Classes/SBBSageNetworkManager.html</Path>
-            
-                <Subnodes>
-                <Node type="section">
-                    <Path>Classes/SBBSageNetworkManager.html</Path>
-                    <Name>Overview</Name>
-                    <Anchor>overview</Anchor>
-                </Node>
-                <Node type="section">
-                    <Path>Classes/SBBSageNetworkManager.html</Path>
-                    <Name>Tasks</Name>
-                    <Anchor>tasks</Anchor>
-                </Node>
-                
-                
-                
-                <Node type="section">
-                    <Path>Classes/SBBSageNetworkManager.html</Path>
-                    <Name>Instance Methods</Name>
-                    <Anchor>instance_methods</Anchor>
-                </Node>
-                
-            </Subnodes>
-            
-        </Node>
-		<Node id="13" type="file" documentType="reference">
+		<Node id="11" type="file" documentType="reference">
             <Name>SBBScheduleManager</Name>
             <Path>Classes/SBBScheduleManager.html</Path>
             
@@ -469,12 +413,12 @@
             </Subnodes>
             
         </Node>
-		<Node id="14" type="file" documentType="reference">
+		<Node id="12" type="file" documentType="reference">
             <Name>SBBSignUp</Name>
             <Path>Classes/SBBSignUp.html</Path>
             
         </Node>
-		<Node id="15" type="file" documentType="reference">
+		<Node id="13" type="file" documentType="reference">
             <Name>SBBSurveyManager</Name>
             <Path>Classes/SBBSurveyManager.html</Path>
             
@@ -501,7 +445,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="16" type="file" documentType="reference">
+		<Node id="14" type="file" documentType="reference">
             <Name>SBBUploadManager</Name>
             <Path>Classes/SBBUploadManager.html</Path>
             
@@ -528,7 +472,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="17" type="file" documentType="reference">
+		<Node id="15" type="file" documentType="reference">
             <Name>SBBUserManager</Name>
             <Path>Classes/SBBUserManager.html</Path>
             
@@ -557,7 +501,7 @@
         </Node>
 		
 		
-        <Node id="18" type="file" documentType="reference">
+        <Node id="16" type="file" documentType="reference">
             <Name>SBBActivityManagerProtocol</Name>
             <Path>Protocols/SBBActivityManagerProtocol.html</Path>
             
@@ -584,7 +528,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="19" type="file" documentType="reference">
+		<Node id="17" type="file" documentType="reference">
             <Name>SBBAuthManagerDelegateProtocol</Name>
             <Path>Protocols/SBBAuthManagerDelegateProtocol.html</Path>
             
@@ -611,7 +555,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="20" type="file" documentType="reference">
+		<Node id="18" type="file" documentType="reference">
             <Name>SBBAuthManagerProtocol</Name>
             <Path>Protocols/SBBAuthManagerProtocol.html</Path>
             
@@ -638,12 +582,12 @@
             </Subnodes>
             
         </Node>
-		<Node id="21" type="file" documentType="reference">
+		<Node id="19" type="file" documentType="reference">
             <Name>SBBBridgeAPIManagerProtocol</Name>
             <Path>Protocols/SBBBridgeAPIManagerProtocol.html</Path>
             
         </Node>
-		<Node id="22" type="file" documentType="reference">
+		<Node id="20" type="file" documentType="reference">
             <Name>SBBBridgeAppDelegate</Name>
             <Path>Protocols/SBBBridgeAppDelegate.html</Path>
             
@@ -670,7 +614,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="23" type="file" documentType="reference">
+		<Node id="21" type="file" documentType="reference">
             <Name>SBBConsentManagerProtocol</Name>
             <Path>Protocols/SBBConsentManagerProtocol.html</Path>
             
@@ -697,7 +641,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="24" type="file" documentType="reference">
+		<Node id="22" type="file" documentType="reference">
             <Name>SBBNetworkManagerProtocol</Name>
             <Path>Protocols/SBBNetworkManagerProtocol.html</Path>
             
@@ -730,7 +674,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="25" type="file" documentType="reference">
+		<Node id="23" type="file" documentType="reference">
             <Name>SBBObjectManagerProtocol</Name>
             <Path>Protocols/SBBObjectManagerProtocol.html</Path>
             
@@ -757,7 +701,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="26" type="file" documentType="reference">
+		<Node id="24" type="file" documentType="reference">
             <Name>SBBParticipantManagerProtocol</Name>
             <Path>Protocols/SBBParticipantManagerProtocol.html</Path>
             
@@ -784,7 +728,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="27" type="file" documentType="reference">
+		<Node id="25" type="file" documentType="reference">
             <Name>SBBScheduleManagerProtocol</Name>
             <Path>Protocols/SBBScheduleManagerProtocol.html</Path>
             
@@ -811,7 +755,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="28" type="file" documentType="reference">
+		<Node id="26" type="file" documentType="reference">
             <Name>SBBSurveyManagerProtocol</Name>
             <Path>Protocols/SBBSurveyManagerProtocol.html</Path>
             
@@ -838,7 +782,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="29" type="file" documentType="reference">
+		<Node id="27" type="file" documentType="reference">
             <Name>SBBUploadManagerDelegate</Name>
             <Path>Protocols/SBBUploadManagerDelegate.html</Path>
             
@@ -865,7 +809,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="30" type="file" documentType="reference">
+		<Node id="28" type="file" documentType="reference">
             <Name>SBBUploadManagerProtocol</Name>
             <Path>Protocols/SBBUploadManagerProtocol.html</Path>
             
@@ -898,7 +842,7 @@
             </Subnodes>
             
         </Node>
-		<Node id="31" type="file" documentType="reference">
+		<Node id="29" type="file" documentType="reference">
             <Name>SBBUserManagerProtocol</Name>
             <Path>Protocols/SBBUserManagerProtocol.html</Path>
             
@@ -926,138 +870,138 @@
             
         </Node>
 		
-        <Node id="32" type="file" documentType="reference">
+        <Node id="30" type="file" documentType="reference">
             <Name>SBBCachingPolicy</Name>
             <Path>Constants/SBBCachingPolicy.html</Path>
             
         </Node>
-		<Node id="33" type="file" documentType="reference">
+		<Node id="31" type="file" documentType="reference">
             <Name>SBBEnvironment</Name>
             <Path>Constants/SBBEnvironment.html</Path>
             
         </Node>
-		<Node id="34" type="file" documentType="reference">
+		<Node id="32" type="file" documentType="reference">
             <Name>SBBErrorCode</Name>
             <Path>Constants/SBBErrorCode.html</Path>
             
         </Node>
-		<Node id="35" type="file" documentType="reference">
+		<Node id="33" type="file" documentType="reference">
             <Name>SBBErrorCodes</Name>
             <Path>Constants/SBBErrorCodes.html</Path>
             
         </Node>
-		<Node id="36" type="file" documentType="reference">
+		<Node id="34" type="file" documentType="reference">
             <Name>SBBParticipantDataSharingScope</Name>
             <Path>Constants/SBBParticipantDataSharingScope.html</Path>
             
         </Node>
-		<Node id="37" type="file" documentType="reference">
+		<Node id="35" type="file" documentType="reference">
             <Name>SBBScheduledActivityStatus</Name>
             <Path>Constants/SBBScheduledActivityStatus.html</Path>
             
         </Node>
-		<Node id="38" type="file" documentType="reference">
+		<Node id="36" type="file" documentType="reference">
             <Name>SBBUserDataSharingScope</Name>
             <Path>Constants/SBBUserDataSharingScope.html</Path>
             
         </Node>
 		
-        <Node id="39" type="file" documentType="reference">
+        <Node id="37" type="file" documentType="reference">
             <Name>SBBActivityManagerGetCompletionBlock</Name>
             <Path>Blocks/SBBActivityManagerGetCompletionBlock.html</Path>
             
         </Node>
-        <Node id="40" type="file" documentType="reference">
+        <Node id="38" type="file" documentType="reference">
             <Name>SBBActivityManagerUpdateCompletionBlock</Name>
             <Path>Blocks/SBBActivityManagerUpdateCompletionBlock.html</Path>
             
         </Node>
-        <Node id="41" type="file" documentType="reference">
+        <Node id="39" type="file" documentType="reference">
             <Name>SBBConsentManagerCompletionBlock</Name>
             <Path>Blocks/SBBConsentManagerCompletionBlock.html</Path>
             
         </Node>
-        <Node id="42" type="file" documentType="reference">
+        <Node id="40" type="file" documentType="reference">
             <Name>SBBConsentManagerGetCompletionBlock</Name>
             <Path>Blocks/SBBConsentManagerGetCompletionBlock.html</Path>
             
         </Node>
-        <Node id="43" type="file" documentType="reference">
+        <Node id="41" type="file" documentType="reference">
             <Name>SBBConsentManagerRetrieveCompletionBlock</Name>
             <Path>Blocks/SBBConsentManagerRetrieveCompletionBlock.html</Path>
             
         </Node>
-        <Node id="44" type="file" documentType="reference">
+        <Node id="42" type="file" documentType="reference">
             <Name>SBBNetworkManagerCompletionBlock</Name>
             <Path>Blocks/SBBNetworkManagerCompletionBlock.html</Path>
             
         </Node>
-        <Node id="45" type="file" documentType="reference">
+        <Node id="43" type="file" documentType="reference">
             <Name>SBBNetworkManagerDownloadCompletionBlock</Name>
             <Path>Blocks/SBBNetworkManagerDownloadCompletionBlock.html</Path>
             
         </Node>
-        <Node id="46" type="file" documentType="reference">
+        <Node id="44" type="file" documentType="reference">
             <Name>SBBNetworkManagerTaskCompletionBlock</Name>
             <Path>Blocks/SBBNetworkManagerTaskCompletionBlock.html</Path>
             
         </Node>
-        <Node id="47" type="file" documentType="reference">
+        <Node id="45" type="file" documentType="reference">
             <Name>SBBParticipantManagerCompletionBlock</Name>
             <Path>Blocks/SBBParticipantManagerCompletionBlock.html</Path>
             
         </Node>
-        <Node id="48" type="file" documentType="reference">
+        <Node id="46" type="file" documentType="reference">
             <Name>SBBParticipantManagerGetGroupsCompletionBlock</Name>
             <Path>Blocks/SBBParticipantManagerGetGroupsCompletionBlock.html</Path>
             
         </Node>
-        <Node id="49" type="file" documentType="reference">
+        <Node id="47" type="file" documentType="reference">
             <Name>SBBParticipantManagerGetRecordCompletionBlock</Name>
             <Path>Blocks/SBBParticipantManagerGetRecordCompletionBlock.html</Path>
             
         </Node>
-        <Node id="50" type="file" documentType="reference">
+        <Node id="48" type="file" documentType="reference">
             <Name>SBBScheduleManagerGetCompletionBlock</Name>
             <Path>Blocks/SBBScheduleManagerGetCompletionBlock.html</Path>
             
         </Node>
-        <Node id="51" type="file" documentType="reference">
+        <Node id="49" type="file" documentType="reference">
             <Name>SBBSurveyManagerEditResponseCompletionBlock</Name>
             <Path>Blocks/SBBSurveyManagerEditResponseCompletionBlock.html</Path>
             
         </Node>
-        <Node id="52" type="file" documentType="reference">
+        <Node id="50" type="file" documentType="reference">
             <Name>SBBSurveyManagerGetCompletionBlock</Name>
             <Path>Blocks/SBBSurveyManagerGetCompletionBlock.html</Path>
             
         </Node>
-        <Node id="53" type="file" documentType="reference">
+        <Node id="51" type="file" documentType="reference">
             <Name>SBBSurveyManagerGetResponseCompletionBlock</Name>
             <Path>Blocks/SBBSurveyManagerGetResponseCompletionBlock.html</Path>
             
         </Node>
-        <Node id="54" type="file" documentType="reference">
+        <Node id="52" type="file" documentType="reference">
             <Name>SBBSurveyManagerSubmitAnswersCompletionBlock</Name>
             <Path>Blocks/SBBSurveyManagerSubmitAnswersCompletionBlock.html</Path>
             
         </Node>
-        <Node id="55" type="file" documentType="reference">
+        <Node id="53" type="file" documentType="reference">
             <Name>SBBUploadManagerCompletionBlock</Name>
             <Path>Blocks/SBBUploadManagerCompletionBlock.html</Path>
             
         </Node>
-        <Node id="56" type="file" documentType="reference">
+        <Node id="54" type="file" documentType="reference">
             <Name>SBBUserManagerCompletionBlock</Name>
             <Path>Blocks/SBBUserManagerCompletionBlock.html</Path>
             
         </Node>
-        <Node id="57" type="file" documentType="reference">
+        <Node id="55" type="file" documentType="reference">
             <Name>SBBUserManagerGetGroupsCompletionBlock</Name>
             <Path>Blocks/SBBUserManagerGetGroupsCompletionBlock.html</Path>
             
         </Node>
-        <Node id="58" type="file" documentType="reference">
+        <Node id="56" type="file" documentType="reference">
             <Name>SBBUserManagerGetProfileCompletionBlock</Name>
             <Path>Blocks/SBBUserManagerGetProfileCompletionBlock.html</Path>
             

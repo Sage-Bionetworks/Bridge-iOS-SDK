@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Constants/SBBEnvironment.html">
+	<File path="Constants/SBBErrorCodes.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/c/tdef/SBBEnvironment</TokenIdentifier>
-			<Abstract type="html">An enumeration of the available server environments.
-@constant SBBEnvironmentProd The production environment.
-@constant SBBEnvironmentStaging The staging environment, used for testing before releasing to production.
-@constant SBBEnvironmentDev The development environment, for Sage Bionetworks internal use only.
-@constant SBBEnvironmentCustom A custom environment for testing purposes.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/c/tdef/SBBErrorCodes</TokenIdentifier>
+			<Abstract type="html">DEPRECATED</Abstract>
+			<DeclaredIn>SBBErrors.h</DeclaredIn>
             
 			
 			<NodeRef refid="33"/>
@@ -18,41 +14,131 @@
 		
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBEnvironmentProd</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBUnknownError</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>SBBEnvironmentProd</Declaration>
+            <Declaration>kSBBUnknownError</Declaration>
             
-            <DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
             
             <NodeRef refid="33"/>
         </Token>
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBEnvironmentStaging</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBInternetNotConnected</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>SBBEnvironmentStaging</Declaration>
+            <Declaration>kSBBInternetNotConnected</Declaration>
             
-            <DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
             
             <NodeRef refid="33"/>
         </Token>
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBEnvironmentDev</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBServerNotReachable</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>SBBEnvironmentDev</Declaration>
+            <Declaration>kSBBServerNotReachable</Declaration>
             
-            <DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
             
             <NodeRef refid="33"/>
         </Token>
         
         <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBEnvironmentCustom</TokenIdentifier>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBServerUnderMaintenance</TokenIdentifier>
             <Abstract type="html"></Abstract>
-            <Declaration>SBBEnvironmentCustom</Declaration>
+            <Declaration>kSBBServerUnderMaintenance</Declaration>
             
-            <DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBServerNotAuthenticated</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBServerNotAuthenticated</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBServerPreconditionNotMet</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBServerPreconditionNotMet</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBNoCredentialsAvailable</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBNoCredentialsAvailable</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBUnsupportedAppVersion</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBUnsupportedAppVersion</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBS3UploadErrorResponse</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBS3UploadErrorResponse</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBNotAFileURL</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBNotAFileURL</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBObjectNotExpectedClass</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBObjectNotExpectedClass</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBTempFileError</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBTempFileError</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
+            
+            <NodeRef refid="33"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/kSBBTempFileReadError</TokenIdentifier>
+            <Abstract type="html"></Abstract>
+            <Declaration>kSBBTempFileReadError</Declaration>
+            
+            <DeclaredIn>SBBErrors.h</DeclaredIn>
             
             <NodeRef refid="33"/>
         </Token>

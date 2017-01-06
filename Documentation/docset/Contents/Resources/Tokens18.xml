@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Protocols/SBBActivityManagerProtocol.html">
+	<File path="Protocols/SBBAuthManagerProtocol.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intf/SBBActivityManagerProtocol</TokenIdentifier>
-			<Abstract type="html">This protocol defines the interface to the SBBActivityManager&apos;s non-constructor, non-initializer methods. The interface is
+			<TokenIdentifier>//apple_ref/occ/intf/SBBAuthManagerProtocol</TokenIdentifier>
+			<Abstract type="html">This protocol defines the interface to the SBBAuthManager&apos;s non-constructor, non-initializer methods. The interface is
 abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</Abstract>
-			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
             
 			
 			<NodeRef refid="18"/>
@@ -14,140 +14,233 @@ abstracted out for use in mock objects for testing, and to allow selecting among
 		
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:</TokenIdentifier>
-			<Abstract type="html">Gets all available, started, or scheduled activities for a user. The &quot;daysAhead&quot; parameter allows you to retrieve activities that are scheduled in the future for the indicated number of days past today (to a maximum of four days, at this time). This allows certain kinds of UIs (e.g. &quot;You have N activities tomorrow&quot; or &quot;You have completed N of X activities today&quot;, even when the activities are not yet to be performed). A &quot;daysBehind&quot; parameter allows you to retain previously-cached activities that have not yet been completed that expired within the indicated number of days in the past. This allows UIs that say, e.g., &quot;You left N activities uncompleted yesterday.&quot; Scheduled activities will be returned in the timezone of the device at the time of the request. Once a task is finished, or expires (the time has passed for it to be started), or becomes invalid due to a schedule change on the server, it will be removed from the list of scheduled activities returned from Bridge, and (except for previously-fetched but unfinished tasks within daysBehind) will also be removed from the list passed to this method&apos;s completion handler.
-  </Abstract>
-			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/signUpStudyParticipant:completion:</TokenIdentifier>
+			<Abstract type="html">Sign up for an account using a SignUp record, which is basically a StudyParticipant object with a password field.
+At minimum, the email and password fields must be filled in; in general, you would also want to fill in any of the following
+information available at sign-up time: firstName, lastName, sharingScope, externalId (if used), dataGroups, notifyByEmail,
+and any custom attributes you&apos;ve defined for the attributes field.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion</Declaration>
+			<Declaration>- (nonnull NSURLSessionTask *)signUpStudyParticipant:(nonnull SBBSignUp *)signUp completion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>daysAhead</Name>
-					<Abstract type="html">A number of days in the future (0-4) for which to retrieve available/started/scheduled activities.</Abstract>
-				</Parameter><Parameter>
-					<Name>daysBehind</Name>
-					<Abstract type="html">A number of days in the past (no limit) for which to include previously-cached but expired and unfinished activities (ignored if the SDK was initialized with useCache=NO).</Abstract>
-				</Parameter><Parameter>
-					<Name>policy</Name>
-					<Abstract type="html">Caching policy to use (ignored if the SDK was initialized with useCache=NO).</Abstract>
+					<Name>signUp</Name>
+					<Abstract type="html">A SBBSignUp object representing the participant signing up.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">An SBBActivityManagerGetCompletionBlock to be called upon completion.</Abstract>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.</Abstract>
 				</Parameter>
 			</Parameters>
 			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/getScheduledActivitiesForDaysAhead:daysBehind:cachingPolicy:withCompletion:</Anchor>
+			<Anchor>//api/name/signUpStudyParticipant:completion:</Anchor>
             <NodeRef refid="18"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:</TokenIdentifier>
-			<Abstract type="html">This is a convenience method that assumes a default value of 1 for daysBehind.</Abstract>
-			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/signUpWithEmail:username:password:dataGroups:completion:</TokenIdentifier>
+			<Abstract type="html">Sign up for an account with an email address, userName, password, and an optional list of data group tags.
+An email will be sent to the specified email address containing a link to verify that this is indeed that
+person&apos;s email. The userName and password won&apos;t be valid for signing in until the email has been verified. (&lt;b class=&quot;deprecated&quot;&gt;Deprecated:&lt;/b&gt;&lt;span class=&quot;deprecated&quot;&gt; Use signUpStudyParticipant:completion: instead.&lt;/span&gt;)</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion</Declaration>
-			
-			
-			<Anchor>//api/name/getScheduledActivitiesForDaysAhead:cachingPolicy:withCompletion:</Anchor>
-            <NodeRef refid="18"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/getScheduledActivitiesForDaysAhead:withCompletion:</TokenIdentifier>
-			<Abstract type="html">This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyFallBackToCache,
-if caching is enabled. Also implies a default value of 1 for daysBehind.</Abstract>
-			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion</Declaration>
-			
-			
-			<Anchor>//api/name/getScheduledActivitiesForDaysAhead:withCompletion:</Anchor>
-            <NodeRef refid="18"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/startScheduledActivity:asOf:withCompletion:</TokenIdentifier>
-			<Abstract type="html">Mark a ScheduledActivity as started, as of the time this method is called.</Abstract>
-			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion</Declaration>
+			<Declaration>- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray&lt;NSString*&gt; *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>scheduledActivity</Name>
-					<Abstract type="html">The ScheduledActivity to be marked as started.</Abstract>
+					<Name>email</Name>
+					<Abstract type="html">The email address to be associated with the account.</Abstract>
 				</Parameter><Parameter>
-					<Name>startDate</Name>
-					<Abstract type="html">The date/time as of which the Task was started.</Abstract>
+					<Name>username</Name>
+					<Abstract type="html">The username to use for the account.</Abstract>
+				</Parameter><Parameter>
+					<Name>password</Name>
+					<Abstract type="html">The password to use for the account.</Abstract>
+				</Parameter><Parameter>
+					<Name>dataGroups</Name>
+					<Abstract type="html">An array of dataGroup tags to assign to the user at signup. Optional.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">An SBBActivityManagerUpdateCompletionBlock to be called upon completion.</Abstract>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.</Abstract>
 				</Parameter>
 			</Parameters>
 			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/startScheduledActivity:asOf:withCompletion:</Anchor>
+			<Anchor>//api/name/signUpWithEmail:username:password:dataGroups:completion:</Anchor>
             <NodeRef refid="18"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/finishScheduledActivity:asOf:withCompletion:</TokenIdentifier>
-			<Abstract type="html">Mark a ScheduledActivity as finished, as of the time this method is called.</Abstract>
-			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/signUpWithEmail:username:password:completion:</TokenIdentifier>
+			<Abstract type="html">Sign up for an account with an email address, userName, and password. This is a convenience method
+that calls signUpWithEmail:username:password:dataGroups:completion: with dataGroups set to nil. (&lt;b class=&quot;deprecated&quot;&gt;Deprecated:&lt;/b&gt;&lt;span class=&quot;deprecated&quot;&gt; Use signUpStudyParticipant:withPassword:completion: instead.&lt;/span&gt;)</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion</Declaration>
+			<Declaration>- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>scheduledActivity</Name>
-					<Abstract type="html">The ScheduledActivity to be marked as started.</Abstract>
+					<Name>email</Name>
+					<Abstract type="html">The email address to be associated with the account.</Abstract>
 				</Parameter><Parameter>
-					<Name>finishDate</Name>
-					<Abstract type="html">The date/time as of which the Task was finished.</Abstract>
+					<Name>username</Name>
+					<Abstract type="html">The username to use for the account.</Abstract>
+				</Parameter><Parameter>
+					<Name>password</Name>
+					<Abstract type="html">The password to use for the account.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">An SBBActivityManagerUpdateCompletionBlock to be called upon completion.</Abstract>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.</Abstract>
 				</Parameter>
 			</Parameters>
 			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/finishScheduledActivity:asOf:withCompletion:</Anchor>
+			<Anchor>//api/name/signUpWithEmail:username:password:completion:</Anchor>
             <NodeRef refid="18"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/deleteScheduledActivity:withCompletion:</TokenIdentifier>
-			<Abstract type="html">Delete a ScheduledActivity from the list of available/started/scheduled activities.</Abstract>
-			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/resendEmailVerification:completion:</TokenIdentifier>
+			<Abstract type="html">Request Bridge to re-send the email verification link to the specified email address.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion</Declaration>
+			<Declaration>- (nonnull NSURLSessionTask *)resendEmailVerification:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>scheduledActivity</Name>
-					<Abstract type="html">The ScheduledActivity to be deleted.</Abstract>
+					<Name>email</Name>
+					<Abstract type="html">The email address for which to re-send the verification link.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">An SBBActivityManagerUpdateCompletionBlock to be called upon completion.</Abstract>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
 			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/deleteScheduledActivity:withCompletion:</Anchor>
+			<Anchor>//api/name/resendEmailVerification:completion:</Anchor>
             <NodeRef refid="18"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBActivityManagerProtocol/updateScheduledActivities:withCompletion:</TokenIdentifier>
-			<Abstract type="html">Update multiple scheduled activities&apos; statuses with the API at one time.</Abstract>
-			<DeclaredIn>SBBActivityManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/signInWithEmail:password:completion:</TokenIdentifier>
+			<Abstract type="html">Sign in to an existing account with an email and password.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion</Declaration>
+			<Declaration>- (nonnull NSURLSessionTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>scheduledActivities</Name>
-					<Abstract type="html">The list of ScheduledActivity objects whose statuses are to be updated to the API.</Abstract>
+					<Name>email</Name>
+					<Abstract type="html">The email address of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.</Abstract>
+				</Parameter><Parameter>
+					<Name>password</Name>
+					<Abstract type="html">The password of the account.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">An SBBActivityManagerUpdateCompletionBlock to be called upon completion.</Abstract>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API  UserSessionInfo object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you&apos;ve mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of idSBBObjectManagerProtocol if you&apos;ve set one up).</Abstract>
 				</Parameter>
 			</Parameters>
 			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/updateScheduledActivities:withCompletion:</Anchor>
+			<Anchor>//api/name/signInWithEmail:password:completion:</Anchor>
+            <NodeRef refid="18"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/signOutWithCompletion:</TokenIdentifier>
+			<Abstract type="html">Sign out of the user&apos;s Bridge account.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
+			
+			<Declaration>- (nonnull NSURLSessionTask *)signOutWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/signOutWithCompletion:</Anchor>
+            <NodeRef refid="18"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/ensureSignedInWithCompletion:</TokenIdentifier>
+			<Abstract type="html">Call this at app launch to ensure the user is logged in to their account (if any).</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
+			
+			<Declaration>- (void)ensureSignedInWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/ensureSignedInWithCompletion:</Anchor>
+            <NodeRef refid="18"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/requestPasswordResetForEmail:completion:</TokenIdentifier>
+			<Abstract type="html">Request that the password be reset for the account associated with the given email address. An email will be sent
+to that address with instructions for choosing a new password.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
+			
+			<Declaration>- (nonnull NSURLSessionTask *)requestPasswordResetForEmail:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>email</Name>
+					<Abstract type="html">The email address associated with the account whose password is to be reset.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/requestPasswordResetForEmail:completion:</Anchor>
+            <NodeRef refid="18"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/resetPasswordToNewPassword:resetToken:completion:</TokenIdentifier>
+			<Abstract type="html">Reset the password for this user&apos;s account.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
+			
+			<Declaration>- (nonnull NSURLSessionTask *)resetPasswordToNewPassword:(nonnull NSString *)password resetToken:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>password</Name>
+					<Abstract type="html">The new password for this user&apos;s account.</Abstract>
+				</Parameter><Parameter>
+					<Name>token</Name>
+					<Abstract type="html">The sptoken sent to the user&apos;s email address in response to a requestPasswordResetForEmail: call.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">A SBBNetworkManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/resetPasswordToNewPassword:resetToken:completion:</Anchor>
+            <NodeRef refid="18"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/addAuthHeaderToHeaders:</TokenIdentifier>
+			<Abstract type="html">This method is used by other API manager components to inject the session token header for authentication.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
+			
+			<Declaration>- (void)addAuthHeaderToHeaders:(nonnull NSMutableDictionary *)headers</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>headers</Name>
+					<Abstract type="html">A mutable dictionary containing HTTP header key-value (string) pairs, to which to add the auth header.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/addAuthHeaderToHeaders:</Anchor>
+            <NodeRef refid="18"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerProtocol/signInWithUsername:password:completion:</TokenIdentifier>
+			<Abstract type="html">For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
+			
+			<Declaration>- (nonnull NSURLSessionTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/signInWithUsername:password:completion:</Anchor>
             <NodeRef refid="18"/>
 		</Token>
 		

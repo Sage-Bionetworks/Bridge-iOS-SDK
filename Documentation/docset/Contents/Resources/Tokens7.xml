@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Classes/SBBConsentManager.html">
+	<File path="Classes/SBBConsentSignature.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/cl/SBBConsentManager</TokenIdentifier>
-			<Abstract type="html">This class handles communication with the Bridge Consent API.</Abstract>
-			<DeclaredIn>SBBConsentManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/cl/SBBConsentSignature</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBBConsentSignature.h</DeclaredIn>
             
 			
 			<NodeRef refid="7"/>
@@ -13,167 +13,31 @@
 		
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentManager/consentSignature:birthdate:signatureImage:dataSharing:completion:</TokenIdentifier>
-			<Abstract type="html">Submit the user&apos;s &quot;signature&quot; and birthdate to indicate consent to participate in this research project. (&lt;b class=&quot;deprecated&quot;&gt;Deprecated:&lt;/b&gt;&lt;span class=&quot;deprecated&quot;&gt; use consentSignature:forSubpopulationGuid:birthdate:signatureImage:dataSharing:completion: instead.&lt;/span&gt;)</Abstract>
-			<DeclaredIn>SBBConsentManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentSignature/signatureImage</TokenIdentifier>
+			<Abstract type="html">Create a UIImage object from the imageData if it exists.</Abstract>
+			<DeclaredIn>SBBConsentSignature.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)consentSignature:(NSString *)name birthdate:(NSDate *)date signatureImage:(UIImage *)signatureImage dataSharing:(SBBParticipantDataSharingScope)scope completion:(SBBConsentManagerCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>name</Name>
-					<Abstract type="html">The user&apos;s name.</Abstract>
-				</Parameter><Parameter>
-					<Name>date</Name>
-					<Abstract type="html">The user&apos;s birthday in the format &quot;YYYY-MM-DD&quot;.</Abstract>
-				</Parameter><Parameter>
-					<Name>signatureImage</Name>
-					<Abstract type="html">Image file of the user&apos;s signature. Should be less than 10kb. Optional, can be nil.</Abstract>
-				</Parameter><Parameter>
-					<Name>scope</Name>
-					<Abstract type="html">The scope of data sharing to which the user has consented.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBConsentManagerCompletionBlock to be called upon completion.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/consentSignature:birthdate:signatureImage:dataSharing:completion:</Anchor>
+			<Declaration>- (nullable UIImage *)signatureImage</Declaration>
+			
+			<ReturnValue><Abstract type="html">The created UIImage object, or nil if no imageData.</Abstract></ReturnValue>
+			<Anchor>//api/name/signatureImage</Anchor>
             <NodeRef refid="7"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentManager/consentSignature:forSubpopulationGuid:birthdate:signatureImage:dataSharing:completion:</TokenIdentifier>
-			<Abstract type="html">Submit the user&apos;s &quot;signature&quot; and birthdate to indicate consent to participate in this research project.</Abstract>
-			<DeclaredIn>SBBConsentManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentSignature/setSignatureImage:</TokenIdentifier>
+			<Abstract type="html">Set (or clear) the imageData and imageMimeType fields from a UIImage object.</Abstract>
+			<DeclaredIn>SBBConsentSignature.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)consentSignature:(NSString *)name forSubpopulationGuid:(NSString *)subpopGuid birthdate:(NSDate *)date signatureImage:(UIImage *)signatureImage dataSharing:(SBBParticipantDataSharingScope)scope completion:(SBBConsentManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (void)setSignatureImage:(nullable UIImage *)image</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>name</Name>
-					<Abstract type="html">The user&apos;s name.</Abstract>
-				</Parameter><Parameter>
-					<Name>subpopGuid</Name>
-					<Abstract type="html">The GUID of the subpopulation for which the consent is being signed.</Abstract>
-				</Parameter><Parameter>
-					<Name>date</Name>
-					<Abstract type="html">The user&apos;s birthday in the format &quot;YYYY-MM-DD&quot;.</Abstract>
-				</Parameter><Parameter>
-					<Name>signatureImage</Name>
-					<Abstract type="html">Image file of the user&apos;s signature. Should be less than 10kb. Optional, can be nil.</Abstract>
-				</Parameter><Parameter>
-					<Name>scope</Name>
-					<Abstract type="html">The scope of data sharing to which the user has consented.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBConsentManagerCompletionBlock to be called upon completion.</Abstract>
+					<Name>image</Name>
+					<Abstract type="html">The consent signature image object.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/consentSignature:forSubpopulationGuid:birthdate:signatureImage:dataSharing:completion:</Anchor>
-            <NodeRef refid="7"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentManager/retrieveConsentSignatureWithCompletion:</TokenIdentifier>
-			<Abstract type="html">Retrieve the user&apos;s consent signature as previously submitted. If the user has not submitted a consent signature,
-this method throws an Entity Not Found error. (&lt;b class=&quot;deprecated&quot;&gt;Deprecated:&lt;/b&gt;&lt;span class=&quot;deprecated&quot;&gt; use getConsentSignatureWithCompletion:notConsented: instead.&lt;/span&gt;)</Abstract>
-			<DeclaredIn>SBBConsentManager.m</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBConsentManagerRetrieveCompletionBlock to be called upon completion.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/retrieveConsentSignatureWithCompletion:</Anchor>
-            <NodeRef refid="7"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentManager/getConsentSignatureForSubpopulation:completion:</TokenIdentifier>
-			<Abstract type="html">Get the user&apos;s consent signature as previously submitted. If the user has not submitted a required consent
-signature, the SBBBridgeAppDelegate method handleUserNotConsentedError:sessionInfo:networkManager: will be
-called if it has been implemented in the app delegate, just before calling the completion handler.</Abstract>
-			<DeclaredIn>SBBConsentManager.m</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)getConsentSignatureForSubpopulation:(NSString *)subpopGuid completion:(SBBConsentManagerGetCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>subpopGuid</Name>
-					<Abstract type="html">The GUID of the subpopulation for which the consent signature is being fetched.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBConsentManagerGetCompletionBlock to be called upon completion. See the documentation of that block type for details on what is passed to it under various circumstances.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/getConsentSignatureForSubpopulation:completion:</Anchor>
-            <NodeRef refid="7"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentManager/withdrawConsentWithReason:completion:</TokenIdentifier>
-			<Abstract type="html">Withdraw the user&apos;s consent signature previously submitted. This has the effect of withdrawing them from the
-study altogether. (&lt;b class=&quot;deprecated&quot;&gt;Deprecated:&lt;/b&gt;&lt;span class=&quot;deprecated&quot;&gt; Use withdrawConsentForSubpopulation:withReason: instead.&lt;/span&gt;)</Abstract>
-			<DeclaredIn>SBBConsentManager.m</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>reason</Name>
-					<Abstract type="html">A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBConsentManagerCompletionBlock to be called upon completion.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/withdrawConsentWithReason:completion:</Anchor>
-            <NodeRef refid="7"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentManager/withdrawConsentForSubpopulation:withReason:completion:</TokenIdentifier>
-			<Abstract type="html">Withdraw the user&apos;s consent signature previously submitted for a specific subpopulation.</Abstract>
-			<DeclaredIn>SBBConsentManager.m</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)withdrawConsentForSubpopulation:(NSString *)subpopGuid withReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>subpopGuid</Name>
-					<Abstract type="html">The GUID of the subpopulation for which the consent signature is being withdrawn.</Abstract>
-				</Parameter><Parameter>
-					<Name>reason</Name>
-					<Abstract type="html">A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBConsentManagerCompletionBlock to be called upon completion.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/withdrawConsentForSubpopulation:withReason:completion:</Anchor>
-            <NodeRef refid="7"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBConsentManager/emailConsentForSubpopulation:completion:</TokenIdentifier>
-			<Abstract type="html">Email (again) the consent document signed by the user when consenting as a member of a particular subpopulation.</Abstract>
-			<DeclaredIn>SBBConsentManager.m</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)emailConsentForSubpopulation:(NSString *)subpopGuid completion:(SBBConsentManagerCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>subpopGuid</Name>
-					<Abstract type="html">The GUID of the subpopulation for which the consent document is to be emailed.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBConsentManagerCompletionBlock to be called upon completion.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/emailConsentForSubpopulation:completion:</Anchor>
+			<Anchor>//api/name/setSignatureImage:</Anchor>
             <NodeRef refid="7"/>
 		</Token>
 		

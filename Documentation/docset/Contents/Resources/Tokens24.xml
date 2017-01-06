@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Protocols/SBBNetworkManagerProtocol.html">
+	<File path="Protocols/SBBParticipantManagerProtocol.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intf/SBBNetworkManagerProtocol</TokenIdentifier>
-			<Abstract type="html">This protocol defines the interface to the SBBNetworkManager&apos;s non-constructor, non-initializer methods. The interface is
-abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBParticipantManagerProtocol</TokenIdentifier>
+			<Abstract type="html"></Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
             
 			
 			<NodeRef refid="24"/>
@@ -14,267 +13,160 @@ abstracted out for use in mock objects for testing, and to allow selecting among
 		
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/setSendCookies:</TokenIdentifier>
-			<Abstract type="html">This property tells the network manager whether it should send cookies with its requests.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBParticipantManagerProtocol/getParticipantRecordWithCompletion:</TokenIdentifier>
+			<Abstract type="html">Fetch the StudyParticipant record from cache if caching is turned on, otherwise from the Bridge API.</Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
 			
-			<Declaration>@property (nonatomic, assign) BOOL sendCookies</Declaration>
-			
-			
-			<Anchor>//api/name/sendCookies</Anchor>
-            <NodeRef refid="24"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/sendCookies</TokenIdentifier>
-			<Abstract type="html">This property tells the network manager whether it should send cookies with its requests.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
-			
-			<Declaration>@property (nonatomic, assign) BOOL sendCookies</Declaration>
-			
-			
-			<Anchor>//api/name/sendCookies</Anchor>
-            <NodeRef refid="24"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfp/SBBNetworkManagerProtocol/sendCookies</TokenIdentifier>
-			<Abstract type="html">This property tells the network manager whether it should send cookies with its requests.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
-			
-			<Declaration>@property (nonatomic, assign) BOOL sendCookies</Declaration>
-			
-			
-			<Anchor>//api/name/sendCookies</Anchor>
-            <NodeRef refid="24"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/get:headers:parameters:background:completion:</TokenIdentifier>
-			<Abstract type="html">Perform an HTTP GET with the specified URL, HTTP headers, parameters, and completion handler.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSURLSessionTask *)getParticipantRecordWithCompletion:(nullable SBBParticipantManagerGetRecordCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>URLString</Name>
-					<Abstract type="html">The URL to which you are making this HTTP request.</Abstract>
-				</Parameter><Parameter>
-					<Name>headers</Name>
-					<Abstract type="html">The HTTP headers for this request.</Abstract>
-				</Parameter><Parameter>
-					<Name>parameters</Name>
-					<Abstract type="html">The parameters for this request, to be passed in the query portion of the request.</Abstract>
-				</Parameter><Parameter>
-					<Name>background</Name>
-					<Abstract type="html">A BOOL flag indicating whether the request should be performed as a background download.</Abstract>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBParticipantManagerGetRecordCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getParticipantRecordWithCompletion:</Anchor>
+            <NodeRef refid="24"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBParticipantManagerProtocol/updateParticipantRecordWithRecord:completion:</TokenIdentifier>
+			<Abstract type="html">Update the StudyParticipant record to the Bridge API.</Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
+			
+			<Declaration>- (nullable NSURLSessionTask *)updateParticipantRecordWithRecord:(nullable id)participant completion:(nullable SBBParticipantManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>participant</Name>
+					<Abstract type="html">A client object representing the StudyParticipant record as it should be updated. If caching is enabled and you want to sync changes you&apos;ve made to the local (cached) SBBStudyParticipant to Bridge, pass nil for this parameter.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.</Abstract>
+					<Abstract type="html">An SBBParticipantManagerCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/get:headers:parameters:background:completion:</Anchor>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/updateParticipantRecordWithRecord:completion:</Anchor>
             <NodeRef refid="24"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/get:headers:parameters:completion:</TokenIdentifier>
-			<Abstract type="html">This is a convenience method that assumes a default value of NO for background.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBParticipantManagerProtocol/setExternalIdentifier:completion:</TokenIdentifier>
+			<Abstract type="html">Add an external identifier for a participant.</Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
-			
-			
-			<Anchor>//api/name/get:headers:parameters:completion:</Anchor>
-            <NodeRef refid="24"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/post:headers:parameters:background:completion:</TokenIdentifier>
-			<Abstract type="html">Perform an HTTP POST with the specified URL, HTTP headers, parameters, and completion handler.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSURLSessionTask *)setExternalIdentifier:(nullable NSString *)externalID completion:(nullable SBBParticipantManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>URLString</Name>
-					<Abstract type="html">The URL to which you are making this HTTP request.</Abstract>
-				</Parameter><Parameter>
-					<Name>headers</Name>
-					<Abstract type="html">The HTTP headers for this request.</Abstract>
-				</Parameter><Parameter>
-					<Name>parameters</Name>
-					<Abstract type="html">The parameters for this request, to be passed in the request body as JSON. May be nil.</Abstract>
-				</Parameter><Parameter>
-					<Name>background</Name>
-					<Abstract type="html">A BOOL flag indicating whether the request should be performed as a background download.</Abstract>
+					<Name>externalID</Name>
+					<Abstract type="html">An external identifier to allow this participant to be tracked outside of the Bridge-specific study.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.</Abstract>
+					<Abstract type="html">An SBBParticipantManagerCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/post:headers:parameters:background:completion:</Anchor>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/setExternalIdentifier:completion:</Anchor>
             <NodeRef refid="24"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/post:headers:parameters:completion:</TokenIdentifier>
-			<Abstract type="html">This is a convenience method that assumes a default value of NO for background.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBParticipantManagerProtocol/setSharingScope:completion:</TokenIdentifier>
+			<Abstract type="html">Change the scope of data sharing for this user.
+This is a convenience method that sets the participant record&apos;s sharingScope field and updates it to Bridge.
+This should only be done in response to an explicit choice on the part of the user to change the sharing scope.</Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
-			
-			
-			<Anchor>//api/name/post:headers:parameters:completion:</Anchor>
-            <NodeRef refid="24"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/put:headers:parameters:background:completion:</TokenIdentifier>
-			<Abstract type="html">Perform an HTTP PUT with the specified URL, HTTP headers, parameters, and completion handler.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSURLSessionTask *)setSharingScope:(SBBParticipantDataSharingScope)scope completion:(nullable SBBParticipantManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>URLString</Name>
-					<Abstract type="html">The URL to which you are making this HTTP request.</Abstract>
-				</Parameter><Parameter>
-					<Name>headers</Name>
-					<Abstract type="html">The HTTP headers for this request.</Abstract>
-				</Parameter><Parameter>
-					<Name>parameters</Name>
-					<Abstract type="html">The parameters for this request, to be passed in the request body as JSON. May be nil.</Abstract>
-				</Parameter><Parameter>
-					<Name>background</Name>
-					<Abstract type="html">A BOOL flag indicating whether the request should be performed as a background download.</Abstract>
+					<Name>scope</Name>
+					<Abstract type="html">The scope of data sharing to set for this user.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.</Abstract>
+					<Abstract type="html">An SBBParticipantManagerCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/put:headers:parameters:background:completion:</Anchor>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/setSharingScope:completion:</Anchor>
             <NodeRef refid="24"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/put:headers:parameters:completion:</TokenIdentifier>
-			<Abstract type="html">This is a convenience method that assumes a default value of NO for background.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBParticipantManagerProtocol/getDataGroupsWithCompletion:</TokenIdentifier>
+			<Abstract type="html">Fetch the data groups to which this user belongs from the Bridge API.
+This is a convenience method which fetches the StudyParticipant record (from cache, if available, otherwise from Bridge)
+and passes its dataGroups to the completion handler.</Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
-			
-			
-			<Anchor>//api/name/put:headers:parameters:completion:</Anchor>
-            <NodeRef refid="24"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/delete:headers:parameters:background:completion:</TokenIdentifier>
-			<Abstract type="html">Perform an HTTP DELETE with the specified URL, HTTP headers, parameters, and completion handler.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSURLSessionTask *)getDataGroupsWithCompletion:(nonnull SBBParticipantManagerGetGroupsCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>URLString</Name>
-					<Abstract type="html">The URL to which you are making this HTTP request.</Abstract>
-				</Parameter><Parameter>
-					<Name>headers</Name>
-					<Abstract type="html">The HTTP headers for this request.</Abstract>
-				</Parameter><Parameter>
-					<Name>parameters</Name>
-					<Abstract type="html">The parameters for this request, to be passed in the request body as JSON. Usually for a DELETE this will be nil.</Abstract>
-				</Parameter><Parameter>
-					<Name>background</Name>
-					<Abstract type="html">A BOOL flag indicating whether the request should be performed as a background download.</Abstract>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBParticipantManagerGetGroupsCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getDataGroupsWithCompletion:</Anchor>
+            <NodeRef refid="24"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBParticipantManagerProtocol/updateDataGroupsWithGroups:completion:</TokenIdentifier>
+			<Abstract type="html">Update the user&apos;s dataGroups to the Bridge API.</Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
+			
+			<Declaration>- (nullable NSURLSessionTask *)updateDataGroupsWithGroups:(nonnull NSSet&lt;NSString*&gt; *)dataGroups completion:(nullable SBBParticipantManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>dataGroups</Name>
+					<Abstract type="html">An NSSet of strings representing the dataGroups as they should be updated.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.</Abstract>
+					<Abstract type="html">An SBBParticipantManagerCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/delete:headers:parameters:background:completion:</Anchor>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/updateDataGroupsWithGroups:completion:</Anchor>
             <NodeRef refid="24"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/delete:headers:parameters:completion:</TokenIdentifier>
-			<Abstract type="html">This is a convenience method that assumes a default value of NO for background.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBParticipantManagerProtocol/addToDataGroups:completion:</TokenIdentifier>
+			<Abstract type="html">Add the user to the specified data groups (tags).</Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
-			
-			
-			<Anchor>//api/name/delete:headers:parameters:completion:</Anchor>
-            <NodeRef refid="24"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/uploadFile:httpHeaders:toUrl:taskDescription:completion:</TokenIdentifier>
-			<Abstract type="html">Perform a background upload of a file to a given URL with provided HTTP headers.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSURLSessionTask *)addToDataGroups:(nonnull NSSet&lt;NSString*&gt; *)dataGroups completion:(nullable SBBParticipantManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>fileUrl</Name>
-					<Abstract type="html">The URL of the file to be uploaded.</Abstract>
-				</Parameter><Parameter>
-					<Name>headers</Name>
-					<Abstract type="html">An NSDictionary containing the HTTP headers as key-value pairs.</Abstract>
-				</Parameter><Parameter>
-					<Name>urlString</Name>
-					<Abstract type="html">The URL (as a string) to which to upload the file.</Abstract>
-				</Parameter><Parameter>
-					<Name>description</Name>
-					<Abstract type="html">A string to associate with this task.</Abstract>
+					<Name>dataGroups</Name>
+					<Abstract type="html">The data groups to which to add the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, adds the specified groups to the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user&apos;s existing dataGroups, that error will be passed to the completion handler. If an attempt is made to add a user to one or more data groups that haven&apos;t first been defined in the study, the Bridge API will respond with 400 (Bad Request) with an error message detailing the problem in the body of the response.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">SBBNetworkManagerTaskCompletionBlock to be called upon completion of the upload.</Abstract>
+					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">The NSURLSessionUploadTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/uploadFile:httpHeaders:toUrl:taskDescription:completion:</Anchor>
+			
+			<Anchor>//api/name/addToDataGroups:completion:</Anchor>
             <NodeRef refid="24"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:</TokenIdentifier>
-			<Abstract type="html"></Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBParticipantManagerProtocol/removeFromDataGroups:completion:</TokenIdentifier>
+			<Abstract type="html">Remove the user from the specified data groups (tags).</Abstract>
+			<DeclaredIn>SBBParticipantManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion</Declaration>
-			
-			
-			<Anchor>//api/name/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:</Anchor>
-            <NodeRef refid="24"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/restoreBackgroundSession:completionHandler:</TokenIdentifier>
-			<Abstract type="html">This method should be called from your app delegate&apos;s
-application:handleEventsForBackgroundURLSession:completionHandler: method when the identifier passed in there matches
-kBackgroundSessionIdentifier.</Abstract>
-			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
-			
-			<Declaration>- (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void ( ^ ) ( void ))completionHandler</Declaration>
+			<Declaration>- (nullable NSURLSessionTask *)removeFromDataGroups:(nonnull NSSet&lt;NSString*&gt; *)dataGroups completion:(nullable SBBParticipantManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>identifier</Name>
-					<Abstract type="html">The session identifier, as passed in to your app delegate&apos;s
-application:handleEventsForBackgroundURLSession:completionHandler: method.</Abstract>
+					<Name>dataGroups</Name>
+					<Abstract type="html">The data groups from which to remove the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, removes the specified groups from the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user&apos;s existing dataGroups, that error will be passed to the completion handler. If the fetch succeeds but the user is not a member of one or more of these data groups, whether because they haven&apos;t been added or because they don&apos;t exist in the study, this method will complete without updating the user&apos;s dataGroups and without an error.</Abstract>
 				</Parameter><Parameter>
-					<Name>completionHandler</Name>
-					<Abstract type="html">The completion handler, as passed in to your app delegate&apos;s
-application:handleEventsForBackgroundURLSession:completionHandler: method.</Abstract>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
 			
-			<Anchor>//api/name/restoreBackgroundSession:completionHandler:</Anchor>
+			<Anchor>//api/name/removeFromDataGroups:completion:</Anchor>
             <NodeRef refid="24"/>
 		</Token>
 		

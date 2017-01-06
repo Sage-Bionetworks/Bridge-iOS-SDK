@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Classes/SBBSurveyManager.html">
+	<File path="Classes/SBBUserManager.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/cl/SBBSurveyManager</TokenIdentifier>
-			<Abstract type="html">This class handles communication with the Bridge surveys API.</Abstract>
-			<DeclaredIn>SBBSurveyManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/cl/SBBUserManager</TokenIdentifier>
+			<Abstract type="html">This class handles communication with the Bridge users API.</Abstract>
+			<DeclaredIn>SBBUserManager.h</DeclaredIn>
             
 			
 			<NodeRef refid="15"/>
@@ -13,38 +13,177 @@
 		
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBSurveyManager/getSurveyByRef:completion:</TokenIdentifier>
-			<Abstract type="html">This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyCheckCacheFirst,
-if caching is enabled.</Abstract>
-			<DeclaredIn>SBBSurveyManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/getUserProfileWithCompletion:</TokenIdentifier>
+			<Abstract type="html">Fetch the UserProfile from the Bridge API.</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)getSurveyByRef:(NSString *)ref completion:(SBBSurveyManagerGetCompletionBlock)completion</Declaration>
-			
-			
-			<Anchor>//api/name/getSurveyByRef:completion:</Anchor>
+			<Declaration>- (NSURLSessionTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBUserManagerGetProfileCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getUserProfileWithCompletion:</Anchor>
             <NodeRef refid="15"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBSurveyManager/getSurveyByRef:cachingPolicy:completion:</TokenIdentifier>
-			<Abstract type="html">Fetch a survey from the Bridge API via an activityRef (href).</Abstract>
-			<DeclaredIn>SBBSurveyManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/updateUserProfileWithProfile:completion:</TokenIdentifier>
+			<Abstract type="html">Update the UserProfile to the Bridge API.</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)getSurveyByRef:(NSString *)ref cachingPolicy:(SBBCachingPolicy)policy completion:(SBBSurveyManagerGetCompletionBlock)completion</Declaration>
+			<Declaration>- (NSURLSessionTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>ref</Name>
-					<Abstract type="html">The href identifying the desired survey, obtained e.g. from the Schedules or Activities API.</Abstract>
-				</Parameter><Parameter>
-					<Name>policy</Name>
-					<Abstract type="html">Caching policy to use (ignored if the SDK was initialized with useCache=NO).</Abstract>
+					<Name>profile</Name>
+					<Abstract type="html">A client object representing the UserProfile as it should be updated.</Abstract>
 				</Parameter><Parameter>
 					<Name>completion</Name>
-					<Abstract type="html">An SBBSurveyManagerGetCompletionBlock to be called upon completion.</Abstract>
+					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
 				</Parameter>
 			</Parameters>
 			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/getSurveyByRef:cachingPolicy:completion:</Anchor>
+			<Anchor>//api/name/updateUserProfileWithProfile:completion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/addExternalIdentifier:completion:</TokenIdentifier>
+			<Abstract type="html">Add an external identifier for a participant.</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>externalID</Name>
+					<Abstract type="html">An external identifier to allow this participant to be tracked outside of the Bridge-specific study.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/addExternalIdentifier:completion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/emailDataToUserFrom:to:completion:</TokenIdentifier>
+			<Abstract type="html">Email the user&apos;s study data in the specified date range to the email address associated with their account.</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)emailDataToUserFrom:(NSDate *)startDate to:(NSDate *)endDate completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>startDate</Name>
+					<Abstract type="html">The starting date for the data to be sent.</Abstract>
+				</Parameter><Parameter>
+					<Name>endDate</Name>
+					<Abstract type="html">The ending date for the data to be sent.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/emailDataToUserFrom:to:completion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/dataSharing:completion:</TokenIdentifier>
+			<Abstract type="html">Change the scope of data sharing for this user.
+This should only be done in response to an explicit choice on the part of the user to change the sharing scope.</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>scope</Name>
+					<Abstract type="html">The scope of data sharing to set for this user.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/dataSharing:completion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/getDataGroupsWithCompletion:</TokenIdentifier>
+			<Abstract type="html">Fetch the data groups to which this user belongs from the Bridge API.</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBUserManagerGetGroupsCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/getDataGroupsWithCompletion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/updateDataGroupsWithGroups:completion:</TokenIdentifier>
+			<Abstract type="html">Update the user&apos;s dataGroups to the Bridge API.</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>dataGroups</Name>
+					<Abstract type="html">A client object representing the dataGroups as they should be updated.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/updateDataGroupsWithGroups:completion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/addToDataGroups:completion:</TokenIdentifier>
+			<Abstract type="html">Add the user to the specified data groups (tags).</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			
+			<Declaration>- (void)addToDataGroups:(NSArray&lt;NSString*&gt; *)dataGroups completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>dataGroups</Name>
+					<Abstract type="html">The data groups to which to add the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, adds the specified groups to the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user&apos;s existing dataGroups, that error will be passed to the completion handler. If an attempt is made to add a user to one or more data groups that haven&apos;t first been defined in the study, the Bridge API will respond with 400 (Bad Request) with an error message detailing the problem in the body of the response.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/addToDataGroups:completion:</Anchor>
+            <NodeRef refid="15"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/removeFromDataGroups:completion:</TokenIdentifier>
+			<Abstract type="html">Remove the user from the specified data groups (tags).</Abstract>
+			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			
+			<Declaration>- (void)removeFromDataGroups:(NSArray&lt;NSString*&gt; *)dataGroups completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>dataGroups</Name>
+					<Abstract type="html">The data groups from which to remove the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, removes the specified groups from the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user&apos;s existing dataGroups, that error will be passed to the completion handler. If the fetch succeeds but the user is not a member of one or more of these data groups, whether because they haven&apos;t been added or because they don&apos;t exist in the study, this method will complete without updating the user&apos;s dataGroups and without an error.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/removeFromDataGroups:completion:</Anchor>
             <NodeRef refid="15"/>
 		</Token>
 		

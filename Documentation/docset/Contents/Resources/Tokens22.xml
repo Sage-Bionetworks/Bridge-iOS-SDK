@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Protocols/SBBBridgeAppDelegate.html">
+	<File path="Protocols/SBBNetworkManagerProtocol.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intf/SBBBridgeAppDelegate</TokenIdentifier>
-			<Abstract type="html">If the app delegate conforms to this protocol then the methods included will be called as appropriate.</Abstract>
-			<DeclaredIn>SBBBridgeAppDelegate.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBNetworkManagerProtocol</TokenIdentifier>
+			<Abstract type="html">This protocol defines the interface to the SBBNetworkManager&apos;s non-constructor, non-initializer methods. The interface is
+abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
             
 			
 			<NodeRef refid="22"/>
@@ -13,31 +14,290 @@
 		
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBBridgeAppDelegate/handleUnsupportedAppVersionError:networkManager:</TokenIdentifier>
-			<Abstract type="html">Method called when the Bridge services return an error code that this version of the app is no longer supported.
-If not implemented or returns @NO then the BridgeNetworkManager will handle the error with a general message.
-In any case it will also pass the error through to the completion handler of the call that triggered the error.
-This method will only be called once per app launch.</Abstract>
-			<DeclaredIn>SBBBridgeAppDelegate.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/setSendCookies:</TokenIdentifier>
+			<Abstract type="html">This property tells the network manager whether it should send cookies with its requests.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
 			
-			<Declaration>- (BOOL)handleUnsupportedAppVersionError:(NSError *)error networkManager:(id&lt;SBBNetworkManagerProtocol&gt; _Nullable)networkManager</Declaration>
+			<Declaration>@property (nonatomic, assign) BOOL sendCookies</Declaration>
 			
-			<ReturnValue><Abstract type="html">@YES if the error has been handled by the delegate.</Abstract></ReturnValue>
-			<Anchor>//api/name/handleUnsupportedAppVersionError:networkManager:</Anchor>
+			
+			<Anchor>//api/name/sendCookies</Anchor>
             <NodeRef refid="22"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/intfm/SBBBridgeAppDelegate/handleUserNotConsentedError:sessionInfo:networkManager:</TokenIdentifier>
-			<Abstract type="html">Method called when the Bridge services return an error code that the user has not consented.
-If not implemented or returns @NO then the BridgeNetworkManager will just log the error to the console.
-In any case it will also pass the error through to the completion handler of the call that triggered the error.</Abstract>
-			<DeclaredIn>SBBBridgeAppDelegate.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/sendCookies</TokenIdentifier>
+			<Abstract type="html">This property tells the network manager whether it should send cookies with its requests.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
 			
-			<Declaration>- (BOOL)handleUserNotConsentedError:(NSError *)error sessionInfo:(id)sessionInfo networkManager:(id&lt;SBBNetworkManagerProtocol&gt; _Nullable)networkManager</Declaration>
+			<Declaration>@property (nonatomic, assign) BOOL sendCookies</Declaration>
 			
-			<ReturnValue><Abstract type="html">@YES if the error has been handled by the delegate.</Abstract></ReturnValue>
-			<Anchor>//api/name/handleUserNotConsentedError:sessionInfo:networkManager:</Anchor>
+			
+			<Anchor>//api/name/sendCookies</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfp/SBBNetworkManagerProtocol/sendCookies</TokenIdentifier>
+			<Abstract type="html">This property tells the network manager whether it should send cookies with its requests.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL sendCookies</Declaration>
+			
+			
+			<Anchor>//api/name/sendCookies</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/get:headers:parameters:background:completion:</TokenIdentifier>
+			<Abstract type="html">Perform an HTTP GET with the specified URL, HTTP headers, parameters, and completion handler.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>URLString</Name>
+					<Abstract type="html">The URL to which you are making this HTTP request.</Abstract>
+				</Parameter><Parameter>
+					<Name>headers</Name>
+					<Abstract type="html">The HTTP headers for this request.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">The parameters for this request, to be passed in the query portion of the request.</Abstract>
+				</Parameter><Parameter>
+					<Name>background</Name>
+					<Abstract type="html">A BOOL flag indicating whether the request should be performed as a background download.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/get:headers:parameters:background:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/get:headers:parameters:completion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes a default value of NO for background.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)get:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/get:headers:parameters:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/post:headers:parameters:background:completion:</TokenIdentifier>
+			<Abstract type="html">Perform an HTTP POST with the specified URL, HTTP headers, parameters, and completion handler.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>URLString</Name>
+					<Abstract type="html">The URL to which you are making this HTTP request.</Abstract>
+				</Parameter><Parameter>
+					<Name>headers</Name>
+					<Abstract type="html">The HTTP headers for this request.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">The parameters for this request, to be passed in the request body as JSON. May be nil.</Abstract>
+				</Parameter><Parameter>
+					<Name>background</Name>
+					<Abstract type="html">A BOOL flag indicating whether the request should be performed as a background download.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/post:headers:parameters:background:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/post:headers:parameters:completion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes a default value of NO for background.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)post:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/post:headers:parameters:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/put:headers:parameters:background:completion:</TokenIdentifier>
+			<Abstract type="html">Perform an HTTP PUT with the specified URL, HTTP headers, parameters, and completion handler.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>URLString</Name>
+					<Abstract type="html">The URL to which you are making this HTTP request.</Abstract>
+				</Parameter><Parameter>
+					<Name>headers</Name>
+					<Abstract type="html">The HTTP headers for this request.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">The parameters for this request, to be passed in the request body as JSON. May be nil.</Abstract>
+				</Parameter><Parameter>
+					<Name>background</Name>
+					<Abstract type="html">A BOOL flag indicating whether the request should be performed as a background download.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/put:headers:parameters:background:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/put:headers:parameters:completion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes a default value of NO for background.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)put:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/put:headers:parameters:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/delete:headers:parameters:background:completion:</TokenIdentifier>
+			<Abstract type="html">Perform an HTTP DELETE with the specified URL, HTTP headers, parameters, and completion handler.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters background:(BOOL)background completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>URLString</Name>
+					<Abstract type="html">The URL to which you are making this HTTP request.</Abstract>
+				</Parameter><Parameter>
+					<Name>headers</Name>
+					<Abstract type="html">The HTTP headers for this request.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">The parameters for this request, to be passed in the request body as JSON. Usually for a DELETE this will be nil.</Abstract>
+				</Parameter><Parameter>
+					<Name>background</Name>
+					<Abstract type="html">A BOOL flag indicating whether the request should be performed as a background download.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">A block to be executed on completion of the request (successful or otherwise), of type SBBNetworkManagerCompletionBlock.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The NSURLSessionTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/delete:headers:parameters:background:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/delete:headers:parameters:completion:</TokenIdentifier>
+			<Abstract type="html">This is a convenience method that assumes a default value of NO for background.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionTask *)delete:(NSString *)URLString headers:(NSDictionary *)headers parameters:(id)parameters completion:(SBBNetworkManagerCompletionBlock)completion</Declaration>
+			
+			
+			<Anchor>//api/name/delete:headers:parameters:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/uploadFile:httpHeaders:toUrl:taskDescription:completion:</TokenIdentifier>
+			<Abstract type="html">Perform a background upload of a file to a given URL with provided HTTP headers.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionUploadTask *)uploadFile:(NSURL *)fileUrl httpHeaders:(NSDictionary *)headers toUrl:(NSString *)urlString taskDescription:(NSString *)description completion:(SBBNetworkManagerTaskCompletionBlock)completion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>fileUrl</Name>
+					<Abstract type="html">The URL of the file to be uploaded.</Abstract>
+				</Parameter><Parameter>
+					<Name>headers</Name>
+					<Abstract type="html">An NSDictionary containing the HTTP headers as key-value pairs.</Abstract>
+				</Parameter><Parameter>
+					<Name>urlString</Name>
+					<Abstract type="html">The URL (as a string) to which to upload the file.</Abstract>
+				</Parameter><Parameter>
+					<Name>description</Name>
+					<Abstract type="html">A string to associate with this task.</Abstract>
+				</Parameter><Parameter>
+					<Name>completion</Name>
+					<Abstract type="html">SBBNetworkManagerTaskCompletionBlock to be called upon completion of the upload.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The NSURLSessionUploadTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/uploadFile:httpHeaders:toUrl:taskDescription:completion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:</TokenIdentifier>
+			<Abstract type="html">Perform a background download of a file from a given URL with provided method, headers, and parameters.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (NSURLSessionDownloadTask *)downloadFileFromURLString:(NSString *)urlString method:(NSString *)httpMethod httpHeaders:(NSDictionary *)headers parameters:(NSDictionary *)parameters taskDescription:(NSString *)description downloadCompletion:(SBBNetworkManagerDownloadCompletionBlock)downloadCompletion taskCompletion:(SBBNetworkManagerTaskCompletionBlock)taskCompletion</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>urlString</Name>
+					<Abstract type="html">The URL from which to download the file. If relative, the base URL will be prepended.</Abstract>
+				</Parameter><Parameter>
+					<Name>httpMethod</Name>
+					<Abstract type="html">The HTTP method to use for the request (e.g., GET, POST).</Abstract>
+				</Parameter><Parameter>
+					<Name>headers</Name>
+					<Abstract type="html">HTTP headers for the request. To these will be added User-Agent, Accept-Language, and (if not specified) Content-Type will be set to application/json.</Abstract>
+				</Parameter><Parameter>
+					<Name>parameters</Name>
+					<Abstract type="html">Query parameters for a GET, or body parameters for a POST.</Abstract>
+				</Parameter><Parameter>
+					<Name>description</Name>
+					<Abstract type="html">A string to associate with this task.</Abstract>
+				</Parameter><Parameter>
+					<Name>downloadCompletion</Name>
+					<Abstract type="html">SBBNetworkManagerDownloadCompletionBlock to be called upon successful download, with the URL of the file to which the downloaded data was saved.</Abstract>
+				</Parameter><Parameter>
+					<Name>taskCompletion</Name>
+					<Abstract type="html">SBBNetworkManagerTaskCompletionBlock to be called upon unsuccessful completion.</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">The NSURLSessionDownloadTask used to make the request, so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
+			<Anchor>//api/name/downloadFileFromURLString:method:httpHeaders:parameters:taskDescription:downloadCompletion:taskCompletion:</Anchor>
+            <NodeRef refid="22"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBNetworkManagerProtocol/restoreBackgroundSession:completionHandler:</TokenIdentifier>
+			<Abstract type="html">This method should be called from your app delegate&apos;s
+application:handleEventsForBackgroundURLSession:completionHandler: method when the identifier passed in there matches
+kBackgroundSessionIdentifier.</Abstract>
+			<DeclaredIn>SBBNetworkManager.h</DeclaredIn>
+			
+			<Declaration>- (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void ( ^ ) ( void ))completionHandler</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>identifier</Name>
+					<Abstract type="html">The session identifier, as passed in to your app delegate&apos;s
+application:handleEventsForBackgroundURLSession:completionHandler: method.</Abstract>
+				</Parameter><Parameter>
+					<Name>completionHandler</Name>
+					<Abstract type="html">The completion handler, as passed in to your app delegate&apos;s
+application:handleEventsForBackgroundURLSession:completionHandler: method.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/restoreBackgroundSession:completionHandler:</Anchor>
             <NodeRef refid="22"/>
 		</Token>
 		

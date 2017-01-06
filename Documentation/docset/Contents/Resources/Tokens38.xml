@@ -1,50 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Constants/SBBUserDataSharingScope.html">
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/c/tdef/SBBUserDataSharingScope</TokenIdentifier>
-			<Abstract type="html">An enumeration of the choices for the scope of sharing collected data.
-@constant SBBUserDataSharingScopeNone The user has not consented to sharing their data.
-@constant SBBUserDataSharingScopeStudy The user has consented only to sharing their de-identified data with the sponsors and partners of the current research study.
-@constant SBBUserDataSharingScopeAll The user has consented to sharing their de-identified data for current and future research, which may or may not involve the same institutions or investigators.</Abstract>
-			<DeclaredIn>SBBUserManager.h</DeclaredIn>
-            
-			
-			<NodeRef refid="38"/>
-		</Token>
+	<File path="">
 		
 		
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBUserDataSharingScopeNone</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBUserDataSharingScopeNone</Declaration>
-            
-            <DeclaredIn>SBBUserManager.h</DeclaredIn>
-            
-            <NodeRef refid="38"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBUserDataSharingScopeStudy</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBUserDataSharingScopeStudy</Declaration>
-            
-            <DeclaredIn>SBBUserManager.h</DeclaredIn>
-            
-            <NodeRef refid="38"/>
-        </Token>
-        
-        <Token>
-            <TokenIdentifier>//apple_ref/c/econst/SBBUserDataSharingScopeAll</TokenIdentifier>
-            <Abstract type="html"></Abstract>
-            <Declaration>SBBUserDataSharingScopeAll</Declaration>
-            
-            <DeclaredIn>SBBUserManager.h</DeclaredIn>
-            
-            <NodeRef refid="38"/>
-        </Token>
         
         
 	</File>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tokens version="1.0">
-	<File path="Classes/SBBUserManager.html">
+	<File path="Protocols/SBBAuthManagerDelegateProtocol.html">
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/cl/SBBUserManager</TokenIdentifier>
-			<Abstract type="html">This class handles communication with the Bridge users API.</Abstract>
-			<DeclaredIn>SBBUserManager.h</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intf/SBBAuthManagerDelegateProtocol</TokenIdentifier>
+			<Abstract type="html">This protocol defines the interfaces for the Auth Manager delegate.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
             
 			
 			<NodeRef refid="17"/>
@@ -13,177 +13,122 @@
 		
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/getUserProfileWithCompletion:</TokenIdentifier>
-			<Abstract type="html">Fetch the UserProfile from the Bridge API.</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/sessionTokenForAuthManager:</TokenIdentifier>
+			<Abstract type="html">This delegate method should return the session token for the current signed-in user session,
+or nil if not currently signed in to any account.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)getUserProfileWithCompletion:(SBBUserManagerGetProfileCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSString *)sessionTokenForAuthManager:(nonnull id&lt;SBBAuthManagerProtocol&gt;)authManager</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBUserManagerGetProfileCompletionBlock to be called upon completion.</Abstract>
+					<Name>authManager</Name>
+					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/getUserProfileWithCompletion:</Anchor>
+			<ReturnValue><Abstract type="html">The session token, or nil.</Abstract></ReturnValue>
+			<Anchor>//api/name/sessionTokenForAuthManager:</Anchor>
             <NodeRef refid="17"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/updateUserProfileWithProfile:completion:</TokenIdentifier>
-			<Abstract type="html">Update the UserProfile to the Bridge API.</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:</TokenIdentifier>
+			<Abstract type="html">The auth manager will call this delegate method when it obtains a new session token, so that the delegate
+can store it appropriately and return it later in sessionTokenForAuthManager: calls.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)updateUserProfileWithProfile:(id)profile completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (void)authManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager didGetSessionToken:(nullable NSString *)sessionToken</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>profile</Name>
-					<Abstract type="html">A client object representing the UserProfile as it should be updated.</Abstract>
+					<Name>authManager</Name>
+					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
 				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+					<Name>sessionToken</Name>
+					<Abstract type="html">The session token just obtained by the auth manager.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/updateUserProfileWithProfile:completion:</Anchor>
+			
+			<Anchor>//api/name/authManager:didGetSessionToken:</Anchor>
             <NodeRef refid="17"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/addExternalIdentifier:completion:</TokenIdentifier>
-			<Abstract type="html">Add an external identifier for a participant.</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/authManager:didGetSessionToken:forEmail:andPassword:</TokenIdentifier>
+			<Abstract type="html">If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
+when it obtains a new session token, so that the delegate can store the email and password used,
+to be returned later in the emailForAuthManager: and passwordForAuthManager: calls.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)addExternalIdentifier:(NSString *)externalID completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (void)authManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager didGetSessionToken:(nullable NSString *)sessionToken forEmail:(nullable NSString *)email andPassword:(nullable NSString *)password</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>externalID</Name>
-					<Abstract type="html">An external identifier to allow this participant to be tracked outside of the Bridge-specific study.</Abstract>
+					<Name>authManager</Name>
+					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
 				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/addExternalIdentifier:completion:</Anchor>
-            <NodeRef refid="17"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/emailDataToUserFrom:to:completion:</TokenIdentifier>
-			<Abstract type="html">Email the user&apos;s study data in the specified date range to the email address associated with their account.</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)emailDataToUserFrom:(NSDate *)startDate to:(NSDate *)endDate completion:(SBBUserManagerCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>startDate</Name>
-					<Abstract type="html">The starting date for the data to be sent.</Abstract>
+					<Name>sessionToken</Name>
+					<Abstract type="html">The session token just obtained by the auth manager.</Abstract>
 				</Parameter><Parameter>
-					<Name>endDate</Name>
-					<Abstract type="html">The ending date for the data to be sent.</Abstract>
-				</Parameter>
-			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/emailDataToUserFrom:to:completion:</Anchor>
-            <NodeRef refid="17"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/dataSharing:completion:</TokenIdentifier>
-			<Abstract type="html">Change the scope of data sharing for this user.
-This should only be done in response to an explicit choice on the part of the user to change the sharing scope.</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
-			
-			<Declaration>- (NSURLSessionTask *)dataSharing:(SBBUserDataSharingScope)scope completion:(SBBUserManagerCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>scope</Name>
-					<Abstract type="html">The scope of data sharing to set for this user.</Abstract>
+					<Name>email</Name>
+					<Abstract type="html">The email used when signing in to obtain this session token.</Abstract>
 				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+					<Name>password</Name>
+					<Abstract type="html">The password used when signing in to obtain this session token.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/dataSharing:completion:</Anchor>
+			
+			<Anchor>//api/name/authManager:didGetSessionToken:forEmail:andPassword:</Anchor>
             <NodeRef refid="17"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/getDataGroupsWithCompletion:</TokenIdentifier>
-			<Abstract type="html">Fetch the data groups to which this user belongs from the Bridge API.</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/emailForAuthManager:</TokenIdentifier>
+			<Abstract type="html">This delegate method should return the email for the user account last signed up for or signed in to,
+or nil if the user has never signed up or signed in on this device.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)getDataGroupsWithCompletion:(SBBUserManagerGetGroupsCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSString *)emailForAuthManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBUserManagerGetGroupsCompletionBlock to be called upon completion.</Abstract>
+					<Name>authManager</Name>
+					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/getDataGroupsWithCompletion:</Anchor>
+			<ReturnValue><Abstract type="html">The username, or nil.</Abstract></ReturnValue>
+			<Anchor>//api/name/emailForAuthManager:</Anchor>
             <NodeRef refid="17"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/updateDataGroupsWithGroups:completion:</TokenIdentifier>
-			<Abstract type="html">Update the user&apos;s dataGroups to the Bridge API.</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/usernameForAuthManager:</TokenIdentifier>
+			<Abstract type="html">For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (NSURLSessionTask *)updateDataGroupsWithGroups:(id)dataGroups completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSString *)usernameForAuthManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>dataGroups</Name>
-					<Abstract type="html">A client object representing the dataGroups as they should be updated.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+					<Name>authManager</Name>
+					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
 				</Parameter>
 			</Parameters>
-			<ReturnValue><Abstract type="html">An NSURLSessionTask object so you can cancel or suspend/resume the request.</Abstract></ReturnValue>
-			<Anchor>//api/name/updateDataGroupsWithGroups:completion:</Anchor>
+			<ReturnValue><Abstract type="html">The username, or nil.</Abstract></ReturnValue>
+			<Anchor>//api/name/usernameForAuthManager:</Anchor>
             <NodeRef refid="17"/>
 		</Token>
 		
 		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/addToDataGroups:completion:</TokenIdentifier>
-			<Abstract type="html">Add the user to the specified data groups (tags).</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
+			<TokenIdentifier>//apple_ref/occ/intfm/SBBAuthManagerDelegateProtocol/passwordForAuthManager:</TokenIdentifier>
+			<Abstract type="html">This delegate method should return the password for the user account last signed up for or signed in to,
+or nil if the user has never signed up or signed in on this device.</Abstract>
+			<DeclaredIn>SBBAuthManager.h</DeclaredIn>
 			
-			<Declaration>- (void)addToDataGroups:(NSArray&lt;NSString*&gt; *)dataGroups completion:(SBBUserManagerCompletionBlock)completion</Declaration>
+			<Declaration>- (nullable NSString *)passwordForAuthManager:(nullable id&lt;SBBAuthManagerProtocol&gt;)authManager</Declaration>
 			<Parameters>
 				<Parameter>
-					<Name>dataGroups</Name>
-					<Abstract type="html">The data groups to which to add the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, adds the specified groups to the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user&apos;s existing dataGroups, that error will be passed to the completion handler. If an attempt is made to add a user to one or more data groups that haven&apos;t first been defined in the study, the Bridge API will respond with 400 (Bad Request) with an error message detailing the problem in the body of the response.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
+					<Name>authManager</Name>
+					<Abstract type="html">The auth manager instance making the delegate request.</Abstract>
 				</Parameter>
 			</Parameters>
-			
-			<Anchor>//api/name/addToDataGroups:completion:</Anchor>
-            <NodeRef refid="17"/>
-		</Token>
-		
-		<Token>
-			<TokenIdentifier>//apple_ref/occ/instm/SBBUserManager/removeFromDataGroups:completion:</TokenIdentifier>
-			<Abstract type="html">Remove the user from the specified data groups (tags).</Abstract>
-			<DeclaredIn>SBBUserManager.m</DeclaredIn>
-			
-			<Declaration>- (void)removeFromDataGroups:(NSArray&lt;NSString*&gt; *)dataGroups completion:(SBBUserManagerCompletionBlock)completion</Declaration>
-			<Parameters>
-				<Parameter>
-					<Name>dataGroups</Name>
-					<Abstract type="html">The data groups from which to remove the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, removes the specified groups from the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user&apos;s existing dataGroups, that error will be passed to the completion handler. If the fetch succeeds but the user is not a member of one or more of these data groups, whether because they haven&apos;t been added or because they don&apos;t exist in the study, this method will complete without updating the user&apos;s dataGroups and without an error.</Abstract>
-				</Parameter><Parameter>
-					<Name>completion</Name>
-					<Abstract type="html">An SBBUserManagerCompletionBlock to be called upon completion.</Abstract>
-				</Parameter>
-			</Parameters>
-			
-			<Anchor>//api/name/removeFromDataGroups:completion:</Anchor>
+			<ReturnValue><Abstract type="html">The password, or nil.</Abstract></ReturnValue>
+			<Anchor>//api/name/passwordForAuthManager:</Anchor>
             <NodeRef refid="17"/>
 		</Token>
 		
