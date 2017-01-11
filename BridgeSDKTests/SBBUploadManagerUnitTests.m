@@ -372,10 +372,10 @@ static NSString *const kSessionType = @"UploadSession";
         NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
         NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
         NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
-        XCTAssert(retryUploads.count == 0, @"No files left in retry-time map");
-        XCTAssert(uploadFiles.count == 0, @"No files left in temp-file-to-original-file map");
-        XCTAssert(uploadRequests.count == 0, @"No files left in temp-file-to-upload-request map");
-        XCTAssert(uploadSessions.count == 0, @"No files left in temp-file-to-upload-session map");
+        XCTAssert(retryUploads.count == 0, @"%@ files left in retry-time map", @(retryUploads.count));
+        XCTAssert(uploadFiles.count == 0, @"%@ files left in temp-file-to-original-file map", @(uploadFiles.count));
+        XCTAssert(uploadRequests.count == 0, @"%@ files left in temp-file-to-upload-request map", @(uploadRequests.count));
+        XCTAssert(uploadSessions.count == 0, @"%@ files left in temp-file-to-upload-session map", @(uploadSessions.count));
         
         // make sure we didn't leave any unreferenced files lying around in the temp upload dir
         NSURL *tempDir = [uMan tempUploadDirURL];

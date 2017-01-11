@@ -6,6 +6,8 @@
  BD - From https://github.com/erica/uidevice-extension
  */
 
+// maintainer's note: up-to-date mappings between new device identifiers and name strings can be found here https://www.theiphonewiki.com/wiki/Models ~emm 2017-01-06
+
 #import <UIKit/UIKit.h>
 
 #define IFPGA_NAMESTRING                @"iFPGA"
@@ -17,10 +19,14 @@
 #define IPHONE_4S_NAMESTRING            @"iPhone 4S"
 #define IPHONE_5_NAMESTRING             @"iPhone 5"
 #define IPHONE_5S_NAMESTRING            @"iPhone 5S"
+#define IPHONE_5C_NAMESTRING            @"iPhone 5C"
 #define IPHONE_6_NAMESTRING             @"iPhone 6"
 #define IPHONE_6PLUS_NAMESTRING         @"iPhone 6+"
 #define IPHONE_6S_NAMESTRING            @"iPhone 6S"
 #define IPHONE_6SPLUS_NAMESTRING        @"iPhone 6S+"
+#define IPHONE_SE_NAMESTRING            @"iPhone SE"
+#define IPHONE_7_NAMESTRING             @"iPhone 7"
+#define IPHONE_7PLUS_NAMESTRING         @"iPhone 7+"
 #define IPHONE_UNKNOWN_NAMESTRING       @"Unknown iPhone"
 
 #define IPOD_1G_NAMESTRING              @"iPod touch 1G"
@@ -48,54 +54,58 @@
 #define SIMULATOR_APPLETV_NAMESTRING    @"Apple TV Simulator" // :)
 
 typedef enum {
-  UIDeviceUnknown,
-  
-  UIDeviceSimulator,
-  UIDeviceSimulatoriPhone,
-  UIDeviceSimulatoriPad,
-  UIDeviceSimulatorAppleTV,
-  
-  UIDevice1GiPhone,
-  UIDevice3GiPhone,
-  UIDevice3GSiPhone,
-  UIDevice4iPhone,
-  UIDevice4SiPhone,
-  UIDevice5iPhone,
-  UIDevice5SiPhone,
-  UIDevice6iPhone,
-  UIDevice6PlusiPhone,
-  UIDevice6SiPhone,
-  UIDevice6SPlusiPhone,
-  
-  UIDevice1GiPod,
-  UIDevice2GiPod,
-  UIDevice3GiPod,
-  UIDevice4GiPod,
-  
-  UIDevice1GiPad,
-  UIDevice2GiPad,
-  UIDevice3GiPad,
-  UIDevice4GiPad,
-  
-  UIDeviceAppleTV2,
-  UIDeviceAppleTV3,
-  UIDeviceAppleTV4,
-  
-  UIDeviceUnknowniPhone,
-  UIDeviceUnknowniPod,
-  UIDeviceUnknowniPad,
-  UIDeviceUnknownAppleTV,
-  UIDeviceIFPGA,
-  
+    UIDeviceUnknown,
+    
+    UIDeviceSimulator,
+    UIDeviceSimulatoriPhone,
+    UIDeviceSimulatoriPad,
+    UIDeviceSimulatorAppleTV,
+    
+    UIDevice1GiPhone,
+    UIDevice3GiPhone,
+    UIDevice3GSiPhone,
+    UIDevice4iPhone,
+    UIDevice4SiPhone,
+    UIDevice5iPhone,
+    UIDevice5SiPhone,
+    UIDevice5CiPhone,
+    UIDevice6iPhone,
+    UIDevice6PlusiPhone,
+    UIDevice6SiPhone,
+    UIDevice6SPlusiPhone,
+    UIDeviceSEiPhone,
+    UIDevice7iPhone,
+    UIDevice7PlusiPhone,
+    
+    UIDevice1GiPod,
+    UIDevice2GiPod,
+    UIDevice3GiPod,
+    UIDevice4GiPod,
+    
+    UIDevice1GiPad,
+    UIDevice2GiPad,
+    UIDevice3GiPad,
+    UIDevice4GiPad,
+    
+    UIDeviceAppleTV2,
+    UIDeviceAppleTV3,
+    UIDeviceAppleTV4,
+    
+    UIDeviceUnknowniPhone,
+    UIDeviceUnknowniPod,
+    UIDeviceUnknowniPad,
+    UIDeviceUnknownAppleTV,
+    UIDeviceIFPGA,
+    
 } UIDevicePlatform;
 
 typedef enum {
-  UIDeviceFamilyiPhone,
-  UIDeviceFamilyiPod,
-  UIDeviceFamilyiPad,
-  UIDeviceFamilyAppleTV,
-  UIDeviceFamilyUnknown,
-  
+    UIDeviceFamilyiPhone,
+    UIDeviceFamilyiPod,
+    UIDeviceFamilyiPad,
+    UIDeviceFamilyAppleTV,
+    UIDeviceFamilyUnknown,
+    
 } UIDeviceFamily;
 
 @interface UIDevice (Hardware)
