@@ -161,7 +161,10 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 {
     // If it's null, we want to send json null to the endpoint, to clear the value there. The participants
     // endpoint accepts partial JSON and ignores missing values.
-    id jsonValue = value ?: [NSNull null];
+    id (^jsonValue)() = ^id(){
+        return (value == nil) ? [NSNull null] : [self.objectManager bridgeJSONFromObject:value];
+    };
+    
     NSDictionary *bridgeJSON = nil;
     NSString *participantType = [SBBStudyParticipant entityName];
     if (gSBBUseCache) {
@@ -173,11 +176,15 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         bridgeJSON = [self.objectManager bridgeJSONFromObject:cachedParticipant];
         if (!value) {
             NSMutableDictionary *mutableBridgeJSON = [bridgeJSON mutableCopy];
-            mutableBridgeJSON[fieldName] = jsonValue;
+            mutableBridgeJSON[fieldName] = jsonValue();
             bridgeJSON = [mutableBridgeJSON copy];
         }
-    } else {
-        bridgeJSON = @{fieldName: jsonValue, @"type": participantType};
+    }
+    
+    // If something went wrong with the cached participant *or* caching isn't used,
+    // then just include the values that are changed.
+    if (!bridgeJSON) {
+        bridgeJSON = @{fieldName: jsonValue(), @"type": participantType};
     }
     
     return bridgeJSON;
