@@ -61,6 +61,21 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly) SBBEnvironment environment;
 
+/**
+ Keychain service name.
+ */
+@property (nonatomic, readonly, copy) NSString * _Nullable keychainService;
+
+/**
+ Keychain access group name.
+ */
+@property (nonatomic, readonly, copy) NSString * _Nullable keychainAccessGroup;
+
+/**
+ App group identifier used for the suite name of NSUserDefaults (if provided).
+ */
+@property (nonatomic, readonly, copy) NSString * _Nullable appGroupIdentifier;
+
 @end
 
 NS_ASSUME_NONNULL_END

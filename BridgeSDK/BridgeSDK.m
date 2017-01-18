@@ -41,7 +41,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 @implementation BridgeSDK
 
 + (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo {
-    gSBBPemCertificateName = bridgeInfo.certificateName;
+    // TODO: syoung 01/18/2017 Keep a pointer to the bridge info protocol
     [self setupWithStudy:bridgeInfo.studyIdentifier cacheDaysAhead:bridgeInfo.cacheDaysAhead cacheDaysBehind:bridgeInfo.cacheDaysBehind environment:bridgeInfo.environment];
 }
 
