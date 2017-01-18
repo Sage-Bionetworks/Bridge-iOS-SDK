@@ -48,6 +48,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBAuthManager.h>
 #import <BridgeSDK/SBBBridgeNetworkManager.h>
 #import <BridgeSDK/SBBBridgeAppDelegate.h>
+#import <BridgeSDK/SBBBridgeInfoProtocol.h>
 #import <BridgeSDK/SBBComponent.h>
 #import <BridgeSDK/SBBComponentManager.h>
 #import <BridgeSDK/SBBConsentManager.h>
@@ -80,6 +81,19 @@ extern const NSInteger SBBDefaultCacheDaysBehind;
 extern const NSInteger SBBMaxSupportedCacheDays;
   
 @interface BridgeSDK : NSObject
+
+/*!
+ * Set up the Bridge SDK for the given study and pointing at the production environment.
+ * Usually you would call this at the beginning of your AppDelegate's application:didFinishLaunchingWithOptions: method.
+ *
+ * This will register a default SBBNetworkManager instance conigured correctly for the specified study and appropriate
+ * server environment. If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
+ *
+ * Caching is turned off if `cacheDaysAhead = 0` AND `cacheDaysBehind = 0`
+ *
+ *  @param bridgeInfo   A pointer to the protocol with the required information for setting up a study.
+ */
++ (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo;
 
 /*!
  * Set up the Bridge SDK for the given study and pointing at the production environment.

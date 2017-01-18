@@ -40,6 +40,11 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 
 @implementation BridgeSDK
 
++ (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo {
+    // TODO: syoung 01/18/2017 Keep a pointer to the bridge info protocol
+    [self setupWithStudy:bridgeInfo.studyIdentifier cacheDaysAhead:bridgeInfo.cacheDaysAhead cacheDaysBehind:bridgeInfo.cacheDaysBehind environment:bridgeInfo.environment];
+}
+
 + (void)setupWithStudy:(NSString *)study
 {
     [self setupWithStudy:study cacheDaysAhead:0 cacheDaysBehind:0 environment:gDefaultEnvironment];
