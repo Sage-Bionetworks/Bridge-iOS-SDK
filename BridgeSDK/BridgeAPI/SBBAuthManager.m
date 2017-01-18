@@ -50,6 +50,7 @@ NSString * const kSBBAuthRequestResetAPI = AUTH_API @"/requestResetPassword";
 NSString * const kSBBAuthResetAPI =        AUTH_API @"/resetPassword";
 
 NSString *gSBBAppStudy = nil;
+NSString *gSBBPemCertificateName = nil;
 
 NSString *kBridgeKeychainService = @"SageBridge";
 NSString *kBridgeAuthManagerFirstRunKey = @"SBBAuthManagerFirstRunCompleted";

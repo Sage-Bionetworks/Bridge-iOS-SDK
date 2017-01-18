@@ -38,6 +38,9 @@
 // Global study identifier, specific to each app. Must be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy: or setupWithStudy:useCache: class method.
 extern  NSString * _Nonnull gSBBAppStudy;
 
+// Global name for the pem certificate used to encode an archive before uploading.
+extern  NSString * _Nullable gSBBPemCertificateName;
+
 /// A class derived from SBBStudyParticipant which includes a password field. Use this object when signing up to set any StudyParticipant fields or custom attributes at that time.
 @interface SBBSignUp : SBBStudyParticipant
 
