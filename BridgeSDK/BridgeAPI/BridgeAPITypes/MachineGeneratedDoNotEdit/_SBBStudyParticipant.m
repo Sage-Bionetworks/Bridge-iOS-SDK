@@ -239,6 +239,10 @@
         }
     }
 
+    // we do need to fill in the key used for caching this object type, though
+    id keyValue = ((id)self.type == [NSNull null]) ? nil : self.type;
+    [managedObject setValue:keyValue forKey:@"type"];
+
     // Calling code will handle saving these changes to cacheContext.
 }
 

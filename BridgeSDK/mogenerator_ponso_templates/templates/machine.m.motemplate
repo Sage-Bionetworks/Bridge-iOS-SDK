@@ -294,6 +294,15 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     self.<$userInfo.entityIDKeyPath$> = key;
 <$endif$><$endif$>
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
+        <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if ! Relationship.isToMany$><$if Relationship.userInfo.includedAsSubobject$>
+    // If we're just creating a stub object to be populated later with actual JSON, don't try to create
+    // any included subobjects at this point. We can tell because the dictionary will consist of only the
+    // "type" key and nothing else.
+    BOOL creatingObjectBeforePopulating = (dictionary.count == 1) && dictionary[@"type"];
+        <$break$><$endif$><$endif$><$endif$><$endif$>
+    <$endif$><$endforeach do$>
+
+    <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>
         <$if ! Relationship.userInfo.destinationEntityIDKeyPath $><$if ! Relationship.isTransient$><$if Relationship.isToMany$>
     // overwrite the old <$Relationship.name$> relationship entirely rather than adding to it
     [self remove<$Relationship.name.initialCapitalString$>Objects];
@@ -307,13 +316,16 @@ static id dynamicGetterIMP(id self, SEL _cmd)
         [self add<$Relationship.name.initialCapitalString$>Object:<$Relationship.name$>Obj];
     }<$else$>
     <$if Relationship.userInfo.includedAsSubobject$>
-    // <$Relationship.name$> is included as a subobject, meaning its fields are mingled with ours in the Bridge JSON,
-    // rather than being in their own JSON dictionary under the appropriate key. So we'll create the necessary
-    // JSON dictionary by copying ours, removing our own fields, and setting the type appropriately.
-    NSMutableDictionary *<$Relationship.name$>Dict = [dictionary mutableCopy];
-    NSArray *myProps = [self originalProperties];
-    [<$Relationship.name$>Dict removeObjectsForKeys:myProps];
-    <$Relationship.name$>Dict[@"type"] = @"<$Relationship.destinationEntity.name$>";
+    NSMutableDictionary *<$Relationship.name$>Dict = nil;
+    if (!creatingObjectBeforePopulating) {
+        // <$Relationship.name$> is included as a subobject, meaning its fields are mingled with ours in the Bridge JSON,
+        // rather than being in their own JSON dictionary under the appropriate key. So we'll create the necessary
+        // JSON dictionary by copying ours, removing our own fields, and setting the type appropriately.
+        <$Relationship.name$>Dict = [dictionary mutableCopy];
+        NSArray *myProps = [self originalProperties];
+        [<$Relationship.name$>Dict removeObjectsForKeys:myProps];
+        <$Relationship.name$>Dict[@"type"] = @"<$Relationship.destinationEntity.name$>";
+    }
     <$else$>
     NSDictionary *<$Relationship.name$>Dict = [dictionary objectForKey:@"<$Relationship.name$>"];
     <$endif$>
@@ -561,6 +573,11 @@ static id dynamicGetterIMP(id self, SEL _cmd)
             managedObject.<$userInfo.encrypted$> = ciphertext;
         }
     }
+    <$if userInfo.entityIDKeyPath$>
+    // we do need to fill in the key used for caching this object type, though
+    id keyValue = ((id)self.<$userInfo.entityIDKeyPath$> == [NSNull null]) ? nil : self.<$userInfo.entityIDKeyPath$>;
+    [managedObject setValue:keyValue forKey:@"<$userInfo.entityIDKeyPath$>"];
+    <$endif$>
     <$else$>[super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;<$break$><$endif$><$endforeach do$>
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
