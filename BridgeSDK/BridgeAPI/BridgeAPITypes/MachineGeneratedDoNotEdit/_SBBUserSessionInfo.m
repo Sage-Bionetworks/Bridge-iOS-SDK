@@ -157,6 +157,11 @@
 
     self.signedMostRecentConsent = [dictionary objectForKey:@"signedMostRecentConsent"];
 
+    // If we're just creating a stub object to be populated later with actual JSON, don't try to create
+    // any included subobjects at this point. We can tell because the dictionary will consist of only the
+    // "type" key and nothing else.
+    BOOL creatingObjectBeforePopulating = (dictionary.count == 1) && dictionary[@"type"] != nil;
+
     // overwrite the old consentStatuses relationship entirely rather than adding to it
     [self removeConsentStatusesObjects];
 
@@ -168,13 +173,16 @@
         [self addConsentStatusesObject:consentStatusesObj];
     }
 
-    // studyParticipant is included as a subobject, meaning its fields are mingled with ours in the Bridge JSON,
-    // rather than being in their own JSON dictionary under the appropriate key. So we'll create the necessary
-    // JSON dictionary by copying ours, removing our own fields, and setting the type appropriately.
-    NSMutableDictionary *studyParticipantDict = [dictionary mutableCopy];
-    NSArray *myProps = [self originalProperties];
-    [studyParticipantDict removeObjectsForKeys:myProps];
-    studyParticipantDict[@"type"] = @"StudyParticipant";
+    NSMutableDictionary *studyParticipantDict = nil;
+    if (!creatingObjectBeforePopulating) {
+        // studyParticipant is included as a subobject, meaning its fields are mingled with ours in the Bridge JSON,
+        // rather than being in their own JSON dictionary under the appropriate key. So we'll create the necessary
+        // JSON dictionary by copying ours, removing our own fields, and setting the type appropriately.
+        studyParticipantDict = [dictionary mutableCopy];
+        NSArray *myProps = [self originalProperties];
+        [studyParticipantDict removeObjectsForKeys:myProps];
+        studyParticipantDict[@"type"] = @"StudyParticipant";
+    }
 
     if (studyParticipantDict != nil)
     {

@@ -12,22 +12,24 @@
 
 - (NSString *)sessionTokenForAuthManager:(id<SBBAuthManagerProtocol>)authManager
 {
-  return _sessionToken;
+    return _sessionToken;
 }
 
-- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken
+- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(NSString *)sessionToken forEmail:(nullable NSString *)email andPassword:(nullable NSString *)password
 {
-  _sessionToken = sessionToken;
+    _sessionToken = sessionToken;
+    _email = email;
+    _password = password;
 }
 
 - (NSString *)emailForAuthManager:(id<SBBAuthManagerProtocol>)authManager
 {
-  return _email;
+    return _email;
 }
 
 - (NSString *)passwordForAuthManager:(id<SBBAuthManagerProtocol>)authManager
 {
-  return _password;
+    return _password;
 }
 
 @end

@@ -355,28 +355,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         if (sessionToken.length) {
             // Sign-in was successful.
             
-            // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated.
-            // Since client-writable objects are not updated from the server once first cached, we need to clear this
-            // out of our cache before reading the response object into the cache so we will get the server-side changes.
-            // We wait until now to do it because until sign-in succeeds, to the best of our knowledge what's in
-            // the cache is still valid.
-            
-            [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
-            [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
-            
-            // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
-            // (which UserSessionInfo now extends). Even though we can't return the values from here, though, we do
-            // want to update them in the cache, which calling objectFromBridgeJSON: will do.
-            if (gSBBUseCache) {
-                [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
-            }
-            
             if (_authDelegate) {
-                if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)]) {
-                    [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
-                } else {
-                    [_authDelegate authManager:self didGetSessionToken:sessionToken];
-                }
+                [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
             } else {
                 dispatchSyncToAuthQueue(^{
                     _sessionToken = sessionToken;
@@ -390,6 +370,28 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                     [store synchronize];
                 });
             }
+            
+            // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated.
+            // Since client-writable objects are not updated from the server once first cached, we need to clear this
+            // out of our cache before reading the response object into the cache so we will get the server-side changes.
+            // We wait until now to do it because until sign-in succeeds, to the best of our knowledge what's in
+            // the cache is still valid; and if the user's email is retrievable (if auth delegate exists, it implements
+            // emailForAuthManager:) then that is used in generating the persistent store path so we need to do this
+            // here, were we know it will be available.
+            
+            [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
+            [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
+            
+            // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
+            // (which UserSessionInfo now extends). Even though we can't return the values from here, though, we do
+            // want to update them in the cache, which calling objectFromBridgeJSON: will do.
+            // ETA since the StudyParticipant is stored encrypted and uses the login password
+            // as the encryption key, we need to do this after checking/calling the auth delegate
+            // and/or storing the password to the keychain ourselves. emm2017-01-19
+            if (gSBBUseCache) {
+                [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
+            }
+            
         }
         
         if (completion) {
@@ -403,17 +405,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self addAuthHeaderToHeaders:headers];
     return [_networkManager post:kSBBAuthSignOutAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        // Remove the session token (and credentials?) from the keychain
+        // Remove the session token and credentials from the keychain
         // ??? Do we want to not do this in case of error?
         if (_authDelegate) {
-            if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)] &&
-                ([_authDelegate respondsToSelector:@selector(emailForAuthManager:)] ||
-                 [_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) &&
-                [_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
-                [_authDelegate authManager:self didGetSessionToken:nil forEmail:nil andPassword:nil];
-            } else {
-                [_authDelegate authManager:self didGetSessionToken:nil];
-            }
+            [_authDelegate authManager:self didGetSessionToken:nil forEmail:nil andPassword:nil];
         } else {
             dispatchSyncToKeychainQueue(^{
                 UICKeyChainStore *store = [self.class sdkKeychainStore];
@@ -595,39 +590,27 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 // used internally for unit testing
 - (void)setSessionToken:(NSString *)sessionToken
 {
-    if (sessionToken.length) {
-        if (_authDelegate) {
-            [_authDelegate authManager:self didGetSessionToken:sessionToken];
-        } else {
-            dispatchSyncToAuthQueue(^{
-                _sessionToken = sessionToken;
-            });
-            dispatchSyncToKeychainQueue(^{
-                UICKeyChainStore *store = [self.class sdkKeychainStore];
-                [store setString:_sessionToken forKey:self.sessionTokenKey];
-                
-                [store synchronize];
-            });
-        }
+    if (_authDelegate) {
+        NSString *email = [_authDelegate emailForAuthManager:self];
+        NSString *password = [_authDelegate passwordForAuthManager:self];
+        [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
+    } else {
+        dispatchSyncToAuthQueue(^{
+            _sessionToken = sessionToken;
+        });
+        dispatchSyncToKeychainQueue(^{
+            UICKeyChainStore *store = [self.class sdkKeychainStore];
+            [store setString:_sessionToken forKey:self.sessionTokenKey];
+            
+            [store synchronize];
+        });
     }
 }
 
 // used by SBBBridgeNetworkManager to auto-reauth when session tokens expire
 - (void)clearSessionToken
 {
-    if (_authDelegate) {
-        [_authDelegate authManager:self didGetSessionToken:nil];
-    } else {
-        dispatchSyncToAuthQueue(^{
-            _sessionToken = nil;
-        });
-        dispatchSyncToKeychainQueue(^{
-            UICKeyChainStore *store = [self.class sdkKeychainStore];
-            [store setString:nil forKey:self.sessionTokenKey];
-            
-            [store synchronize];
-        });
-    }
+    [self setSessionToken:nil];
 }
 
 @end
