@@ -101,7 +101,7 @@ extern  NSString * _Nonnull gSBBAppStudy;
  *
  *  @param authManager The auth manager instance making the delegate request.
  *
- *  @return The username, or nil.
+ *  @return The email for the user account, or nil.
  */
 - (nullable NSString *)emailForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
 
