@@ -355,15 +355,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         if (sessionToken.length) {
             // Sign-in was successful.
             
-            // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated.
-            // Since client-writable objects are not updated from the server once first cached, we need to clear this
-            // out of our cache before reading the response object into the cache so we will get the server-side changes.
-            // We wait until now to do it because until sign-in succeeds, to the best of our knowledge what's in
-            // the cache is still valid.
-            
-            [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
-            [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
-            
             if (_authDelegate) {
                 [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
             } else {
@@ -379,6 +370,17 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                     [store synchronize];
                 });
             }
+            
+            // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated.
+            // Since client-writable objects are not updated from the server once first cached, we need to clear this
+            // out of our cache before reading the response object into the cache so we will get the server-side changes.
+            // We wait until now to do it because until sign-in succeeds, to the best of our knowledge what's in
+            // the cache is still valid; and if the user's email is retrievable (if auth delegate exists, it implements
+            // emailForAuthManager:) then that is used in generating the persistent store path so we need to do this
+            // here, were we know it will be available.
+            
+            [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
+            [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
             
             // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
             // (which UserSessionInfo now extends). Even though we can't return the values from here, though, we do
