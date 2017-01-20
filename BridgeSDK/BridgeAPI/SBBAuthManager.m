@@ -593,7 +593,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (_authDelegate) {
         NSString *email = [_authDelegate emailForAuthManager:self];
         NSString *password = [_authDelegate passwordForAuthManager:self];
-        [_authDelegate authManager:self didGetSessionToken:nil forEmail:email andPassword:password];
+        [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
     } else {
         dispatchSyncToAuthQueue(^{
             _sessionToken = sessionToken;
