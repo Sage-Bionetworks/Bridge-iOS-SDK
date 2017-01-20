@@ -11,5 +11,7 @@
 @interface TestAdminAuthDelegate : NSObject <SBBAuthManagerDelegateProtocol>
 
 @property (nonatomic, strong) NSString *sessionToken;
+@property (nonatomic, strong) NSString *email;
+@property (nonatomic, strong) NSString *password;
 
 @end

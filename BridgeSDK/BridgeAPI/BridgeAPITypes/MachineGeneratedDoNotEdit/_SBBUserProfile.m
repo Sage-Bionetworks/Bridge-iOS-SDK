@@ -316,7 +316,8 @@ static id dynamicGetterIMP(id self, SEL _cmd)
         }
     }
 
-    // we do need to fill in the key used for caching this object type, though
+    // fill in the key used for caching this object type so we can still use the usual
+    // fetch requests with predicates to find it in CoreData in spite of being encrypted.
     id keyValue = ((id)self.type == [NSNull null]) ? nil : self.type;
     [managedObject setValue:keyValue forKey:@"type"];
 

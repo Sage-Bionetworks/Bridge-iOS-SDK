@@ -160,7 +160,7 @@
     // If we're just creating a stub object to be populated later with actual JSON, don't try to create
     // any included subobjects at this point. We can tell because the dictionary will consist of only the
     // "type" key and nothing else.
-    BOOL creatingObjectBeforePopulating = (dictionary.count == 1) && dictionary[@"type"];
+    BOOL creatingObjectBeforePopulating = (dictionary.count == 1) && dictionary[@"type"] != nil;
 
     // overwrite the old consentStatuses relationship entirely rather than adding to it
     [self removeConsentStatusesObjects];
