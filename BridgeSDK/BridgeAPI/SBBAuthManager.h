@@ -4,7 +4,7 @@
 //
 //  Created by Erin Mounts on 9/11/14.
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2016, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -78,24 +78,13 @@ extern  NSString * _Nonnull gSBBAppStudy;
 - (nullable NSString *)sessionTokenForAuthManager:(nonnull id<SBBAuthManagerProtocol>)authManager;
 
 /*!
- *  The auth manager will call this delegate method when it obtains a new session token, so that the delegate
- *  can store it appropriately and return it later in sessionTokenForAuthManager: calls.
- *
- *  @note This method is required.
- *
- *  @param authManager The auth manager instance making the delegate request.
- *  @param sessionToken The session token just obtained by the auth manager.
- */
-- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken;
-
-@optional
-
-/*!
  *  If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
  *  when it obtains a new session token, so that the delegate can store the email and password used,
  *  to be returned later in the emailForAuthManager: and passwordForAuthManager: calls.
  *
- *  @note This method is optional. It provides a convenient interface for keeping track of the auth credentials used in the most recent successful signIn, for re-use when automatically refreshing an expired session token.
+ *  This method provides a convenient interface for keeping track of the auth credentials used in the most recent successful signIn, for re-use when automatically refreshing an expired session token.
+ *
+ *  @note This method is now required, and once it has been called, the emailForAuthManager: and passwordForAuthManager: delegate methods must return valid credentials.
  *
  *  @param authManager The auth manager instance making the delegate request.
  *  @param sessionToken The session token just obtained by the auth manager.
@@ -105,10 +94,35 @@ extern  NSString * _Nonnull gSBBAppStudy;
 - (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken forEmail:(nullable NSString *)email andPassword:(nullable NSString *)password;
 
 /*!
+ *  This delegate method should return the password for the user account last signed up for or signed in to,
+ *  or nil if the user has never signed up or signed in on this device.
+ *
+ *  @note This method is now required. The password is used when encrypting sensitive user data in CoreData, and also (if emailForAuthManager: is implemented as well) for refreshing the session token automatically when 401 status codes are received from the Bridge API.
+ *
+ *  @param authManager The auth manager instance making the delegate request.
+ *
+ *  @return The password, or nil.
+ */
+- (nullable NSString *)passwordForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
+
+@optional
+
+/*!
+ *  The auth manager will call this delegate method when it obtains a new session token, so that the delegate
+ *  can store it appropriately and return it later in sessionTokenForAuthManager: calls.
+ *
+ *  @deprecated Implement authManager:didGetSessionToken:forEmail:andPassword instead.
+ *
+ *  @param authManager The auth manager instance making the delegate request.
+ *  @param sessionToken The session token just obtained by the auth manager.
+ */
+- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken __attribute__((deprecated("implement authManager:didGetSessionToken:forEmail:andPassword instead")));
+
+/*!
  *  This delegate method should return the email for the user account last signed up for or signed in to,
  *  or nil if the user has never signed up or signed in on this device.
  *
- *  @note This method is optional. If both this and passwordForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.
+ *  @note This method is optional. If this is provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.
  *
  *  @param authManager The auth manager instance making the delegate request.
  *
@@ -124,19 +138,6 @@ extern  NSString * _Nonnull gSBBAppStudy;
  *  @return The username, or nil.
  */
 - (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager __attribute__((deprecated("implement emailForAuthManager: instead")));
-
-
-/*!
- *  This delegate method should return the password for the user account last signed up for or signed in to,
- *  or nil if the user has never signed up or signed in on this device.
- *
- *  @note This method is optional. If both this and emailForAuthManager: are provided by the delegate, the SDK can handle refreshing the session token automatically when 401 status codes are received from the Bridge API.
- *
- *  @param authManager The auth manager instance making the delegate request.
- *
- *  @return The password, or nil.
- */
-- (nullable NSString *)passwordForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager;
 
 @end
 
