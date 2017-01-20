@@ -364,13 +364,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
             [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
             
-            // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
-            // (which UserSessionInfo now extends). Even though we can't return the values from here, though, we do
-            // want to update them in the cache, which calling objectFromBridgeJSON: will do.
-            if (gSBBUseCache) {
-                [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
-            }
-            
             if (_authDelegate) {
                 if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)]) {
                     [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
@@ -390,6 +383,17 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                     [store synchronize];
                 });
             }
+            
+            // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
+            // (which UserSessionInfo now extends). Even though we can't return the values from here, though, we do
+            // want to update them in the cache, which calling objectFromBridgeJSON: will do.
+            // ETA since the StudyParticipant is stored encrypted and uses the login password
+            // as the encryption key, we need to do this after checking/calling the auth delegate
+            // and/or storing the password to the keychain ourselves. emm2017-01-19
+            if (gSBBUseCache) {
+                [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
+            }
+            
         }
         
         if (completion) {
