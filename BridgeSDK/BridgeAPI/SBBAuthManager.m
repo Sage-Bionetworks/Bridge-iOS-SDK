@@ -590,22 +590,20 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 // used internally for unit testing
 - (void)setSessionToken:(NSString *)sessionToken
 {
-    if (sessionToken.length) {
-        if (_authDelegate) {
-            NSString *email = [_authDelegate emailForAuthManager:self];
-            NSString *password = [_authDelegate passwordForAuthManager:self];
-            [_authDelegate authManager:self didGetSessionToken:nil forEmail:email andPassword:password];
-        } else {
-            dispatchSyncToAuthQueue(^{
-                _sessionToken = sessionToken;
-            });
-            dispatchSyncToKeychainQueue(^{
-                UICKeyChainStore *store = [self.class sdkKeychainStore];
-                [store setString:_sessionToken forKey:self.sessionTokenKey];
-                
-                [store synchronize];
-            });
-        }
+    if (_authDelegate) {
+        NSString *email = [_authDelegate emailForAuthManager:self];
+        NSString *password = [_authDelegate passwordForAuthManager:self];
+        [_authDelegate authManager:self didGetSessionToken:nil forEmail:email andPassword:password];
+    } else {
+        dispatchSyncToAuthQueue(^{
+            _sessionToken = sessionToken;
+        });
+        dispatchSyncToKeychainQueue(^{
+            UICKeyChainStore *store = [self.class sdkKeychainStore];
+            [store setString:_sessionToken forKey:self.sessionTokenKey];
+            
+            [store synchronize];
+        });
     }
 }
 
