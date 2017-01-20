@@ -78,9 +78,9 @@ extern  NSString * _Nonnull gSBBAppStudy;
 - (nullable NSString *)sessionTokenForAuthManager:(nonnull id<SBBAuthManagerProtocol>)authManager;
 
 /*!
- *  If you implement this delegate method, the auth manager will call it rather than authManager:didGetSessionToken:
- *  when it obtains a new session token, so that the delegate can store the email and password used,
- *  to be returned later in the emailForAuthManager: and passwordForAuthManager: calls.
+ *  The auth manager will call this delegate method when it obtains a new session token, so that the delegate
+ *  can store the new sessionToken as well as the email and password used to obtain it, to be returned later in
+ *  the sessionTokenForAuthManager:, emailForAuthManager:, and passwordForAuthManager: calls, respectively.
  *
  *  This method provides a convenient interface for keeping track of the auth credentials used in the most recent successful signIn, for re-use when automatically refreshing an expired session token.
  *
@@ -108,17 +108,6 @@ extern  NSString * _Nonnull gSBBAppStudy;
 @optional
 
 /*!
- *  The auth manager will call this delegate method when it obtains a new session token, so that the delegate
- *  can store it appropriately and return it later in sessionTokenForAuthManager: calls.
- *
- *  @deprecated Implement authManager:didGetSessionToken:forEmail:andPassword instead.
- *
- *  @param authManager The auth manager instance making the delegate request.
- *  @param sessionToken The session token just obtained by the auth manager.
- */
-- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken __attribute__((deprecated("implement authManager:didGetSessionToken:forEmail:andPassword instead")));
-
-/*!
  *  This delegate method should return the email for the user account last signed up for or signed in to,
  *  or nil if the user has never signed up or signed in on this device.
  *
@@ -138,6 +127,16 @@ extern  NSString * _Nonnull gSBBAppStudy;
  *  @return The username, or nil.
  */
 - (nullable NSString *)usernameForAuthManager:(nullable id<SBBAuthManagerProtocol>)authManager __attribute__((deprecated("implement emailForAuthManager: instead")));
+
+/*!
+ *  For backward compatibility only. This method will no longer be called.
+ *
+ *  @deprecated Implement authManager:didGetSessionToken:forEmail:andPassword instead.
+ *
+ *  @param authManager The auth manager instance making the delegate request.
+ *  @param sessionToken The session token just obtained by the auth manager.
+ */
+- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didGetSessionToken:(nullable NSString *)sessionToken __attribute__((deprecated("implement authManager:didGetSessionToken:forEmail:andPassword instead")));
 
 @end
 

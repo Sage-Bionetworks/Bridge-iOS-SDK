@@ -365,11 +365,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
             
             if (_authDelegate) {
-                if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)]) {
-                    [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
-                } else {
-                    [_authDelegate authManager:self didGetSessionToken:sessionToken];
-                }
+                [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
             } else {
                 dispatchSyncToAuthQueue(^{
                     _sessionToken = sessionToken;
@@ -407,17 +403,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self addAuthHeaderToHeaders:headers];
     return [_networkManager post:kSBBAuthSignOutAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        // Remove the session token (and credentials?) from the keychain
+        // Remove the session token and credentials from the keychain
         // ??? Do we want to not do this in case of error?
         if (_authDelegate) {
-            if ([_authDelegate respondsToSelector:@selector(authManager:didGetSessionToken:forEmail:andPassword:)] &&
-                ([_authDelegate respondsToSelector:@selector(emailForAuthManager:)] ||
-                 [_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) &&
-                [_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
-                [_authDelegate authManager:self didGetSessionToken:nil forEmail:nil andPassword:nil];
-            } else {
-                [_authDelegate authManager:self didGetSessionToken:nil];
-            }
+            [_authDelegate authManager:self didGetSessionToken:nil forEmail:nil andPassword:nil];
         } else {
             dispatchSyncToKeychainQueue(^{
                 UICKeyChainStore *store = [self.class sdkKeychainStore];
@@ -601,7 +590,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     if (sessionToken.length) {
         if (_authDelegate) {
-            [_authDelegate authManager:self didGetSessionToken:sessionToken];
+            NSString *email = [_authDelegate emailForAuthManager:self];
+            NSString *password = [_authDelegate passwordForAuthManager:self];
+            [_authDelegate authManager:self didGetSessionToken:nil forEmail:email andPassword:password];
         } else {
             dispatchSyncToAuthQueue(^{
                 _sessionToken = sessionToken;
@@ -619,19 +610,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 // used by SBBBridgeNetworkManager to auto-reauth when session tokens expire
 - (void)clearSessionToken
 {
-    if (_authDelegate) {
-        [_authDelegate authManager:self didGetSessionToken:nil];
-    } else {
-        dispatchSyncToAuthQueue(^{
-            _sessionToken = nil;
-        });
-        dispatchSyncToKeychainQueue(^{
-            UICKeyChainStore *store = [self.class sdkKeychainStore];
-            [store setString:nil forKey:self.sessionTokenKey];
-            
-            [store synchronize];
-        });
-    }
+    [self setSessionToken:nil];
 }
 
 @end
