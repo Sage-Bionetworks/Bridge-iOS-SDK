@@ -73,7 +73,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
                            dataSharing:(SBBParticipantDataSharingScope)scope
                             completion:(SBBConsentManagerCompletionBlock)completion
 {
-    return [self consentSignature:name forSubpopulationGuid:gSBBAppStudy birthdate:date signatureImage:signatureImage dataSharing:scope completion:completion];
+    return [self consentSignature:name forSubpopulationGuid:[SBBBridgeInfo shared].studyIdentifier birthdate:date signatureImage:signatureImage dataSharing:scope completion:completion];
 }
 
 - (NSURLSessionTask *)consentSignature:(NSString *)name
@@ -114,7 +114,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
 
 - (NSURLSessionTask *)retrieveConsentSignatureWithCompletion:(SBBConsentManagerRetrieveCompletionBlock)completion
 {
-    return [self getConsentSignatureForSubpopulation:gSBBAppStudy completion:^(id consentSignature, NSError *error) {
+    return [self getConsentSignatureForSubpopulation:[SBBBridgeInfo shared].studyIdentifier completion:^(id consentSignature, NSError *error) {
         NSString* name = nil;
         NSString* birthdate = nil;
         UIImage* image = nil;
@@ -152,7 +152,7 @@ NSString * const kSBBMimeTypePng = @"image/png";
 
 - (NSURLSessionTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
 {
-    return [self withdrawConsentForSubpopulation:gSBBAppStudy withReason:reason completion:completion];
+    return [self withdrawConsentForSubpopulation:[SBBBridgeInfo shared].studyIdentifier withReason:reason completion:completion];
 }
 
 - (NSURLSessionTask *)withdrawConsentForSubpopulation:(NSString *)subpopGuid withReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion

@@ -36,13 +36,20 @@
 
 const NSInteger SBBDefaultCacheDaysAhead = 4;
 const NSInteger SBBDefaultCacheDaysBehind = 7;
-const NSInteger SBBMaxSupportedCacheDays = 30;
+
+id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 
 @implementation BridgeSDK
 
-+ (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo {
-    // TODO: syoung 01/18/2017 Keep a pointer to the bridge info protocol
-    [self setupWithStudy:bridgeInfo.studyIdentifier cacheDaysAhead:bridgeInfo.cacheDaysAhead cacheDaysBehind:bridgeInfo.cacheDaysBehind environment:bridgeInfo.environment];
++ (void)setupWithBridgeInfo:(id<SBBBridgeInfoProtocol>)info errorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
+{
+    gSBBErrorUIDelegate = delegate;
+    SBBBridgeInfo *bridgeInfo = [SBBBridgeInfo shared];
+    [bridgeInfo setFromBridgeInfo:info];
+    gSBBUseCache = bridgeInfo.cacheDaysAhead > 0 || bridgeInfo.cacheDaysBehind > 0;
+    
+    // make sure the Bridge network manager is set up as the delegate for the background session
+    [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
 }
 
 + (void)setupWithStudy:(NSString *)study
@@ -81,14 +88,13 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 
 + (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment
 {
-    gSBBAppStudy = study;
-    gSBBDefaultEnvironment = environment;
-    gSBBUseCache = cacheDaysAhead > 0 || cacheDaysBehind > 0;
-    gSBBCacheDaysAhead = MIN(SBBMaxSupportedCacheDays, cacheDaysAhead);
-    gSBBCacheDaysBehind = MIN(SBBMaxSupportedCacheDays, cacheDaysBehind);
+    id<SBBBridgeInfoProtocol> bridgeInfo = [SBBBridgeInfo new];
+    bridgeInfo.studyIdentifier = study;
+    bridgeInfo.environment = environment;
+    bridgeInfo.cacheDaysAhead = cacheDaysAhead;
+    bridgeInfo.cacheDaysBehind = cacheDaysBehind;
     
-    // make sure the Bridge network manager is set up as the delegate for the background session
-    [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
+    [self setupWithBridgeInfo:bridgeInfo errorUIDelegate:nil];
 }
 
 + (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment

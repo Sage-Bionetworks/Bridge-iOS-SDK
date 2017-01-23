@@ -48,7 +48,9 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBAuthManager.h>
 #import <BridgeSDK/SBBBridgeNetworkManager.h>
 #import <BridgeSDK/SBBBridgeAppDelegate.h>
+#import <BridgeSDK/SBBBridgeErrorUIDelegate.h>
 #import <BridgeSDK/SBBBridgeInfoProtocol.h>
+#import <BridgeSDK/SBBBridgeInfo.h>
 #import <BridgeSDK/SBBComponent.h>
 #import <BridgeSDK/SBBComponentManager.h>
 #import <BridgeSDK/SBBConsentManager.h>
@@ -83,23 +85,22 @@ extern const NSInteger SBBMaxSupportedCacheDays;
 @interface BridgeSDK : NSObject
 
 /*!
- * Set up the Bridge SDK for the given study and pointing at the production environment.
- * Usually you would call this at the beginning of your AppDelegate's application:didFinishLaunchingWithOptions: method.
+ * Set up the Bridge SDK based on settings passed in a configuration object.
  *
- * This will register a default SBBNetworkManager instance conigured correctly for the specified study and appropriate
- * server environment. If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
+ * This is now the preferred method for initializing the Bridge SDK. All other methods are deprecated.
  *
- * Caching is turned off if `cacheDaysAhead = 0` AND `cacheDaysBehind = 0`
- *
- *  @param bridgeInfo   A pointer to the protocol with the required information for setting up a study.
+ *  @param info An object of a class that conforms to SBBBridgeInfoProtocol containing the desired configuration settings.
+ *  @param delegate An object that implements the SBBBridgeErrorUIDelegate protocol. Optional.
+ *  @see SBBBridgeInfoProtocol
+ *  @see SBBBridgeInfo
  */
-+ (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo;
++ (void)setupWithBridgeInfo:(id<SBBBridgeInfoProtocol>)info errorUIDelegate:(nullable id<SBBBridgeErrorUIDelegate>)delegate;
 
 /*!
  * Set up the Bridge SDK for the given study and pointing at the production environment.
  * Usually you would call this at the beginning of your AppDelegate's application:didFinishLaunchingWithOptions: method.
  *
- * This will register a default SBBNetworkManager instance conigured correctly for the specified study and appropriate
+ * This will register a default SBBNetworkManager instance configured correctly for the specified study and appropriate
  * server environment. If you register a custom (or custom-configured) NetworkManager yourself, don't call this method.
  *
  * Caching is turned off if `cacheDaysAhead = 0` AND `cacheDaysBehind = 0`
@@ -107,24 +108,29 @@ extern const NSInteger SBBMaxSupportedCacheDays;
  *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
  *  @param cacheDaysAhead Number of days ahead to cache.
  *  @param cacheDaysBehind Number of days behind to cache.
+ *  @deprecated For backward compatibility only. Use setupWithBridgeInfo:errorUIDelegate: instead (which this method calls).
  */
-+ (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind;
++ (void)setupWithStudy:(nonnull NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind __attribute__((deprecated("use setupWithBridgeInfo:errorUIDelegate: instead")));
 
 /*!
  * Convenience method for setting up the study with default caching for days ahead and days behind.
  *
- * If `useCache` is set to `YES` then this method sets up caching using `SBBDefaultCacheDaysAhead` and 
+ * If `useCache` is set to `YES` then this method sets up caching using `SBBDefaultCacheDaysAhead` and
  * `SBBDefaultCacheDaysBehind`
  *
  *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
  *  @param useCache A flag indicating whether to use the SDK's built-in persistent caching. Pass NO if you want to handle this yourself.
+ *  @deprecated For backward compatibility only. Use setupWithBridgeInfo:errorUIDelegate: instead (which this method calls).
  */
-+ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache;
++ (void)setupWithStudy:(nonnull NSString *)study useCache:(BOOL)useCache __attribute__((deprecated("use setupWithBridgeInfo:errorUIDelegate: instead")));
 
 /*!
  * Convenience method for setting up the study with caching turned off (default).
+ *
+ *  @param study   A string identifier for your app's Bridge study, assigned to you by Sage Bionetworks.
+ *  @deprecated For backward compatibility only. Use setupWithBridgeInfo:errorUIDelegate: instead (which this method calls).
  */
-+ (void)setupWithStudy:(NSString *)study;
++ (void)setupWithStudy:(nonnull NSString *)study __attribute__((deprecated("use setupWithBridgeInfo:errorUIDelegate: instead")));
 
 /*!
  * Set up the Bridge SDK for the given study and server environment. Usually you would only call this version
@@ -141,28 +147,29 @@ extern const NSInteger SBBMaxSupportedCacheDays;
  *  @param cacheDaysAhead Number of days ahead to cache.
  *  @param cacheDaysBehind Number of days behind to cache.
  *  @param environment Which server environment to run against.
+ *  @deprecated For backward compatibility only. Use setupWithBridgeInfo:errorUIDelegate: instead (which this method calls).
  */
-+ (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment;
++ (void)setupWithStudy:(nonnull NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithBridgeInfo:errorUIDelegate: instead")));
 
 /*!
- * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
+ *  @deprecated For backward compatibility only. Use setupWithBridgeInfo:errorUIDelegate: instead (which this method calls).
  */
-+ (void)setupWithStudy:(NSString *)study environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead")));
++ (void)setupWithStudy:(nonnull NSString *)study environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithBridgeInfo:errorUIDelegate: instead")));
 
 /*!
- * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
+ *  @deprecated For backward compatibility only. Use setupWithBridgeInfo:errorUIDelegate: instead (which this method calls).
  */
-+ (void)setupWithStudy:(NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead")));
++ (void)setupWithStudy:(nonnull NSString *)study useCache:(BOOL)useCache environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithBridgeInfo:errorUIDelegate: instead")));
 
 /*!
- * For backward compatibility only. Use setupWithStudy: instead (which this method calls).
+ *  @deprecated For backward compatibility only. Use setupWithBridgeInfo:errorUIDelegate: instead (which this method calls).
  */
-+ (void)setupWithAppPrefix:(NSString *)appPrefix __attribute__((deprecated("use setupWithStudy: instead")));
++ (void)setupWithAppPrefix:(nonnull NSString *)appPrefix __attribute__((deprecated("use setupWithBridgeInfo:errorUIDelegate: instead")));
 
 /*!
- * For backward compatibility only. Use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead (which this method calls).
+ *  @deprecated For backward compatibility only. Use setupWithBridgeInfo:errorUIDelegate: instead (which this method calls).
  */
-+ (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithStudy:cacheDaysAhead:cacheDaysBehind:environment: instead")));
++ (void)setupWithAppPrefix:(nonnull NSString *)appPrefix environment:(SBBEnvironment)environment __attribute__((deprecated("use setupWithBridgeInfo:errorUIDelegate: instead")));
 
 @end
 

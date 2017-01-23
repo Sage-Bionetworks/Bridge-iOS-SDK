@@ -96,8 +96,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    if (!gSBBAppStudy) {
-        gSBBAppStudy = @"ios-sdk-int-tests";
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        [SBBBridgeInfo shared].studyIdentifier = @"ios-sdk-int-tests";
         gSBBUseCache = YES;
     }
     id<SBBAuthManagerProtocol> aMan = SBBComponent(SBBAuthManager);

@@ -50,7 +50,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         // sensitive credentials are stored in a plist file that lives *outside* of the local git repo
         NSString *credentialsPlist = [[NSBundle bundleForClass:[self class]] pathForResource:@"BridgeAdminCredentials" ofType:@"plist"];
         NSDictionary *credentials = [[NSDictionary alloc] initWithContentsOfFile:credentialsPlist][@"studies"];
-        NSDictionary *studyCredentials = credentials[gSBBAppStudy];
+        NSDictionary *studyCredentials = credentials[[SBBBridgeInfo shared].studyIdentifier];
         
         [gAdminAuthManager signInWithEmail:studyCredentials[@"email"] password:studyCredentials[@"password"] completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (error) {

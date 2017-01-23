@@ -37,3 +37,7 @@
 #define STRINGIZE2(x) STRINGIZE(x)
 #define SBBBUNDLEIDSTRING @STRINGIZE2(SBBBUNDLEID)
 
+@protocol SBBBridgeErrorUIDelegate;
+
+extern _Nullable id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate;
+

@@ -39,9 +39,6 @@ extern NSString * const kSBBAuthSignOutAPI;
 extern NSString * const kSBBAuthRequestResetAPI;
 extern NSString * const kSBBAuthResetAPI;
 
-
-extern SBBEnvironment gSBBDefaultEnvironment;
-
 @protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>
 
 - (BOOL)isAuthenticated;

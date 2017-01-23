@@ -179,7 +179,7 @@
                 } else {
                     unconsentedId = responseObject[kUserSessionInfoIdKey];
                     // sign default (required) consent first
-                    [cMan consentSignature:signname forSubpopulationGuid:gSBBAppStudy birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+                    [cMan consentSignature:signname forSubpopulationGuid:[SBBBridgeInfo shared].studyIdentifier birthdate:birthdate signatureImage:signatureImage dataSharing:SBBUserDataSharingScopeStudy completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
                         if (error) {
                             NSLog(@"Error recording default consent signature:\n%@\nResponse: %@", error, responseObject);
                             [expectSigned fulfill];
