@@ -66,6 +66,21 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/NSBundle+SBBAdditions.h>
 #import <BridgeSDK/UIDevice+Hardware.h>
 
+    
+/*!
+ * @typedef SBBEnvironment
+ * @brief An enumeration of the available server environments.
+ * @constant SBBEnvironmentProd The production environment.
+ * @constant SBBEnvironmentStaging The staging environment, used for testing before releasing to production.
+ * @constant SBBEnvironmentDev The development environment, for Sage Bionetworks internal use only.
+ * @constant SBBEnvironmentCustom A custom environment for testing purposes.
+ */
+typedef NS_ENUM(NSInteger, SBBEnvironment) {
+    SBBEnvironmentProd,
+    SBBEnvironmentStaging,
+    SBBEnvironmentDev,
+    SBBEnvironmentCustom
+};
   
 // This sets the default environment at app (not SDK) compile time to Staging for debug builds and Production for non-debug.
 #if DEBUG
@@ -94,7 +109,7 @@ extern const NSInteger SBBMaxSupportedCacheDays;
  *  @see SBBBridgeInfoProtocol
  *  @see SBBBridgeInfo
  */
-+ (void)setupWithBridgeInfo:(id<SBBBridgeInfoProtocol>)info errorUIDelegate:(nullable id<SBBBridgeErrorUIDelegate>)delegate;
++ (void)setupWithBridgeInfo:(nonnull id<SBBBridgeInfoProtocol>)info errorUIDelegate:(nullable id<SBBBridgeErrorUIDelegate>)delegate;
 
 /*!
  * Set up the Bridge SDK for the given study and pointing at the production environment.

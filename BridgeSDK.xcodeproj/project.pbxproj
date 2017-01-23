@@ -580,6 +580,7 @@
 		80240B031D4AE6DE00100F21 /* upload-request-success.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "upload-request-success.json"; sourceTree = "<group>"; };
 		80240B051D4AE80000100F21 /* upload-request-expired.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "upload-request-expired.json"; sourceTree = "<group>"; };
 		80240B071D4AEC6600100F21 /* empty-response-body.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "empty-response-body.json"; sourceTree = "<group>"; };
+		8024339D1E36BCDB00D4AACE /* SBBBridgeInfo+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SBBBridgeInfo+Internal.h"; sourceTree = "<group>"; };
 		8026BD0F19C7532D0077F3EB /* UICKeyChainStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICKeyChainStore.h; sourceTree = "<group>"; };
 		8026BD1019C7532D0077F3EB /* UICKeyChainStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICKeyChainStore.m; sourceTree = "<group>"; };
 		8026BD1D19C883FC0077F3EB /* BridgeSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BridgeSDK.m; sourceTree = "<group>"; };
@@ -1171,6 +1172,7 @@
 				60737A201DA828D20078E13E /* SBBBridgeAPIManagerInternal.h */,
 				8026D67D19E857FC008942B0 /* SBBBridgeAPIManager.m */,
 				804C109F1E2847FE004B68E6 /* SBBBridgeInfo.h */,
+				8024339D1E36BCDB00D4AACE /* SBBBridgeInfo+Internal.h */,
 				804C10A01E2847FE004B68E6 /* SBBBridgeInfo.m */,
 				60B6353E1B14ED0500C4DA63 /* SBBBridgeNetworkManager.h */,
 				60B6353F1B14ED0500C4DA63 /* SBBBridgeNetworkManager.m */,
@@ -1421,7 +1423,6 @@
 				80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */,
 				80E819751A83E8EB00513919 /* SBBSurveyElement.h in Headers */,
 				800E796719ED74B600EEE612 /* SBBStringConstraints.h in Headers */,
-				FFF65A9A1E3002DC0043FB40 /* SBBBridgeInfoProtocol.h in Headers */,
 				807AE2DF1B62B76F002588BB /* SBBActivityManagerInternal.h in Headers */,
 				8026BD2819C8AE200077F3EB /* SBBAuthManagerInternal.h in Headers */,
 				800E796F19ED74D000EEE612 /* SBBTimeConstraints.h in Headers */,

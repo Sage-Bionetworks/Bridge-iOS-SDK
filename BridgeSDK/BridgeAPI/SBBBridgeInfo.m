@@ -2,11 +2,33 @@
 //  SBBBridgeInfo.m
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 1/12/17.
-//  Copyright © 2017 Sage Bionetworks. All rights reserved.
+//	Copyright (c) 2017, Sage Bionetworks
+//	All rights reserved.
+//
+//	Redistribution and use in source and binary forms, with or without
+//	modification, are permitted provided that the following conditions are met:
+//	    * Redistributions of source code must retain the above copyright
+//	      notice, this list of conditions and the following disclaimer.
+//	    * Redistributions in binary form must reproduce the above copyright
+//	      notice, this list of conditions and the following disclaimer in the
+//	      documentation and/or other materials provided with the distribution.
+//	    * Neither the name of Sage Bionetworks nor the names of BridgeSDk's
+//		  contributors may be used to endorse or promote products derived from
+//		  this software without specific prior written permission.
+//
+//	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//	ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//	DISCLAIMED. IN NO EVENT SHALL SAGE BIONETWORKS BE LIABLE FOR ANY
+//	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//	(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+//	LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+//	ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBBridgeInfo.h"
+#import "SBBBridgeInfo+Internal.h"
 
 const NSInteger SBBMaxSupportedCacheDays = 30;
 
@@ -20,7 +42,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 
 + (instancetype)shared
 {
-    static SBBBridgeInfoDict *shared;
+    static SBBBridgeInfo *shared;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shared = [SBBBridgeInfo new];
@@ -33,6 +55,14 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 {
     if (self = [super init]) {
         _bridgeInfo = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary
+{
+    if (self = [super init]) {
+        _bridgeInfo = [dictionary mutableCopy];
     }
     return self;
 }
@@ -54,28 +84,28 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 
 - (void)setStudyIdentifier:(NSString *)studyIdentifier
 {
-    _bridgeInfo[NSStringFromSelector(@selector(studyIdentifier))] = studyIdentifier;
+    _bridgeInfo[NSStringFromSelector(@selector(studyIdentifier))] = [studyIdentifier copy];
 }
 
-- (NSUInteger)cacheDaysAhead
+- (NSInteger)cacheDaysAhead
 {
-    return [((NSNumber *)_bridgeInfo[NSStringFromSelector(@selector(cacheDaysAhead))]) unsignedIntegerValue];
+    return [((NSNumber *)_bridgeInfo[NSStringFromSelector(@selector(cacheDaysAhead))]) integerValue];
 }
 
-- (void) setCacheDaysAhead:(NSUInteger)cacheDaysAhead
+- (void) setCacheDaysAhead:(NSInteger)cacheDaysAhead
 {
-    NSUInteger daysAhead = MIN(SBBMaxSupportedCacheDays, cacheDaysAhead)
+    NSUInteger daysAhead = MIN(SBBMaxSupportedCacheDays, cacheDaysAhead);
     _bridgeInfo[NSStringFromSelector(@selector(cacheDaysAhead))] = @(daysAhead);
 }
 
-- (NSUInteger)cacheDaysBehind
+- (NSInteger)cacheDaysBehind
 {
-    return [((NSNumber *)_bridgeInfo[NSStringFromSelector(@selector(cacheDaysBehind))]) unsignedIntegerValue];
+    return [((NSNumber *)_bridgeInfo[NSStringFromSelector(@selector(cacheDaysBehind))]) integerValue];
 }
 
-- (void)setCacheDaysBehind:(NSUInteger)cacheDaysBehind
+- (void)setCacheDaysBehind:(NSInteger)cacheDaysBehind
 {
-    NSUInteger daysBehind = MIN(SBBMaxSupportedCacheDays, cacheDaysBehind)
+    NSUInteger daysBehind = MIN(SBBMaxSupportedCacheDays, cacheDaysBehind);
     _bridgeInfo[NSStringFromSelector(@selector(cacheDaysBehind))] = @(daysBehind);
 }
 
@@ -96,7 +126,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 
 - (void)setCertificateName:(NSString *)certificateName
 {
-    _bridgeInfo[NSStringFromSelector(@selector(certificateName))] = certificateName;
+    _bridgeInfo[NSStringFromSelector(@selector(certificateName))] = [certificateName copy];
 }
 
 - (NSString *)appGroupIdentifier
@@ -106,7 +136,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 
 - (void)setAppGroupIdentifier:(NSString *)appGroupIdentifier
 {
-    _bridgeInfo[NSStringFromSelector(@selector(appGroupIdentifier))] = appGroupIdentifier;
+    _bridgeInfo[NSStringFromSelector(@selector(appGroupIdentifier))] = [appGroupIdentifier copy];
 }
 
 @end

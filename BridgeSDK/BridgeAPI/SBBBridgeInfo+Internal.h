@@ -1,5 +1,5 @@
 //
-//  SBBBridgeInfo.h
+//  SBBBridgeInfo+Internal.h
 //  BridgeSDK
 //
 //	Copyright (c) 2017, Sage Bionetworks
@@ -28,12 +28,10 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <BridgeSDK/SBBBridgeInfoProtocol.h>
+#import "SBBBridgeInfo.h"
 
-@interface SBBBridgeInfo : NSObject <SBBBridgeInfoProtocol>
+@interface SBBBridgeInfo (internal)
 
-+ (instancetype)shared;
-
-- (void)setFromBridgeInfo:(id<SBBBridgeInfoProtocol>)info;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @end

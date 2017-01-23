@@ -33,6 +33,7 @@
 #import "BridgeSDK.h"
 #import "SBBAuthManagerInternal.h"
 #import "SBBCacheManager.h"
+#import "BridgeAPI/SBBBridgeInfo+Internal.h"
 
 const NSInteger SBBDefaultCacheDaysAhead = 4;
 const NSInteger SBBDefaultCacheDaysBehind = 7;
@@ -88,11 +89,13 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 
 + (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment
 {
-    id<SBBBridgeInfoProtocol> bridgeInfo = [SBBBridgeInfo new];
-    bridgeInfo.studyIdentifier = study;
-    bridgeInfo.environment = environment;
-    bridgeInfo.cacheDaysAhead = cacheDaysAhead;
-    bridgeInfo.cacheDaysBehind = cacheDaysBehind;
+    NSDictionary *bridgeInfoDict = @{
+                                     NSStringFromSelector(@selector(studyIdentifier)) : study,
+                                     NSStringFromSelector(@selector(environment)) : @(environment),
+                                     NSStringFromSelector(@selector(cacheDaysAhead)) : @(cacheDaysAhead),
+                                     NSStringFromSelector(@selector(cacheDaysBehind)) : @(cacheDaysBehind)
+                                     };
+    SBBBridgeInfo *bridgeInfo = [[SBBBridgeInfo alloc] initWithDictionary:bridgeInfoDict];
     
     [self setupWithBridgeInfo:bridgeInfo errorUIDelegate:nil];
 }
