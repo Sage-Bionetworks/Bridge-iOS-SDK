@@ -45,5 +45,7 @@ extern _Nullable id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate;
 
 + (nonnull NSUserDefaults *)sharedUserDefaults;
 
++ (BOOL)isRunningInAppExtension;
+
 @end
 

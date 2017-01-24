@@ -28,7 +28,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "BridgeSDK.h"
+#import "BridgeSDK+Internal.h"
 #import "SBBNetworkManagerInternal.h"
 #import "SBBErrors.h"
 #import "NSBundle+SBBAdditions.h"
@@ -260,8 +260,18 @@ NSString *kAPIPrefix = @"webservices";
         static NSURLSession *bgSession;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:kBackgroundSessionIdentifier];
-            bgSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+            NSString *sessionIdentifier = kBackgroundSessionIdentifier;
+            if ([BridgeSDK isRunningInAppExtension]) {
+                // Uniquify it from the containing app's BridgeSDK background session and those of any other
+                // app extensions or instances thereof with the same containing app that use BridgeSDK. Note
+                // that if the extension is gone when the background upload/download finishes, the containing
+                // app will be launched to handle it, not the extension, so this string doesn't need to be
+                // preserved across multiple invocations of the extension, and this way multiple simultaneous
+                // instances of the same extension, if such a thing is possible, wouldn't interfere with
+                // each other.
+                sessionIdentifier = [sessionIdentifier stringByAppendingString:[NSUUID UUID].UUIDString];
+            }
+            bgSession = [self backgroundSessionWithIdentifier:sessionIdentifier];
         });
         
         _backgroundSession = bgSession;
@@ -281,6 +291,11 @@ NSString *kAPIPrefix = @"webservices";
     NSURLSession *bgSession = bgSessionForIdentifier[identifier];
     if (!bgSession) {
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+        NSString *appGroupIdentifier = SBBBridgeInfo.shared.appGroupIdentifier;
+        if (appGroupIdentifier.length > 0) {
+            // configure it with the shared container
+            config.sharedContainerIdentifier = appGroupIdentifier;
+        }
         bgSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
         bgSessionForIdentifier[identifier] = bgSession;
     }
