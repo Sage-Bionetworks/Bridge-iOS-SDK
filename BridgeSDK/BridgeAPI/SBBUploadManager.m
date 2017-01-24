@@ -40,7 +40,7 @@
 #import "SBBUploadRequest.h"
 #import "NSError+SBBAdditions.h"
 #import "SBBErrors.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 #import "NSDate+SBBAdditions.h"
 #import "NSString+SBBAdditions.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -146,7 +146,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     // So we need to check if that's been updated and fix if not--on the background delegate queue, to serialize access.
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
 
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         BOOL keysUpgraded = [defaults boolForKey:keysUpdatedKey];
         
         if (!keysUpgraded) {
@@ -244,7 +244,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         
         // keep track of what file it's a copy of
         [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
             NSMutableDictionary *filesForTempFiles = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
             if (!filesForTempFiles) {
                 filesForTempFiles = [NSMutableDictionary dictionary];
@@ -262,7 +262,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 {
     NSString *file = nil;
     if (tempFilePath.length) {
-        file = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadFilesKey][[tempFilePath sandboxRelativePath]];
+        file = [[BridgeSDK sharedUserDefaults] dictionaryForKey:kUploadFilesKey][[tempFilePath sandboxRelativePath]];
     }
     
     return file;
@@ -270,7 +270,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)removeFileForTempFile:(NSString *)tempFilePath
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSMutableDictionary *files = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
     [files removeObjectForKey:[tempFilePath sandboxRelativePath]];
     [defaults setObject:files forKey:kUploadFilesKey];
@@ -279,7 +279,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)removeTempFilesWithOriginalFile:(NSString *)filePath exceptFile:(NSString *)saveFilePath
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSMutableDictionary *files = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
     for (NSString *tempFilePath in files.allKeys) {
         NSString *key = [tempFilePath sandboxRelativePath];
@@ -345,7 +345,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)setUploadRequestJSON:(id)json forFile:(NSString *)fileURLString
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     
     NSMutableDictionary *uploadRequests = [[defaults dictionaryForKey:kUploadRequestsKey] mutableCopy];
     if (!uploadRequests) {
@@ -362,7 +362,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (NSDictionary *)uploadRequestJSONForFile:(NSString *)fileURLString
 {
-    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadRequestsKey][[fileURLString sandboxRelativePath]];
+    return [[BridgeSDK sharedUserDefaults] dictionaryForKey:kUploadRequestsKey][[fileURLString sandboxRelativePath]];
 }
 
 - (SBBUploadRequest *)uploadRequestForFile:(NSString *)fileURLString
@@ -378,7 +378,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)setUploadSessionJSON:(id)json forFile:(NSString *)fileURLString
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     
     NSMutableDictionary *uploadSessions = [[defaults dictionaryForKey:kUploadSessionsKey] mutableCopy];
     if (!uploadSessions) {
@@ -396,7 +396,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 - (SBBUploadSession *)uploadSessionForFile:(NSString *)fileURLString
 {
     SBBUploadSession *uploadSession = nil;
-    id json = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadSessionsKey][[fileURLString sandboxRelativePath]];
+    id json = [[BridgeSDK sharedUserDefaults] dictionaryForKey:kUploadSessionsKey][[fileURLString sandboxRelativePath]];
     if (json) {
         uploadSession = [self.cleanObjectManager objectFromBridgeJSON:json];
     }
@@ -407,7 +407,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 - (NSDate *)retryTimeForFile:(NSString *)fileURLString
 {
     NSDate *retryTime = nil;
-    NSString *jsonDate = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kSBBUploadRetryAfterDelayKey][[fileURLString sandboxRelativePath]];
+    NSString *jsonDate = [[BridgeSDK sharedUserDefaults] dictionaryForKey:kSBBUploadRetryAfterDelayKey][[fileURLString sandboxRelativePath]];
     if (jsonDate) {
         retryTime = [NSDate dateWithISO8601String:jsonDate];
     }
@@ -427,7 +427,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 }
 
 - (void)setRetryTime:(NSDate *)retryTime forFile:(NSString *)fileURLString {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     
     NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
     if (!retryUploads) {
@@ -445,7 +445,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 - (void)retryUploadsAfterDelay
 {
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         
         NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
         for (NSString *fileURLString in retryUploads.allKeys) {
@@ -655,7 +655,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     // If we don't have a completion handler for it, though, set it up with the given one before returning.
     // Compare just the sandbox-relative parts, as the app sandbox path may have changed. But completion handlers, being in-memory-only,
     // are indexed by the full path.
-    NSArray *uploadTempFiles = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadFilesKey].allKeys;
+    NSArray *uploadTempFiles = [[BridgeSDK sharedUserDefaults] dictionaryForKey:kUploadFilesKey].allKeys;
     NSString *sandboxRelativePath = [fileUrl.path sandboxRelativePath];
     for (NSString *uploadTempFile in uploadTempFiles) {
         NSString *uploadFile = [self fileForTempFile:uploadTempFile];
@@ -887,7 +887,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 {
     NSURLSession *bgSession = ((SBBNetworkManager *)self.networkManager).backgroundSession;
     void (^block)(NSArray<__kindof NSURLSessionTask *> * _Nullable tasks) = ^(NSArray<__kindof NSURLSessionTask *> *tasks){
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         NSFileManager *fileMan = [NSFileManager defaultManager];
         NSMutableSet *filesRetrying = [NSMutableSet set];
         
@@ -1074,7 +1074,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     NSLog(@"Session became invalid! Error:\n%@", error);
     
     // handle completion (failure) for all outstanding uploads
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSDictionary *files = [defaults dictionaryForKey:kUploadFilesKey];
     for (NSString *file in files.allKeys) {
         [self completeUploadOfFile:file withError:error];

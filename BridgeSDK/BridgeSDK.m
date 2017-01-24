@@ -30,7 +30,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "BridgeSDK.h"
+#import "BridgeSDK+Internal.h"
 #import "SBBAuthManagerInternal.h"
 #import "SBBCacheManager.h"
 #import "BridgeAPI/SBBBridgeInfo+Internal.h"
@@ -103,6 +103,21 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 + (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment
 {
     [self setupWithStudy:appPrefix environment:environment];
+}
+
++ (NSUserDefaults *)sharedUserDefaults
+{
+    static NSUserDefaults *bridgeUserDefaults = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if ([SBBBridgeInfo shared].appGroupIdentifier.length > 0) {
+            bridgeUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:[SBBBridgeInfo shared].appGroupIdentifier];
+        } else {
+            bridgeUserDefaults = [NSUserDefaults standardUserDefaults];
+        }
+    });
+    
+    return bridgeUserDefaults;
 }
 
 @end

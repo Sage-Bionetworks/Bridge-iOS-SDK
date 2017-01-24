@@ -67,21 +67,6 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/UIDevice+Hardware.h>
 
     
-/*!
- * @typedef SBBEnvironment
- * @brief An enumeration of the available server environments.
- * @constant SBBEnvironmentProd The production environment.
- * @constant SBBEnvironmentStaging The staging environment, used for testing before releasing to production.
- * @constant SBBEnvironmentDev The development environment, for Sage Bionetworks internal use only.
- * @constant SBBEnvironmentCustom A custom environment for testing purposes.
- */
-typedef NS_ENUM(NSInteger, SBBEnvironment) {
-    SBBEnvironmentProd,
-    SBBEnvironmentStaging,
-    SBBEnvironmentDev,
-    SBBEnvironmentCustom
-};
-  
 // This sets the default environment at app (not SDK) compile time to Staging for debug builds and Production for non-debug.
 #if DEBUG
 #define kDefaultEnvironment SBBEnvironmentStaging

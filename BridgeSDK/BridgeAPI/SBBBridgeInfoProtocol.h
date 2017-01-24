@@ -30,7 +30,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <BridgeSDK/BridgeSDK.h>
+#import "SBBNetworkManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -62,7 +62,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) SBBEnvironment environment;
 
 /**
- App group identifier used for the suite name of NSUserDefaults (if provided).
+ App group identifier used for the suite name of NSUserDefaults, and for the name of the shared
+ container, which is used both to configure the background session and as the place to store
+ temporary copies of files being uploaded to Bridge (if provided).
  */
 @property (nonatomic, readonly, copy) NSString * _Nullable appGroupIdentifier;
 

@@ -1,10 +1,8 @@
 //
-//  BridgeSDKInternal.h
+//  BridgeSDK+Internal.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 7/23/15.
-//
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2015-2017, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,6 +28,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+#import "BridgeSDK.h"
+
 #define GLOBAL_API_PREFIX @"/v3"
 
 // SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
@@ -40,4 +40,10 @@
 @protocol SBBBridgeErrorUIDelegate;
 
 extern _Nullable id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate;
+
+@interface BridgeSDK (internal)
+
++ (nonnull NSUserDefaults *)sharedUserDefaults;
+
+@end
 

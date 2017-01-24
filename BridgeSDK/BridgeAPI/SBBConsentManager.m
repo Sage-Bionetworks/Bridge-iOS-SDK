@@ -34,7 +34,7 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBUserManagerInternal.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 #import "SBBConsentSignature.h"
 #import "SBBUserSessionInfo.h"
 #import "SBBObjectManager.h"

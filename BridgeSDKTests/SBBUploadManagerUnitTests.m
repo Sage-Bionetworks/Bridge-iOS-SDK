@@ -72,7 +72,7 @@ static NSString *const kSessionType = @"UploadSession";
         BOOL willRetry = NO;
         NSString *tempFilePath = tempFileURL.path;
         BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:tempFilePath];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         
         NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
         for (NSString *relativeFilePath in retryUploads.allKeys) {
@@ -138,7 +138,7 @@ static NSString *const kSessionType = @"UploadSession";
         [self checkFile:tempFileURL willRetry:NO withMessage:@"No longer in retry queue after successful retry"];
         
         // make sure we didn't generate any spurious uploads or retries
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         NSDictionary *retryUploads = [defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey];
         NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
         NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
@@ -296,7 +296,7 @@ static NSString *const kSessionType = @"UploadSession";
         [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully uploaded and not awaiting retry"];
         
         // make sure we didn't generate any spurious uploads or retries
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         NSDictionary *retryUploads = [defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey];
         NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
         NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
@@ -339,7 +339,7 @@ static NSString *const kSessionType = @"UploadSession";
 }
 
 - (void)removeFileURLFromRetryQueue:(NSURL *)fileURL {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
     [retryUploads removeObjectForKey:[fileURL.path sandboxRelativePath]];
     [defaults setValue:retryUploads forKey:kSBBUploadRetryAfterDelayKey];
@@ -367,7 +367,7 @@ static NSString *const kSessionType = @"UploadSession";
         [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully uploaded and not awaiting retry"];
         
         // make sure we didn't generate any spurious uploads or retries
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         NSDictionary *retryUploads = [defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey];
         NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
         NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
@@ -479,7 +479,7 @@ static NSString *const kSessionType = @"UploadSession";
         [self checkFile:tempFileURL willRetry:NO withMessage:@"Successfully uploaded and not awaiting retry"];
         
         // make sure we didn't generate any spurious uploads or retries
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         NSDictionary *retryUploads = [defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey];
         NSDictionary *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey];
         NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];

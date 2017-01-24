@@ -35,7 +35,7 @@
 #import "UICKeyChainStore.h"
 #import "NSError+SBBAdditions.h"
 #import "SBBComponentManager.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 #import "SBBUserManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
 #import "SBBParticipantManagerInternal.h"
@@ -265,11 +265,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         _networkManager = networkManager;
         
         //Clear keychain on first run in case of reinstallation
-        BOOL firstRunDone = [[NSUserDefaults standardUserDefaults] boolForKey:kBridgeAuthManagerFirstRunKey];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
+        BOOL firstRunDone = [defaults boolForKey:kBridgeAuthManagerFirstRunKey];
         if (!firstRunDone) {
             [self.class resetAuthKeychain];
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kBridgeAuthManagerFirstRunKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            [defaults setBool:YES forKey:kBridgeAuthManagerFirstRunKey];
+            [defaults synchronize];
         }
     }
     

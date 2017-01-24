@@ -35,7 +35,7 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBErrors.h"
 #import "NSError+SBBAdditions.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 
 @interface SBBBridgeNetworkManager ()
 

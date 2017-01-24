@@ -37,7 +37,7 @@
 #import "SBBBridgeObjects.h"
 #import "NSDate+SBBAdditions.h"
 #import "NSError+SBBAdditions.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 #import "SBBBridgeInfo.h"
 
 #define ACTIVITY_API GLOBAL_API_PREFIX @"/activities"

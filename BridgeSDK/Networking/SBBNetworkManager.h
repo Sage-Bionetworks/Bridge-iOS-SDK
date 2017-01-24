@@ -63,6 +63,21 @@ typedef void (^SBBNetworkManagerTaskCompletionBlock)(NSURLSessionTask *task, NSH
 typedef void (^SBBNetworkManagerDownloadCompletionBlock)(NSURL *file);
 
 /*!
+ * @typedef SBBEnvironment
+ * @brief An enumeration of the available server environments.
+ * @constant SBBEnvironmentProd The production environment.
+ * @constant SBBEnvironmentStaging The staging environment, used for testing before releasing to production.
+ * @constant SBBEnvironmentDev The development environment, for Sage Bionetworks internal use only.
+ * @constant SBBEnvironmentCustom A custom environment for testing purposes.
+ */
+typedef NS_ENUM(NSInteger, SBBEnvironment) {
+    SBBEnvironmentProd,
+    SBBEnvironmentStaging,
+    SBBEnvironmentDev,
+    SBBEnvironmentCustom
+};
+
+/*!
  This protocol defines the interface to the SBBNetworkManager's non-constructor, non-initializer methods. The interface is
  abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.
  */
