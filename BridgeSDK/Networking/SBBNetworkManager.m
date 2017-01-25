@@ -746,6 +746,18 @@ NSString *kAPIPrefix = @"webservices";
     }
 }
 
+- (void)performBlockSyncOnBackgroundDelegateQueue:(void (^)(void))block
+{
+    NSOperationQueue *bgQueue = self.backgroundSession.delegateQueue;
+    if (bgQueue) {
+        NSOperation *op = [NSBlockOperation blockOperationWithBlock:block];
+        [bgQueue addOperations:@[op] waitUntilFinished:YES];
+    } else {
+        // do it in line
+        block();
+    }
+}
+
 #pragma mark - NSURLSessionDownloadDelegate methods
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes

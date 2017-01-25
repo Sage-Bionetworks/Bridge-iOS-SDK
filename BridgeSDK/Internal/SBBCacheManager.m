@@ -572,7 +572,15 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
 
 - (NSURL *)storeURL
 {
-    NSURL *storeURL = [self appDocumentsDirectory];
+    NSURL *storeURL = nil;
+    NSString *appGroupIdentifier = SBBBridgeInfo.shared.appGroupIdentifier;
+    
+    // if there's a shared container, use it; otherwise use the Documents directory
+    if (appGroupIdentifier.length > 0) {
+        storeURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroupIdentifier];
+    } else {
+        storeURL = [self appDocumentsDirectory];
+    }
     SBBAuthManager *authMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
     if ([authMan respondsToSelector:@selector(savedEmail)]) {
         NSString *emailHash = [[authMan.savedEmail dataUsingEncoding:NSUTF8StringEncoding] hexMD5];
