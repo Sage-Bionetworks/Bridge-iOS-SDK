@@ -37,6 +37,17 @@
 #define STRINGIZE2(x) STRINGIZE(x)
 #define SBBBUNDLEIDSTRING @STRINGIZE2(SBBBUNDLEID)
 
+// Logging macros to prepend with file, line, & function/method info
+#define SBBPrettyLogInfo()                             \
+([NSString stringWithFormat: @"%@ line %d (%s)",    \
+@(__FILE__).lastPathComponent,                      \
+(int) (__LINE__),                                   \
+(__PRETTY_FUNCTION__)                               \
+])
+
+#define SBBLog(format, ...) NSLog(@"%@: %@", SBBPrettyLogInfo(), [NSString stringWithFormat:format, ##__VA_ARGS__])
+
+
 @protocol SBBBridgeErrorUIDelegate;
 
 extern _Nullable id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate;

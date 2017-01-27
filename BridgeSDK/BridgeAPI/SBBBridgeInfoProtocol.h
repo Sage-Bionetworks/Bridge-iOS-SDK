@@ -47,17 +47,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, copy) NSString * _Nullable certificateName;
 
 /**
- If using BridgeSDK's built-in caching, number of days ahead to cache
+ If using BridgeSDK's built-in caching, number of days ahead to cache.
+ Set both this and cacheDaysBehind to 0 to disable caching in BridgeSDK.
  */
 @property (nonatomic, readonly) NSInteger cacheDaysAhead;
 
 /**
- If using BridgeSDK's built-in caching, number of days behind to cache
+ If using BridgeSDK's built-in caching, number of days behind to cache.
+ Set both this and cacheDaysAhead to 0 to disable caching in BridgeSDK.
  */
 @property (nonatomic, readonly) NSInteger cacheDaysBehind;
 
 /**
- Environment to load
+ Server environment to use.
+ Generally you should not set this to anything other than SBBEnvironmentProd unless you are running your own
+ Bridge server, and then only to test changes to the server which you have not yet deployed to production.
  */
 @property (nonatomic, readonly) SBBEnvironment environment;
 

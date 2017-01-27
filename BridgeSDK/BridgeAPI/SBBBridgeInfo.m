@@ -51,6 +51,19 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
     return shared;
 }
 
++ (NSMutableDictionary *)dictionaryFromDefaultPlists
+{
+    NSBundle *mainBundle = [NSBundle mainBundle];
+    NSDictionary *basePlist = [NSDictionary dictionaryWithContentsOfFile:[mainBundle pathForResource:@"BridgeInfo" ofType:@"plist"]];
+    NSMutableDictionary *bridgePlist = [(basePlist ?: @{}) mutableCopy];
+    NSDictionary *privatePlist = [NSDictionary dictionaryWithContentsOfFile:[mainBundle pathForResource:@"BridgeInfo-private" ofType:@"plist"]];
+    if (privatePlist) {
+        [bridgePlist addEntriesFromDictionary:privatePlist];
+    }
+    
+    return bridgePlist;
+}
+
 - (instancetype)init
 {
     if (self = [super init]) {

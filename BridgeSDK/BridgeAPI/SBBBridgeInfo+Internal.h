@@ -32,6 +32,7 @@
 
 @interface SBBBridgeInfo (internal)
 
++ (NSMutableDictionary *)dictionaryFromDefaultPlists;
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
 @end

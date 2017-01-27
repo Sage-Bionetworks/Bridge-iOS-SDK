@@ -1,3 +1,9 @@
 [submodule "Submodules/RNCryptor"]
 	path = Submodules/RNCryptor
 	url = https://github.com/RNCryptor/RNCryptor.git
+[submodule "Submodules/ZipZap"]
+	path = Submodules/ZipZap
+	url = https://github.com/pixelglow/ZipZap.git
+[submodule "Submodules/CMSSupport"]
+	path = Submodules/CMSSupport
+	url = ssh://git@github.com/Sage-Bionetworks/CMSSupport.git

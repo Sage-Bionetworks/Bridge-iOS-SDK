@@ -61,6 +61,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBSurveyManager.h>
 #import <BridgeSDK/SBBUploadManager.h>
 #import <BridgeSDK/SBBErrors.h>
+#import <BridgeSDK/SBBDataArchive.h>
 #import <BridgeSDK/SBBBridgeObjects.h>
 #import <BridgeSDK/NSDate+SBBAdditions.h>
 #import <BridgeSDK/NSBundle+SBBAdditions.h>
@@ -87,7 +88,27 @@ extern const NSInteger SBBMaxSupportedCacheDays;
 /*!
  * Set up the Bridge SDK based on settings passed in a configuration object.
  *
- * This is now the preferred method for initializing the Bridge SDK. All other methods are deprecated.
+ * This is and setupWithBridgeInfo:errorUIDelegate: are now the preferred methods for initializing the Bridge SDK.
+ * All other methods are deprecated.
+ *
+ * This method searches the main bundle for a plist resource with the filename `BridgeInfo.plist` and merges
+ * its contents with a second (optional) plist called `BridgeInfo-private.plist`. The resulting dictionary of
+ * settings is used to set up the SBBBridgeInfo shared object.
+ *
+ * See SBBBridgeInfoProtocol for a description of the keys and values for these plists. If not specified,
+ * `environment` defaults to SBBEnvironmentProd, and `cacheDaysAhead` and `cacheDaysBehind` default to 0
+ * (BridgeSDK caching disabled). You only need to specify `appGroupIdentifier` if you've set up an app group
+ * under your target's Capabilities in Xcode, and you want BridgeSDK to use that shared space.
+ *
+ *  @param delegate An object that implements the SBBBridgeErrorUIDelegate protocol. Optional.
+ */
++ (void)setupWithErrorUIDelegate:(nullable id<SBBBridgeErrorUIDelegate>)delegate;
+
+/*!
+ * Set up the Bridge SDK based on settings passed in a configuration object.
+ *
+ * This is and setupWithBridgeInfo: are now the preferred methods for initializing the Bridge SDK.
+ * All other methods are deprecated.
  *
  *  @param info An object of a class that conforms to SBBBridgeInfoProtocol containing the desired configuration settings.
  *  @param delegate An object that implements the SBBBridgeErrorUIDelegate protocol. Optional.

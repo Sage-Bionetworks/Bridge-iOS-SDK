@@ -34,6 +34,7 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBCacheManager.h"
 #import "BridgeAPI/SBBBridgeInfo+Internal.h"
+#import "SBBEncryptor.h"
 
 const NSInteger SBBDefaultCacheDaysAhead = 4;
 const NSInteger SBBDefaultCacheDaysBehind = 7;
@@ -42,15 +43,37 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 
 @implementation BridgeSDK
 
++ (void)setupWithErrorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
+{
+    NSDictionary *plistDict = [SBBBridgeInfo dictionaryFromDefaultPlists];
+    SBBBridgeInfo *defaultInfo = [[SBBBridgeInfo alloc] initWithDictionary:plistDict];
+    [self setupWithBridgeInfo:defaultInfo errorUIDelegate:delegate];
+}
+
 + (void)setupWithBridgeInfo:(id<SBBBridgeInfoProtocol>)info errorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
 {
+    SBBBridgeInfo *sharedInfo = [SBBBridgeInfo shared];
+    [sharedInfo setFromBridgeInfo:info];
     gSBBErrorUIDelegate = delegate;
-    SBBBridgeInfo *bridgeInfo = [SBBBridgeInfo shared];
-    [bridgeInfo setFromBridgeInfo:info];
-    gSBBUseCache = bridgeInfo.cacheDaysAhead > 0 || bridgeInfo.cacheDaysBehind > 0;
+    gSBBUseCache = sharedInfo.cacheDaysAhead > 0 || sharedInfo.cacheDaysBehind > 0;
     
     // make sure the Bridge network manager is set up as the delegate for the background session
     [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
+
+    // now kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
+    // manager instance so its notification handlers get set up in time)
+    id<SBBUploadManagerProtocol> uMan = SBBComponent(SBBUploadManager);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSArray<NSString *> *uploads = SBBEncryptor.encryptedFilesAwaitingUploadResponse;
+        for (NSString *file in uploads) {
+            NSURL *fileUrl = [NSURL fileURLWithPath:file];
+            [uMan uploadFileToBridge:fileUrl completion:^(NSError *error) {
+                if (!error) {
+                    [SBBEncryptor cleanUpEncryptedFile:fileUrl];
+                }
+            }];
+        }
+    });
 }
 
 + (void)setupWithStudy:(NSString *)study
