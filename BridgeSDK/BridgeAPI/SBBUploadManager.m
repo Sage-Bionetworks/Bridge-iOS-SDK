@@ -205,29 +205,23 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 {
     static NSURL *uploadDirURL = nil;
     if (!uploadDirURL) {
-        [((SBBNetworkManager *)self.networkManager) performBlockSyncOnBackgroundDelegateQueue:^{
-            if (uploadDirURL) {
-                // someone beat us to it--bail out of the block and return what we've already got
-                return;
-            }
-            NSURL *baseDirURL;
-            NSString *appGroupIdentifier = SBBBridgeInfo.shared.appGroupIdentifier;
-            if (appGroupIdentifier.length > 0) {
-                baseDirURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroupIdentifier];
-            } else {
-                NSURL *appSupportDir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] firstObject];
-                NSString *bundleName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
-                // for unit tests, the main bundle infoDictionary is empty, so...
-                baseDirURL = [[appSupportDir URLByAppendingPathComponent:bundleName ?: @"__test__"] URLByAppendingPathComponent:@"SBBUploadManager"];
-            }
-            uploadDirURL = [baseDirURL URLByAppendingPathComponent:@"SBBUploadManager"];
-            NSError *error;
-            
-            if (![[NSFileManager defaultManager] createDirectoryAtURL:uploadDirURL withIntermediateDirectories:YES attributes:nil error:&error]) {
-                NSLog(@"Error attempting to create uploadDir at path %@:\n%@", uploadDirURL.absoluteURL, error);
-                uploadDirURL = nil;
-            }
-        }];
+        NSURL *baseDirURL;
+        NSString *appGroupIdentifier = SBBBridgeInfo.shared.appGroupIdentifier;
+        if (appGroupIdentifier.length > 0) {
+            baseDirURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroupIdentifier];
+        } else {
+            NSURL *appSupportDir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] firstObject];
+            NSString *bundleName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
+            // for unit tests, the main bundle infoDictionary is empty, so...
+            baseDirURL = [[appSupportDir URLByAppendingPathComponent:bundleName ?: @"__test__"] URLByAppendingPathComponent:@"SBBUploadManager"];
+        }
+        uploadDirURL = [baseDirURL URLByAppendingPathComponent:@"SBBUploadManager"];
+        NSError *error;
+        
+        if (![[NSFileManager defaultManager] createDirectoryAtURL:uploadDirURL withIntermediateDirectories:YES attributes:nil error:&error]) {
+            NSLog(@"Error attempting to create uploadDir at path %@:\n%@", uploadDirURL.absoluteURL, error);
+            uploadDirURL = nil;
+        }
     }
     
     return uploadDirURL;

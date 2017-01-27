@@ -34,5 +34,6 @@
 
 + (NSMutableDictionary *)dictionaryFromDefaultPlists;
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+- (void)setStudyIdentifier:(NSString *)studyIdentifier;
 
 @end

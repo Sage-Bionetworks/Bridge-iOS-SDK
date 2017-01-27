@@ -16,6 +16,7 @@
 #import "SBBTestAuthManagerDelegate.h"
 #import "SBBObjectManagerInternal.h"
 #import "ModelObjectInternal.h"
+#import "SBBBridgeInfo+Internal.h"
 
 @interface SBBObjectManagerUnitTests : XCTestCase
 
@@ -33,7 +34,7 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     if (![SBBBridgeInfo shared].studyIdentifier) {
-        [SBBBridgeInfo shared].studyIdentifier = @"ios-sdk-int-tests";
+        [[SBBBridgeInfo shared] setStudyIdentifier:@"ios-sdk-int-tests"];
         gSBBUseCache = YES;
     }
     static NSDictionary *json;
