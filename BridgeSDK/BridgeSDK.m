@@ -143,6 +143,17 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
     return bridgeUserDefaults;
 }
 
++ (BOOL)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+{
+    BOOL restored = NO;
+    if ([identifier hasPrefix:kBackgroundSessionIdentifier]) {
+        [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
+        restored = YES;
+    }
+    
+    return restored;
+}
+
 + (BOOL)isRunningInAppExtension
 {
     // "An app extension target’s Info.plist file identifies the extension point and may specify some details

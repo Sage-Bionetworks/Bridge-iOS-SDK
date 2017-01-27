@@ -118,6 +118,25 @@ extern const NSInteger SBBMaxSupportedCacheDays;
 + (void)setupWithBridgeInfo:(nonnull id<SBBBridgeInfoProtocol>)info errorUIDelegate:(nullable id<SBBBridgeErrorUIDelegate>)delegate;
 
 /*!
+ * Get the UserDefaults suite being used by BridgeSDK. This will either be the suite with the appGroupIdentifier name,
+ * or if no appGroupIdentifier was specified in the setup info object, then this will be standardUserDefaults.
+ */
++ (nonnull NSUserDefaults *)sharedUserDefaults;
+
+/*
+ * Call this in your app delegate's application:handleEventsForBackgroundURLSession:completionHandler: method to
+ * ensure that uploads to Bridge can be completed when a network connection becomes available.
+ *
+ * If this method returns NO, the session didn't belong to BridgeSDK, so your app will be responsible for
+ * restoring it (or ignoring it, as the case may be).
+ *
+ *  @param identifier The background session identifier passed to your app delegate.
+ *  @param completionHandler The completion handler passed to your app delegate.
+ *  @return YES if the session belonged to BridgeSDK and was restored by this method, NO otherwise.
+ */
++ (BOOL)restoreBackgroundSession:(nonnull NSString *)identifier completionHandler:(nonnull void (^)())completionHandler;
+
+/*!
  * Set up the Bridge SDK for the given study and pointing at the production environment.
  * Usually you would call this at the beginning of your AppDelegate's application:didFinishLaunchingWithOptions: method.
  *

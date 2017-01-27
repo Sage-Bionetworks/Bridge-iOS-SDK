@@ -54,8 +54,6 @@ extern _Nullable id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate;
 
 @interface BridgeSDK (internal)
 
-+ (nonnull NSUserDefaults *)sharedUserDefaults;
-
 + (BOOL)isRunningInAppExtension;
 
 @end
