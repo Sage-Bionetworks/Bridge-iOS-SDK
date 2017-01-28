@@ -8,5 +8,9 @@
 	<string>ios-sdk-int-tests</string>
 	<key>environment</key>
 	<integer>1</integer>
+	<key>cacheDaysAhead</key>
+	<string>4</string>
+	<key>cacheDaysBehind</key>
+	<string>1</string>
 </dict>
 </plist>
