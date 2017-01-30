@@ -34,6 +34,8 @@
 
 + (NSMutableDictionary *)dictionaryFromDefaultPlists;
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+
+- (void)copyFromBridgeInfo:(id<SBBBridgeInfoProtocol>)info;
 - (void)setStudyIdentifier:(NSString *)studyIdentifier;
 
 @end

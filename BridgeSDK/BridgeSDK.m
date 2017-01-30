@@ -53,7 +53,7 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 + (void)setupWithBridgeInfo:(id<SBBBridgeInfoProtocol>)info errorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
 {
     SBBBridgeInfo *sharedInfo = [SBBBridgeInfo shared];
-    [sharedInfo setFromBridgeInfo:info];
+    [sharedInfo copyFromBridgeInfo:info];
     gSBBErrorUIDelegate = delegate;
     gSBBUseCache = sharedInfo.cacheDaysAhead > 0 || sharedInfo.cacheDaysBehind > 0;
     

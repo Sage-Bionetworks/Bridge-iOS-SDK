@@ -80,7 +80,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
     return self;
 }
 
-- (void)setFromBridgeInfo:(id<SBBBridgeInfoProtocol>)info
+- (void)copyFromBridgeInfo:(id<SBBBridgeInfoProtocol>)info
 {
     self.studyIdentifier = info.studyIdentifier;
     self.cacheDaysAhead = info.cacheDaysAhead;

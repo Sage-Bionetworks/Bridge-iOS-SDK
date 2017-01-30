@@ -34,6 +34,4 @@
 
 + (instancetype)shared;
 
-- (void)setFromBridgeInfo:(id<SBBBridgeInfoProtocol>)info;
-
 @end

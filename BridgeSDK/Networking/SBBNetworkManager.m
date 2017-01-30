@@ -116,7 +116,6 @@ NSString *kAPIPrefix = @"webservices";
 @property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
 @property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
 
-//@property (nonatomic, copy) void (^backgroundCompletionHandler)(void);
 @property (nonatomic, strong) NSMutableDictionary *backgroundCompletionHandlers;
 @property (nonatomic, strong) NSMutableDictionary *uploadCompletionHandlers;
 @property (nonatomic, strong) NSMutableDictionary *downloadCompletionHandlers;

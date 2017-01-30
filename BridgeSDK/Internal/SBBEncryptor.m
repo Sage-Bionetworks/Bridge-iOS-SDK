@@ -36,8 +36,8 @@
 @import UIKit;
 #import <OpenSSL/openssl.h>
 
-static const NSString *kEncryptedDataFilename = @"encrypted.zip";
-static const NSString *kEncryptedFileBaseFolder = @"encryptor";
+static NSString *kEncryptedDataFilename = @"encrypted.zip";
+static NSString *kEncryptedFileBaseFolder = @"encryptor";
 
 @interface SBBEncryptor ()
 
