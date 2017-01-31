@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface NSBundle (SBBAdditions)
 
 - (NSURL *)appStoreLinkURL;
+- (NSURL *)privacyPolicyURL;
 
 - (NSString *)appName;
 - (NSString *)appVersion;

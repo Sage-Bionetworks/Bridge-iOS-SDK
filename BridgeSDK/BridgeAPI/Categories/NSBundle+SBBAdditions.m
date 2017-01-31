@@ -80,6 +80,10 @@
     return [NSURL URLWithString:[NSString stringWithFormat:@"http://appstore.com/%@", appName]];
 }
 
+- (NSURL * _Nonnull)privacyPolicyURL {
+    return [NSURL URLWithString:@"http://parkinsonmpower.org/mpower/privacy.html"];
+}
+
 - (NSString *)appName {
     return [self objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
 }
