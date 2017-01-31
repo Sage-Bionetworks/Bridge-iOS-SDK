@@ -34,7 +34,7 @@
 #import "SBBAuthManager.h"
 #import "BridgeSDK+Internal.h"
 
-/// Global flag indicating whether to use internal persistent object cache. Should be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithBridgeInfo:errorUIDelegate: class method.
+/// Global flag indicating whether to use internal persistent object cache. Should be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setup or setupWithBridgeInfo: class method.
 extern  BOOL gSBBUseCache;
 
 @class SBBBridgeObject;
