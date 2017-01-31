@@ -15,6 +15,7 @@
 #import "SBBCacheManager.h"
 #import "SBBObjectManagerInternal.h"
 #import "SBBCacheManager.h"
+#import "SBBBridgeInfo+Internal.h"
 
 @interface SBBBridgeAPIUnitTestCase ()
 
@@ -28,8 +29,8 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    if (!gSBBAppStudy) {
-        gSBBAppStudy = @"ios-sdk-int-tests";
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        [[SBBBridgeInfo shared] setStudyIdentifier:@"ios-sdk-int-tests"];
         gSBBUseCache = YES;
     }
     _mockURLSession = [MockURLSession new];

@@ -40,7 +40,7 @@
 #import "SBBUploadRequest.h"
 #import "NSError+SBBAdditions.h"
 #import "SBBErrors.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 #import "NSDate+SBBAdditions.h"
 #import "NSString+SBBAdditions.h"
 #import <MobileCoreServices/MobileCoreServices.h>
@@ -146,7 +146,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     // So we need to check if that's been updated and fix if not--on the background delegate queue, to serialize access.
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
 
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         BOOL keysUpgraded = [defaults boolForKey:keysUpdatedKey];
         
         if (!keysUpgraded) {
@@ -203,16 +203,28 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (NSURL *)tempUploadDirURL
 {
-    NSURL *appSupportDir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] firstObject];
-    NSString *bundleName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
-    // for unit tests, the main bundle infoDictionary is empty, so...
-    NSURL *uploadDir = [[appSupportDir URLByAppendingPathComponent:bundleName ?: @"__test__"] URLByAppendingPathComponent:@"SBBUploadManager"];
-    NSError *error;
-    if (![[NSFileManager defaultManager] createDirectoryAtURL:uploadDir withIntermediateDirectories:YES attributes:nil error:&error]) {
-        NSLog(@"Error attempting to create uploadDir at path %@:\n%@", uploadDir.absoluteURL, error);
+    static NSURL *uploadDirURL = nil;
+    if (!uploadDirURL) {
+        NSURL *baseDirURL;
+        NSString *appGroupIdentifier = SBBBridgeInfo.shared.appGroupIdentifier;
+        if (appGroupIdentifier.length > 0) {
+            baseDirURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroupIdentifier];
+        } else {
+            NSURL *appSupportDir = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask] firstObject];
+            NSString *bundleName = [[NSBundle mainBundle].infoDictionary objectForKey:@"CFBundleIdentifier"];
+            // for unit tests, the main bundle infoDictionary is empty, so...
+            baseDirURL = [[appSupportDir URLByAppendingPathComponent:bundleName ?: @"__test__"] URLByAppendingPathComponent:@"SBBUploadManager"];
+        }
+        uploadDirURL = [baseDirURL URLByAppendingPathComponent:@"SBBUploadManager"];
+        NSError *error;
+        
+        if (![[NSFileManager defaultManager] createDirectoryAtURL:uploadDirURL withIntermediateDirectories:YES attributes:nil error:&error]) {
+            NSLog(@"Error attempting to create uploadDir at path %@:\n%@", uploadDirURL.absoluteURL, error);
+            uploadDirURL = nil;
+        }
     }
     
-    return uploadDir;
+    return uploadDirURL;
 }
 
 - (NSURL *)tempFileForFileURL:(NSURL *)fileURL
@@ -230,21 +242,34 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     }
     NSString *fileName = [NSString stringWithFormat:@"%@_%@", [[NSUUID UUID] UUIDString], baseFileName];
     NSURL *tempFileURL = [[self tempUploadDirURL] URLByAppendingPathComponent:fileName];
-    NSError *error;
+    __block NSError *error;
     NSFileManager *fileMan = [NSFileManager defaultManager];
-    [fileMan copyItemAtURL:fileURL toURL:tempFileURL error:&error];
-    if (error) {
-        NSLog(@"Error copying file %@ to temp file %@:\n%@", [[fileURL path] sandboxRelativePath], [[tempFileURL path] sandboxRelativePath], error);
+    NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    NSError *fileCoordinatorError = nil;
+    [fileCoordinator coordinateReadingItemAtURL:fileURL options:0 writingItemAtURL:tempFileURL options:0 error:&fileCoordinatorError byAccessor:^(NSURL * _Nonnull newReadingURL, NSURL * _Nonnull newWritingURL) {
+        [fileMan copyItemAtURL:newReadingURL toURL:newWritingURL error:&error];
+    }];
+    
+    NSString *errorMessage;
+    if (fileCoordinatorError) {
+        errorMessage = [NSString stringWithFormat:@"File coordinator error copying file %@ to temp file %@:\n%@", [[fileURL path] sandboxRelativePath], [[tempFileURL path] sandboxRelativePath], fileCoordinatorError];
+    } else if (error) {
+        errorMessage = [NSString stringWithFormat:@"Error copying file %@ to temp file %@:\n%@", [[fileURL path] sandboxRelativePath], [[tempFileURL path] sandboxRelativePath], error];
+    }
+    if (errorMessage.length > 0) {
+        NSLog(@"%@", errorMessage);
         tempFileURL = nil;
     }
     
     if (tempFileURL) {
         // give the copy a fresh modification date for retry accounting purposes
-        [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:tempFileURL.path error:nil];
+        [fileCoordinator coordinateWritingItemAtURL:tempFileURL options:0 error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+            [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:tempFileURL.path error:nil];
+        }];
         
         // keep track of what file it's a copy of
         [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
-            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
             NSMutableDictionary *filesForTempFiles = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
             if (!filesForTempFiles) {
                 filesForTempFiles = [NSMutableDictionary dictionary];
@@ -262,7 +287,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 {
     NSString *file = nil;
     if (tempFilePath.length) {
-        file = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadFilesKey][[tempFilePath sandboxRelativePath]];
+        file = [[BridgeSDK sharedUserDefaults] dictionaryForKey:kUploadFilesKey][[tempFilePath sandboxRelativePath]];
     }
     
     return file;
@@ -270,7 +295,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)removeFileForTempFile:(NSString *)tempFilePath
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSMutableDictionary *files = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
     [files removeObjectForKey:[tempFilePath sandboxRelativePath]];
     [defaults setObject:files forKey:kUploadFilesKey];
@@ -279,7 +304,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)removeTempFilesWithOriginalFile:(NSString *)filePath exceptFile:(NSString *)saveFilePath
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSMutableDictionary *files = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
     for (NSString *tempFilePath in files.allKeys) {
         NSString *key = [tempFilePath sandboxRelativePath];
@@ -304,9 +329,16 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     if  (!tempFile) {
         NSLog(@"Could not create NSURL for temp file %@", tempFilePath);
     }
-    NSError *error;
-    if (![[NSFileManager defaultManager] removeItemAtURL:tempFile error:&error]) {
-        NSLog(@"Failed to remove temp file %@, error:\n%@", tempFile.path, error);
+    __block NSError *error;
+    NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    NSError *fileCoordinatorError = nil;
+    [fileCoordinator coordinateWritingItemAtURL:tempFile options:NSFileCoordinatorWritingForDeleting error:&fileCoordinatorError byAccessor:^(NSURL * _Nonnull newURL) {
+        if (![[NSFileManager defaultManager] removeItemAtURL:tempFile error:&error]) {
+            NSLog(@"Failed to remove temp file %@, error:\n%@", tempFile.path, error);
+        }
+    }];
+    if (fileCoordinatorError != nil) {
+        NSLog(@"Failed to coordinate removal of temp file %@, error:\n%@", tempFile.path, error);
     }
 }
 
@@ -345,7 +377,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)setUploadRequestJSON:(id)json forFile:(NSString *)fileURLString
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     
     NSMutableDictionary *uploadRequests = [[defaults dictionaryForKey:kUploadRequestsKey] mutableCopy];
     if (!uploadRequests) {
@@ -362,7 +394,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (NSDictionary *)uploadRequestJSONForFile:(NSString *)fileURLString
 {
-    return [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadRequestsKey][[fileURLString sandboxRelativePath]];
+    return [[BridgeSDK sharedUserDefaults] dictionaryForKey:kUploadRequestsKey][[fileURLString sandboxRelativePath]];
 }
 
 - (SBBUploadRequest *)uploadRequestForFile:(NSString *)fileURLString
@@ -378,7 +410,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 
 - (void)setUploadSessionJSON:(id)json forFile:(NSString *)fileURLString
 {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     
     NSMutableDictionary *uploadSessions = [[defaults dictionaryForKey:kUploadSessionsKey] mutableCopy];
     if (!uploadSessions) {
@@ -396,7 +428,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 - (SBBUploadSession *)uploadSessionForFile:(NSString *)fileURLString
 {
     SBBUploadSession *uploadSession = nil;
-    id json = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadSessionsKey][[fileURLString sandboxRelativePath]];
+    id json = [[BridgeSDK sharedUserDefaults] dictionaryForKey:kUploadSessionsKey][[fileURLString sandboxRelativePath]];
     if (json) {
         uploadSession = [self.cleanObjectManager objectFromBridgeJSON:json];
     }
@@ -407,7 +439,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 - (NSDate *)retryTimeForFile:(NSString *)fileURLString
 {
     NSDate *retryTime = nil;
-    NSString *jsonDate = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kSBBUploadRetryAfterDelayKey][[fileURLString sandboxRelativePath]];
+    NSString *jsonDate = [[BridgeSDK sharedUserDefaults] dictionaryForKey:kSBBUploadRetryAfterDelayKey][[fileURLString sandboxRelativePath]];
     if (jsonDate) {
         retryTime = [NSDate dateWithISO8601String:jsonDate];
     }
@@ -427,7 +459,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 }
 
 - (void)setRetryTime:(NSDate *)retryTime forFile:(NSString *)fileURLString {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     
     NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
     if (!retryUploads) {
@@ -445,7 +477,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 - (void)retryUploadsAfterDelay
 {
     [((SBBNetworkManager *)self.networkManager) performBlockOnBackgroundDelegateQueue:^{
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         
         NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
         for (NSString *fileURLString in retryUploads.allKeys) {
@@ -655,7 +687,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     // If we don't have a completion handler for it, though, set it up with the given one before returning.
     // Compare just the sandbox-relative parts, as the app sandbox path may have changed. But completion handlers, being in-memory-only,
     // are indexed by the full path.
-    NSArray *uploadTempFiles = [[NSUserDefaults standardUserDefaults] dictionaryForKey:kUploadFilesKey].allKeys;
+    NSArray *uploadTempFiles = [[BridgeSDK sharedUserDefaults] dictionaryForKey:kUploadFilesKey].allKeys;
     NSString *sandboxRelativePath = [fileUrl.path sandboxRelativePath];
     for (NSString *uploadTempFile in uploadTempFiles) {
         NSString *uploadFile = [self fileForTempFile:uploadTempFile];
@@ -685,13 +717,22 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     }
     
     NSString *name = [fileUrl lastPathComponent];
-    NSData *fileData = [NSData dataWithContentsOfURL:tempFileURL];
+    NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    NSError *fileCoordinatorError = nil;
+    __block NSData *fileData = nil;
+    
+    [fileCoordinator coordinateReadingItemAtURL:tempFileURL options:0 error:&fileCoordinatorError byAccessor:^(NSURL *newURL) {
+        fileData = [NSData dataWithContentsOfURL:newURL];
+    }];
+    
     if (!fileData) {
         if (completion) {
-            completion([NSError generateSBBTempFileReadErrorForURL:fileUrl]);
+            NSError *error = fileCoordinatorError ?: [NSError generateSBBTempFileReadErrorForURL:fileUrl];
+            completion(error);
         }
         return nil;
     }
+    
     SBBUploadRequest *uploadRequest = [SBBUploadRequest new];
     uploadRequest.name = name;
     uploadRequest.contentLengthValue = fileData.length;
@@ -771,12 +812,15 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         
         // if there's no old completion handler, get the old "original" file and delete it; the temp file is our new original
         // also create a new completion handler to delete this file upon successful upload
+        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
         if (!completion) {
             NSString *originalFile = [[self fileForTempFile:filePath] fullyQualifiedPath];
             if (originalFile.length) {
-                if  ([fileMan fileExistsAtPath:originalFile]) {
-                    [fileMan removeItemAtPath:originalFile error:nil];
-                }
+                [fileCoordinator coordinateWritingItemAtURL:[NSURL fileURLWithPath:originalFile] options:NSFileCoordinatorWritingForDeleting error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                    if  ([fileMan fileExistsAtPath:newURL.path]) {
+                        [fileMan removeItemAtURL:newURL error:nil];
+                    }
+                }];
             }
             
             // now remove any and all other temp files which are copies of this same original
@@ -800,10 +844,12 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                 if  (!fileUrl) {
                     NSLog(@"Could not create NSURL for file %@", filePath);
                 }
-                NSError *error;
-                if (![fileMan removeItemAtURL:fileUrl error:&error]) {
-                    NSLog(@"Failed to remove file %@, error:\n%@", filePath, error);
-                }
+                [fileCoordinator coordinateWritingItemAtURL:fileUrl options:NSFileCoordinatorWritingForDeleting error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                    NSError *error;
+                    if (![fileMan removeItemAtURL:newURL error:&error]) {
+                        NSLog(@"Failed to remove file %@, error:\n%@", fileUrl, error);
+                    }
+                }];
             }
             
             if (completion) {
@@ -887,7 +933,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 {
     NSURLSession *bgSession = ((SBBNetworkManager *)self.networkManager).backgroundSession;
     void (^block)(NSArray<__kindof NSURLSessionTask *> * _Nullable tasks) = ^(NSArray<__kindof NSURLSessionTask *> *tasks){
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         NSFileManager *fileMan = [NSFileManager defaultManager];
         NSMutableSet *filesRetrying = [NSMutableSet set];
         
@@ -898,6 +944,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         NSArray *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey].allKeys;
         NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
         NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
+        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
         for (NSString *relativePath in uploadRequests.allKeys) {
             NSString *filePath = [relativePath fullyQualifiedPath];
             if ([filesRetrying containsObject:filePath]) {
@@ -905,7 +952,12 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
             }
             if (!uploadSessions[relativePath]) {
                 // get the modification date of the file, if it still exists
-                NSDictionary *fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
+                NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+                __block NSDictionary *fileAttrs;
+                [fileCoordinator coordinateReadingItemAtURL:fileURL options:NSFileCoordinatorReadingImmediatelyAvailableMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                    fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
+                }];
+                
                 if (fileAttrs) {
                     NSDate *modified = [fileAttrs fileModificationDate];
                     if ([modified timeIntervalSinceNow] < -oneDay) {
@@ -914,7 +966,9 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                         [self setRetryTime:nil forFile:filePath];
                         
                         // ...and update its modification date so we don't keep thinking it's due for a retry
-                        [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
+                        [fileCoordinator coordinateWritingItemAtURL:fileURL options:NSFileCoordinatorWritingContentIndependentMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                            [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
+                        }];
                         
                         // ...and cancel any existing tasks trying to upload the same file
                         tasks = [self cancelTasksForFile:filePath inTasks:tasks];
@@ -950,7 +1004,9 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                 [self setUploadSessionJSON:nil forFile:filePath];
                 
                 // 'touch' the file so it doesn't look orphaned again too soon
-                [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
+                [fileCoordinator coordinateWritingItemAtURL:[NSURL fileURLWithPath:filePath] options:NSFileCoordinatorWritingContentIndependentMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                    [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
+                }];
                 
                 // ...and cancel any existing tasks trying to upload the same file
                 tasks = [self cancelTasksForFile:filePath inTasks:tasks];
@@ -995,7 +1051,10 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
             NSString *filePath = ((NSURL *)evaluatedObject).path;
             BOOL ofInterest = ![uploadFiles containsObject:[filePath sandboxRelativePath]];
             if (ofInterest) {
-                NSDictionary *fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
+                __block NSDictionary *fileAttrs = nil;
+                [fileCoordinator coordinateReadingItemAtURL:(NSURL *)evaluatedObject options:NSFileCoordinatorReadingImmediatelyAvailableMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                    fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
+                }];
                 if (fileAttrs) {
                     NSDate *modified = [fileAttrs fileModificationDate];
                     if ([modified timeIntervalSinceNow] >= -oneDay) {
@@ -1049,9 +1108,16 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         if  (!derelictFileURL) {
             NSLog(@"Could not create NSURL for derelict file %@", derelictFile);
         }
-        NSError *error;
-        if (![[NSFileManager defaultManager] removeItemAtURL:derelictFileURL error:&error]) {
-            NSLog(@"Failed to remove derelict file %@, error:\n%@", derelictFileURL.path, error);
+        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+        NSError *fileCoordinatorError = nil;
+        [fileCoordinator coordinateWritingItemAtURL:derelictFileURL options:NSFileCoordinatorWritingForDeleting error:&fileCoordinatorError byAccessor:^(NSURL * _Nonnull newURL) {
+            NSError *error;
+            if (![[NSFileManager defaultManager] removeItemAtURL:derelictFileURL error:&error]) {
+                NSLog(@"Failed to remove derelict file %@, error:\n%@", derelictFileURL.path, error);
+            }
+        }];
+        if (fileCoordinatorError != nil) {
+            NSLog(@"Failed to coordinate removal of derelict file %@, error:\n%@", derelictFileURL.path, error);
         }
     }
     
@@ -1074,7 +1140,7 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     NSLog(@"Session became invalid! Error:\n%@", error);
     
     // handle completion (failure) for all outstanding uploads
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSDictionary *files = [defaults dictionaryForKey:kUploadFilesKey];
     for (NSString *file in files.allKeys) {
         [self completeUploadOfFile:file withError:error];
@@ -1086,10 +1152,18 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     [defaults removeObjectForKey:kUploadSessionsKey];
     [defaults removeObjectForKey:kUploadFilesKey];
     
-    NSError *fileError;
-    [[NSFileManager defaultManager] removeItemAtURL:[self tempUploadDirURL] error:&fileError];
-    if (fileError) {
-        NSLog(@"Error removing temp upload file directory:\n%@", fileError);
+    NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    NSError *fileCoordinatorError = nil;
+    NSURL *tempUploadDir = [self tempUploadDirURL];
+    [fileCoordinator coordinateWritingItemAtURL:tempUploadDir options:NSFileCoordinatorWritingForDeleting error:&fileCoordinatorError byAccessor:^(NSURL * _Nonnull newURL) {
+        NSError *fileError;
+        [[NSFileManager defaultManager] removeItemAtURL:tempUploadDir error:&fileError];
+        if (fileError) {
+            NSLog(@"Error removing temp upload file directory:\n%@", fileError);
+        }
+    }];
+    if (fileCoordinatorError != nil) {
+        NSLog(@"Error coordinating removal of temp upload file directory:\n%@", fileCoordinatorError);
     }
 }
 

@@ -30,19 +30,49 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "BridgeSDK.h"
+#import "BridgeSDK+Internal.h"
 #import "SBBAuthManagerInternal.h"
 #import "SBBCacheManager.h"
+#import "BridgeAPI/SBBBridgeInfo+Internal.h"
+#import "SBBEncryptor.h"
 
 const NSInteger SBBDefaultCacheDaysAhead = 4;
 const NSInteger SBBDefaultCacheDaysBehind = 7;
-const NSInteger SBBMaxSupportedCacheDays = 30;
+
+id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 
 @implementation BridgeSDK
 
-+ (void)setupWithBridgeInfo:(id <SBBBridgeInfoProtocol>)bridgeInfo {
-    // TODO: syoung 01/18/2017 Keep a pointer to the bridge info protocol
-    [self setupWithStudy:bridgeInfo.studyIdentifier cacheDaysAhead:bridgeInfo.cacheDaysAhead cacheDaysBehind:bridgeInfo.cacheDaysBehind environment:bridgeInfo.environment];
++ (void)setup
+{
+    NSDictionary *plistDict = [SBBBridgeInfo dictionaryFromDefaultPlists];
+    SBBBridgeInfo *defaultInfo = [[SBBBridgeInfo alloc] initWithDictionary:plistDict];
+    [self setupWithBridgeInfo:defaultInfo];
+}
+
++ (void)setupWithBridgeInfo:(id<SBBBridgeInfoProtocol>)info
+{
+    SBBBridgeInfo *sharedInfo = [SBBBridgeInfo shared];
+    [sharedInfo copyFromBridgeInfo:info];
+    gSBBUseCache = sharedInfo.cacheDaysAhead > 0 || sharedInfo.cacheDaysBehind > 0;
+    
+    // make sure the Bridge network manager is set up as the delegate for the background session
+    [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
+
+    // now kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
+    // manager instance so its notification handlers get set up in time)
+    id<SBBUploadManagerProtocol> uMan = SBBComponent(SBBUploadManager);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSArray<NSString *> *uploads = SBBEncryptor.encryptedFilesAwaitingUploadResponse;
+        for (NSString *file in uploads) {
+            NSURL *fileUrl = [NSURL fileURLWithPath:file];
+            [uMan uploadFileToBridge:fileUrl completion:^(NSError *error) {
+                if (!error) {
+                    [SBBEncryptor cleanUpEncryptedFile:fileUrl];
+                }
+            }];
+        }
+    });
 }
 
 + (void)setupWithStudy:(NSString *)study
@@ -81,19 +111,69 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 
 + (void)setupWithStudy:(NSString *)study cacheDaysAhead:(NSInteger)cacheDaysAhead cacheDaysBehind:(NSInteger)cacheDaysBehind environment:(SBBEnvironment)environment
 {
-    gSBBAppStudy = study;
-    gSBBDefaultEnvironment = environment;
-    gSBBUseCache = cacheDaysAhead > 0 || cacheDaysBehind > 0;
-    gSBBCacheDaysAhead = MIN(SBBMaxSupportedCacheDays, cacheDaysAhead);
-    gSBBCacheDaysBehind = MIN(SBBMaxSupportedCacheDays, cacheDaysBehind);
+    NSDictionary *bridgeInfoDict = @{
+                                     NSStringFromSelector(@selector(studyIdentifier)) : study,
+                                     NSStringFromSelector(@selector(environment)) : @(environment),
+                                     NSStringFromSelector(@selector(cacheDaysAhead)) : @(cacheDaysAhead),
+                                     NSStringFromSelector(@selector(cacheDaysBehind)) : @(cacheDaysBehind)
+                                     };
+    SBBBridgeInfo *bridgeInfo = [[SBBBridgeInfo alloc] initWithDictionary:bridgeInfoDict];
     
-    // make sure the Bridge network manager is set up as the delegate for the background session
-    [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
+    [self setupWithBridgeInfo:bridgeInfo];
 }
 
 + (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment
 {
     [self setupWithStudy:appPrefix environment:environment];
+}
+
++ (NSUserDefaults *)sharedUserDefaults
+{
+    static NSUserDefaults *bridgeUserDefaults = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if ([SBBBridgeInfo shared].appGroupIdentifier.length > 0) {
+            bridgeUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:[SBBBridgeInfo shared].appGroupIdentifier];
+        } else {
+            bridgeUserDefaults = [NSUserDefaults standardUserDefaults];
+        }
+    });
+    
+    return bridgeUserDefaults;
+}
+
++ (BOOL)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+{
+    BOOL restored = NO;
+    if ([identifier hasPrefix:kBackgroundSessionIdentifier]) {
+        [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
+        restored = YES;
+    }
+    
+    return restored;
+}
+
++ (void)setAuthDelegate:(id<SBBAuthManagerDelegateProtocol>)delegate
+{
+    [SBBComponent(SBBAuthManager) setAuthDelegate:delegate];
+}
+
++ (void)setErrorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
+{
+    gSBBErrorUIDelegate = delegate;
+}
+
++ (BOOL)isRunningInAppExtension
+{
+    // "An app extension target’s Info.plist file identifies the extension point and may specify some details
+    // about your extension. At a minimum, the file includes the NSExtension key and a dictionary of keys and
+    // values that the extension point specifies."
+    // (see https://developer.apple.com/library/content/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html)
+    // We also double-check that the Bundle OS Type Code is not APPL, just to be sure they haven't for some
+    // reason added that key to their app's infoDict.
+    NSDictionary *infoDict = NSBundle.mainBundle.infoDictionary;
+    return (![infoDict[@"CFBundlePackageType"] isEqualToString:@"APPL"] &&
+            infoDict[@"NSExtension"] != nil);
 }
 
 @end

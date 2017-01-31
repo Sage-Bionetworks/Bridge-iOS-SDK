@@ -28,7 +28,7 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "BridgeSDK.h"
+#import "BridgeSDK+Internal.h"
 #import "SBBNetworkManagerInternal.h"
 #import "SBBErrors.h"
 #import "NSBundle+SBBAdditions.h"
@@ -36,8 +36,6 @@
 #import "Reachability.h"
 #import "UIDevice+Hardware.h"
 #import "NSDate+SBBAdditions.h"
-
-SBBEnvironment gSBBDefaultEnvironment;
 
 const NSInteger kMaxRetryCount = 5;
 
@@ -118,7 +116,7 @@ NSString *kAPIPrefix = @"webservices";
 @property (nonatomic, strong) NSURLSession * mainSession; //For data tasks
 @property (nonatomic, strong) NSURLSession * backgroundSession; //For upload/download tasks
 
-@property (nonatomic, copy) void (^backgroundCompletionHandler)(void);
+@property (nonatomic, strong) NSMutableDictionary *backgroundCompletionHandlers;
 @property (nonatomic, strong) NSMutableDictionary *uploadCompletionHandlers;
 @property (nonatomic, strong) NSMutableDictionary *downloadCompletionHandlers;
 
@@ -181,7 +179,7 @@ NSString *kAPIPrefix = @"webservices";
 
 + (instancetype)defaultComponent
 {
-    if (!gSBBAppStudy) {
+    if (![SBBBridgeInfo shared].studyIdentifier) {
         return nil;
     }
     
@@ -189,10 +187,10 @@ NSString *kAPIPrefix = @"webservices";
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        SBBEnvironment environment = gSBBDefaultEnvironment;
+        SBBEnvironment environment = [SBBBridgeInfo shared].environment;
         
         NSString *baseURL = [self baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
-        NSString *bridgeStudy = gSBBAppStudy;
+        NSString *bridgeStudy = [SBBBridgeInfo shared].studyIdentifier;
         shared = [[self alloc] initWithBaseURL:baseURL bridgeStudy:bridgeStudy];
         shared.environment = environment;
     });
@@ -261,14 +259,47 @@ NSString *kAPIPrefix = @"webservices";
         static NSURLSession *bgSession;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:kBackgroundSessionIdentifier];
-            bgSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+            NSString *sessionIdentifier = kBackgroundSessionIdentifier;
+            if ([BridgeSDK isRunningInAppExtension]) {
+                // Uniquify it from the containing app's BridgeSDK background session and those of any other
+                // app extensions or instances thereof with the same containing app that use BridgeSDK. Note
+                // that if the extension is gone when the background upload/download finishes, the containing
+                // app will be launched to handle it, not the extension, so this string doesn't need to be
+                // preserved across multiple invocations of the extension, and this way multiple simultaneous
+                // instances of the same extension, if such a thing is possible, wouldn't interfere with
+                // each other.
+                sessionIdentifier = [sessionIdentifier stringByAppendingString:[NSUUID UUID].UUIDString];
+            }
+            bgSession = [self backgroundSessionWithIdentifier:sessionIdentifier];
         });
         
         _backgroundSession = bgSession;
     }
     
     return _backgroundSession;
+}
+
+- (NSURLSession *)backgroundSessionWithIdentifier:(NSString *)identifier
+{
+    static NSMutableDictionary *bgSessionForIdentifier = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        bgSessionForIdentifier = [NSMutableDictionary dictionary];
+    });
+    
+    NSURLSession *bgSession = bgSessionForIdentifier[identifier];
+    if (!bgSession) {
+        NSURLSessionConfiguration *config = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
+        NSString *appGroupIdentifier = SBBBridgeInfo.shared.appGroupIdentifier;
+        if (appGroupIdentifier.length > 0) {
+            // configure it with the shared container
+            config.sharedContainerIdentifier = appGroupIdentifier;
+        }
+        bgSession = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:nil];
+        bgSessionForIdentifier[identifier] = bgSession;
+    }
+    
+    return bgSession;
 }
 
 - (BOOL)isInternetConnected
@@ -464,14 +495,21 @@ NSString *kAPIPrefix = @"webservices";
     return task;
 }
 
-
+- (NSMutableDictionary *)backgroundCompletionHandlers
+{
+    if (!_backgroundCompletionHandlers) {
+        _backgroundCompletionHandlers = [NSMutableDictionary dictionary];
+    }
+    
+    return _backgroundCompletionHandlers;
+}
 
 - (void)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
-    // make sure we're being called with the expected identifier--if not, ignore
-    if ([identifier isEqualToString:kBackgroundSessionIdentifier]) {
-        [self backgroundSession];
-        _backgroundCompletionHandler = completionHandler;
+    // make sure we're being called with an expected identifier--if not, ignore
+    if ([identifier hasPrefix:kBackgroundSessionIdentifier]) {
+        [self backgroundSessionWithIdentifier:identifier];
+        _backgroundCompletionHandlers[identifier] = completionHandler;
     }
 }
 
@@ -707,6 +745,18 @@ NSString *kAPIPrefix = @"webservices";
     }
 }
 
+- (void)performBlockSyncOnBackgroundDelegateQueue:(void (^)(void))block
+{
+    NSOperationQueue *bgQueue = self.backgroundSession.delegateQueue;
+    if (bgQueue) {
+        NSOperation *op = [NSBlockOperation blockOperationWithBlock:block];
+        [bgQueue addOperations:@[op] waitUntilFinished:YES];
+    } else {
+        // do it in line
+        block();
+    }
+}
+
 #pragma mark - NSURLSessionDownloadDelegate methods
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didResumeAtOffset:(int64_t)fileOffset expectedTotalBytes:(int64_t)expectedTotalBytes
@@ -810,9 +860,10 @@ NSString *kAPIPrefix = @"webservices";
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session
 {
-    if (_backgroundCompletionHandler) {
-        _backgroundCompletionHandler();
-        _backgroundCompletionHandler = nil;
+    void (^backgroundCompletionHandler)(void) = _backgroundCompletionHandlers[session.configuration.identifier];
+    if (backgroundCompletionHandler) {
+        backgroundCompletionHandler();
+        _backgroundCompletionHandlers[session.configuration.identifier] = nil;
     }
     
     if (_backgroundTransferDelegate && [_backgroundTransferDelegate respondsToSelector:@selector(URLSessionDidFinishEventsForBackgroundURLSession:)]) {

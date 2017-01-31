@@ -1,8 +1,8 @@
 //
-//  SBBBridgeInfoProtocol.h
+//  SBBBridgeErrorUIDelegate.h
 //  BridgeSDK
 //
-// Copyright (c) 2017, Sage Bionetworks. All rights reserved.
+// Copyright (c) 2016, Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -30,47 +30,38 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "SBBNetworkManager.h"
+#import <BridgeSDK/SBBNetworkManager.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol SBBBridgeInfoProtocol <NSObject>
-
 /**
- Study identifier used to setup the study with Bridge
+ * If the error UI delegate conforms to this protocol then the methods included will be called as appropriate.
  */
-@property (nonatomic, readonly, copy) NSString *studyIdentifier;
+@protocol SBBBridgeErrorUIDelegate <NSObject>
 
+@optional
 /**
- Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
+ * Method called when the Bridge services return an error code that this version of the app is no longer supported.
+ * If not implemented or returns @NO then the BridgeNetworkManager will just log the error to the console.
+ * In any case it will also pass the error through to the completion handler of the call that triggered the error.
+ * This method will only be called once per app launch.
+ *
+ * @return @YES if the error has been handled by the delegate.
  */
-@property (nonatomic, readonly, copy) NSString * _Nullable certificateName;
+- (BOOL)handleUnsupportedAppVersionError:(NSError *)error networkManager:(id<SBBNetworkManagerProtocol> _Nullable)networkManager;
 
+@optional
 /**
- If using BridgeSDK's built-in caching, number of days ahead to cache.
- Set both this and cacheDaysBehind to 0 to disable caching in BridgeSDK.
+ * Method called when the Bridge services return an error code that the user has not consented.
+ * If not implemented or returns @NO then the BridgeNetworkManager will just log the error to the console.
+ * In any case it will also pass the error through to the completion handler of the call that triggered the error.
+ *
+ * The sessionInfo object will be of type SBBUserSessionInfo unless the UserSessionInfo type has been mapped in
+ * SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:.
+ *
+ * @return @YES if the error has been handled by the delegate.
  */
-@property (nonatomic, readonly) NSInteger cacheDaysAhead;
-
-/**
- If using BridgeSDK's built-in caching, number of days behind to cache.
- Set both this and cacheDaysAhead to 0 to disable caching in BridgeSDK.
- */
-@property (nonatomic, readonly) NSInteger cacheDaysBehind;
-
-/**
- Server environment to use.
- Generally you should not set this to anything other than SBBEnvironmentProd unless you are running your own
- Bridge server, and then only to test changes to the server which you have not yet deployed to production.
- */
-@property (nonatomic, readonly) SBBEnvironment environment;
-
-/**
- App group identifier used for the suite name of NSUserDefaults, and for the name of the shared
- container, which is used both to configure the background session and as the place to store
- temporary copies of files being uploaded to Bridge (if provided).
- */
-@property (nonatomic, readonly, copy) NSString * _Nullable appGroupIdentifier;
+- (BOOL)handleUserNotConsentedError:(NSError*)error sessionInfo:(id)sessionInfo networkManager:(id<SBBNetworkManagerProtocol> _Nullable)networkManager;
 
 @end
 

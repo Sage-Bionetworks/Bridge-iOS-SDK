@@ -1,10 +1,8 @@
 //
-//  BridgeSDKInternal.h
+//  SBBBridgeInfo.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 7/23/15.
-//
-//	Copyright (c) 2015, Sage Bionetworks
+//	Copyright (c) 2017, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,10 +28,10 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#define GLOBAL_API_PREFIX @"/v3"
+#import <BridgeSDK/SBBBridgeInfoProtocol.h>
 
-// SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
-#define STRINGIZE(x) #x
-#define STRINGIZE2(x) STRINGIZE(x)
-#define SBBBUNDLEIDSTRING @STRINGIZE2(SBBBUNDLEID)
+@interface SBBBridgeInfo : NSObject <SBBBridgeInfoProtocol>
 
++ (instancetype)shared;
+
+@end

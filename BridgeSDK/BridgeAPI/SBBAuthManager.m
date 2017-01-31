@@ -35,7 +35,7 @@
 #import "UICKeyChainStore.h"
 #import "NSError+SBBAdditions.h"
 #import "SBBComponentManager.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 #import "SBBUserManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
 #import "SBBParticipantManagerInternal.h"
@@ -48,8 +48,6 @@ NSString * const kSBBAuthSignInAPI =       AUTH_API @"/signIn";
 NSString * const kSBBAuthSignOutAPI =      AUTH_API @"/signOut";
 NSString * const kSBBAuthRequestResetAPI = AUTH_API @"/requestResetPassword";
 NSString * const kSBBAuthResetAPI =        AUTH_API @"/resetPassword";
-
-NSString *gSBBAppStudy = nil;
 
 NSString *kBridgeKeychainService = @"SageBridge";
 NSString *kBridgeAuthManagerFirstRunKey = @"SBBAuthManagerFirstRunCompleted";
@@ -267,11 +265,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         _networkManager = networkManager;
         
         //Clear keychain on first run in case of reinstallation
-        BOOL firstRunDone = [[NSUserDefaults standardUserDefaults] boolForKey:kBridgeAuthManagerFirstRunKey];
+        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
+        BOOL firstRunDone = [defaults boolForKey:kBridgeAuthManagerFirstRunKey];
         if (!firstRunDone) {
             [self.class resetAuthKeychain];
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kBridgeAuthManagerFirstRunKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
+            [defaults setBool:YES forKey:kBridgeAuthManagerFirstRunKey];
+            [defaults synchronize];
         }
     }
     
@@ -305,7 +304,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (NSURLSessionTask *)signUpStudyParticipant:(SBBSignUp *)signUp completion:(SBBNetworkManagerCompletionBlock)completion
 {
     NSMutableDictionary *json = [[signUp dictionaryRepresentation] mutableCopy];
-    json[@"study"] = gSBBAppStudy;
+    json[@"study"] = [SBBBridgeInfo shared].studyIdentifier;
     return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:json completion:completion];
 }
 
@@ -329,7 +328,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionTask *)resendEmailVerification:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthResendAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
+    return [_networkManager post:kSBBAuthResendAPI headers:nil parameters:@{@"study":[SBBBridgeInfo shared].studyIdentifier, @"email":email} completion:completion];
 }
 
 - (NSURLSessionTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
@@ -339,7 +338,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":[SBBBridgeInfo shared].studyIdentifier, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         // check for and handle app version out of date error (n.b.: our networkManager instance is a vanilla one, and we need
         // a Bridge network manager for this)
         id<SBBBridgeNetworkManagerProtocol> bridgeNetworkManager = (id<SBBBridgeNetworkManagerProtocol>)SBBComponent(SBBBridgeNetworkManager);
@@ -494,7 +493,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionTask *)requestPasswordResetForEmail:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthRequestResetAPI headers:nil parameters:@{@"study":gSBBAppStudy, @"email":email} completion:completion];
+    return [_networkManager post:kSBBAuthRequestResetAPI headers:nil parameters:@{@"study":[SBBBridgeInfo shared].studyIdentifier, @"email":email} completion:completion];
 }
 
 - (NSURLSessionTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
@@ -520,12 +519,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)sessionTokenKey
 {
-    return [NSString stringWithFormat:envSessionTokenKeyFormat[_networkManager.environment], gSBBAppStudy];
+    return [NSString stringWithFormat:envSessionTokenKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
 }
 
 - (NSString *)sessionTokenFromKeychain
 {
-    if (!gSBBAppStudy) {
+    if (![SBBBridgeInfo shared].studyIdentifier) {
         return nil;
     }
     
@@ -539,12 +538,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)emailKey
 {
-    return [NSString stringWithFormat:envEmailKeyFormat[_networkManager.environment], gSBBAppStudy];
+    return [NSString stringWithFormat:envEmailKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
 }
 
 - (NSString *)emailFromKeychain
 {
-    if (!gSBBAppStudy) {
+    if (![SBBBridgeInfo shared].studyIdentifier) {
         return nil;
     }
     
@@ -558,12 +557,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)passwordKey
 {
-    return [NSString stringWithFormat:envPasswordKeyFormat[_networkManager.environment], gSBBAppStudy];
+    return [NSString stringWithFormat:envPasswordKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
 }
 
 - (NSString *)passwordFromKeychain
 {
-    if (!gSBBAppStudy) {
+    if (![SBBBridgeInfo shared].studyIdentifier) {
         return nil;
     }
     

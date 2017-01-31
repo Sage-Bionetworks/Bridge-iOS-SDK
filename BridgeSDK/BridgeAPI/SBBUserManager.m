@@ -32,7 +32,7 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManager.h"
 #import "SBBObjectManager.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 #import "NSDate+SBBAdditions.h"
 #import "SBBDataGroups.h"
 #import "SBBCacheManager.h"

@@ -34,7 +34,7 @@
 #import "SBBObjectManager.h"
 #import "SBBObjectManagerInternal.h"
 #import "NSDate+SBBAdditions.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 #import "ModelObjectInternal.h"
 #import "SBBErrors.h"
 

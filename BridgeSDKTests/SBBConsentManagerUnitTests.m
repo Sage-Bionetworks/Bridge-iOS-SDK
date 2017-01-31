@@ -34,7 +34,7 @@ static NSString * const kSBBKeyAPIObjectType = @"type";
 - (void)testRetrieve {
   // construct consent manager with mock response
   NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01", kSBBKeyAPIObjectType:@"ConsentSignature"};
-  NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, gSBBAppStudy];
+  NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, [SBBBridgeInfo shared].studyIdentifier];
   [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
   SBBConsentManager* consentMan = (SBBConsentManager *)SBBComponent(SBBConsentManager);
 
@@ -56,7 +56,7 @@ static NSString * const kSBBKeyAPIObjectType = @"type";
   // construct consent manager with mock response
   NSDictionary* responseDict = @{kSBBKeyName:@"Eggplant McTester", kSBBKeyBirthdate:@"1970-01-01",
     kSBBKeyImageData:imageBase64String, kSBBKeyImageMimeType:kSBBMimeTypePng, kSBBKeyAPIObjectType:@"ConsentSignature"};
-  NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, gSBBAppStudy];
+  NSString *endpoint = [NSString stringWithFormat:kSBBConsentSubpopulationsAPIFormat, [SBBBridgeInfo shared].studyIdentifier];
   [self.mockURLSession setJson:responseDict andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
   id<SBBConsentManagerProtocol> consentMan = SBBComponent(SBBConsentManager);
 

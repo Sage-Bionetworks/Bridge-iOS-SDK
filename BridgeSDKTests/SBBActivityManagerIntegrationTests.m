@@ -162,7 +162,7 @@
         if (error) {
             NSLog(@"Error getting tasks for %@:\n%@", tzStr, error);
         }
-        XCTAssert([tasksList isKindOfClass:[NSArray class]], @"Method returned an NSArray");
+        XCTAssert([tasksList isKindOfClass:[NSArray class]], @"Method returned %@ instead of NSArray", NSStringFromClass([tasksList class]));
         if (tasksList.count) {
             SBBScheduledActivity *task = tasksList[0];
             XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], @"Method returned a list of ScheduledActivity objects");

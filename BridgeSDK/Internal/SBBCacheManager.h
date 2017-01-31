@@ -32,15 +32,10 @@
 @import Foundation;
 #import "SBBComponent.h"
 #import "SBBAuthManager.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
 
-/// Global flag indicating whether to use internal persistent object cache. Should be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy:useCache: class method.
+/// Global flag indicating whether to use internal persistent object cache. Should be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setup or setupWithBridgeInfo: class method.
 extern  BOOL gSBBUseCache;
-
-// Global integers indicating how far ahead and behind to use persistent object cache. Should be set before attempting to access Bridge APIs, usually by calling the BridgeSDK setupWithStudy:cacheDaysAhead:cacheDaysBehind class method.
-extern  NSInteger gSBBCacheDaysAhead;
-extern  NSInteger gSBBCacheDaysBehind;
-
 
 @class SBBBridgeObject;
 @class ModelObject;

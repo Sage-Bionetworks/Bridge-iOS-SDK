@@ -1,10 +1,8 @@
 //
-//  SBBAuthManagerInternal.h
+//  SBBBridgeInfo+Internal.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/16/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2017, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,29 +28,14 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBAuthManager.h"
+#import "SBBBridgeInfo.h"
 
-extern NSString * const kSBBAuthSignUpAPI;
-extern NSString * const kSBBAuthResendAPI;
-extern NSString * const kSBBAuthSignInAPI;
-extern NSString * const kSBBAuthSignOutAPI;
-extern NSString * const kSBBAuthRequestResetAPI;
-extern NSString * const kSBBAuthResetAPI;
+@interface SBBBridgeInfo (internal)
 
-@protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>
++ (NSMutableDictionary *)dictionaryFromDefaultPlists;
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
 
-- (BOOL)isAuthenticated;
-- (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
-- (void)setSessionToken:(NSString *)sessionToken;
-- (void)clearSessionToken;
-
-@end
-
-@interface SBBAuthManager(internal)<SBBAuthManagerInternalProtocol>
-
-- (void)clearKeychainStore;
-
-- (NSString *)savedEmail;
-- (NSString *)savedPassword;
+- (void)copyFromBridgeInfo:(id<SBBBridgeInfoProtocol>)info;
+- (void)setStudyIdentifier:(NSString *)studyIdentifier;
 
 @end

@@ -35,6 +35,7 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBErrors.h"
 #import "NSError+SBBAdditions.h"
+#import "BridgeSDK+Internal.h"
 
 @interface SBBBridgeNetworkManager ()
 
@@ -46,7 +47,7 @@
 
 + (instancetype)defaultComponent
 {
-    if (!gSBBAppStudy) {
+    if (![SBBBridgeInfo shared].studyIdentifier) {
         return nil;
     }
     
@@ -62,10 +63,10 @@
 
 - (instancetype)initWithAuthManager:(id<SBBAuthManagerInternalProtocol>)authManager
 {
-    SBBEnvironment environment = gSBBDefaultEnvironment;
+    SBBEnvironment environment = [SBBBridgeInfo shared].environment;
     
     NSString *baseURL = [[self class] baseURLForEnvironment:environment appURLPrefix:kAPIPrefix baseURLPath:@"sagebridge.org"];
-    NSString *bridgeStudy = gSBBAppStudy;
+    NSString *bridgeStudy = [SBBBridgeInfo shared].studyIdentifier;
     if (self = [super initWithBaseURL:baseURL bridgeStudy:bridgeStudy]) {
         self.environment = environment;
         _authManager = authManager;
@@ -158,29 +159,17 @@
         // Set flag that this exception has already been thrown by the server
         _unsupportedAppVersion = YES;
         
-        // Look to see if the app delegate handles this error or if this SDK should do so.
+        // Look to see if the error UI delegate handles this error.
         // Note: check conforms to protocol to ensure that the app delegate is intentionally
         // implementing this method and not coincidentally using the same method signature for something else.
-        id appDelegate = [[UIApplication sharedApplication] delegate];
-        if (![appDelegate conformsToProtocol:@protocol(SBBBridgeAppDelegate)] ||
-            ![appDelegate respondsToSelector:@selector(handleUnsupportedAppVersionError:networkManager:)] ||
-            ![appDelegate handleUnsupportedAppVersionError:error networkManager:self])
+        if (![gSBBErrorUIDelegate conformsToProtocol:@protocol(SBBBridgeErrorUIDelegate)] ||
+            ![gSBBErrorUIDelegate respondsToSelector:@selector(handleUnsupportedAppVersionError:networkManager:)] ||
+            ![gSBBErrorUIDelegate handleUnsupportedAppVersionError:error networkManager:self])
         {
-            // Show default alert with a button tap to take the user to the app store to update
-            NSString *localizedTitle = NSLocalizedStringWithDefaultValue(@"SBB_ALERT_TITLE_UNSUPPORTED_APP", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Unsupported App Version", @"Alert title: Unsupported App Version");
-            NSString *localizedDismiss = NSLocalizedStringWithDefaultValue(@"SBB_ALERT_DISMISS_BUTTON", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Dismiss", @"Alert button: dismiss");
-            NSString *localizedAppStore = NSLocalizedStringWithDefaultValue(@"SBB_ALERT_APPSTORE_BUTTON", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"App Store", @"Alert button: App Store");
-            
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:localizedTitle message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction *dismiss = [UIAlertAction actionWithTitle:localizedDismiss style:UIAlertActionStyleDefault handler:^(UIAlertAction *__unused action) {
-            }];
-            [alertController addAction:dismiss];
-            UIAlertAction *appStore = [UIAlertAction actionWithTitle:localizedAppStore style:UIAlertActionStyleCancel handler:^(UIAlertAction * __unused action) {
-                [[UIApplication sharedApplication] openURL:[[NSBundle mainBundle] appStoreLinkURL]];
-            }];
-            [alertController addAction:appStore];
-            
-            [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:alertController animated:YES completion:nil];
+#if DEBUG
+            // Log the error to the console
+            NSLog(@"App Version Not Supported error not handled by app delegate:\n%@", error);
+#endif
         }
     }
     
@@ -191,13 +180,12 @@
 {
     if (error.code == SBBErrorCodeServerPreconditionNotMet)
     {
-        // Look to see if the app delegate handles this error.
+        // Look to see if the error UI delegate handles this error.
         // Note: check conforms to protocol to ensure that the app delegate is intentionally
         // implementing this method and not coincidentally using the same method signature for something else.
-        id appDelegate = [[UIApplication sharedApplication] delegate];
-        if (![appDelegate conformsToProtocol:@protocol(SBBBridgeAppDelegate)] ||
-            ![appDelegate respondsToSelector:@selector(handleUserNotConsentedError:sessionInfo:networkManager:)] ||
-            ![appDelegate handleUserNotConsentedError:error sessionInfo:responseObject networkManager:self])
+        if (![gSBBErrorUIDelegate conformsToProtocol:@protocol(SBBBridgeErrorUIDelegate)] ||
+            ![gSBBErrorUIDelegate respondsToSelector:@selector(handleUserNotConsentedError:sessionInfo:networkManager:)] ||
+            ![gSBBErrorUIDelegate handleUserNotConsentedError:error sessionInfo:responseObject networkManager:self])
         {
 #if DEBUG
             // Log the error to the console

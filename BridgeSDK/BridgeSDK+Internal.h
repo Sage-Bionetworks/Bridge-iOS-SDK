@@ -1,10 +1,8 @@
 //
-//  SBBAuthManagerInternal.h
+//  BridgeSDK+Internal.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/16/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2015-2017, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,29 +28,33 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBAuthManager.h"
+#import "BridgeSDK.h"
 
-extern NSString * const kSBBAuthSignUpAPI;
-extern NSString * const kSBBAuthResendAPI;
-extern NSString * const kSBBAuthSignInAPI;
-extern NSString * const kSBBAuthSignOutAPI;
-extern NSString * const kSBBAuthRequestResetAPI;
-extern NSString * const kSBBAuthResetAPI;
+#define GLOBAL_API_PREFIX @"/v3"
 
-@protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>
+// SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
+#define STRINGIZE(x) #x
+#define STRINGIZE2(x) STRINGIZE(x)
+#define SBBBUNDLEIDSTRING @STRINGIZE2(SBBBUNDLEID)
 
-- (BOOL)isAuthenticated;
-- (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
-- (void)setSessionToken:(NSString *)sessionToken;
-- (void)clearSessionToken;
+// Logging macros to prepend with file, line, & function/method info
+#define SBBPrettyLogInfo()                             \
+([NSString stringWithFormat: @"%@ line %d (%s)",    \
+@(__FILE__).lastPathComponent,                      \
+(int) (__LINE__),                                   \
+(__PRETTY_FUNCTION__)                               \
+])
+
+#define SBBLog(format, ...) NSLog(@"%@: %@", SBBPrettyLogInfo(), [NSString stringWithFormat:format, ##__VA_ARGS__])
+
+
+@protocol SBBBridgeErrorUIDelegate;
+
+extern _Nullable id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate;
+
+@interface BridgeSDK (internal)
+
++ (BOOL)isRunningInAppExtension;
 
 @end
 
-@interface SBBAuthManager(internal)<SBBAuthManagerInternalProtocol>
-
-- (void)clearKeychainStore;
-
-- (NSString *)savedEmail;
-- (NSString *)savedPassword;
-
-@end

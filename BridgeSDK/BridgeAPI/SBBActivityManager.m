@@ -37,7 +37,8 @@
 #import "SBBBridgeObjects.h"
 #import "NSDate+SBBAdditions.h"
 #import "NSError+SBBAdditions.h"
-#import "BridgeSDKInternal.h"
+#import "BridgeSDK+Internal.h"
+#import "SBBBridgeInfo.h"
 
 #define ACTIVITY_API GLOBAL_API_PREFIX @"/activities"
 
@@ -127,7 +128,8 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 
 - (NSArray<SBBScheduledActivity *> *)savedTasksFromCachedTasks:(NSArray<SBBScheduledActivity *> *)cachedTasks
 {
-    return [self filterTasks:cachedTasks forDaysAhead:gSBBCacheDaysAhead andDaysBehind:gSBBCacheDaysBehind excludeStillValid:YES];
+    SBBBridgeInfo *bridgeInfo = [SBBBridgeInfo shared];
+    return [self filterTasks:cachedTasks forDaysAhead:bridgeInfo.cacheDaysAhead andDaysBehind:bridgeInfo.cacheDaysBehind excludeStillValid:YES];
 }
 
 - (void)addSavedTasks:(NSArray<SBBScheduledActivity *> *)savedTasks toResourceList:(SBBResourceList *)resourceList
@@ -165,7 +167,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     // If caching, always request the maximum days ahead from the server so we have them cached
     // and if the desiredDaysAhead is more than the max allowed, then fetch a minimum number of
     // items per schedule.
-    NSInteger desiredDaysAhead = gSBBUseCache ? gSBBCacheDaysAhead : daysAhead;
+    NSInteger desiredDaysAhead = gSBBUseCache ? [SBBBridgeInfo shared].cacheDaysAhead : daysAhead;
     NSInteger fetchDaysAhead = MIN(kMaxAdvance, desiredDaysAhead);
     NSInteger fetchMinimumPerSchedule = (fetchDaysAhead < desiredDaysAhead) ? kMaxAdvance : 0;
     NSDictionary *parameters = @{@"daysAhead": @(fetchDaysAhead),
