@@ -47,6 +47,10 @@
 
 @property (nullable, nonatomic, retain) NSString* pattern;
 
+@property (nullable, nonatomic, retain) NSString* patternErrorMessage;
+
+@property (nullable, nonatomic, retain) NSString* patternPlaceholder;
+
 @end
 
 @implementation _SBBStringConstraints
@@ -95,6 +99,10 @@
 
     self.pattern = [dictionary objectForKey:@"pattern"];
 
+    self.patternErrorMessage = [dictionary objectForKey:@"patternErrorMessage"];
+
+    self.patternPlaceholder = [dictionary objectForKey:@"patternPlaceholder"];
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -106,6 +114,10 @@
     [dict setObjectIfNotNil:self.minLength forKey:@"minLength"];
 
     [dict setObjectIfNotNil:self.pattern forKey:@"pattern"];
+
+    [dict setObjectIfNotNil:self.patternErrorMessage forKey:@"patternErrorMessage"];
+
+    [dict setObjectIfNotNil:self.patternPlaceholder forKey:@"patternPlaceholder"];
 
 	return [dict copy];
 }
@@ -135,6 +147,10 @@
         self.minLength = managedObject.minLength;
 
         self.pattern = managedObject.pattern;
+
+        self.patternErrorMessage = managedObject.patternErrorMessage;
+
+        self.patternPlaceholder = managedObject.patternPlaceholder;
 
     }
 
@@ -173,6 +189,10 @@
     managedObject.minLength = ((id)self.minLength == [NSNull null]) ? nil : self.minLength;
 
     managedObject.pattern = ((id)self.pattern == [NSNull null]) ? nil : self.pattern;
+
+    managedObject.patternErrorMessage = ((id)self.patternErrorMessage == [NSNull null]) ? nil : self.patternErrorMessage;
+
+    managedObject.patternPlaceholder = ((id)self.patternPlaceholder == [NSNull null]) ? nil : self.patternPlaceholder;
 
     // Calling code will handle saving these changes to cacheContext.
 }

@@ -164,6 +164,8 @@
         <attribute name="maxLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="minLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="pattern" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="patternErrorMessage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="patternPlaceholder" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="StudyParticipant" parentEntity="BridgeObject" syncable="YES">
         <attribute name="attributes" optional="YES" attributeType="Transformable" syncable="YES">
@@ -380,7 +382,7 @@
         <element name="ResourceList" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
         <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="StringConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
         <element name="StudyParticipant" positionX="18" positionY="108" width="128" height="270"/>
         <element name="Survey" positionX="0" positionY="0" width="128" height="180"/>
         <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="75"/>
