@@ -884,6 +884,7 @@
 		80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestAuthManagerDelegate.m; sourceTree = "<group>"; };
 		80C5654F1E3C010900D83A72 /* BridgeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BridgeInfo.plist; sourceTree = "<group>"; };
 		80C5655F1E3C07F700D83A72 /* ios-sdk-int-tests.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ios-sdk-int-tests.pem"; sourceTree = "<group>"; };
+		80C565751E40FC4000D83A72 /* SBBDataModelV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV2.xcdatamodel; sourceTree = "<group>"; };
 		80C87F071C18E55A00FE8A63 /* _SBBDataGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBDataGroups.h; sourceTree = "<group>"; };
 		80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBDataGroups.m; sourceTree = "<group>"; };
 		80C87F0B1C18E61000FE8A63 /* SBBDataGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDataGroups.h; sourceTree = "<group>"; };
@@ -2882,6 +2883,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				80C565751E40FC4000D83A72 /* SBBDataModelV2.xcdatamodel */,
 				8055F52A1E05FD2A009F3485 /* SBBDataModelV1.xcdatamodel */,
 				80F7C33A19E5DC0D00574800 /* SBBDataModel.xcdatamodel */,
 			);

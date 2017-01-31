@@ -49,4 +49,8 @@
 
 @property (nonatomic, strong) NSString* pattern;
 
+@property (nonatomic, strong) NSString* patternErrorMessage;
+
+@property (nonatomic, strong) NSString* patternPlaceholder;
+
 @end
