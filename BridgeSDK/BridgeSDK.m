@@ -43,18 +43,17 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 
 @implementation BridgeSDK
 
-+ (void)setupWithErrorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
++ (void)setup
 {
     NSDictionary *plistDict = [SBBBridgeInfo dictionaryFromDefaultPlists];
     SBBBridgeInfo *defaultInfo = [[SBBBridgeInfo alloc] initWithDictionary:plistDict];
-    [self setupWithBridgeInfo:defaultInfo errorUIDelegate:delegate];
+    [self setupWithBridgeInfo:defaultInfo];
 }
 
-+ (void)setupWithBridgeInfo:(id<SBBBridgeInfoProtocol>)info errorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
++ (void)setupWithBridgeInfo:(id<SBBBridgeInfoProtocol>)info
 {
     SBBBridgeInfo *sharedInfo = [SBBBridgeInfo shared];
     [sharedInfo copyFromBridgeInfo:info];
-    gSBBErrorUIDelegate = delegate;
     gSBBUseCache = sharedInfo.cacheDaysAhead > 0 || sharedInfo.cacheDaysBehind > 0;
     
     // make sure the Bridge network manager is set up as the delegate for the background session
@@ -120,7 +119,7 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
                                      };
     SBBBridgeInfo *bridgeInfo = [[SBBBridgeInfo alloc] initWithDictionary:bridgeInfoDict];
     
-    [self setupWithBridgeInfo:bridgeInfo errorUIDelegate:nil];
+    [self setupWithBridgeInfo:bridgeInfo];
 }
 
 + (void)setupWithAppPrefix:(NSString *)appPrefix environment:(SBBEnvironment)environment
@@ -152,6 +151,16 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
     }
     
     return restored;
+}
+
++ (void)setAuthDelegate:(id<SBBAuthManagerDelegateProtocol>)delegate
+{
+    [SBBComponent(SBBAuthManager) setAuthDelegate:delegate];
+}
+
++ (void)setErrorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
+{
+    gSBBErrorUIDelegate = delegate;
 }
 
 + (BOOL)isRunningInAppExtension
