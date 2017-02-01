@@ -32,6 +32,8 @@
 
 #import "NSBundle+SBBAdditions.h"
 
+const NSString *kPrivacyPolicyUrlStringKey = @"PrivacyPolicyUrlString";
+
 @implementation NSBundle (SBBAdditions)
 
 - (NSURL * _Nonnull)appStoreLinkURL
@@ -78,6 +80,10 @@
     replace(@"ž", @"z");
     
     return [NSURL URLWithString:[NSString stringWithFormat:@"http://appstore.com/%@", appName]];
+}
+
+- (NSURL * _Nonnull)privacyPolicyURL {
+    return [NSURL URLWithString:self.infoDictionary[kPrivacyPolicyUrlStringKey]];
 }
 
 - (NSString *)appName {
