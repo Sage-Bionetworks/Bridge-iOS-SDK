@@ -72,14 +72,16 @@ NS_ASSUME_NONNULL_BEGIN
  @param     dictionary              Dictionary to be inserted into the zip archive.
  
  @param     filename                Filename for the json data to be included without path extension
+ 
+ @param     createdOn               File creation timestamp to use in info.json
  */
-- (void)insertDictionaryIntoArchive:(NSDictionary *)dictionary filename:(NSString *)filename;
+- (void)insertDictionaryIntoArchive:(NSDictionary *)dictionary filename:(NSString *)filename createdOn:(NSDate *)createdOn;
 
 
 /**
  Inserts the data from the file at the url.
  
- @param     url                     URL where the file exists
+ @param     url                     URL where the file exists. The original file's creation date will be used as the creation timestamp in info.json
  
  @param     filename                Filename for the json data to be included without path extension (path extension will be preserved from the url).
  */
@@ -91,8 +93,10 @@ NS_ASSUME_NONNULL_BEGIN
  @param     data                    Data to add to archive
  
  @param     filename                Filename for the data to be included (path extension assumed to be json if excluded)
-  */
-- (void)insertDataIntoArchive :(NSData *)data filename:(NSString *)filename;
+ 
+ @param     createdOn               File creation timestamp to use in info.json
+ */
+- (void)insertDataIntoArchive:(NSData *)data filename:(NSString *)filename createdOn:(NSDate *)createdOn;
 
 /**
  Checks if the archive is empty (contains no files).
@@ -127,6 +131,12 @@ NS_ASSUME_NONNULL_BEGIN
  Call this method when you are finished with the archive, for example after encrypting or uploading.
  */
 - (void) removeArchive;
+
+#pragma mark deprecated
+
+- (void)insertDictionaryIntoArchive:(NSDictionary *)dictionary filename:(NSString *)filename __attribute__((deprecated("Use insertDictionaryIntoArchive:filename:createdOn: instead.")));
+
+- (void)insertDataIntoArchive :(NSData *)data filename:(NSString *)filename __attribute__((deprecated("Use insertDataIntoArchive:filename:createdOn: instead.")));
 
 @end
 
