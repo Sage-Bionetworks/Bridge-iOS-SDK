@@ -105,7 +105,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
     return [((NSNumber *)_bridgeInfo[NSStringFromSelector(@selector(cacheDaysAhead))]) integerValue];
 }
 
-- (void) setCacheDaysAhead:(NSInteger)cacheDaysAhead
+- (void)setCacheDaysAhead:(NSInteger)cacheDaysAhead
 {
     NSUInteger daysAhead = MIN(SBBMaxSupportedCacheDays, cacheDaysAhead);
     _bridgeInfo[NSStringFromSelector(@selector(cacheDaysAhead))] = @(daysAhead);
@@ -150,6 +150,26 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 - (void)setAppGroupIdentifier:(NSString *)appGroupIdentifier
 {
     _bridgeInfo[NSStringFromSelector(@selector(appGroupIdentifier))] = [appGroupIdentifier copy];
+}
+
+- (BOOL)useStandardUserDefaults
+{
+    return [((NSNumber *)_bridgeInfo[NSStringFromSelector(@selector(useStandardUserDefaults))]) boolValue];
+}
+
+- (void)setUseStandardUserDefaults:(BOOL)useStandardUserDefaults
+{
+    _bridgeInfo[NSStringFromSelector(@selector(useStandardUserDefaults))] = @(useStandardUserDefaults);
+}
+
+- (NSString *)userDefaultsSuite
+{
+    return _bridgeInfo[NSStringFromSelector(@selector(userDefaultsSuite))];
+}
+
+- (void)setUserDefaultsSuite:(NSString *)userDefaultsSuite
+{
+    _bridgeInfo[NSStringFromSelector(@selector(userDefaultsSuite))] = [userDefaultsSuite copy];
 }
 
 @end
