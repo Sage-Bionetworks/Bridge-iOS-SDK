@@ -68,20 +68,20 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Tells the Bridge libraries to use the standard user defaults suite.
  
- @note This flag is intended only for backward compatibility when upgrading apps built with older versions of Bridge libraries that used the standard user defaults suite. It will be ignored in any case if either userDefaultsSuite or appGroupIdentifier are set.
+ @note This flag is intended only for backward compatibility when upgrading apps built with older versions of Bridge libraries that used the standard user defaults suite. It will be ignored in any case if either userDefaultsSuiteName or appGroupIdentifier are set.
  */
-@property (nonatomic, readonly) BOOL useStandardUserDefaults;
+@property (nonatomic, readonly) BOOL usesStandardUserDefaults;
 
 /**
- The user defaults suite for the Bridge libraries to use internally. Only needs to be set if you want
+ The name of the user defaults suite for the Bridge libraries to use internally. Only needs to be set if you want
  the Bridge libraries to use something other than their default internal suite name (org.sagebase.Bridge)
  or, in conjunction with appGroupIdentifier, to have them use a different suite other than the
  shared suite.
  */
-@property (nonatomic, readonly) NSString * _Nullable userDefaultsSuite;
+@property (nonatomic, readonly) NSString * _Nullable userDefaultsSuiteName;
 
 /**
- This property, if set, is used for the suite name of NSUserDefaults (if userDefaultsSuite
+ This property, if set, is used for the suite name of NSUserDefaults (if userDefaultsSuiteName
  is not explicitly set), and for the name of the shared container, which is used both to configure the
  background session and as the place to store temporary copies of files being uploaded to Bridge
  (if provided).

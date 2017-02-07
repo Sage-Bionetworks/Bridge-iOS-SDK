@@ -39,7 +39,7 @@
 const NSInteger SBBDefaultCacheDaysAhead = 4;
 const NSInteger SBBDefaultCacheDaysBehind = 7;
 
-const NSString *SBBDefaultUserDefaultsSuite = @"org.sagebase.Bridge";
+const NSString *SBBDefaultUserDefaultsSuiteName = @"org.sagebase.Bridge";
 
 id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 
@@ -135,14 +135,14 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         SBBBridgeInfo *sharedInfo = [SBBBridgeInfo shared];
-        if (sharedInfo.userDefaultsSuite.length > 0) {
-            bridgeUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:sharedInfo.userDefaultsSuite];
+        if (sharedInfo.userDefaultsSuiteName.length > 0) {
+            bridgeUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:sharedInfo.userDefaultsSuiteName];
         } else if (sharedInfo.appGroupIdentifier.length > 0) {
             bridgeUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:sharedInfo.appGroupIdentifier];
-        } else if (sharedInfo.useStandardUserDefaults) {
+        } else if (sharedInfo.usesStandardUserDefaults) {
             bridgeUserDefaults = [NSUserDefaults standardUserDefaults];
         } else {
-            bridgeUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:(NSString *)SBBDefaultUserDefaultsSuite];
+            bridgeUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:(NSString *)SBBDefaultUserDefaultsSuiteName];
         }
     });
     
