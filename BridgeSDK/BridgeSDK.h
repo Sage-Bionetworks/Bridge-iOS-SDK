@@ -82,6 +82,9 @@ extern const NSInteger SBBDefaultCacheDaysBehind;
 
 // The maximum number of days that are supported for caching.
 extern const NSInteger SBBMaxSupportedCacheDays;
+    
+// The default NSUserDefaults suite to use if not otherwise specified at setup time
+extern const NSString * _Nullable SBBDefaultUserDefaultsSuiteName;
   
 @interface BridgeSDK : NSObject
 
