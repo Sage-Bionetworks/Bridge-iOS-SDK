@@ -26,3 +26,5 @@ DerivedData/
 Output
 Breakpoints_v2.xcbkptlist
 /Documentation/docset-installed.txt
+/OpenSSL
+/libOpenSSL.a

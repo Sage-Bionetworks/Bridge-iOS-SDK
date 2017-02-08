@@ -2324,7 +2324,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# first copy the correct libOpenSSL.a build variant into place\nSOURCE_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Copying contents of ${SOURCE_DIR}\"\nrm -f ./libOpenSSL.a\nrm -rf ./OpenSSL\ncp -pR \"${SOURCE_LIB}/*\" .\n";
+			shellScript = "# first copy the correct libOpenSSL.a build variant into place\nSOURCE_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Copying contents of ${SOURCE_DIR}\"\nrm -f ./libOpenSSL.a\nrm -rf ./OpenSSL\ncp -pR \"${SOURCE_DIR}/\" .\n";
 		};
 		80B2C4781E3AA70E001F9FEA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
