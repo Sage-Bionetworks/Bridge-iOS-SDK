@@ -29,6 +29,18 @@
 			name = RNCryptor;
 			productName = RNCryptor;
 		};
+		8063FF881E4A9E4C001B0C3D /* libOpenSSL */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 8063FF891E4A9E4C001B0C3D /* Build configuration list for PBXAggregateTarget "libOpenSSL" */;
+			buildPhases = (
+				8063FF8E1E4A9E59001B0C3D /* ShellScript */,
+			);
+			dependencies = (
+				8063030F1E4AA031001B0C3D /* PBXTargetDependency */,
+			);
+			name = libOpenSSL;
+			productName = libOpenSSL;
+		};
 		80B2C4771E3AA70E001F9FEA /* ZipZap */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 80B2C4791E3AA70E001F9FEA /* Build configuration list for PBXAggregateTarget "ZipZap" */;
@@ -252,6 +264,7 @@
 		8053B62F1A00356000A2E6C4 /* _SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */; };
 		8053B6331A00357400A2E6C4 /* SBBResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8053B6311A00357400A2E6C4 /* SBBResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8053B6341A00357400A2E6C4 /* SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B6321A00357400A2E6C4 /* SBBResourceList.m */; };
+		8063030D1E4A9FDF001B0C3D /* libOpenSSL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8063FF8F1E4A9F6D001B0C3D /* libOpenSSL.a */; };
 		80643BE71DA6E4E900EB91C6 /* _SBBUserProfileInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */; };
 		807747801E28289C000C13CD /* SBBBridgeAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		807AE28C1B603309002588BB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28B1B603309002588BB /* main.m */; };
@@ -301,7 +314,6 @@
 		80B2C4451E3A5CED001F9FEA /* SBBDataArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 80B2C4431E3A5CED001F9FEA /* SBBDataArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80B2C4461E3A5CED001F9FEA /* SBBDataArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C4441E3A5CED001F9FEA /* SBBDataArchive.m */; };
 		80B2C4911E3AA80D001F9FEA /* ZipZap+Namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 80B2C4901E3AA80D001F9FEA /* ZipZap+Namespace.h */; };
-		80B2C5981E3AB5B3001F9FEA /* libOpenSSL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 80B2C5971E3AB5B3001F9FEA /* libOpenSSL.a */; };
 		80B2C6331E3AD493001F9FEA /* ZipZap.h in Headers */ = {isa = PBXBuildFile; fileRef = 80B2C6031E3AD493001F9FEA /* ZipZap.h */; };
 		80B2C6341E3AD493001F9FEA /* ZZArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = 80B2C6041E3AD493001F9FEA /* ZZArchive.h */; };
 		80B2C6351E3AD493001F9FEA /* ZZArchiveEntry.h in Headers */ = {isa = PBXBuildFile; fileRef = 80B2C6051E3AD493001F9FEA /* ZZArchiveEntry.h */; };
@@ -471,6 +483,13 @@
 			remoteGlobalIDString = 80855F4F19BE258C006601C7;
 			remoteInfo = BridgeSDK;
 		};
+		8063030E1E4AA031001B0C3D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 80B2C4A01E3AAC25001F9FEA;
+			remoteInfo = "OpenSSL (iOS Static Library)";
+		};
 		807AE2A01B60330C002588BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
@@ -546,13 +565,6 @@
 			containerPortal = 80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 80B2C4A11E3AAC25001F9FEA;
-			remoteInfo = "OpenSSL (iOS Static Library)";
-		};
-		80B2C5991E3ABDDB001F9FEA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 80B2C4A01E3AAC25001F9FEA;
 			remoteInfo = "OpenSSL (iOS Static Library)";
 		};
 		80DB6BA61BACB27C0062D1EF /* PBXContainerItemProxy */ = {
@@ -768,6 +780,7 @@
 		8053B6311A00357400A2E6C4 /* SBBResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBResourceList.h; sourceTree = "<group>"; };
 		8053B6321A00357400A2E6C4 /* SBBResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBResourceList.m; sourceTree = "<group>"; };
 		8055F52A1E05FD2A009F3485 /* SBBDataModelV1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV1.xcdatamodel; sourceTree = "<group>"; };
+		8063FF8F1E4A9F6D001B0C3D /* libOpenSSL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOpenSSL.a; sourceTree = "<group>"; };
 		80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBUserProfileInternal.h; sourceTree = "<group>"; };
 		8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAppDelegate.h; sourceTree = "<group>"; };
 		807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdminAuthDelegate.h; path = ../BridgeSDKTests/TestAdminAuthDelegate.h; sourceTree = "<group>"; };
@@ -981,9 +994,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80B2C5981E3AB5B3001F9FEA /* libOpenSSL.a in Frameworks */,
 				601F7CB51D6246DC00C5FE09 /* MobileCoreServices.framework in Frameworks */,
 				8026D6A019EC46E3008942B0 /* libz.dylib in Frameworks */,
+				8063030D1E4A9FDF001B0C3D /* libOpenSSL.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1150,6 +1163,14 @@
 			path = Submodules/RNCryptor/RNCryptor;
 			sourceTree = SOURCE_ROOT;
 		};
+		8063FF901E4A9FB1001B0C3D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8063FF8F1E4A9F6D001B0C3D /* libOpenSSL.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		807AE2881B603309002588BB /* BridgeSDKIntegration */ = {
 			isa = PBXGroup;
 			children = (
@@ -1224,6 +1245,7 @@
 				807AE2881B603309002588BB /* BridgeSDKIntegration */,
 				807AE2A21B60330C002588BB /* BridgeSDKIntegrationTests */,
 				80855F5119BE258C006601C7 /* Products */,
+				8063FF901E4A9FB1001B0C3D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1825,7 +1847,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				80B2C59A1E3ABDDB001F9FEA /* PBXTargetDependency */,
 			);
 			name = BridgeSDK;
 			productName = BridgeSDK;
@@ -1863,6 +1884,10 @@
 				TargetAttributes = {
 					804545811A1E781D001D41D4 = {
 						CreatedOnToolsVersion = 6.1;
+					};
+					8063FF881E4A9E4C001B0C3D = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
 					};
 					807AE2861B603309002588BB = {
 						CreatedOnToolsVersion = 6.4;
@@ -1926,6 +1951,7 @@
 				807AE2861B603309002588BB /* BridgeSDKIntegration */,
 				807AE29E1B60330C002588BB /* BridgeSDKIntegrationTests */,
 				80B2C4771E3AA70E001F9FEA /* ZipZap */,
+				8063FF881E4A9E4C001B0C3D /* libOpenSSL */,
 			);
 		};
 /* End PBXProject section */
@@ -2104,6 +2130,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "${PROJECT_DIR}/generate_namespace_header.sh";
+		};
+		8063FF8E1E4A9E59001B0C3D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "rm -f ./libOpenSSL.a\ncp ${BUILT_PRODUCTS_DIR}/libOpenSSL.a .";
 		};
 		80B2C4781E3AA70E001F9FEA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2377,15 +2416,15 @@
 			target = 80855F4F19BE258C006601C7 /* BridgeSDK */;
 			targetProxy = 8017AF6919D9E67C001AF9BA /* PBXContainerItemProxy */;
 		};
+		8063030F1E4AA031001B0C3D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "OpenSSL (iOS Static Library)";
+			targetProxy = 8063030E1E4AA031001B0C3D /* PBXContainerItemProxy */;
+		};
 		807AE2A11B60330C002588BB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 807AE2861B603309002588BB /* BridgeSDKIntegration */;
 			targetProxy = 807AE2A01B60330C002588BB /* PBXContainerItemProxy */;
-		};
-		80B2C59A1E3ABDDB001F9FEA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "OpenSSL (iOS Static Library)";
-			targetProxy = 80B2C5991E3ABDDB001F9FEA /* PBXContainerItemProxy */;
 		};
 		80DB6BA71BACB27C0062D1EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2436,6 +2475,20 @@
 			name = Debug;
 		};
 		804545841A1E781D001D41D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		8063FF8A1E4A9E4C001B0C3D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		8063FF8B1E4A9E4C001B0C3D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2608,6 +2661,10 @@
 				INFOPLIST_FILE = BridgeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -2634,6 +2691,10 @@
 				INFOPLIST_FILE = BridgeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
@@ -2776,6 +2837,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		8063FF891E4A9E4C001B0C3D /* Build configuration list for PBXAggregateTarget "libOpenSSL" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8063FF8A1E4A9E4C001B0C3D /* Debug */,
+				8063FF8B1E4A9E4C001B0C3D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		807AE2A71B60330D002588BB /* Build configuration list for PBXNativeTarget "BridgeSDKIntegration" */ = {
 			isa = XCConfigurationList;
