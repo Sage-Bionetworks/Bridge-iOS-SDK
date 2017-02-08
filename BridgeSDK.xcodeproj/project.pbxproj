@@ -2007,6 +2007,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 80855F6319BE258C006601C7 /* Build configuration list for PBXNativeTarget "BridgeSDK" */;
 			buildPhases = (
+				809266AA1E4B9D3F000BBEDA /* ShellScript */,
 				80855F4B19BE258C006601C7 /* Sources */,
 				80855F4C19BE258C006601C7 /* Frameworks */,
 				80855F4D19BE258C006601C7 /* Headers */,
@@ -2310,7 +2311,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -f ./libOpenSSL.a\nrm -rf ./OpenSSL\ncp ${BUILT_PRODUCTS_DIR}/libOpenSSL.a .\ncp -R ${BUILT_PRODUCTS_DIR}/include/OpenSSL .";
+			shellScript = "OUT_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Built products will be copied to: ${OUT_DIR}\"\nmkdir -p \"${OUT_DIR}\"\n\nrm -f \"${OUT_DIR}/libOpenSSL.a\"\nrm -rf \"${OUT_DIR}/OpenSSL\"\ncp \"${BUILT_PRODUCTS_DIR}/libOpenSSL.a\" \"${OUT_DIR}/libOpenSSL.a\"\ncp -R \"${BUILT_PRODUCTS_DIR}/include/OpenSSL\" \"${OUT_DIR}/OpenSSL\"";
+		};
+		809266AA1E4B9D3F000BBEDA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# first copy the correct libOpenSSL.a build variant into place\nSOURCE_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Copying contents of ${SOURCE_DIR}\"\nrm -f ./libOpenSSL.a\nrm -rf ./OpenSSL\ncp -pR \"${SOURCE_LIB}/*\" .\n";
 		};
 		80B2C4781E3AA70E001F9FEA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
