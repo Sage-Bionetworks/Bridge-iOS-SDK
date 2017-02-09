@@ -591,7 +591,11 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     <$if Relationship.isOrdered$>NSOrderedSet<$else$>NSSet<$endif$> *<$Relationship.name$>Copy = [managedObject.<$Relationship.name$> copy];
 
     // now remove all items from the existing relationship
-    [managedObject remove<$Relationship.name.initialCapitalString$>:managedObject.<$Relationship.name$>];
+    <$if Relationship.isOrdered$>// to work pre-iOS 10, we have to work around this issue: http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
+    NSMutableOrderedSet *workingSet = [self mutableOrderedSetValueForKey:NSStringFromSelector(@selector(<$Relationship.name$>))];
+    [workingSet removeAllObjects];
+    <$else$>[managedObject remove<$Relationship.name.initialCapitalString$>:managedObject.<$Relationship.name$>];
+    <$endif$>
 
     // now put the "new" items, if any, into the relationship
     if ([self.<$Relationship.name$> count] > 0) {
@@ -605,7 +609,11 @@ static id dynamicGetterIMP(id self, SEL _cmd)
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
+            <$if Relationship.isOrdered$>
+            [workingSet addObject:relMo];
+            <$else$>
             [managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
+            <$endif$>
         }
 	}
 

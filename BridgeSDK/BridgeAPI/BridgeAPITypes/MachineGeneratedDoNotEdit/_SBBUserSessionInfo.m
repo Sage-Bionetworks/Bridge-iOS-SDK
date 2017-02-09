@@ -348,7 +348,9 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
+
             [managedObject addConsentStatusesObject:relMo];
+
         }
 	}
 
