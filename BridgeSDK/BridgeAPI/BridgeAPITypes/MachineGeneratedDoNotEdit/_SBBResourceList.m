@@ -207,8 +207,8 @@
 
     // now remove all items from the existing relationship
     // to work pre-iOS 10, we have to work around this issue: http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
-    NSMutableOrderedSet *workingSet = [self mutableOrderedSetValueForKey:NSStringFromSelector(@selector(items))];
-    [workingSet removeAllObjects];
+    NSMutableOrderedSet *workingItemsSet = [managedObject mutableOrderedSetValueForKey:NSStringFromSelector(@selector(items))];
+    [workingItemsSet removeAllObjects];
 
     // now put the "new" items, if any, into the relationship
     if ([self.items count] > 0) {
@@ -223,7 +223,7 @@
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
 
-            [workingSet addObject:relMo];
+            [workingItemsSet addObject:relMo];
 
         }
 	}

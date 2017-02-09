@@ -592,8 +592,8 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
     // now remove all items from the existing relationship
     <$if Relationship.isOrdered$>// to work pre-iOS 10, we have to work around this issue: http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
-    NSMutableOrderedSet *workingSet = [self mutableOrderedSetValueForKey:NSStringFromSelector(@selector(<$Relationship.name$>))];
-    [workingSet removeAllObjects];
+    NSMutableOrderedSet *working<$Relationship.name.initialCapitalString$>Set = [managedObject mutableOrderedSetValueForKey:NSStringFromSelector(@selector(<$Relationship.name$>))];
+    [working<$Relationship.name.initialCapitalString$>Set removeAllObjects];
     <$else$>[managedObject remove<$Relationship.name.initialCapitalString$>:managedObject.<$Relationship.name$>];
     <$endif$>
 
@@ -610,7 +610,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
             <$if Relationship.isOrdered$>
-            [workingSet addObject:relMo];
+            [working<$Relationship.name.initialCapitalString$>Set addObject:relMo];
             <$else$>
             [managedObject add<$Relationship.name.initialCapitalString$>Object:relMo];
             <$endif$>
