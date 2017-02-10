@@ -226,7 +226,9 @@
     NSOrderedSet *enumerationCopy = [managedObject.enumeration copy];
 
     // now remove all items from the existing relationship
-    [managedObject removeEnumeration:managedObject.enumeration];
+    // to work pre-iOS 10, we have to work around this issue: http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
+    NSMutableOrderedSet *workingEnumerationSet = [managedObject mutableOrderedSetValueForKey:NSStringFromSelector(@selector(enumeration))];
+    [workingEnumerationSet removeAllObjects];
 
     // now put the "new" items, if any, into the relationship
     if ([self.enumeration count] > 0) {
@@ -240,7 +242,9 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            [managedObject addEnumerationObject:relMo];
+
+            [workingEnumerationSet addObject:relMo];
+
         }
 	}
 

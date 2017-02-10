@@ -474,7 +474,9 @@
     NSOrderedSet *bridgeObjectArrayFieldCopy = [managedObject.bridgeObjectArrayField copy];
 
     // now remove all items from the existing relationship
-    [managedObject removeBridgeObjectArrayField:managedObject.bridgeObjectArrayField];
+    // to work pre-iOS 10, we have to work around this issue: http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
+    NSMutableOrderedSet *workingBridgeObjectArrayFieldSet = [managedObject mutableOrderedSetValueForKey:NSStringFromSelector(@selector(bridgeObjectArrayField))];
+    [workingBridgeObjectArrayFieldSet removeAllObjects];
 
     // now put the "new" items, if any, into the relationship
     if ([self.bridgeObjectArrayField count] > 0) {
@@ -488,7 +490,9 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
-            [managedObject addBridgeObjectArrayFieldObject:relMo];
+
+            [workingBridgeObjectArrayFieldSet addObject:relMo];
+
         }
 	}
 
@@ -520,7 +524,9 @@
                 // sub object is not directly cacheable, or not currently cached, so create it before adding
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
+
             [managedObject addBridgeObjectSetFieldObject:relMo];
+
         }
 	}
 
