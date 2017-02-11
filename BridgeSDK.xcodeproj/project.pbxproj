@@ -2158,7 +2158,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# first copy the correct libOpenSSL.a build variant into place\nSOURCE_DIR=\"./libOpenSSLBuilds/Release${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Copying contents of ${SOURCE_DIR}\"\nrm -f ./OpenSSL.a\nrm -rf ./OpenSSL\ncp -pR \"${SOURCE_DIR}/OpenSSL\" .\n\n# we have to rename the library so Xcode doesn't find implicit\n# dependencies and try to rebuild it\ncp -p \"${SOURCE_DIR}/libOpenSSL.a\" ./OpenSSL.a\n";
+			shellScript = "# first copy the correct libOpenSSL.a build variant into place\nSOURCE_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Copying contents of ${SOURCE_DIR}\"\nrm -f ./OpenSSL.a\nrm -rf ./OpenSSL\ncp -pR \"${SOURCE_DIR}/OpenSSL\" .\n\n# we have to rename the library so Xcode doesn't find implicit\n# dependencies and try to rebuild it\ncp -p \"${SOURCE_DIR}/libOpenSSL.a\" ./OpenSSL.a\n";
 		};
 		80B2C4781E3AA70E001F9FEA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
