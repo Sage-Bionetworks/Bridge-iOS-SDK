@@ -25,7 +25,7 @@ DerivedData/
 *.xcuserstate
 Output
 Breakpoints_v2.xcbkptlist
-/Documentation/docset-installed.txt
+Documentation/
 /OpenSSL
 /libOpenSSL.a
 /OpenSSL.a
