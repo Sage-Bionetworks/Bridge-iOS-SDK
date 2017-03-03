@@ -31,6 +31,7 @@
 //
 
 #import "_SBBResourceList.h"
+#import "_SBBResourceListInternal.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
@@ -46,6 +47,8 @@
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (ResourceList)
+
+@property (nullable, nonatomic, retain) NSString* listID__;
 
 @property (nullable, nonatomic, retain) NSNumber* total;
 
@@ -156,6 +159,8 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
+        self.listID__ = managedObject.listID__;
+
         self.total = managedObject.total;
 
 		for (NSManagedObject *itemsManagedObj in managedObject.items)
@@ -199,6 +204,8 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.listID__ = ((id)self.listID__ == [NSNull null]) ? nil : self.listID__;
 
     managedObject.total = ((id)self.total == [NSNull null]) ? nil : self.total;
 

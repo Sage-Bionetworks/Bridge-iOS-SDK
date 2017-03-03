@@ -265,6 +265,8 @@
 		8053B62F1A00356000A2E6C4 /* _SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */; };
 		8053B6331A00357400A2E6C4 /* SBBResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 8053B6311A00357400A2E6C4 /* SBBResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8053B6341A00357400A2E6C4 /* SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B6321A00357400A2E6C4 /* SBBResourceList.m */; };
+		80561DB71E6A0866005FBFA3 /* _SBBResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80561DB61E6A0865005FBFA3 /* _SBBResourceListInternal.h */; };
+		80561DB91E6A0879005FBFA3 /* SBBResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80561DB81E6A0879005FBFA3 /* SBBResourceListInternal.h */; };
 		80643BE71DA6E4E900EB91C6 /* _SBBUserProfileInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */; };
 		807747801E28289C000C13CD /* SBBBridgeAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		807AE28C1B603309002588BB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28B1B603309002588BB /* main.m */; };
@@ -782,6 +784,9 @@
 		8053B6311A00357400A2E6C4 /* SBBResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBResourceList.h; sourceTree = "<group>"; };
 		8053B6321A00357400A2E6C4 /* SBBResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBResourceList.m; sourceTree = "<group>"; };
 		8055F52A1E05FD2A009F3485 /* SBBDataModelV1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV1.xcdatamodel; sourceTree = "<group>"; };
+		80561DA71E69EF7E005FBFA3 /* SBBDataModelV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV3.xcdatamodel; sourceTree = "<group>"; };
+		80561DB61E6A0865005FBFA3 /* _SBBResourceListInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBResourceListInternal.h; sourceTree = "<group>"; };
+		80561DB81E6A0879005FBFA3 /* SBBResourceListInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBResourceListInternal.h; sourceTree = "<group>"; };
 		80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBUserProfileInternal.h; sourceTree = "<group>"; };
 		8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAppDelegate.h; sourceTree = "<group>"; };
 		807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdminAuthDelegate.h; path = ../BridgeSDKTests/TestAdminAuthDelegate.h; sourceTree = "<group>"; };
@@ -1059,6 +1064,7 @@
 				800E795F19ED74B600EEE612 /* SBBMultiValueConstraints.h */,
 				800E796019ED74B600EEE612 /* SBBMultiValueConstraints.m */,
 				8053B6311A00357400A2E6C4 /* SBBResourceList.h */,
+				80561DB81E6A0879005FBFA3 /* SBBResourceListInternal.h */,
 				8053B6321A00357400A2E6C4 /* SBBResourceList.m */,
 				80E60DA219FAD5860053D166 /* SBBSchedule.h */,
 				80E60DA319FAD5860053D166 /* SBBSchedule.m */,
@@ -1579,6 +1585,7 @@
 				800E793719ED744000EEE612 /* _SBBMultiValueConstraints.h */,
 				800E793819ED744000EEE612 /* _SBBMultiValueConstraints.m */,
 				8053B62C1A00356000A2E6C4 /* _SBBResourceList.h */,
+				80561DB61E6A0865005FBFA3 /* _SBBResourceListInternal.h */,
 				8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */,
 				80E60D9D19FAD56C0053D166 /* _SBBSchedule.h */,
 				80E60D9E19FAD56C0053D166 /* _SBBSchedule.m */,
@@ -1646,6 +1653,7 @@
 				8026D65E19E7527F008942B0 /* SBBSurveyManager.h in Headers */,
 				80F7C34119E5DC0D00574800 /* _SBBBridgeObject.h in Headers */,
 				80F88E4B1AF98DA70090D462 /* SBBActivityManager.h in Headers */,
+				80561DB71E6A0866005FBFA3 /* _SBBResourceListInternal.h in Headers */,
 				80B2C6421E3AD493001F9FEA /* ZZDataChannelOutput.h in Headers */,
 				800E793119ED740F00EEE612 /* _SBBDecimalConstraints.h in Headers */,
 				8017AF7219DA0359001AF9BA /* UIDevice+Hardware.h in Headers */,
@@ -1750,6 +1758,7 @@
 				6056DE1F1CF61F4000C21E82 /* SBBStudyParticipantCustomAttributes.h in Headers */,
 				80B2C64D1E3AD493001F9FEA /* ZZInflateInputStream.h in Headers */,
 				807AE2DB1B61C2ED002588BB /* SBBScheduleManagerInternal.h in Headers */,
+				80561DB91E6A0879005FBFA3 /* SBBResourceListInternal.h in Headers */,
 				80DB99221CC01BD300B56EAE /* NSManagedObject+SBBAdditions.h in Headers */,
 				80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */,
 				80B2C6551E3AD493001F9FEA /* ZZOldArchiveEntryWriter.h in Headers */,
@@ -2596,7 +2605,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2637,7 +2646,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2666,7 +2675,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 20;
+				DYLIB_CURRENT_VERSION = 21;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2698,7 +2707,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 20;
+				DYLIB_CURRENT_VERSION = 21;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2973,6 +2982,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				80561DA71E69EF7E005FBFA3 /* SBBDataModelV3.xcdatamodel */,
 				80C565751E40FC4000D83A72 /* SBBDataModelV2.xcdatamodel */,
 				8055F52A1E05FD2A009F3485 /* SBBDataModelV1.xcdatamodel */,
 				80F7C33A19E5DC0D00574800 /* SBBDataModel.xcdatamodel */,

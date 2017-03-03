@@ -178,7 +178,12 @@
 
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
 {
-    return [NSEntityDescription entityForName:self.class.entityName inManagedObjectContext:context];
+    return [self.class entityForContext:context];
+}
+
++ (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context
+{
+    return [NSEntityDescription entityForName:self.entityName inManagedObjectContext:context];
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
