@@ -43,6 +43,7 @@ extern NSString * const kSBBParticipantDataSharingScopeStrings[];
 
 - (void)clearUserInfoFromCache;
 - (NSURLSessionTask *)getParticipantRecordFromBridgeWithCompletion:(SBBParticipantManagerGetRecordCompletionBlock)completion;
+- (NSDictionary *)bridgeJSONForParticipantWithField:(NSString *)fieldName setTo:(id)value;
 
 @end
 
