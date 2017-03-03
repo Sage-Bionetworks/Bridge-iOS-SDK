@@ -39,6 +39,7 @@
 #import "NSError+SBBAdditions.h"
 #import "BridgeSDK+Internal.h"
 #import "SBBBridgeInfo.h"
+#import "ModelObjectInternal.h"
 
 #define ACTIVITY_API GLOBAL_API_PREFIX @"/activities"
 
@@ -121,7 +122,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 // all three have been called!
 - (SBBResourceList *)cachedTasksFromCacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedObjectOfType:@"ResourceList" withId:@"ScheduledActivity" createIfMissing:NO];
+    SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedObjectOfType:@"ResourceList" withId:[self listIdentifier] createIfMissing:NO];
     
     return tasks;
 }
@@ -144,6 +145,11 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     
     // ...and save it back to the cache for later.
     [resourceList saveToCoreDataCacheWithObjectManager:self.objectManager];
+}
+
+- (NSString *)listIdentifier
+{
+    return [SBBScheduledActivity entityName];
 }
 
 - (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
@@ -184,12 +190,26 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 
                 // now process the new data into the cache
                 if (!error) {
-                    [self.objectManager objectFromBridgeJSON:responseObject];
+                    // first, set an identifier in the JSON so we can find the cached object later--since
+                    // ResourceList doesn't come with anything by which to distinguish one from another if the
+                    // items[] list is empty.
+                    NSMutableDictionary *objectWithEntityID = [responseObject mutableCopy];
+                    
+                    // -- get the identifier key path we need to set from the cache manager core data entity description
+                    //    rather than hardcoding it with a string literal
+                    NSEntityDescription *entityDescription = [SBBResourceList entityForContext:self.cacheManager.cacheIOContext];
+                    NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
+                    
+                    // -- set it in the JSON to the identifier for the list this manager manages
+                    [objectWithEntityID setValue:[self listIdentifier] forKeyPath:entityIDKeyPath];
+                    
+                    // -- now process into the cache
+                    [self.objectManager objectFromBridgeJSON:objectWithEntityID];
                 }
                 
                 // we've either updated the cached tasks list from the server, or not, as the case may be;
                 // in either case, we want to pass the cached tasks list to the completion handler.
-                tasks = (SBBResourceList *)[self.cacheManager cachedObjectOfType:@"ResourceList" withId:@"ScheduledActivity" createIfMissing:NO];
+                tasks = (SBBResourceList *)[self.cacheManager cachedObjectOfType:@"ResourceList" withId:[self listIdentifier] createIfMissing:NO];
                 
                 // ...ok, if we *did* update from the server though, we want to add back any we saved from before.
                 if (!error && savedTasks.count) {

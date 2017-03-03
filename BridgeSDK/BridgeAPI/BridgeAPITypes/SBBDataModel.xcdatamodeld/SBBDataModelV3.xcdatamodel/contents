@@ -119,15 +119,10 @@
         <relationship name="enumeration" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyQuestionOption" inverseName="multiValueConstraints" inverseEntity="SurveyQuestionOption" syncable="YES"/>
     </entity>
     <entity name="ResourceList" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="listID__" optional="YES" attributeType="String" defaultValueString="ScheduledActivity" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </attribute>
         <attribute name="total" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="resourceList" inverseEntity="BridgeObject" syncable="YES"/>
         <userInfo>
-            <entry key="entityIDKeyPath" value="listID__"/>
+            <entry key="entityIDKeyPath" value="items[0].type"/>
             <entry key="entityIDRegex" value="^(ScheduledActivity|Schedule)$"/>
         </userInfo>
     </entity>
@@ -384,7 +379,7 @@
         <element name="Image" positionX="0" positionY="0" width="128" height="90"/>
         <element name="IntegerConstraints" positionX="0" positionY="0" width="128" height="105"/>
         <element name="MultiValueConstraints" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="ResourceList" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="ResourceList" positionX="0" positionY="0" width="128" height="75"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
         <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="150"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
