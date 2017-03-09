@@ -8,7 +8,7 @@ install:
   - ./travis/install-appledoc.sh
   - export PATH="$HOME/bin:$HOME/.fastlane/bin:$PATH"
 script:
-  - ./travis/run-tests.sh
+#  - ./travis/run-tests.sh
   - ./travis/build-docs.sh
 deploy:
   provider: s3
