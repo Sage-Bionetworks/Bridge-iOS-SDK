@@ -30,6 +30,18 @@ platform :ios do
       scan
     end
   end
+  
+  desc "Build the documentation"
+  lane :doc do |options|
+    appledoc(
+      project_name: "BridgeSDK",
+      project_company: "Sage BioNetworks",
+      input: "BridgeSDK",
+      output: "./Documentation",
+      options: "--keep-intermediate-files --search-undocumented-doc",
+      warnings: "--warn-missing-output-path --warn-missing-company-id"
+    )
+  end
 
   desc "Submit a new Beta Build to Apple TestFlight"
   desc "This will also make sure the profile is up to date"
