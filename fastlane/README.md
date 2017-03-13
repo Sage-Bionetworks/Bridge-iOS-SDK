@@ -29,6 +29,11 @@ xcode-select --install
 </table>
 # Available Actions
 ## iOS
+### ios doc
+```
+fastlane ios doc
+```
+Build the documentation
 ### ios test
 ```
 fastlane ios test
