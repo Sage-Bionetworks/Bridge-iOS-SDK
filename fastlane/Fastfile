@@ -22,6 +22,18 @@ platform :ios do
     
   end
 
+  desc "Build the documentation"
+  lane :doc do |options|
+    appledoc(
+      project_name: "BridgeSDK",
+      project_company: "Sage BioNetworks",
+      input: "BridgeSDK",
+      output: "./Documentation",
+      options: "--keep-intermediate-files --search-undocumented-doc",
+      warnings: "--warn-missing-output-path --warn-missing-company-id"
+    )
+  end
+
   desc "Runs all the tests"
   lane :test do |options|
     if options[:scheme]
