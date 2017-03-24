@@ -78,7 +78,7 @@ NS_ASSUME_NONNULL_BEGIN
  or, in conjunction with appGroupIdentifier, to have them use a different suite other than the
  shared suite.
  */
-@property (nonatomic, readonly) NSString * _Nullable userDefaultsSuiteName;
+@property (nonatomic, readonly, copy) NSString * _Nullable userDefaultsSuiteName;
 
 /**
  This property, if set, is used for the suite name of NSUserDefaults (if userDefaultsSuiteName
