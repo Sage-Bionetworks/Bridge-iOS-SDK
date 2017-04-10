@@ -46,6 +46,8 @@
 
 @property (nullable, nonatomic, retain) NSString* type;
 
+@property (nullable, nonatomic, retain) NSManagedObject *forwardCursorPagedResourceList;
+
 @property (nullable, nonatomic, retain) NSManagedObject *resourceList;
 
 @end

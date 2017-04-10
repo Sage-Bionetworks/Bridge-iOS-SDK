@@ -43,6 +43,8 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (ScheduledActivity)
 
+@property (nullable, nonatomic, retain) id<SBBJSONValue> clientData;
+
 @property (nullable, nonatomic, retain) NSDate* expiresOn;
 
 @property (nullable, nonatomic, retain) NSDate* finishedOn;
@@ -89,6 +91,8 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.clientData = [dictionary objectForKey:@"clientData"];
+
     self.expiresOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"expiresOn"]];
 
     self.finishedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"finishedOn"]];
@@ -114,6 +118,8 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+
+    [dict setObjectIfNotNil:self.clientData forKey:@"clientData"];
 
     [dict setObjectIfNotNil:[self.expiresOn ISO8601String] forKey:@"expiresOn"];
 
@@ -153,6 +159,8 @@
 {
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        self.clientData = managedObject.clientData;
 
         self.expiresOn = managedObject.expiresOn;
 
@@ -205,6 +213,8 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.clientData = ((id)self.clientData == [NSNull null]) ? nil : self.clientData;
 
     managedObject.expiresOn = ((id)self.expiresOn == [NSNull null]) ? nil : self.expiresOn;
 

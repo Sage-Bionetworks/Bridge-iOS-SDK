@@ -310,6 +310,14 @@
 		80855F7319BE27ED006601C7 /* SBBNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F6C19BE27ED006601C7 /* SBBNetworkManager.m */; };
 		80855F7D19BE41C9006601C7 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F7B19BE41C9006601C7 /* Reachability.h */; };
 		80855F7E19BE41C9006601C7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F7C19BE41C9006601C7 /* Reachability.m */; };
+		808D03BA1E96BC810030F23E /* SBBJSONValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03B91E96BC810030F23E /* SBBJSONValue.h */; };
+		808D03CC1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03C91E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h */; };
+		808D03CD1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 808D03CA1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m */; };
+		808D03CE1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03CB1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h */; };
+		808D03D21E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03CF1E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h */; };
+		808D03D31E96CDF30030F23E /* SBBForwardCursorPagedResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 808D03D01E96CDF30030F23E /* SBBForwardCursorPagedResourceList.m */; };
+		808D03D41E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03D11E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h */; };
+		808D03D61E96D6770030F23E /* SBBJSONValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 808D03D51E96D6770030F23E /* SBBJSONValue.m */; };
 		80AF00801CAB267B009A222B /* SBBTestBridgeObjects.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6319D9C3AF001AF9BA /* SBBTestBridgeObjects.m */; };
 		80B2C43E1E3A59D2001F9FEA /* SBBEncryptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 80B2C43C1E3A59D2001F9FEA /* SBBEncryptor.h */; };
 		80B2C43F1E3A59D2001F9FEA /* SBBEncryptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B2C43D1E3A59D2001F9FEA /* SBBEncryptor.m */; };
@@ -830,6 +838,14 @@
 		80855F6C19BE27ED006601C7 /* SBBNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBNetworkManager.m; sourceTree = "<group>"; };
 		80855F7B19BE41C9006601C7 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		80855F7C19BE41C9006601C7 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		808D03B91E96BC810030F23E /* SBBJSONValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBJSONValue.h; sourceTree = "<group>"; };
+		808D03C91E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBForwardCursorPagedResourceList.h; sourceTree = "<group>"; };
+		808D03CA1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBForwardCursorPagedResourceList.m; sourceTree = "<group>"; };
+		808D03CB1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBForwardCursorPagedResourceListInternal.h; sourceTree = "<group>"; };
+		808D03CF1E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBForwardCursorPagedResourceList.h; sourceTree = "<group>"; };
+		808D03D01E96CDF30030F23E /* SBBForwardCursorPagedResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBForwardCursorPagedResourceList.m; sourceTree = "<group>"; };
+		808D03D11E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBForwardCursorPagedResourceListInternal.h; sourceTree = "<group>"; };
+		808D03D51E96D6770030F23E /* SBBJSONValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBJSONValue.m; sourceTree = "<group>"; };
 		80B2C43C1E3A59D2001F9FEA /* SBBEncryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBEncryptor.h; sourceTree = "<group>"; };
 		80B2C43D1E3A59D2001F9FEA /* SBBEncryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBEncryptor.m; sourceTree = "<group>"; };
 		80B2C4431E3A5CED001F9FEA /* SBBDataArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDataArchive.h; sourceTree = "<group>"; };
@@ -908,6 +924,7 @@
 		80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBDataGroups.m; sourceTree = "<group>"; };
 		80C87F0B1C18E61000FE8A63 /* SBBDataGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDataGroups.h; sourceTree = "<group>"; };
 		80C87F0C1C18E61000FE8A63 /* SBBDataGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBDataGroups.m; sourceTree = "<group>"; };
+		80CE622C1E8DDBBC00CD154C /* SBBDataModelV4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV4.xcdatamodel; sourceTree = "<group>"; };
 		80D517331CADD0A8002D2C06 /* NSObject+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBBAdditions.h"; sourceTree = "<group>"; };
 		80D517341CADD0A8002D2C06 /* NSObject+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBBAdditions.m"; sourceTree = "<group>"; };
 		80D517491CAF4453002D2C06 /* _SBBSurveyInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSurveyInternal.h; sourceTree = "<group>"; };
@@ -1055,6 +1072,9 @@
 				800E795219ED74A600EEE612 /* SBBDecimalConstraints.m */,
 				800E795319ED74A600EEE612 /* SBBDurationConstraints.h */,
 				800E795419ED74A600EEE612 /* SBBDurationConstraints.m */,
+				808D03CF1E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h */,
+				808D03D11E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h */,
+				808D03D01E96CDF30030F23E /* SBBForwardCursorPagedResourceList.m */,
 				606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */,
 				606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */,
 				80E8196D1A83E8EB00513919 /* SBBImage.h */,
@@ -1149,6 +1169,8 @@
 				8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */,
 				FFEA839B1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h */,
 				804C109D1E2841C9004B68E6 /* SBBBridgeInfoProtocol.h */,
+				808D03B91E96BC810030F23E /* SBBJSONValue.h */,
+				808D03D51E96D6770030F23E /* SBBJSONValue.m */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -1576,6 +1598,9 @@
 				800E792A19ED740F00EEE612 /* _SBBDecimalConstraints.m */,
 				800E792B19ED740F00EEE612 /* _SBBDurationConstraints.h */,
 				800E792C19ED740F00EEE612 /* _SBBDurationConstraints.m */,
+				808D03C91E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h */,
+				808D03CB1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h */,
+				808D03CA1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m */,
 				606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */,
 				606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */,
 				80E819601A83E89E00513919 /* _SBBImage.h */,
@@ -1683,6 +1708,7 @@
 				80D5174A1CAF4454002D2C06 /* _SBBSurveyInternal.h in Headers */,
 				8026D67A19E77518008942B0 /* SBBUploadManager.h in Headers */,
 				800E795719ED74A600EEE612 /* SBBDateTimeConstraints.h in Headers */,
+				808D03CC1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h in Headers */,
 				6056DE111CF61ECD00C21E82 /* _SBBStudyParticipantInternal.h in Headers */,
 				807AE2DD1B62ADB1002588BB /* SBBSurveyManagerInternal.h in Headers */,
 				80E819731A83E8EB00513919 /* SBBImage.h in Headers */,
@@ -1706,11 +1732,13 @@
 				80B2C6341E3AD493001F9FEA /* ZZArchive.h in Headers */,
 				800E794519ED744000EEE612 /* _SBBSurveyQuestionOption.h in Headers */,
 				80B2C43E1E3A59D2001F9FEA /* SBBEncryptor.h in Headers */,
+				808D03CE1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h in Headers */,
 				80F7C34B19E5DC0D00574800 /* SBBBridgeObjects.h in Headers */,
 				800E794719ED744000EEE612 /* _SBBTimeConstraints.h in Headers */,
 				80B2C6451E3AD493001F9FEA /* ZZDeflateOutputStream.h in Headers */,
 				606FDE251A2F9E4300898466 /* SBBIdentifierHolder.h in Headers */,
 				804C10A11E2847FE004B68E6 /* SBBBridgeInfo.h in Headers */,
+				808D03D21E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h in Headers */,
 				80104A5C19D4CD9E001F2573 /* SBBUserProfile.h in Headers */,
 				800E795519ED74A600EEE612 /* SBBDateConstraints.h in Headers */,
 				800E794319ED744000EEE612 /* _SBBStringConstraints.h in Headers */,
@@ -1722,6 +1750,7 @@
 				80BA3D991C3F19D400AA70FB /* SBBConsentStatus.h in Headers */,
 				80B2C4911E3AA80D001F9FEA /* ZipZap+Namespace.h in Headers */,
 				8017AF7019DA0359001AF9BA /* NSError+SBBAdditions.h in Headers */,
+				808D03D41E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h in Headers */,
 				8017AF7619DA038D001AF9BA /* NSDate+SBBAdditions.h in Headers */,
 				80B2C6351E3AD493001F9FEA /* ZZArchiveEntry.h in Headers */,
 				60F1E4161A420E96009B380E /* _SBBActivity.h in Headers */,
@@ -1742,6 +1771,7 @@
 				8026D68A19E888DB008942B0 /* SBBUploadSession.h in Headers */,
 				6056DE231CF61F4000C21E82 /* SBBSurveyInternal.h in Headers */,
 				80F7C35119E5DC0D00574800 /* SBBSurveyQuestion.h in Headers */,
+				808D03BA1E96BC810030F23E /* SBBJSONValue.h in Headers */,
 				80855F7119BE27ED006601C7 /* SBBErrors.h in Headers */,
 				800E796B19ED74C500EEE612 /* SBBSurveyQuestionOption.h in Headers */,
 				80FA54DF1A25110E00EDE46E /* SBBCacheManager.h in Headers */,
@@ -2318,10 +2348,12 @@
 				807AE2FF1B62E98C002588BB /* SBBUserSessionInfo.m in Sources */,
 				800E792E19ED740F00EEE612 /* _SBBDateConstraints.m in Sources */,
 				80B2C6591E3AD493001F9FEA /* ZZStandardCryptoEngine.cpp in Sources */,
+				808D03CD1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m in Sources */,
 				807AE2EF1B62E8C3002588BB /* _SBBUserSessionInfo.m in Sources */,
 				80B2C4461E3A5CED001F9FEA /* SBBDataArchive.m in Sources */,
 				80F88E541AF991B10090D462 /* _SBBScheduledActivity.m in Sources */,
 				80F88E4C1AF98DA70090D462 /* SBBActivityManager.m in Sources */,
+				808D03D31E96CDF30030F23E /* SBBForwardCursorPagedResourceList.m in Sources */,
 				800E796419ED74B600EEE612 /* SBBIntegerConstraints.m in Sources */,
 				800E796619ED74B600EEE612 /* SBBMultiValueConstraints.m in Sources */,
 				80B2C6391E3AD493001F9FEA /* ZZAESDecryptInputStream.mm in Sources */,
@@ -2336,6 +2368,7 @@
 				8017AF7719DA038D001AF9BA /* NSDate+SBBAdditions.m in Sources */,
 				8051DCE21A1E6FDB0068D06E /* RNEncryptor.m in Sources */,
 				80B2C6561E3AD493001F9FEA /* ZZOldArchiveEntryWriter.mm in Sources */,
+				808D03D61E96D6770030F23E /* SBBJSONValue.m in Sources */,
 				8026D69319E892B5008942B0 /* SBBUploadRequest.m in Sources */,
 				80F7C35219E5DC0D00574800 /* SBBSurveyQuestion.m in Sources */,
 				80855F7319BE27ED006601C7 /* SBBNetworkManager.m in Sources */,
@@ -2982,6 +3015,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				80CE622C1E8DDBBC00CD154C /* SBBDataModelV4.xcdatamodel */,
 				80561DA71E69EF7E005FBFA3 /* SBBDataModelV3.xcdatamodel */,
 				80C565751E40FC4000D83A72 /* SBBDataModelV2.xcdatamodel */,
 				8055F52A1E05FD2A009F3485 /* SBBDataModelV1.xcdatamodel */,

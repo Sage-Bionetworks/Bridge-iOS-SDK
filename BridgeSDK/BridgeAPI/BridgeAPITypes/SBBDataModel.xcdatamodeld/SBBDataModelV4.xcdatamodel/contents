@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16E195" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16D32" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" regularExpressionString="^(task|survey)$" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -30,11 +30,6 @@
                 <entry key="mogenerator.readonly" value="YES"/>
             </userInfo>
         </attribute>
-        <relationship name="forwardCursorPagedResourceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ForwardCursorPagedResourceList" inverseName="items" inverseEntity="ForwardCursorPagedResourceList" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
         <relationship name="resourceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ResourceList" inverseName="items" inverseEntity="ResourceList" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
@@ -93,17 +88,6 @@
     </entity>
     <entity name="DurationConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="unit" optional="YES" attributeType="String" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years)$" syncable="YES"/>
-    </entity>
-    <entity name="ForwardCursorPagedResourceList" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="listID__" optional="YES" attributeType="String" defaultValueString="ScheduledActivity" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </attribute>
-        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="forwardCursorPagedResourceList" inverseEntity="BridgeObject" syncable="YES"/>
-        <userInfo>
-            <entry key="entityIDKeyPath" value="listID__"/>
-        </userInfo>
     </entity>
     <entity name="IdentifierHolder" parentEntity="BridgeObject" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
@@ -169,11 +153,6 @@
         </userInfo>
     </entity>
     <entity name="ScheduledActivity" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="clientData" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="id&lt;SBBJSONValue&gt;"/>
-            </userInfo>
-        </attribute>
         <attribute name="expiresOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="finishedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -182,7 +161,6 @@
         <attribute name="startedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="activity" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Activity" inverseName="scheduledActivity" inverseEntity="Activity" syncable="YES"/>
         <userInfo>
-            <entry key="additionalHeaderFileName" value="SBBJSONValue.h"/>
             <entry key="entityIDKeyPath" value="guid"/>
             <entry key="hasClientWritableFields" value="1"/>
         </userInfo>
@@ -394,7 +372,7 @@
     <elements>
         <element name="Activity" positionX="0" positionY="0" width="128" height="165"/>
         <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
-        <element name="BridgeObject" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="BridgeObject" positionX="0" positionY="0" width="128" height="60"/>
         <element name="ConsentSignature" positionX="9" positionY="99" width="128" height="120"/>
         <element name="ConsentStatus" positionX="0" positionY="90" width="128" height="135"/>
         <element name="DataGroups" positionX="0" positionY="90" width="128" height="60"/>
@@ -402,14 +380,13 @@
         <element name="DateTimeConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="DecimalConstraints" positionX="0" positionY="0" width="128" height="105"/>
         <element name="DurationConstraints" positionX="0" positionY="0" width="128" height="60"/>
-        <element name="ForwardCursorPagedResourceList" positionX="9" positionY="153" width="128" height="75"/>
         <element name="IdentifierHolder" positionX="0" positionY="0" width="128" height="60"/>
         <element name="Image" positionX="0" positionY="0" width="128" height="90"/>
         <element name="IntegerConstraints" positionX="0" positionY="0" width="128" height="105"/>
         <element name="MultiValueConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="ResourceList" positionX="0" positionY="0" width="128" height="90"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
-        <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="150"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
         <element name="StudyParticipant" positionX="18" positionY="108" width="128" height="270"/>
         <element name="Survey" positionX="0" positionY="0" width="128" height="180"/>
