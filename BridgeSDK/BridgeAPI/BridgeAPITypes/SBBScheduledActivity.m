@@ -86,4 +86,9 @@ NSString * const SBBScheduledActivityStatusStringDeleted = @"deleted";
     return stringsForStatuses[[self statusEnum]];
 }
 
+- (BOOL)validateClientData:(id<SBBJSONValue> *)clientData error:(NSError **)error
+{
+    return [*clientData validateJSONWithError:error];
+}
+
 @end

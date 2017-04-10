@@ -310,7 +310,7 @@
 		80855F7319BE27ED006601C7 /* SBBNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F6C19BE27ED006601C7 /* SBBNetworkManager.m */; };
 		80855F7D19BE41C9006601C7 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F7B19BE41C9006601C7 /* Reachability.h */; };
 		80855F7E19BE41C9006601C7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F7C19BE41C9006601C7 /* Reachability.m */; };
-		808D03BA1E96BC810030F23E /* SBBJSONValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03B91E96BC810030F23E /* SBBJSONValue.h */; };
+		808D03BA1E96BC810030F23E /* SBBJSONValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03B91E96BC810030F23E /* SBBJSONValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		808D03CC1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03C91E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h */; };
 		808D03CD1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 808D03CA1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m */; };
 		808D03CE1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03CB1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h */; };

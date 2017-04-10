@@ -51,6 +51,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBBridgeErrorUIDelegate.h>
 #import <BridgeSDK/SBBBridgeInfoProtocol.h>
 #import <BridgeSDK/SBBBridgeInfo.h>
+#import <BridgeSDK/SBBJSONValue.h>
 #import <BridgeSDK/SBBComponent.h>
 #import <BridgeSDK/SBBComponentManager.h>
 #import <BridgeSDK/SBBConsentManager.h>

@@ -44,7 +44,7 @@
 
 @protocol SBBJSONValue <NSObject>
 
-- (BOOL)isValidJSON;
+- (BOOL)validateJSONWithError:(NSError **)error;
 
 @end
 

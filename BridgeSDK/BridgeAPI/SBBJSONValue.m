@@ -31,11 +31,29 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import"SBBJSONValue.h"
+#import "BridgeSDK.h"
+@import ObjectiveC;
 
 @implementation NSDictionary (SBBJSONValue)
 
-- (BOOL)isValidJSON {
++ (NSError *)notValidJSONErrorForValue:(id)value {
+    NSString *descriptionFormat =  NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NOT_VALID_JSON", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Object %@ (%s) is not a valid JSON object.",
+                                                                     @"Error Description: Object is not valid for JSON serialization. To be filled in with a debug description of the offending object and its type name. Intended for developers, not end users.");
+    
+    // no guarantess that value is an NSObject, or even necessarily conforms to the NSObject protocol, so don't assume it
+    NSString *valueDescription = [NSString stringWithFormat:@"%p", value]; // fall back to the pointer value
+    if ([value respondsToSelector:@selector(debugDescription)]) {
+        valueDescription = [value debugDescription];
+    } else if ([value respondsToSelector:@selector(description)]) {
+        valueDescription = [value description];
+    }
+    const char *valueType = object_getClassName(value);
+    NSString *description = [NSString stringWithFormat:descriptionFormat, valueDescription, valueType];
+    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeNotAValidJSONObject userInfo:@{NSLocalizedDescriptionKey:description}];
+
+}
+
+- (BOOL)validateJSONWithError:(NSError **)error {
     // all keys must be strings
     for (NSObject *key in self.allKeys) {
         if (![key isKindOfClass:[NSString class]]) {
@@ -45,9 +63,13 @@
     
     // all values must conform to SBBJSONValue and be valid JSON themselves
     for (id<SBBJSONValue> value in self.allValues) {
-        if (![value conformsToProtocol:@protocol(SBBJSONValue)] ||
-            ![value isValidJSON]) {
+        if (![value conformsToProtocol:@protocol(SBBJSONValue)]) {
+            if (error) {
+                *error = [self.class notValidJSONErrorForValue:value];
+            }
             return NO;
+        } else {
+            return [value validateJSONWithError:error];
         }
     }
     
@@ -58,12 +80,16 @@
 
 @implementation NSArray (SBBJSONValue)
 
-- (BOOL)isValidJSON {
+- (BOOL)validateJSONWithError:(NSError **)error {
     // all values must conform to SBBJSONValue and be valid JSON themselves
     for (id<SBBJSONValue> value in self) {
-        if (![value conformsToProtocol:@protocol(SBBJSONValue)] ||
-            ![value isValidJSON]) {
+        if (![value conformsToProtocol:@protocol(SBBJSONValue)]) {
+            if (error) {
+                *error = [self.class notValidJSONErrorForValue:value];
+            }
             return NO;
+        } else {
+            return [value validateJSONWithError:error];
         }
     }
     
@@ -74,7 +100,7 @@
 
 @implementation NSString (SBBJSONValue)
 
-- (BOOL)isValidJSON {
+- (BOOL)validateJSONWithError:(NSError **)error {
     return YES;
 }
 
@@ -82,7 +108,7 @@
 
 @implementation NSNumber (SBBJSONValue)
 
-- (BOOL)isValidJSON {
+- (BOOL)validateJSONWithError:(NSError **)error {
     return YES;
 }
 
@@ -90,7 +116,7 @@
 
 @implementation NSNull (SBBJSONValue)
 
-- (BOOL)isValidJSON {
+- (BOOL)validateJSONWithError:(NSError **)error {
     return YES;
 }
 
