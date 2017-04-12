@@ -34,7 +34,7 @@
 #import "SBBEncryptor.h"
 #import "BridgeSDK+Internal.h"
 @import UIKit;
-#import <OpenSSL/openssl.h>
+#import <openssl/openssl.h>
 
 static NSString *kEncryptedDataFilename = @"encrypted.zip";
 static NSString *kEncryptedFileBaseFolder = @"encryptor";

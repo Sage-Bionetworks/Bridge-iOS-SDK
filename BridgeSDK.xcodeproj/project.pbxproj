@@ -128,7 +128,6 @@
 		606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */; };
 		6070B1DB1DDD02CA00886FB6 /* SBBParticipantManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6070B1DA1DDD02C300886FB6 /* SBBParticipantManagerInternal.h */; };
 		60737A211DA828D20078E13E /* SBBBridgeAPIManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60737A201DA828D20078E13E /* SBBBridgeAPIManagerInternal.h */; };
-		607B127D1E4BCF9500237EA7 /* OpenSSL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 607B127C1E4BCF8A00237EA7 /* OpenSSL.a */; };
 		60B635401B14ED0500C4DA63 /* SBBBridgeNetworkManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 60B6353E1B14ED0500C4DA63 /* SBBBridgeNetworkManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60B635411B14ED0500C4DA63 /* SBBBridgeNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B6353F1B14ED0500C4DA63 /* SBBBridgeNetworkManager.m */; };
 		60B635431B14F5C800C4DA63 /* SBBNetworkManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60B635421B14F5C800C4DA63 /* SBBNetworkManagerInternal.h */; };
@@ -304,6 +303,7 @@
 		807AE2FD1B62E98C002588BB /* SBBTaskReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE2F51B62E98B002588BB /* SBBTaskReference.m */; };
 		807AE2FE1B62E98C002588BB /* SBBUserSessionInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 807AE2F61B62E98C002588BB /* SBBUserSessionInfo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		807AE2FF1B62E98C002588BB /* SBBUserSessionInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE2F71B62E98C002588BB /* SBBUserSessionInfo.m */; };
+		807D50701E9DACE600FB6F4F /* openssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 607B127C1E4BCF8A00237EA7 /* openssl.a */; };
 		80855F5619BE258C006601C7 /* BridgeSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F5519BE258C006601C7 /* BridgeSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80855F7119BE27ED006601C7 /* SBBErrors.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F6A19BE27ED006601C7 /* SBBErrors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80855F7219BE27ED006601C7 /* SBBNetworkManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F6B19BE27ED006601C7 /* SBBNetworkManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -636,8 +636,8 @@
 		606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBIdentifierHolder.m; sourceTree = "<group>"; };
 		6070B1DA1DDD02C300886FB6 /* SBBParticipantManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBParticipantManagerInternal.h; sourceTree = "<group>"; };
 		60737A201DA828D20078E13E /* SBBBridgeAPIManagerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAPIManagerInternal.h; sourceTree = "<group>"; };
-		607B127A1E4BCE0B00237EA7 /* OpenSSL */ = {isa = PBXFileReference; lastKnownFileType = folder; path = OpenSSL; sourceTree = "<group>"; };
-		607B127C1E4BCF8A00237EA7 /* OpenSSL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = OpenSSL.a; sourceTree = "<group>"; };
+		607B127A1E4BCE0B00237EA7 /* openssl */ = {isa = PBXFileReference; lastKnownFileType = folder; path = openssl; sourceTree = "<group>"; };
+		607B127C1E4BCF8A00237EA7 /* openssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = openssl.a; sourceTree = "<group>"; };
 		60B6353E1B14ED0500C4DA63 /* SBBBridgeNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeNetworkManager.h; sourceTree = "<group>"; };
 		60B6353F1B14ED0500C4DA63 /* SBBBridgeNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeNetworkManager.m; sourceTree = "<group>"; };
 		60B635421B14F5C800C4DA63 /* SBBNetworkManagerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBNetworkManagerInternal.h; sourceTree = "<group>"; };
@@ -1019,7 +1019,7 @@
 			files = (
 				601F7CB51D6246DC00C5FE09 /* MobileCoreServices.framework in Frameworks */,
 				8026D6A019EC46E3008942B0 /* libz.dylib in Frameworks */,
-				607B127D1E4BCF9500237EA7 /* OpenSSL.a in Frameworks */,
+				807D50701E9DACE600FB6F4F /* openssl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1195,8 +1195,8 @@
 		8063FF901E4A9FB1001B0C3D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				607B127C1E4BCF8A00237EA7 /* OpenSSL.a */,
-				607B127A1E4BCE0B00237EA7 /* OpenSSL */,
+				607B127C1E4BCF8A00237EA7 /* openssl.a */,
+				607B127A1E4BCE0B00237EA7 /* openssl */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -2197,7 +2197,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# first copy the correct libOpenSSL.a build variant into place\nSOURCE_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Copying contents of ${SOURCE_DIR}\"\nrm -f ./OpenSSL.a\nrm -rf ./OpenSSL\ncp -pR \"${SOURCE_DIR}/OpenSSL\" .\n\n# we have to rename the library so Xcode doesn't find implicit\n# dependencies and try to rebuild it\ncp -p \"${SOURCE_DIR}/libOpenSSL.a\" ./OpenSSL.a\n";
+			shellScript = "# first copy the correct libOpenSSL.a build variant into place\nSOURCE_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Copying contents of ${SOURCE_DIR}\"\nrm -f ./openssl.a\nrm -rf ./openssl\ncp -pR \"${SOURCE_DIR}/OpenSSL\" ./openssl\n\n# we have to rename the library so Xcode doesn't find implicit\n# dependencies and try to rebuild it\ncp -p \"${SOURCE_DIR}/libOpenSSL.a\" ./openssl.a\n";
 		};
 		80B2C4781E3AA70E001F9FEA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
