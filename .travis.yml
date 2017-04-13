@@ -8,6 +8,9 @@ before_install:
 - brew update
 - bundle update
 - echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
+- openssl aes-256-cbc -K $encrypted_d59c41fdd72b_key -iv $encrypted_d59c41fdd72b_iv
+  -in BridgeAdminCredentials.plist.enc -out BridgeAdminCredentials.plist -d
+- mv BridgeAdminCredentials.plist ..
 install:
 - "./travis/install-mogenerator.sh"
 - "./travis/install-appledoc.sh"
@@ -21,6 +24,6 @@ deploy:
   bucket: developer.sagebridge.org
   skip_cleanup: true
   local_dir: Documentation
-  upload-dir: $TRAVIS_XCODE_SCHEME/$TRAVIS_TAG
+  upload-dir: "$TRAVIS_XCODE_SCHEME/$TRAVIS_TAG"
   on:
     tags: true
