@@ -1,26 +1,26 @@
 language: objective-c
 osx_image: xcode8.2
+xcode_project: BridgeSDK.xcodeproj
+xcode_scheme: BridgeSDK
+cache:
+- bundler
 before_install:
-  - brew update
+- brew update
+- bundle update
+- echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
 install:
-  - ./travis/install-fastlane.sh
-  - ./travis/install-mogenerator.sh
-  - ./travis/install-appledoc.sh
-  - export PATH="$HOME/bin:$HOME/.fastlane/bin:$PATH"
+- "./travis/install-mogenerator.sh"
+- "./travis/install-appledoc.sh"
 script:
-# disable tests due to issue BRIDGE-1727
-#  - ./travis/run-tests.sh
-  - ./travis/build-docs.sh
-
-# deploy docs on a tag
+- "./travis/build.sh"
 deploy:
   provider: s3
   access_key_id: AKIAI6OL6JAPHW5QJTLQ
   secret_access_key:
-    secure: FN9DKqIZmYdxaOJNAQf0/R0I0IlcWMi8417Mz4XAATs92ZauHdeTrQKeeRtFT2i8LHHVzxy1KEqJt5Uo3pOvH+Awn6TTuJBR+3aOrKh88L3Qcxcl2NFdbamR2xeBkSAUfGaiLTYEQuB+QbWlVKqilGvD2wAQc37+pUv207prgJg=
+    secure: ur2qqEudbSmVAtOfAbHbyjM9k05GBCvd9HCN+ujn8adHo2Zoka9pbAFYfP2STFMCBkjyfIqHZTWxbisqvn/ofMmruoO9ve8k0LtxQVn/43EW8DC4feftyBmU6ZMlbgtvfFuG452EazQGhLzmMedBhMT6hrU5D8sbVQsAXqGmEGY=
   bucket: developer.sagebridge.org
   skip_cleanup: true
   local_dir: Documentation
-  upload-dir: "$TRAVIS_XCODE_PROJECT/$TRAVIS_TAG"
+  upload-dir: $TRAVIS_XCODE_SCHEME/$TRAVIS_TAG
   on:
     tags: true
