@@ -47,25 +47,41 @@ NSString * const kUserSessionInfoIdKey = @"id";
     if (!gAdminAuthManager.isAuthenticated) {
         XCTestExpectation *expectAdminSignin = [self expectationWithDescription:@"admin account signed in"];
         
-        // sensitive credentials are stored in a plist file that lives *outside* of the local git repo
-        NSString *credentialsPlist = [[NSBundle bundleForClass:[self class]] pathForResource:@"BridgeAdminCredentials" ofType:@"plist"];
-        NSDictionary *credentials = [[NSDictionary alloc] initWithContentsOfFile:credentialsPlist][@"studies"];
-        NSDictionary *studyCredentials = credentials[[SBBBridgeInfo shared].studyIdentifier];
-        
-        [gAdminAuthManager signInWithEmail:studyCredentials[@"email"] password:studyCredentials[@"password"] completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-            if (error) {
-                NSLog(@"Error logging in to admin account:\n%@\nResponse: %@", error, responseObject);
-            } else {
-                NSLog(@"Logged in to admin account:\n%@", responseObject);
+        // if available, get credentials from environment vars
+        NSDictionary *environment = NSProcessInfo.processInfo.environment;
+        NSString *credentialsEmail = environment[@"SAGE_ADMIN_EMAIL"];
+        NSString *credentialsPassword = environment[@"SAGE_ADMIN_PASSWORD"];
+
+        // if either is missing from environment vars, fall back to looking for the credentials
+        // in a plist file that lives *outside* of the local git repo
+        if (!credentialsEmail.length || !credentialsPassword.length) {
+            NSString *credentialsPlist = [[NSBundle bundleForClass:[self class]] pathForResource:@"BridgeAdminCredentials" ofType:@"plist"];
+            if (credentialsPlist) {
+                NSDictionary *credentials = [[NSDictionary alloc] initWithContentsOfFile:credentialsPlist][@"studies"];
+                NSDictionary *studyCredentials = credentials[[SBBBridgeInfo shared].studyIdentifier];
+                credentialsEmail = studyCredentials[@"email"];
+                credentialsPassword = studyCredentials[@"password"];
             }
-            [expectAdminSignin fulfill];
-        }];
+        }
         
-        [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
-            if (error) {
-                NSLog(@"Time out error trying to log in to admin account:\n%@", error);
-            }
-        }];
+        if (credentialsEmail.length && credentialsPassword.length) {
+            [gAdminAuthManager signInWithEmail:credentialsEmail password:credentialsPassword completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+                if (error) {
+                    NSLog(@"Error logging in to admin account:\n%@\nResponse: %@", error, responseObject);
+                } else {
+                    NSLog(@"Logged in to admin account:\n%@", responseObject);
+                }
+                [expectAdminSignin fulfill];
+            }];
+            
+            [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+                if (error) {
+                    NSLog(@"Time out error trying to log in to admin account:\n%@", error);
+                }
+            }];
+        } else {
+            NSLog(@"Error: Missing admin email (%@) and/or password (%@) for integration test study", credentialsEmail, credentialsPassword);
+        }
     }
     
     // create & sign in a dev user
