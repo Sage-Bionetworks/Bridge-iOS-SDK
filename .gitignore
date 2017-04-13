@@ -29,7 +29,6 @@ Documentation/
 /OpenSSL
 /libOpenSSL.a
 /OpenSSL.a
-BridgeAdminCredentials.plist
 
 # fastlane specific
 fastlane/report.xml
