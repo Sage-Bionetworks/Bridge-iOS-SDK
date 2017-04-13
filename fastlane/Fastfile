@@ -27,7 +27,7 @@ platform :ios do
     scheme = options[:scheme]
     appledoc(
       project_name: "#{scheme}",
-      project_company: "Sage BioNetworks",
+      project_company: "Sage Bionetworks",
       input: "#{scheme}",
       output: "./Documentation",
       options: "--keep-intermediate-files --search-undocumented-doc",
