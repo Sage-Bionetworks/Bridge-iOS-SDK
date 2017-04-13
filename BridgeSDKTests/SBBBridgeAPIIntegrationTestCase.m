@@ -47,22 +47,21 @@ NSString * const kUserSessionInfoIdKey = @"id";
     if (!gAdminAuthManager.isAuthenticated) {
         XCTestExpectation *expectAdminSignin = [self expectationWithDescription:@"admin account signed in"];
         
-        // sensitive credentials are stored in a plist file that lives *outside* of the local git repo
-        NSString *credentialsPlist = [[NSBundle bundleForClass:[self class]] pathForResource:@"BridgeAdminCredentials" ofType:@"plist"];
-        NSString *credentialsEmail = nil;
-        NSString *credentialsPassword = nil;
-        if (credentialsPlist) {
-            NSDictionary *credentials = [[NSDictionary alloc] initWithContentsOfFile:credentialsPlist][@"studies"];
-            NSDictionary *studyCredentials = credentials[[SBBBridgeInfo shared].studyIdentifier];
-            credentialsEmail = studyCredentials[@"email"];
-            credentialsPassword = studyCredentials[@"password"];
-        }
-        
-        // ...if not found, check env vars
+        // if available, get credentials from environment vars
+        NSDictionary *environment = NSProcessInfo.processInfo.environment;
+        NSString *credentialsEmail = environment[@"SAGE_ADMIN_EMAIL"];
+        NSString *credentialsPassword = environment[@"SAGE_ADMIN_PASSWORD"];
+
+        // if either is missing from environment vars, fall back to looking for the credentials
+        // in a plist file that lives *outside* of the local git repo
         if (!credentialsEmail.length || !credentialsPassword.length) {
-            NSDictionary *environment = NSProcessInfo.processInfo.environment;
-            credentialsEmail = credentialsEmail.length ? credentialsEmail : environment[@"SAGE_ADMIN_EMAIL"];
-            credentialsPassword = credentialsPassword.length ? credentialsPassword : environment[@"SAGE_ADMIN_PASSWORD"];
+            NSString *credentialsPlist = [[NSBundle bundleForClass:[self class]] pathForResource:@"BridgeAdminCredentials" ofType:@"plist"];
+            if (credentialsPlist) {
+                NSDictionary *credentials = [[NSDictionary alloc] initWithContentsOfFile:credentialsPlist][@"studies"];
+                NSDictionary *studyCredentials = credentials[[SBBBridgeInfo shared].studyIdentifier];
+                credentialsEmail = studyCredentials[@"email"];
+                credentialsPassword = studyCredentials[@"password"];
+            }
         }
         
         if (credentialsEmail.length && credentialsPassword.length) {
