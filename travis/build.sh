@@ -7,6 +7,7 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 fi
 if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
     bundle exec fastlane doc scheme:"BridgeSDK"
+    cp BridgeAdminCredentials.plist ../BridgeAdminCredentials.plist
     bundle exec fastlane test scheme:"BridgeSDK"
 fi
 exit $?

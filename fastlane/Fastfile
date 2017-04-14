@@ -38,7 +38,12 @@ platform :ios do
   desc "Runs all the tests"
   lane :test do |options|
     if options[:scheme]
-      scan(scheme: options[:scheme])
+       scan(
+         scheme: options[:scheme],
+         xcargs: [
+           "SAGE_ADMIN_EMAIL=#{ENV['SAGE_ADMIN_EMAIL']}",
+           "SAGE_ADMIN_PASSWORD=#{ENV['SAGE_ADMIN_PASSWORD']}"]
+        )
     else
       scan
     end
