@@ -57,10 +57,10 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
 /*!
  Gets all available, started, or scheduled activities for a user. The "daysAhead" parameter allows you to retrieve activities that are scheduled in the future for the indicated number of days past today (to a maximum of four days, at this time). This allows certain kinds of UIs (e.g. "You have N activities tomorrow" or "You have completed N of X activities today", even when the activities are not yet to be performed). A "daysBehind" parameter allows you to retain previously-cached activities that have not yet been completed that expired within the indicated number of days in the past. This allows UIs that say, e.g., "You left N activities uncompleted yesterday." Scheduled activities will be returned in the timezone of the device at the time of the request. Once a task is finished, or expires (the time has passed for it to be started), or becomes invalid due to a schedule change on the server, it will be removed from the list of scheduled activities returned from Bridge, and (except for previously-fetched but unfinished tasks within daysBehind) will also be removed from the list passed to this method's completion handler.
   
- @param daysAhead  A number of days in the future (0-4) for which to retrieve available/started/scheduled activities.
+ @param daysAhead   A number of days in the future (0-4) for which to retrieve available/started/scheduled activities.
  @param daysBehind  A number of days in the past (no limit) for which to include previously-cached but expired and unfinished activities (ignored if the SDK was initialized with useCache=NO).
- @param policy Caching policy to use (ignored if the SDK was initialized with useCache=NO).
- @param completion An SBBActivityManagerGetCompletionBlock to be called upon completion.
+ @param policy      Caching policy to use (ignored if the SDK was initialized with useCache=NO).
+ @param completion  An SBBActivityManagerGetCompletionBlock to be called upon completion.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
@@ -120,9 +120,24 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
 - (NSURLSessionTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
+ Add client-specific JSON-serializable data to a ScheduledActivity.
+ 
+ This data will be stored on this ScheduledActivity object on the Bridge server, for later retrieval via the getScheduledActivitiesForGuid:scheduledFrom:to:withCompletion: method. This is intended to allow storing small amounts of data summarizing the result of performing the activity, e.g. a single computed "score" or the like, and not the full raw results.
+ 
+ The data can be of any JSON-serializable iOS type: NSString, NSNumber, NSNull, or an NSArray or NSDictionary containing only values of a JSON-serializable iOS type or collection thereof (and the keys of the NSDictionary must be of type NSString).
+ 
+ @param clientData          A (relatively small) JSON-serializable object to store in Bridge with the ScheduledActivity.
+ @param scheduledActivity   The ScheduledActivity to which the clientData will be attached.
+ @param completion          An SBBActivityManagerGetCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionTask *)setClientData:(id<SBBJSONValue>)clientData forScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+
+/*!
  Update multiple scheduled activities' statuses with the API at one time.
  
- Only the startedOn and finishedOn fields of ScheduledActivity are user-writable, so only changes to those fields will have any effect on the server state.
+ Only the startedOn, finishedOn, and clientData fields of ScheduledActivity are user-writable, so only changes to those fields will have any effect on the server state.
  
  @param scheduledActivities The list of ScheduledActivity objects whose statuses are to be updated to the API.
  @param completion An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
@@ -130,6 +145,19 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
 - (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+
+/*!
+ Gets all the participant's activities with the specified guid in the specified date range. Activities that were never scheduled (e.g. the participant didn't open the app for longer than the cacheDaysAhead that was given when setting up BridgeSDK, so it didn't request scheduled activities during that period, so Bridge never scheduled them) will not be included as they don't actually exist on the server.
+ 
+ @param activityGuid    The guid for the desired activities to be retrieved. This can be found in the Bridge study manager UI next to the activity's entry in its schedule.
+ @param scheduledFrom   The earlier end of the desired date range for activities to be retrieved.
+ @param scheduledTo     The later end of the desired date range for activities to be retrieved.
+ @param policy          Caching policy to use (ignored if the SDK was initialized with useCache=NO).
+ @param completion      An SBBActivityManagerGetCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
 @end
 
