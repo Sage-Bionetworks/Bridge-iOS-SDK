@@ -41,8 +41,8 @@ platform :ios do
        scan(
          scheme: options[:scheme],
          xcargs: [
-           "SAGE_ADMIN_EMAIL=#{ENV['SAGE_ADMIN_EMAIL']}",
-           "SAGE_ADMIN_PASSWORD=#{ENV['SAGE_ADMIN_PASSWORD']}"]
+           'SAGE_ADMIN_EMAIL=$SAGE_ADMIN_EMAIL',
+           'SAGE_ADMIN_PASSWORD=$SAGE_ADMIN_PASSWORD']
         )
     else
       scan
