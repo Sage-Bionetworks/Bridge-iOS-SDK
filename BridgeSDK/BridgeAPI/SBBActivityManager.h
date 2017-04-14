@@ -32,13 +32,15 @@
 #import "SBBBridgeAPIManager.h"
 #import "SBBScheduledActivity.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  Completion block called when retrieving scheduled activities from the API.
  
  @param activitiesList By default, an array of SBBScheduledActivity objects, unless the ScheduledActivity type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:.
  @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBActivityManagerGetCompletionBlock)(NSArray *activitiesList, NSError *error);
+typedef void (^SBBActivityManagerGetCompletionBlock)(NSArray * _Nullable activitiesList, NSError * _Nullable error);
 
 /*!
  Completion block called when updating a ScheduledActivity's status to the API.
@@ -46,7 +48,7 @@ typedef void (^SBBActivityManagerGetCompletionBlock)(NSArray *activitiesList, NS
  @param responseObject JSON response from the server.
  @param error          An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSError *error);
+typedef void (^SBBActivityManagerUpdateCompletionBlock)(_Nullable id responseObject, NSError * _Nullable error);
 
 /*!
  This protocol defines the interface to the SBBActivityManager's non-constructor, non-initializer methods. The interface is
@@ -72,7 +74,7 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
 - (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
 /**
- This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyFallBackToCache,
+ This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyFallBackToCached,
  if caching is enabled. Also implies a default value of 1 for daysBehind.
  */
 - (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
@@ -84,11 +86,11 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  
  @param scheduledActivity   The ScheduledActivity to be marked as started.
  @param startDate           The date/time as of which the Task was started.
- @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
+ @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion. Optional.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(nullable SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Mark a ScheduledActivity as finished, as of the time this method is called.
@@ -99,11 +101,11 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  
  @param scheduledActivity   The ScheduledActivity to be marked as started.
  @param finishDate          The date/time as of which the Task was finished.
- @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
+ @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion. Optional.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)finishScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)finishDate withCompletion:(nullable SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Delete a ScheduledActivity from the list of available/started/scheduled activities.
@@ -113,11 +115,11 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  This method notifies the server API to delete the scheduled activity, and calls the completion block upon success (or failure) of that notification.
  
  @param scheduledActivity   The ScheduledActivity to be deleted.
- @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
+ @param completion          An SBBActivityManagerUpdateCompletionBlock to be called upon completion. Optional.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)deleteScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(nullable SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Add client-specific JSON-serializable data to a ScheduledActivity.
@@ -128,11 +130,11 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  
  @param clientData          A (relatively small) JSON-serializable object to store in Bridge with the ScheduledActivity.
  @param scheduledActivity   The ScheduledActivity to which the clientData will be attached.
- @param completion          An SBBActivityManagerGetCompletionBlock to be called upon completion.
+ @param completion          An SBBActivityManagerGetCompletionBlock to be called upon completion. Optional.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)setClientData:(id<SBBJSONValue>)clientData forScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)setClientData:(nullable id<SBBJSONValue>)clientData forScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(nullable SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Update multiple scheduled activities' statuses with the API at one time.
@@ -140,11 +142,11 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  Only the startedOn, finishedOn, and clientData fields of ScheduledActivity are user-writable, so only changes to those fields will have any effect on the server state.
  
  @param scheduledActivities The list of ScheduledActivity objects whose statuses are to be updated to the API.
- @param completion An SBBActivityManagerUpdateCompletionBlock to be called upon completion.
+ @param completion An SBBActivityManagerUpdateCompletionBlock to be called upon completion. Optional.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(nullable SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Gets all the participant's activities with the specified guid in the specified date range. Activities that were never scheduled (e.g. the participant didn't open the app for longer than the cacheDaysAhead that was given when setting up BridgeSDK, so it didn't request scheduled activities during that period, so Bridge never scheduled them) will not be included as they don't actually exist on the server.
@@ -159,6 +161,11 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
  */
 - (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
 
+/*!
+ This is a convenience method that assumes the default caching policy, which is SBBCachingPolicyFallBackToCached, if caching is enabled.
+ */
+- (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo withCompletion:(SBBActivityManagerGetCompletionBlock)completion;
+
 @end
 
 /*!
@@ -167,3 +174,5 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(id responseObject, NSErr
 @interface SBBActivityManager : SBBBridgeAPIManager<SBBComponent, SBBActivityManagerProtocol>
 
 @end
+
+NS_ASSUME_NONNULL_END

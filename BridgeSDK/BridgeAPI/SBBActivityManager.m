@@ -256,11 +256,36 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     return [self finishScheduledActivity:scheduledActivity asOf:[NSDate date] withCompletion:completion];
 }
 
+- (NSURLSessionTask *)setClientData:(id<SBBJSONValue>)clientData forScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
+{
+    // If it's not nil but also not valid JSON, call the completion block with the error and return nil
+    NSError *error = nil;
+    if (clientData && ![clientData validateJSONWithError:&error]) {
+        if (completion) {
+            completion(clientData, error);
+        }
+        return nil;
+    }
+    
+    // otherwise, set it (or nil it) and update to Bridge
+    scheduledActivity.clientData = clientData;
+    return [self updateScheduledActivities:@[scheduledActivity] withCompletion:completion];
+}
+
 - (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
     id jsonTasks = [self.objectManager bridgeJSONFromObject:scheduledActivities];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
+    
+    if (gSBBUseCache) {
+        // Update the activities in the local cache
+        [self.cacheManager.cacheIOContext performBlock:^{
+            for (SBBScheduledActivity *scheduledActivity in scheduledActivities) {
+                [scheduledActivity saveToCoreDataCacheWithObjectManager:self.objectManager];
+            }
+        }];
+    }
     
     // Activities can be started/finished without a network connection, so this has to be able to do that too
     return [self.networkManager post:kSBBActivityAPI headers:headers parameters:jsonTasks background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
@@ -272,6 +297,16 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
             completion(responseObject, error);
         }
     }];
+}
+
+- (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+{
+    
+}
+
+- (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+{
+    return [self getScheduledActivitiesForGuid:activityGuid scheduledFrom:scheduledFrom to:scheduledTo cachingPolicy:SBBCachingPolicyFallBackToCached withCompletion:completion];
 }
 
 // Note: this method blocks until it gets its turn in the cache IO context queue
