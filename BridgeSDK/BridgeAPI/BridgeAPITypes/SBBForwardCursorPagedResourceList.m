@@ -28,11 +28,53 @@
 //
 
 #import "SBBForwardCursorPagedResourceList.h"
+#import "SBBObjectManagerInternal.h"
+#import "ModelObjectInternal.h"
+#import "SBBForwardCursorPagedResourceListInternal.h"
 
 @implementation SBBForwardCursorPagedResourceList
 
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.
+- (void)reconcileWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerInternalProtocol>)objectManager
+{
+    // For all but items[], the server value is canonical.
+    // For items[], we want to accumulate the ScheduledActivities for a given forward cursor paged list
+    // as the pages are loaded from Bridge, rather than overwriting items[] with just the current page of
+    // activities each time.
+    NSArray<SBBScheduledActivity *> *savedItems = self.items;
+    
+    [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
+    
+    // Since ScheduledActivity objects always originate on the server, never in the app, if we have any
+    // in our local cache that we're no longer getting back from the server, we should delete them locally
+    // as well, since that most likely means there was some kind of problem that required cleanup on the
+    // server and the missing ones are no longer canonically valid. We look at the offsetBy string to
+    // determine the (inclusive) start date for the current page of items, and remove our cached items in
+    // the date range between that and the previous offsetBy (or scheduledOnStart if not yet set), then
+    // add in the newly-retrieved ones, and sort by scheduledOnStart descending before adding back to
+    // the cached object's items[].
+    NSDate *lastOffset = self.lastOffsetBy__;
+    if (!lastOffset) {
+        lastOffset = self.scheduledOnStart;
+    }
+    NSString *comparisonKey = NSStringFromSelector(@selector(scheduledOnStart));
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K < %K OR %K >= %@",
+                              comparisonKey, NSStringFromSelector(@selector(offsetBy)),
+                              comparisonKey, lastOffset];
+    savedItems = [savedItems filteredArrayUsingPredicate:predicate];
+    [savedItems arrayByAddingObjectsFromArray:self.items];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:comparisonKey ascending:NO];
+    savedItems = [savedItems sortedArrayUsingDescriptors:@[sortDescriptor]];
+    
+    [self removeItemsObjects];
+    for (SBBScheduledActivity *scheduledActivity in savedItems) {
+        [self addItemsObject:scheduledActivity];
+    }
+    
+    // update lastOffsetBy__ for the next pass
+    self.lastOffsetBy__ = self.offsetBy;
+}
 
 @end

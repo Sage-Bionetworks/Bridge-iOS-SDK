@@ -41,6 +41,20 @@
 
 @interface _SBBForwardCursorPagedResourceList : SBBBridgeObject
 
+@property (nonatomic, strong) NSNumber* hasNext;
+
+@property (nonatomic, assign) BOOL hasNextValue;
+
+@property (nonatomic, strong) NSDate* offsetBy;
+
+@property (nonatomic, strong) NSNumber* pageSize;
+
+@property (nonatomic, assign) int16_t pageSizeValue;
+
+@property (nonatomic, strong) NSDate* scheduledOnEnd;
+
+@property (nonatomic, strong) NSDate* scheduledOnStart;
+
 @property (nonatomic, strong, readonly) NSArray *items;
 
 - (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;

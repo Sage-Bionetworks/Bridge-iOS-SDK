@@ -95,11 +95,21 @@
         <attribute name="unit" optional="YES" attributeType="String" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years)$" syncable="YES"/>
     </entity>
     <entity name="ForwardCursorPagedResourceList" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="hasNext" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="lastOffsetBy__" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
         <attribute name="listID__" optional="YES" attributeType="String" defaultValueString="ScheduledActivity" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </attribute>
+        <attribute name="offsetBy" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="pageSize" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scheduledOnEnd" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scheduledOnStart" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="forwardCursorPagedResourceList" inverseEntity="BridgeObject" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="listID__"/>
@@ -402,7 +412,7 @@
         <element name="DateTimeConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="DecimalConstraints" positionX="0" positionY="0" width="128" height="105"/>
         <element name="DurationConstraints" positionX="0" positionY="0" width="128" height="60"/>
-        <element name="ForwardCursorPagedResourceList" positionX="9" positionY="153" width="128" height="75"/>
+        <element name="ForwardCursorPagedResourceList" positionX="9" positionY="153" width="128" height="165"/>
         <element name="IdentifierHolder" positionX="0" positionY="0" width="128" height="60"/>
         <element name="Image" positionX="0" positionY="0" width="128" height="90"/>
         <element name="IntegerConstraints" positionX="0" positionY="0" width="128" height="105"/>

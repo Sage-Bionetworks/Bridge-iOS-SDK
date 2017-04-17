@@ -48,7 +48,19 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (ForwardCursorPagedResourceList)
 
+@property (nullable, nonatomic, retain) NSNumber* hasNext;
+
+@property (nullable, nonatomic, retain) NSDate* lastOffsetBy__;
+
 @property (nullable, nonatomic, retain) NSString* listID__;
+
+@property (nullable, nonatomic, retain) NSDate* offsetBy;
+
+@property (nullable, nonatomic, retain) NSNumber* pageSize;
+
+@property (nullable, nonatomic, retain) NSDate* scheduledOnEnd;
+
+@property (nullable, nonatomic, retain) NSDate* scheduledOnStart;
 
 @property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *items;
 
@@ -80,11 +92,41 @@
 
 #pragma mark Scalar values
 
+- (BOOL)hasNextValue
+{
+	return [self.hasNext boolValue];
+}
+
+- (void)setHasNextValue:(BOOL)value_
+{
+	self.hasNext = [NSNumber numberWithBool:value_];
+}
+
+- (int16_t)pageSizeValue
+{
+	return [self.pageSize shortValue];
+}
+
+- (void)setPageSizeValue:(int16_t)value_
+{
+	self.pageSize = [NSNumber numberWithShort:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
+
+    self.hasNext = [dictionary objectForKey:@"hasNext"];
+
+    self.offsetBy = [NSDate dateWithISO8601String:[dictionary objectForKey:@"offsetBy"]];
+
+    self.pageSize = [dictionary objectForKey:@"pageSize"];
+
+    self.scheduledOnEnd = [NSDate dateWithISO8601String:[dictionary objectForKey:@"scheduledOnEnd"]];
+
+    self.scheduledOnStart = [NSDate dateWithISO8601String:[dictionary objectForKey:@"scheduledOnStart"]];
 
     // overwrite the old items relationship entirely rather than adding to it
     [self removeItemsObjects];
@@ -101,6 +143,16 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+
+    [dict setObjectIfNotNil:self.hasNext forKey:@"hasNext"];
+
+    [dict setObjectIfNotNil:[self.offsetBy ISO8601String] forKey:@"offsetBy"];
+
+    [dict setObjectIfNotNil:self.pageSize forKey:@"pageSize"];
+
+    [dict setObjectIfNotNil:[self.scheduledOnEnd ISO8601String] forKey:@"scheduledOnEnd"];
+
+    [dict setObjectIfNotNil:[self.scheduledOnStart ISO8601String] forKey:@"scheduledOnStart"];
 
     if ([self.items count] > 0)
 	{
@@ -143,7 +195,19 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
+        self.hasNext = managedObject.hasNext;
+
+        self.lastOffsetBy__ = managedObject.lastOffsetBy__;
+
         self.listID__ = managedObject.listID__;
+
+        self.offsetBy = managedObject.offsetBy;
+
+        self.pageSize = managedObject.pageSize;
+
+        self.scheduledOnEnd = managedObject.scheduledOnEnd;
+
+        self.scheduledOnStart = managedObject.scheduledOnStart;
 
 		for (NSManagedObject *itemsManagedObj in managedObject.items)
 		{
@@ -187,7 +251,19 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
+    managedObject.hasNext = ((id)self.hasNext == [NSNull null]) ? nil : self.hasNext;
+
+    managedObject.lastOffsetBy__ = ((id)self.lastOffsetBy__ == [NSNull null]) ? nil : self.lastOffsetBy__;
+
     managedObject.listID__ = ((id)self.listID__ == [NSNull null]) ? nil : self.listID__;
+
+    managedObject.offsetBy = ((id)self.offsetBy == [NSNull null]) ? nil : self.offsetBy;
+
+    managedObject.pageSize = ((id)self.pageSize == [NSNull null]) ? nil : self.pageSize;
+
+    managedObject.scheduledOnEnd = ((id)self.scheduledOnEnd == [NSNull null]) ? nil : self.scheduledOnEnd;
+
+    managedObject.scheduledOnStart = ((id)self.scheduledOnStart == [NSNull null]) ? nil : self.scheduledOnStart;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSOrderedSet *itemsCopy = [managedObject.items copy];

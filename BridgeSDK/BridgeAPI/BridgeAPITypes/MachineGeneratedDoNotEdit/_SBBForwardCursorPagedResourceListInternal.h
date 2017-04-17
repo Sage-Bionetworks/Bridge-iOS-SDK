@@ -11,6 +11,8 @@
 
 @interface _SBBForwardCursorPagedResourceList ()
 
+@property (nonatomic, strong) NSDate* lastOffsetBy__;
+
 @property (nonatomic, strong) NSString* listID__;
 
 @end
