@@ -311,10 +311,10 @@
 		80855F7D19BE41C9006601C7 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = 80855F7B19BE41C9006601C7 /* Reachability.h */; };
 		80855F7E19BE41C9006601C7 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 80855F7C19BE41C9006601C7 /* Reachability.m */; };
 		808D03BA1E96BC810030F23E /* SBBJSONValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03B91E96BC810030F23E /* SBBJSONValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		808D03CC1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03C91E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h */; };
+		808D03CC1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03C91E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		808D03CD1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 808D03CA1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m */; };
 		808D03CE1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03CB1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h */; };
-		808D03D21E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03CF1E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h */; };
+		808D03D21E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03CF1E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		808D03D31E96CDF30030F23E /* SBBForwardCursorPagedResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 808D03D01E96CDF30030F23E /* SBBForwardCursorPagedResourceList.m */; };
 		808D03D41E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 808D03D11E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h */; };
 		808D03D61E96D6770030F23E /* SBBJSONValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 808D03D51E96D6770030F23E /* SBBJSONValue.m */; };

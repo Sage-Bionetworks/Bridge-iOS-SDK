@@ -43,7 +43,7 @@
     // For items[], we want to accumulate the ScheduledActivities for a given forward cursor paged list
     // as the pages are loaded from Bridge, rather than overwriting items[] with just the current page of
     // activities each time.
-    NSArray<SBBScheduledActivity *> *savedItems = self.items;
+    NSArray<SBBScheduledActivity *> *savedItems = [self.items copy];
     
     [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
     
@@ -51,20 +51,24 @@
     // in our local cache that we're no longer getting back from the server, we should delete them locally
     // as well, since that most likely means there was some kind of problem that required cleanup on the
     // server and the missing ones are no longer canonically valid. We look at the offsetBy string to
-    // determine the (inclusive) start date for the current page of items, and remove our cached items in
-    // the date range between that and the previous offsetBy (or scheduledOnStart if not yet set), then
-    // add in the newly-retrieved ones, and sort by scheduledOnStart descending before adding back to
-    // the cached object's items[].
-    NSDate *lastOffset = self.lastOffsetBy__;
-    if (!lastOffset) {
-        lastOffset = self.scheduledOnStart;
+    // determine the (inclusive) start date for the current page of items (or scheduledOnStart if not set),
+    // and remove our cached items in the date range between that and the previous offsetBy (or scheduledOnEnd
+    // if not yet set), then add in the newly-retrieved ones, and sort by scheduledOn descending before
+    // adding back to the cached object's items[].
+    NSDate *startDate = self.offsetBy;
+    if (!startDate) {
+        startDate = self.scheduledOnStart;
     }
-    NSString *comparisonKey = NSStringFromSelector(@selector(scheduledOnStart));
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K < %K OR %K >= %@",
-                              comparisonKey, NSStringFromSelector(@selector(offsetBy)),
-                              comparisonKey, lastOffset];
+    NSDate *endDate = self.lastOffsetBy__;
+    if (!endDate) {
+        endDate = self.scheduledOnEnd;
+    }
+    NSString *comparisonKey = NSStringFromSelector(@selector(scheduledOn));
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K < %@ OR %K >= %@",
+                              comparisonKey, startDate,
+                              comparisonKey, endDate];
     savedItems = [savedItems filteredArrayUsingPredicate:predicate];
-    [savedItems arrayByAddingObjectsFromArray:self.items];
+    savedItems = [savedItems arrayByAddingObjectsFromArray:self.items];
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:comparisonKey ascending:NO];
     savedItems = [savedItems sortedArrayUsingDescriptors:@[sortDescriptor]];
     

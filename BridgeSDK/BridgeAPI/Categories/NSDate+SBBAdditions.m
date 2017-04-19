@@ -123,6 +123,13 @@
     return [[[self class] ISO8601TimeOnlyformatter] stringFromDate:self];
 }
 
+- (NSString *)ISO8601DateTimeOnlyString
+{
+    NSString *dateOnly = [self ISO8601DateOnlyString];
+    NSString *timeOnly = [self ISO8601TimeOnlyString];
+    return [NSString stringWithFormat:@"%@T%@", dateOnly, timeOnly];
+}
+
 - (NSString *)ISO8601OffsetString
 {
     return [[[self class] ISO8601OffsetOnlyformatter] stringFromDate:self];

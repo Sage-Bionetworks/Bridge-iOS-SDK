@@ -44,6 +44,7 @@
 - (NSString *)ISO8601StringUTC;
 - (NSString *)ISO8601DateOnlyString;
 - (NSString *)ISO8601TimeOnlyString;
+- (NSString *)ISO8601DateTimeOnlyString;
 - (NSString *)ISO8601OffsetString;
 
 @end
