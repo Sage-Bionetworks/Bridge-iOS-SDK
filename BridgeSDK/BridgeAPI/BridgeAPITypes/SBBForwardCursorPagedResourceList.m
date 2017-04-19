@@ -44,24 +44,29 @@
     // as the pages are loaded from Bridge, rather than overwriting items[] with just the current page of
     // activities each time.
     NSArray<SBBScheduledActivity *> *savedItems = [self.items copy];
-    
-    [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
-    
+
     // Since ScheduledActivity objects always originate on the server, never in the app, if we have any
     // in our local cache that we're no longer getting back from the server, we should delete them locally
     // as well, since that most likely means there was some kind of problem that required cleanup on the
-    // server and the missing ones are no longer canonically valid. We look at the offsetBy string to
+    // server and the missing ones are no longer canonically valid. We'll look at the offsetBy string to
     // determine the (inclusive) start date for the current page of items (or scheduledOnStart if not set),
     // and remove our cached items in the date range between that and the previous offsetBy (or scheduledOnEnd
     // if not yet set), then add in the newly-retrieved ones, and sort by scheduledOn descending before
-    // adding back to the cached object's items[].
+    // adding back to the cached object's items[]. So let's get the previous offsetBy, if we need it,
+    // before updating from the dictionary.
+    NSDate *endDate = self.offsetBy;
+    if (!endDate) {
+        endDate = self.scheduledOnEnd;
+    }
+
+    // now that we've got the old offsetBy if we needed it, we can update ourself from the dictionary
+    [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
+    
+    // now get the start date of the new item range--either the new offsetBy, or the requested start date
+    // if offsetBy is not (or no longer) set
     NSDate *startDate = self.offsetBy;
     if (!startDate) {
         startDate = self.scheduledOnStart;
-    }
-    NSDate *endDate = self.lastOffsetBy__;
-    if (!endDate) {
-        endDate = self.scheduledOnEnd;
     }
     NSString *comparisonKey = NSStringFromSelector(@selector(scheduledOn));
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K < %@ OR %K >= %@",
@@ -76,9 +81,6 @@
     for (SBBScheduledActivity *scheduledActivity in savedItems) {
         [self addItemsObject:scheduledActivity];
     }
-    
-    // update lastOffsetBy__ for the next pass
-    self.lastOffsetBy__ = self.offsetBy;
 }
 
 @end

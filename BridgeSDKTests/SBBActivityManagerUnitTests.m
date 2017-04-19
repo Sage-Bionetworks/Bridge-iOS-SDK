@@ -112,8 +112,6 @@
     NSString *scheduledActivityGuid2 = [NSString stringWithFormat:@"%@:%@", activityGuid, task2ScheduledString];
     NSDate *fromDate = [NSDate dateWithISO8601String:fromDateString];
     NSDate *toDate = [NSDate dateWithISO8601String:toDateString];
-    NSDate *task1Scheduled = [NSDate dateWithISO8601String:task1ScheduledString];
-    NSDate *task2Scheduled = [NSDate dateWithISO8601String:task2ScheduledString];
     NSDictionary *task1 =
     @{
       @"type": @"ScheduledActivity",
