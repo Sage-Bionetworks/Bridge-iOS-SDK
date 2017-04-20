@@ -13,6 +13,8 @@
 #import "SBBActivityManager.h"
 #import "SBBScheduledActivity.h"
 #import "SBBActivity.h"
+#import "NSDate+SBBAdditions.h"
+#import "SBBCacheManager.h"
 
 #define TASKS_ADMIN_API @"/v3/scheduleplans"
 
@@ -230,6 +232,23 @@
 }
 
 - (void)testUpdateScheduledActivities {
+    NSDictionary *validJSON =
+    @{
+      @"thing": @{
+              @"thing1": @"today's-date-as-a-string",
+              @"thing2": [[NSDate date] ISO8601StringUTC]
+              },
+      @"anotherThing": @[
+              @"anotherThing1",
+              @(12345),
+              @(NO),
+              @(3.14159),
+              @{
+                  @"andAnotherThing": @"never mind"
+                  }
+              ]
+      };
+    
     NSInteger daysAhead = 0; // just get today's
     XCTestExpectation *expectTasks = [self expectationWithDescription:@"got scheduled activities for Update Activities test"];
     [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead withCompletion:^(NSArray *tasksList, NSError *error) {
@@ -243,14 +262,31 @@
         XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], @"Method returned a list of ScheduledActivity objects");
         task.startedOn = [NSDate date];
         task.finishedOn = [NSDate date];
+        task.clientData = validJSON;
         [SBBComponent(SBBActivityManager) updateScheduledActivities:@[task] withCompletion:^(id responseObject, NSError *error) {
             BOOL isDictionary = [responseObject isKindOfClass:[NSDictionary class]];
             XCTAssert(isDictionary, @"Update activity response is an NSDictionary");
             if (isDictionary) {
                 XCTAssertEqualObjects([responseObject objectForKey:@"message"], @"Activities updated.", @"Update activity succeeded.");
+                
+                // ok now delete the task from local cache to be sure we're not just looking at that, then retrieve from Bridge and make sure the updates "took"
+                [SBBComponent(SBBCacheManager) removeFromCacheObjectOfType:task.type withId:task.guid];
+                NSArray *guidComponents = [task.guid componentsSeparatedByString:@":"];
+                NSString *activityGuid = guidComponents[0];
+                [SBBComponent(SBBActivityManager) getScheduledActivitiesForGuid:activityGuid scheduledFrom:task.scheduledOn to:task.expiresOn withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", NSStringFromSelector(@selector(guid)), task.guid];
+                    NSArray *matchingTasks = [activitiesList filteredArrayUsingPredicate:predicate];
+                    XCTAssert(matchingTasks.count == 1, @"Expected one task with guid %@, got %@", task.guid, @(matchingTasks.count));
+                    if (matchingTasks.count == 1) {
+                        SBBScheduledActivity *newTask = matchingTasks[0];
+                        XCTAssertNotEqual(task, newTask, @"Somehow even after deleting from cache, the fetched object is the same one as before");
+                        XCTAssertEqualObjects(task, newTask, @"The object as saved to Bridge does not match what came back");
+                    }
+                    [expectTasks fulfill];
+                }];
+            } else {
+                [expectTasks fulfill];
             }
-            
-            [expectTasks fulfill];
         }];
     }];
     

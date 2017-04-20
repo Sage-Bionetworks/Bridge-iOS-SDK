@@ -89,7 +89,7 @@
     static NSDateFormatter *formatter;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        formatter = [[self ISO8601UTCformatter] copy];
+        formatter = [[self ISO8601formatter] copy];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
     });
     

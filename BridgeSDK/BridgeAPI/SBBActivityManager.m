@@ -272,18 +272,27 @@ NSInteger const     kFetchPageSize =     100;
 
 - (NSURLSessionTask *)setClientData:(id<SBBJSONValue>)clientData forScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
-    // If it's not nil but also not valid JSON, call the completion block with the error and return nil
+    // If it's not valid JSON, call the completion block with the error and return nil
     NSError *error = nil;
-    if (clientData && ![clientData validateJSONWithError:&error]) {
+    if (![clientData validateJSONWithError:&error]) {
         if (completion) {
             completion(clientData, error);
         }
         return nil;
     }
     
-    // otherwise, set it (or nil it) and update to Bridge
+    // otherwise, set it and update to Bridge
     scheduledActivity.clientData = clientData;
-    return [self updateScheduledActivities:@[scheduledActivity] withCompletion:completion];
+    return [self updateScheduledActivities:@[scheduledActivity] withCompletion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+        // if we set clientData to [NSNull null], now that we're done updating to Bridge set it to nil in the PONSO object
+        if (scheduledActivity.clientData == [NSNull null]) {
+            scheduledActivity.clientData = nil;
+        }
+        
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
 }
 
 - (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
@@ -415,8 +424,8 @@ NSInteger const     kFetchPageSize =     100;
         return nil;
     }
     
-    NSDictionary *parameters = @{@"scheduledOnStart": [scheduledFrom ISO8601StringUTC],
-                                 @"scheduledOnEnd": [scheduledTo ISO8601StringUTC],
+    NSDictionary *parameters = @{@"scheduledOnStart": [scheduledFrom ISO8601String],
+                                 @"scheduledOnEnd": [scheduledTo ISO8601String],
                                  @"pageSize": @(kFetchPageSize)};
     NSMutableArray *accumulatedItems = nil;
     if (!gSBBUseCache || policy == SBBCachingPolicyNoCaching) {

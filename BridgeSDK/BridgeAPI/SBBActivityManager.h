@@ -128,13 +128,13 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(_Nullable id responseObj
  
  The data can be of any JSON-serializable iOS type: NSString, NSNumber, NSNull, or an NSArray or NSDictionary containing only values of a JSON-serializable iOS type or collection thereof (and the keys of the NSDictionary must be of type NSString).
  
- @param clientData          A (relatively small) JSON-serializable object to store in Bridge with the ScheduledActivity.
+ @param clientData          A (relatively small) JSON-serializable object to store in Bridge with the ScheduledActivity. To set to nil, pass [NSNull null].
  @param scheduledActivity   The ScheduledActivity to which the clientData will be attached.
  @param completion          An SBBActivityManagerGetCompletionBlock to be called upon completion. Optional.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)setClientData:(nullable id<SBBJSONValue>)clientData forScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(nullable SBBActivityManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)setClientData:(nonnull id<SBBJSONValue>)clientData forScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(nullable SBBActivityManagerUpdateCompletionBlock)completion;
 
 /*!
  Update multiple scheduled activities' statuses with the API at one time.
