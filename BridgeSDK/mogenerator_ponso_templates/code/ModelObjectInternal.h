@@ -32,6 +32,7 @@
 // These methods MUST be called on cacheContext's queue.
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager;
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager;
+- (void)releaseManagedObject:(NSManagedObject *)managedObject inContext:(NSManagedObjectContext *)cacheContext;
 
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context;
 

@@ -617,11 +617,11 @@ static id dynamicGetterIMP(id self, SEL _cmd)
         }
 	}
 
-    // now delete any objects that aren't still in the relationship
+    // now release any objects that aren't still in the relationship (they will be deleted when they no longer belong to any to-many relationships)
     for (NSManagedObject *relMo in <$Relationship.name$>Copy) {
         <$if Relationship.inverseRelationship.isToMany$>if (![[relMo valueForKey:@"<$Relationship.inverseRelationship.name$>"] count]) {
         <$else$>if (![relMo valueForKey:@"<$Relationship.inverseRelationship.name$>"]) {
-        <$endif$>   [cacheContext deleteObject:relMo];
+        <$endif$>   [self releaseManagedObject:relMo inContext:cacheContext];
         }
     }
 

@@ -496,10 +496,10 @@
         }
 	}
 
-    // now delete any objects that aren't still in the relationship
+    // now release any objects that aren't still in the relationship (they will be deleted when they no longer belong to any to-many relationships)
     for (NSManagedObject *relMo in bridgeObjectArrayFieldCopy) {
         if (![relMo valueForKey:@"parentTestBridgeObject"]) {
-           [cacheContext deleteObject:relMo];
+           [self releaseManagedObject:relMo inContext:cacheContext];
         }
     }
 
@@ -530,10 +530,10 @@
         }
 	}
 
-    // now delete any objects that aren't still in the relationship
+    // now release any objects that aren't still in the relationship (they will be deleted when they no longer belong to any to-many relationships)
     for (NSManagedObject *relMo in bridgeObjectSetFieldCopy) {
         if (![relMo valueForKey:@"testBridgeObjectSet"]) {
-           [cacheContext deleteObject:relMo];
+           [self releaseManagedObject:relMo inContext:cacheContext];
         }
     }
 

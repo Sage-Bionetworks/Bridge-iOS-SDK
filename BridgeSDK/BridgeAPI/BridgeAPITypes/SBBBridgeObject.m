@@ -57,4 +57,12 @@
     return [NSString stringWithFormat: @"<%@ %p> %@", NSStringFromClass([self class]), self, self.dictionaryRepresentation];
 }
 
+- (void)releaseManagedObject:(NSManagedObject *)managedObject inContext:(NSManagedObjectContext *)cacheContext
+{
+    // delete managedObject from context when no longer a member of a ResourceList or a ForwardCursorPagedResourceList
+    if (![managedObject valueForKey:@"resourceList"] && ![managedObject valueForKey:@"forwardCursorPagedResourceList"]) {
+        [cacheContext deleteObject:managedObject];
+    }
+}
+
 @end

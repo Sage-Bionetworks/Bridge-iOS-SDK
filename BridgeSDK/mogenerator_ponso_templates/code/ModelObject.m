@@ -255,6 +255,13 @@
     // generated subclasses will override this
 }
 
+- (void)releaseManagedObject:(NSManagedObject *)managedObject inContext:(NSManagedObjectContext *)cacheContext
+{
+    // subclasses that are directly cacheable, and can be a member of more than one to-many relationship,
+    // should override this to only delete when no longer a member of any of them
+    [cacheContext deleteObject:managedObject];
+}
+
 - (void)dealloc
 {
     self.sourceDictionaryRepresentation = nil;

@@ -235,10 +235,10 @@
         }
 	}
 
-    // now delete any objects that aren't still in the relationship
+    // now release any objects that aren't still in the relationship (they will be deleted when they no longer belong to any to-many relationships)
     for (NSManagedObject *relMo in itemsCopy) {
         if (![relMo valueForKey:@"resourceList"]) {
-           [cacheContext deleteObject:relMo];
+           [self releaseManagedObject:relMo inContext:cacheContext];
         }
     }
 
