@@ -15,6 +15,13 @@
 
 - (id)initWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager;
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager;
+
+// This method is only called by the cache manager, and is always followed by updating the object to CoreData cache,
+// so no need to do so from within the method. Override it to customize how the Bridge server version of an object
+// gets reconciled with the locally-cached version. The default behavior is server-wins for non-client-writable objects,
+// and cache-wins for objects with any client-writable fields.
+- (void)reconcileWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerInternalProtocol>)objectManager;
+
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager;
 
 - (BOOL)isDirectlyCacheableWithContext:(NSManagedObjectContext *)context;
@@ -25,6 +32,7 @@
 // These methods MUST be called on cacheContext's queue.
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager;
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager;
+- (void)releaseManagedObject:(NSManagedObject *)managedObject inContext:(NSManagedObjectContext *)cacheContext;
 
 - (NSEntityDescription *)entityForContext:(NSManagedObjectContext *)context;
 

@@ -1,5 +1,5 @@
 //
-//  _SBBScheduledActivity.h
+//  SBBForwardCursorPagedResourceList.h
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -26,41 +26,9 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBScheduledActivity.h instead.
-//
 
-#import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import "_SBBForwardCursorPagedResourceList.h"
 
-#import "SBBJSONValue.h"
-
-@class SBBActivity;
-
-@protocol _SBBScheduledActivity
-
-@end
-
-@interface _SBBScheduledActivity : SBBBridgeObject
-
-@property (nonatomic, strong) id<SBBJSONValue> clientData;
-
-@property (nonatomic, strong) NSDate* expiresOn;
-
-@property (nonatomic, strong) NSDate* finishedOn;
-
-@property (nonatomic, strong) NSString* guid;
-
-@property (nonatomic, strong) NSNumber* persistent;
-
-@property (nonatomic, assign) BOOL persistentValue;
-
-@property (nonatomic, strong) NSDate* scheduledOn;
-
-@property (nonatomic, strong) NSDate* startedOn;
-
-@property (nonatomic, strong, readwrite) SBBActivity *activity;
-
-- (void) setActivity: (SBBActivity*) activity_ settingInverse: (BOOL) setInverse;
-
+@interface SBBForwardCursorPagedResourceList : _SBBForwardCursorPagedResourceList <_SBBForwardCursorPagedResourceList>
+// Custom logic goes here.
 @end

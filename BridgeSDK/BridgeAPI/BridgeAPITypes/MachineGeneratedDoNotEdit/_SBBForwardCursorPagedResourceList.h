@@ -1,5 +1,5 @@
 //
-//  _SBBScheduledActivity.h
+//  _SBBForwardCursorPagedResourceList.h
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,40 +27,47 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBScheduledActivity.h instead.
+// Make changes to SBBForwardCursorPagedResourceList.h instead.
 //
 
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-#import "SBBJSONValue.h"
+@class SBBBridgeObject;
 
-@class SBBActivity;
-
-@protocol _SBBScheduledActivity
+@protocol _SBBForwardCursorPagedResourceList
 
 @end
 
-@interface _SBBScheduledActivity : SBBBridgeObject
+@interface _SBBForwardCursorPagedResourceList : SBBBridgeObject
 
-@property (nonatomic, strong) id<SBBJSONValue> clientData;
+@property (nonatomic, strong) NSNumber* hasNext;
 
-@property (nonatomic, strong) NSDate* expiresOn;
+@property (nonatomic, assign) BOOL hasNextValue;
 
-@property (nonatomic, strong) NSDate* finishedOn;
+@property (nonatomic, strong) NSDate* offsetBy;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSNumber* pageSize;
 
-@property (nonatomic, strong) NSNumber* persistent;
+@property (nonatomic, assign) int16_t pageSizeValue;
 
-@property (nonatomic, assign) BOOL persistentValue;
+@property (nonatomic, strong) NSDate* scheduledOnEnd;
 
-@property (nonatomic, strong) NSDate* scheduledOn;
+@property (nonatomic, strong) NSDate* scheduledOnStart;
 
-@property (nonatomic, strong) NSDate* startedOn;
+@property (nonatomic, strong, readonly) NSArray *items;
 
-@property (nonatomic, strong, readwrite) SBBActivity *activity;
+- (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
+- (void)addItemsObject:(SBBBridgeObject*)value_;
+- (void)removeItemsObjects;
+- (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeItemsObject:(SBBBridgeObject*)value_;
 
-- (void) setActivity: (SBBActivity*) activity_ settingInverse: (BOOL) setInverse;
+- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
+- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value;
+- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
 
 @end

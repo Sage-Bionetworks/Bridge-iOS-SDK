@@ -40,12 +40,16 @@
 #import "BridgeSDK+Internal.h"
 #import "SBBBridgeInfo.h"
 #import "ModelObjectInternal.h"
+#import "SBBResourceListInternal.h"
+#import "SBBForwardCursorPagedResourceListInternal.h"
 
 #define ACTIVITY_API GLOBAL_API_PREFIX @"/activities"
 
 NSString * const kSBBActivityAPI =       ACTIVITY_API;
+NSString * const kSBBHistoricalActivityAPIFormat = ACTIVITY_API @"/%@";
 NSTimeInterval const kSBB24Hours =       86400;
 NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
+NSInteger const     kFetchPageSize =     100;
 
 @interface SBBActivityManager()<SBBActivityManagerInternalProtocol, SBBBridgeAPIManagerInternalProtocol>
 
@@ -108,6 +112,16 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     return filtered;
 }
 
+- (NSArray *)filterTasks:(NSArray *)tasks scheduledFrom:(NSDate *)startDate to:(NSDate *)endDate
+{
+    NSString *comparisonKey = NSStringFromSelector(@selector(scheduledOn));
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K < %@",
+                              comparisonKey, startDate,
+                              comparisonKey, endDate];
+    
+    return [tasks filteredArrayUsingPredicate:predicate];
+}
+
 - (void)mapSubObjectsInTaskList:(NSMutableArray *)taskList
 {
     if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
@@ -122,7 +136,7 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
 // all three have been called!
 - (SBBResourceList *)cachedTasksFromCacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedObjectOfType:@"ResourceList" withId:[self listIdentifier] createIfMissing:NO];
+    SBBResourceList *tasks = (SBBResourceList *)[cacheManager cachedObjectOfType:[SBBResourceList entityName] withId:[self listIdentifier] createIfMissing:NO];
     
     return tasks;
 }
@@ -256,11 +270,45 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
     return [self finishScheduledActivity:scheduledActivity asOf:[NSDate date] withCompletion:completion];
 }
 
+- (NSURLSessionTask *)setClientData:(id<SBBJSONValue>)clientData forScheduledActivity:(SBBScheduledActivity *)scheduledActivity withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
+{
+    // If it's not valid JSON, call the completion block with the error and return nil
+    NSError *error = nil;
+    if (![clientData validateJSONWithError:&error]) {
+        if (completion) {
+            completion(clientData, error);
+        }
+        return nil;
+    }
+    
+    // otherwise, set it and update to Bridge
+    scheduledActivity.clientData = clientData;
+    return [self updateScheduledActivities:@[scheduledActivity] withCompletion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+        // if we set clientData to [NSNull null], now that we're done updating to Bridge set it to nil in the PONSO object
+        if (scheduledActivity.clientData == [NSNull null]) {
+            scheduledActivity.clientData = nil;
+        }
+        
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
+}
+
 - (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
 {
     id jsonTasks = [self.objectManager bridgeJSONFromObject:scheduledActivities];
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
+    
+    if (gSBBUseCache) {
+        // Update the activities in the local cache
+        [self.cacheManager.cacheIOContext performBlock:^{
+            for (SBBScheduledActivity *scheduledActivity in scheduledActivities) {
+                [scheduledActivity saveToCoreDataCacheWithObjectManager:self.objectManager];
+            }
+        }];
+    }
     
     // Activities can be started/finished without a network connection, so this has to be able to do that too
     return [self.networkManager post:kSBBActivityAPI headers:headers parameters:jsonTasks background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
@@ -272,6 +320,130 @@ NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
             completion(responseObject, error);
         }
     }];
+}
+
+// pass in an initialized NSMutableArray in accumulatedItems either if not caching, or ignoring cache
+- (NSURLSessionTask *)fetchHistoricalActivitiesForGuid:(NSString *)activityGuid withParameters:(NSDictionary *)parameters offsetBy:(NSDate *)offsetBy accumulatedItems:(NSMutableArray *)accumulatedItems completion:(SBBActivityManagerGetCompletionBlock)completion
+{
+    if (offsetBy) {
+        NSString *offsetString = [offsetBy ISO8601DateTimeOnlyString];
+        NSMutableDictionary *parametersWithOffset = [parameters mutableCopy];
+        parametersWithOffset[NSStringFromSelector(@selector(offsetBy))] = offsetString;
+        parameters = [parametersWithOffset copy];
+    }
+    
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSString *endpoint = [NSString stringWithFormat:kSBBHistoricalActivityAPIFormat, activityGuid];
+    
+    return [self.networkManager get:endpoint headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        if (error) {
+            if (gSBBUseCache) {
+                // clear lastOffsetBy__ for the next time we fetch this activity's history
+                SBBForwardCursorPagedResourceList *list = [self cachedListForActivityGuid:activityGuid];
+                list.lastOffsetBy__ = nil;
+                [list saveToCoreDataCacheWithObjectManager:self.objectManager];
+            }
+            if (completion) {
+                completion(responseObject, error);
+            }
+        } else {
+            NSDictionary *objectJSON = responseObject;
+            if (gSBBUseCache) {
+                // first, set an identifier in the JSON so we can find the cached object later--since
+                // ForwardCursorPagedResourceList doesn't come with anything by which to distinguish one
+                // from another if the items[] list is empty.
+                NSMutableDictionary *objectWithActivityGuid = [responseObject mutableCopy];
+                
+                // -- get the identifier key path we need to set from the cache manager core data entity description
+                //    rather than hardcoding it with a string literal
+                NSEntityDescription *entityDescription = [SBBForwardCursorPagedResourceList entityForContext:self.cacheManager.cacheIOContext];
+                NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
+                
+                // -- set it in the JSON to the activityGuid we're fetching
+                [objectWithActivityGuid setValue:activityGuid forKeyPath:entityIDKeyPath];
+                objectJSON = [objectWithActivityGuid copy];
+            }
+            
+            // -- now process into the cache (if caching), and in any case, get the PONSO object
+            //    so we can check if we're done yet
+            SBBForwardCursorPagedResourceList *fcprl = (SBBForwardCursorPagedResourceList *)[self.objectManager objectFromBridgeJSON:objectJSON];
+            
+            // -- now see if we're done, and act accordingly
+            if (fcprl.hasNextValue) {
+                // not done, keep paging in more activities
+                NSDate *newOffset = fcprl.offsetBy;
+                if (accumulatedItems) {
+                    // if we're not caching or are ignoring cache, accumulate the raw list of items from Bridge
+                    // as we go
+                    [accumulatedItems addObjectsFromArray:fcprl.items];
+                }
+                [self fetchHistoricalActivitiesForGuid:activityGuid withParameters:parameters offsetBy:newOffset accumulatedItems:accumulatedItems completion:completion];
+            } else {
+                // done, call completion
+                if (completion) {
+                    if (accumulatedItems) {
+                        completion([accumulatedItems copy], error);
+                    } else {
+                        completion(fcprl.items, error);
+                    }
+                }
+            }
+        }
+    }];
+}
+
+- (NSArray *)filterAndMapTasks:(NSArray *)tasks scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
+{
+    if (!tasks) {
+        return nil;
+    }
+    
+    NSMutableArray *requestedTasks = [[self filterTasks:tasks scheduledFrom:scheduledFrom to:scheduledTo] mutableCopy];
+    [self mapSubObjectsInTaskList:requestedTasks];
+    return [requestedTasks copy];
+}
+
+- (SBBForwardCursorPagedResourceList *)cachedListForActivityGuid:(NSString *)activityGuid
+{
+    SBBForwardCursorPagedResourceList *fcprl = (SBBForwardCursorPagedResourceList *)[self.cacheManager cachedObjectOfType:[SBBForwardCursorPagedResourceList entityName] withId:activityGuid createIfMissing:NO];
+
+    return fcprl;
+}
+
+- (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+{
+    // if we're going straight to cache, just get it and get out
+    if (gSBBUseCache && policy == SBBCachingPolicyCachedOnly) {
+        if (completion) {
+            SBBForwardCursorPagedResourceList *list = [self cachedListForActivityGuid:activityGuid];
+            NSArray *requestedTasks = [self filterAndMapTasks:list.items scheduledFrom:scheduledFrom to:scheduledTo];
+            completion(requestedTasks, nil);
+        }
+        
+        return nil;
+    }
+    
+    NSDictionary *parameters = @{@"scheduledOnStart": [scheduledFrom ISO8601String],
+                                 @"scheduledOnEnd": [scheduledTo ISO8601String],
+                                 @"pageSize": @(kFetchPageSize)};
+    NSMutableArray *accumulatedItems = nil;
+    if (!gSBBUseCache || policy == SBBCachingPolicyNoCaching) {
+        accumulatedItems = [NSMutableArray array];
+    }
+    return [self fetchHistoricalActivitiesForGuid:activityGuid withParameters:parameters offsetBy:nil accumulatedItems:accumulatedItems completion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+        if (completion) {
+            NSArray *requestedTasks = [self filterAndMapTasks:activitiesList scheduledFrom:scheduledFrom to:scheduledTo];
+            completion(requestedTasks, error);
+        }
+    }];
+}
+
+- (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+{
+    SBBCachingPolicy policy = gSBBUseCache ? SBBCachingPolicyFallBackToCached : SBBCachingPolicyNoCaching;
+
+    return [self getScheduledActivitiesForGuid:activityGuid scheduledFrom:scheduledFrom to:scheduledTo cachingPolicy:policy withCompletion:completion];
 }
 
 // Note: this method blocks until it gets its turn in the cache IO context queue

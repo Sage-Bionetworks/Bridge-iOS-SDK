@@ -1,5 +1,5 @@
 //
-//  _SBBResourceList.m
+//  _SBBForwardCursorPagedResourceList.m
 //
 //	Copyright (c) 2014-2016 Sage Bionetworks
 //	All rights reserved.
@@ -27,17 +27,17 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBResourceList.m instead.
+// Make changes to SBBForwardCursorPagedResourceList.m instead.
 //
 
-#import "_SBBResourceList.h"
-#import "_SBBResourceListInternal.h"
+#import "_SBBForwardCursorPagedResourceList.h"
+#import "_SBBForwardCursorPagedResourceListInternal.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBBridgeObject.h"
 
-@interface _SBBResourceList()
+@interface _SBBForwardCursorPagedResourceList()
 
 // redefine relationships internally as readwrite
 
@@ -46,11 +46,21 @@
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (ResourceList)
+@interface NSManagedObject (ForwardCursorPagedResourceList)
+
+@property (nullable, nonatomic, retain) NSNumber* hasNext;
+
+@property (nullable, nonatomic, retain) NSDate* lastOffsetBy__;
 
 @property (nullable, nonatomic, retain) NSString* listID__;
 
-@property (nullable, nonatomic, retain) NSNumber* total;
+@property (nullable, nonatomic, retain) NSDate* offsetBy;
+
+@property (nullable, nonatomic, retain) NSNumber* pageSize;
+
+@property (nullable, nonatomic, retain) NSDate* scheduledOnEnd;
+
+@property (nullable, nonatomic, retain) NSDate* scheduledOnStart;
 
 @property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *items;
 
@@ -68,7 +78,7 @@
 
 @end
 
-@implementation _SBBResourceList
+@implementation _SBBForwardCursorPagedResourceList
 
 - (instancetype)init
 {
@@ -82,14 +92,24 @@
 
 #pragma mark Scalar values
 
-- (int64_t)totalValue
+- (BOOL)hasNextValue
 {
-	return [self.total longLongValue];
+	return [self.hasNext boolValue];
 }
 
-- (void)setTotalValue:(int64_t)value_
+- (void)setHasNextValue:(BOOL)value_
 {
-	self.total = [NSNumber numberWithLongLong:value_];
+	self.hasNext = [NSNumber numberWithBool:value_];
+}
+
+- (int16_t)pageSizeValue
+{
+	return [self.pageSize shortValue];
+}
+
+- (void)setPageSizeValue:(int16_t)value_
+{
+	self.pageSize = [NSNumber numberWithShort:value_];
 }
 
 #pragma mark Dictionary representation
@@ -98,7 +118,15 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.total = [dictionary objectForKey:@"total"];
+    self.hasNext = [dictionary objectForKey:@"hasNext"];
+
+    self.offsetBy = [NSDate dateWithISO8601String:[dictionary objectForKey:@"offsetBy"]];
+
+    self.pageSize = [dictionary objectForKey:@"pageSize"];
+
+    self.scheduledOnEnd = [NSDate dateWithISO8601String:[dictionary objectForKey:@"scheduledOnEnd"]];
+
+    self.scheduledOnStart = [NSDate dateWithISO8601String:[dictionary objectForKey:@"scheduledOnStart"]];
 
     // overwrite the old items relationship entirely rather than adding to it
     [self removeItemsObjects];
@@ -116,7 +144,15 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
-    [dict setObjectIfNotNil:self.total forKey:@"total"];
+    [dict setObjectIfNotNil:self.hasNext forKey:@"hasNext"];
+
+    [dict setObjectIfNotNil:[self.offsetBy ISO8601String] forKey:@"offsetBy"];
+
+    [dict setObjectIfNotNil:self.pageSize forKey:@"pageSize"];
+
+    [dict setObjectIfNotNil:[self.scheduledOnEnd ISO8601String] forKey:@"scheduledOnEnd"];
+
+    [dict setObjectIfNotNil:[self.scheduledOnStart ISO8601String] forKey:@"scheduledOnStart"];
 
     if ([self.items count] > 0)
 	{
@@ -151,7 +187,7 @@
 
 + (NSString *)entityName
 {
-    return @"ResourceList";
+    return @"ForwardCursorPagedResourceList";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
@@ -159,9 +195,19 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
+        self.hasNext = managedObject.hasNext;
+
+        self.lastOffsetBy__ = managedObject.lastOffsetBy__;
+
         self.listID__ = managedObject.listID__;
 
-        self.total = managedObject.total;
+        self.offsetBy = managedObject.offsetBy;
+
+        self.pageSize = managedObject.pageSize;
+
+        self.scheduledOnEnd = managedObject.scheduledOnEnd;
+
+        self.scheduledOnStart = managedObject.scheduledOnStart;
 
 		for (NSManagedObject *itemsManagedObj in managedObject.items)
 		{
@@ -180,7 +226,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ResourceList" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"ForwardCursorPagedResourceList" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -205,9 +251,19 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
+    managedObject.hasNext = ((id)self.hasNext == [NSNull null]) ? nil : self.hasNext;
+
+    managedObject.lastOffsetBy__ = ((id)self.lastOffsetBy__ == [NSNull null]) ? nil : self.lastOffsetBy__;
+
     managedObject.listID__ = ((id)self.listID__ == [NSNull null]) ? nil : self.listID__;
 
-    managedObject.total = ((id)self.total == [NSNull null]) ? nil : self.total;
+    managedObject.offsetBy = ((id)self.offsetBy == [NSNull null]) ? nil : self.offsetBy;
+
+    managedObject.pageSize = ((id)self.pageSize == [NSNull null]) ? nil : self.pageSize;
+
+    managedObject.scheduledOnEnd = ((id)self.scheduledOnEnd == [NSNull null]) ? nil : self.scheduledOnEnd;
+
+    managedObject.scheduledOnStart = ((id)self.scheduledOnStart == [NSNull null]) ? nil : self.scheduledOnStart;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSOrderedSet *itemsCopy = [managedObject.items copy];
@@ -237,7 +293,7 @@
 
     // now release any objects that aren't still in the relationship (they will be deleted when they no longer belong to any to-many relationships)
     for (NSManagedObject *relMo in itemsCopy) {
-        if (![relMo valueForKey:@"resourceList"]) {
+        if (![relMo valueForKey:@"forwardCursorPagedResourceList"]) {
            [self releaseManagedObject:relMo inContext:cacheContext];
         }
     }

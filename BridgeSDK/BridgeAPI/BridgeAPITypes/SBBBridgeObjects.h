@@ -8,6 +8,7 @@
 #import "SBBDateTimeConstraints.h"
 #import "SBBDecimalConstraints.h"
 #import "SBBDurationConstraints.h"
+#import "SBBForwardCursorPagedResourceList.h"
 #import "SBBIdentifierHolder.h"
 #import "SBBImage.h"
 #import "SBBIntegerConstraints.h"

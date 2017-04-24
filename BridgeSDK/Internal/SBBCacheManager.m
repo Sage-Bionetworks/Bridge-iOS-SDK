@@ -283,10 +283,15 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
     
     if (object) {
         SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
-        // don't overwrite an object we already had cached with the latest from the server if it has client-writable fields
-        BOOL updatable = created || !(entity.userInfo[@"hasClientWritableFields"] || entity.userInfo[@"isExtendable"]);
-        if (updatable) {
+        // if this is a newly-created object, i.e. didn't already exist in the cache, just fill
+        // it in from the given Bridge JSON. Otherwise, let the object decide how the two should
+        // be reconciled. The default implementation is that if the object is marked as extendable
+        // or as having client-writable fields, then we don't update the existing cached object
+        // from the server; otherwise we just overwrite whatever we had cached with the server version.
+        if (created) {
             [object updateWithDictionaryRepresentation:json objectManager:om];
+        } else {
+            [object reconcileWithDictionaryRepresentation:json objectManager:om];
         }
         // Update CoreData cached object too
         [self.cacheIOContext performBlockAndWait:^{

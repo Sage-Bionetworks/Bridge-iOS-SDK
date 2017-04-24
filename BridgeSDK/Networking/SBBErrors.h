@@ -52,7 +52,8 @@ typedef NS_ENUM(NSInteger, SBBErrorCode)
     SBBErrorCodeTempFileError = -1102,
     SBBErrorCodeTempFileReadError = -1103,
     
-    SBBErrorCodeNotAValidSurveyRef = -1200
+    SBBErrorCodeNotAValidSurveyRef = -1200,
+    SBBErrorCodeNotAValidJSONObject = -1201
 };
 
 

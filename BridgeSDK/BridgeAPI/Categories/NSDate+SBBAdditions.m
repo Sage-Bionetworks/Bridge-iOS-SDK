@@ -36,16 +36,16 @@
 
 + (NSDateFormatter *)ISO8601formatter
 {
-  static NSDateFormatter *formatter;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"];
-    NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    [formatter setLocale:enUSPOSIXLocale];
-  });
-  
-  return formatter;
+    static NSDateFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"];
+        NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [formatter setLocale:enUSPOSIXLocale];
+    });
+    
+    return formatter;
 }
 
 + (NSDateFormatter *)ISO8601UTCformatter
@@ -84,6 +84,18 @@
     return formatter;
 }
 
++ (NSDateFormatter *)ISO8601DateTimeOnlyformatter
+{
+    static NSDateFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[self ISO8601formatter] copy];
+        [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSS"];
+    });
+    
+    return formatter;
+}
+
 + (NSDateFormatter *)ISO8601OffsetOnlyformatter
 {
     static NSDateFormatter *formatter;
@@ -100,17 +112,26 @@
 
 + (instancetype)dateWithISO8601String:(NSString *)iso8601string
 {
-  return [[self ISO8601formatter] dateFromString:iso8601string];
+    NSDate *date = [[self ISO8601formatter] dateFromString:iso8601string];
+    // check for missing TZ specifier
+    if (!date) {
+        date = [[self ISO8601DateTimeOnlyformatter] dateFromString:iso8601string];
+    }
+    // check for missing time of day entirely
+    if (!date) {
+        date = [[self ISO8601DateOnlyformatter] dateFromString:iso8601string];
+    }
+  return date;
 }
 
 - (NSString *)ISO8601String
 {
-  return [[[self class] ISO8601formatter] stringFromDate:self];
+    return [[[self class] ISO8601formatter] stringFromDate:self];
 }
 
 - (NSString *)ISO8601StringUTC
 {
-  return [[[self class] ISO8601UTCformatter] stringFromDate:self];
+    return [[[self class] ISO8601UTCformatter] stringFromDate:self];
 }
 
 - (NSString *)ISO8601DateOnlyString
@@ -121,6 +142,11 @@
 - (NSString *)ISO8601TimeOnlyString
 {
     return [[[self class] ISO8601TimeOnlyformatter] stringFromDate:self];
+}
+
+- (NSString *)ISO8601DateTimeOnlyString
+{
+    return [[[self class] ISO8601DateTimeOnlyformatter] stringFromDate:self];
 }
 
 - (NSString *)ISO8601OffsetString

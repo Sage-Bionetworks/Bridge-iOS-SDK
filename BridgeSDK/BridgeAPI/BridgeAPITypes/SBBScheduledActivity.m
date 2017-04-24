@@ -28,6 +28,7 @@
 //
 
 #import "SBBScheduledActivity.h"
+#import "ModelObjectInternal.h"
 
 NSString * const SBBScheduledActivityStatusStringScheduled = @"scheduled";
 NSString * const SBBScheduledActivityStatusStringAvailable = @"available";
@@ -84,6 +85,34 @@ NSString * const SBBScheduledActivityStatusStringDeleted = @"deleted";
     });
     
     return stringsForStatuses[[self statusEnum]];
+}
+
+- (BOOL)validateClientData:(id<SBBJSONValue> *)clientData error:(NSError **)error
+{
+    return [*clientData validateJSONWithError:error];
+}
+
+- (void)reconcileWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerInternalProtocol>)objectManager
+{
+    // For all but the client-writable fields, the server value is completely canonical.
+    // For the client-writable fields, the server value is canonical unless it is nil.
+    NSDate *savedStartedOn = self.startedOn;
+    NSDate *savedFinishedOn = self.finishedOn;
+    id<SBBJSONValue> savedClientData = self.clientData;
+    
+    [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
+    
+    if (!self.startedOn) {
+        self.startedOn = savedStartedOn;
+    }
+    
+    if (!self.finishedOn) {
+        self.finishedOn = savedFinishedOn;
+    }
+    
+    if (!self.clientData) {
+        self.clientData = savedClientData;
+    }
 }
 
 @end
