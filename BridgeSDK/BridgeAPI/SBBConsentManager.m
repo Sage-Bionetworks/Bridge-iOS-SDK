@@ -109,21 +109,18 @@ NSString * const kSBBMimeTypePng = @"image/png";
     return [self.networkManager post:endpoint headers:headers parameters:researchConsent
                           completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                               if (!error) {
-                                  // Update the cached StudyParticipant object with the new sharing scope. This is a temporary
-                                  // fix until the API is updated to return the UserSessionInfo object.
-                                  // TODO: emm2017-03-02 when this REST API is updated to return the UserSessionInfo object,
-                                  // clear that and the StudyParticipant from cache and update by creating a Bridge object from
-                                  // the response, like we do at signIn
                                   if (gSBBUseCache) {
-                                      NSMutableDictionary *participantJSON = [[(id<SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) bridgeJSONForParticipantWithField:NSStringFromSelector(@selector(sharingScope)) setTo:kSBBParticipantDataSharingScopeStrings[scope]] mutableCopy];
+                                      // The respose is a UserSessionInfo object, which includes a StudyParticipant with the updated sharing scope.
+                                      // Since client-writable objects are not updated from the server once first cached, we need to clear this
+                                      // out of our cache before reading the response object into the cache so we will get the server-side changes.
                                       
-                                      // make sure it's not the "couldn't find an existing participant record" case, and then
-                                      // update the cached participant from the JSON (have to clear it from cache first so it
-                                      // will actually update--it's client-writable, so the local version takes priority)
-                                      if (participantJSON.count > 2) {
-                                          [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
-                                          __unused id participant = [self.objectManager objectFromBridgeJSON:participantJSON];
-                                      }
+                                      [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
+                                      [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
+                                      
+                                      // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
+                                      // (which UserSessionInfo now extends). Even though we can't return the values from here, though, we do
+                                      // want to update them in the cache, which calling objectFromBridgeJSON: will do.
+                                      [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
                                   }
                               }
                               if (completion) {
