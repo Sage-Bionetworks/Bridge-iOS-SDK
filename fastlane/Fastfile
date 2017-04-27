@@ -35,17 +35,30 @@ platform :ios do
     )
   end
 
-  desc "Runs all the tests"
+  desc "Run tests"
   lane :test do |options|
-    if options[:scheme]
+    scheme = options[:scheme]
+    build_for_testing = options[:build_for_testing]
+    only_testing = '"BridgeSDKTests","BridgeSDKIntegrationTests"'
+
+    if options[:only_testing]
+       only_testing = options[:only_testing]
+    end
+
+    if build_for_testing
        scan(
-         scheme: options[:scheme],
+         scheme: "#{scheme}",
+         build_for_testing: true
+       )
+    else
+       sh("echo #{only_testing}")
+       scan(
+         scheme: "#{scheme}",
+         only_testing: "#{only_testing}",
          xcargs: [
            'SAGE_ADMIN_EMAIL=$SAGE_ADMIN_EMAIL',
            'SAGE_ADMIN_PASSWORD=$SAGE_ADMIN_PASSWORD']
         )
-    else
-      scan
     end
   end
 

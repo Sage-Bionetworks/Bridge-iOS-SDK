@@ -38,7 +38,7 @@ Build the documentation
 ```
 fastlane ios test
 ```
-Runs all the tests
+Run tests
 
 ----
 
