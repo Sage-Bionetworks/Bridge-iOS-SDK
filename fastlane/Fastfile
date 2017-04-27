@@ -51,7 +51,6 @@ platform :ios do
          build_for_testing: true
        )
     else
-       sh("echo #{only_testing}")
        scan(
          scheme: "#{scheme}",
          only_testing: "#{only_testing}",
