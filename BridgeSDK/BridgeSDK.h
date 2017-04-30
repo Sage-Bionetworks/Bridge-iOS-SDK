@@ -64,6 +64,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBErrors.h>
 #import <BridgeSDK/SBBDataArchive.h>
 #import <BridgeSDK/SBBBridgeObjects.h>
+#import <BridgeSDK/NSData+SBBAdditions.h>
 #import <BridgeSDK/NSDate+SBBAdditions.h>
 #import <BridgeSDK/NSBundle+SBBAdditions.h>
 #import <BridgeSDK/UIDevice+Hardware.h>
