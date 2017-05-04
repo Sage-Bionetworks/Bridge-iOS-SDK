@@ -228,7 +228,7 @@
 		8026D67B19E77518008942B0 /* SBBUploadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D67919E77518008942B0 /* SBBUploadManager.m */; };
 		8026D67E19E857FC008942B0 /* SBBBridgeAPIManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026D67C19E857FC008942B0 /* SBBBridgeAPIManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8026D67F19E857FC008942B0 /* SBBBridgeAPIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D67D19E857FC008942B0 /* SBBBridgeAPIManager.m */; };
-		8026D68219E87CF6008942B0 /* NSData+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026D68019E87CF6008942B0 /* NSData+SBBAdditions.h */; };
+		8026D68219E87CF6008942B0 /* NSData+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026D68019E87CF6008942B0 /* NSData+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8026D68319E87CF6008942B0 /* NSData+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D68119E87CF6008942B0 /* NSData+SBBAdditions.m */; };
 		8026D68619E888C3008942B0 /* _SBBUploadSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 8026D68419E888C3008942B0 /* _SBBUploadSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8026D68719E888C3008942B0 /* _SBBUploadSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D68519E888C3008942B0 /* _SBBUploadSession.m */; };
