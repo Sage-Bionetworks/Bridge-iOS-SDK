@@ -131,9 +131,8 @@
       @"email": @"email@fake.tld"
       };
     [mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
-    SBBObjectManager *oMan = [SBBObjectManager objectManager];
-    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:aMan networkManager:bridgeNetMan objectManager:oMan];
-    [oMan setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"email": @"stringField"}];
+    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:aMan networkManager:bridgeNetMan objectManager:self.objectManager];
+    [self.objectManager setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"email": @"stringField"}];
     [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
         XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
