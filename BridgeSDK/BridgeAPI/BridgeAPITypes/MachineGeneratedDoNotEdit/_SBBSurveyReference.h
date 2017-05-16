@@ -31,18 +31,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBTaskReference.h"
+#import "SBBBridgeObject.h"
 
 @protocol _SBBSurveyReference
 
 @end
 
-@interface _SBBSurveyReference : SBBTaskReference
+@interface _SBBSurveyReference : SBBBridgeObject
 
 @property (nonatomic, strong) NSDate* createdOn;
 
 @property (nonatomic, strong) NSString* guid;
 
 @property (nonatomic, strong) NSString* href;
+
+@property (nonatomic, strong) NSString* identifier;
 
 @end

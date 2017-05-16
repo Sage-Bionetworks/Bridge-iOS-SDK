@@ -45,7 +45,7 @@
 
 @property (nullable, nonatomic, retain) NSString* identifier;
 
-@property (nullable, nonatomic, retain) NSManagedObject *activityForTask;
+@property (nullable, nonatomic, retain) NSManagedObject *activity;
 
 @property (nullable, nonatomic, retain) NSManagedObject *schema;
 
