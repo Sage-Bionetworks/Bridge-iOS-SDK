@@ -16,6 +16,9 @@
 
 @implementation SBBAuthManagerIntegrationTests
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -171,5 +174,7 @@
         }
     }];
 }
+
+#pragma clang diagnostic pop
 
 @end

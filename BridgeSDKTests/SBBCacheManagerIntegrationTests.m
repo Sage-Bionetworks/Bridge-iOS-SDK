@@ -19,6 +19,9 @@
 
 @implementation SBBCacheManagerIntegrationTests
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -120,8 +123,6 @@
         }
     }];
     // fetch them yet again after signing in again first; this time they should be updated from server
-    __block SBBUserProfile *reReProfile = nil;
-    __block SBBDataGroups *reReGroups = nil;
     XCTestExpectation *expectReReGotProfile = [self expectationWithDescription:@"Re-re-retrieved user profile"];
     [SBBComponent(SBBUserManager) getUserProfileWithCompletion:^(id userProfile, NSError *error) {
         if (error) {
@@ -154,5 +155,7 @@
     XCTAssertEqualObjects(savedProfile.firstName, reProfile.firstName, @"Refreshing from server with intervening signIn did overwrite cached UserProfile");
     XCTAssertEqualObjects(savedGroups.dataGroups, reGroups.dataGroups, @"Refreshing from server with intervening signIn did overwrite cached DataGroups");
 }
+
+#pragma clang diagnostic pop
 
 @end
