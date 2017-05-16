@@ -1,7 +1,7 @@
 //
 //  _SBBActivity.m
 //
-//	Copyright (c) 2014-2016 Sage Bionetworks
+//	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBCompoundActivity.h"
 #import "SBBSurveyReference.h"
 #import "SBBTaskReference.h"
 
@@ -51,6 +52,8 @@
 @property (nullable, nonatomic, retain) NSString* label;
 
 @property (nullable, nonatomic, retain) NSString* labelDetail;
+
+@property (nullable, nonatomic, retain) NSManagedObject *compoundActivity;
 
 @property (nullable, nonatomic, retain) NSManagedObject *schedule;
 
@@ -90,6 +93,14 @@
 
     self.labelDetail = [dictionary objectForKey:@"labelDetail"];
 
+    NSDictionary *compoundActivityDict = [dictionary objectForKey:@"compoundActivity"];
+
+    if (compoundActivityDict != nil)
+    {
+        SBBCompoundActivity *compoundActivityObj = [objectManager objectFromBridgeJSON:compoundActivityDict];
+        self.compoundActivity = compoundActivityObj;
+    }
+
     NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
 
     if (surveyDict != nil)
@@ -120,6 +131,8 @@
 
     [dict setObjectIfNotNil:self.labelDetail forKey:@"labelDetail"];
 
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.compoundActivity] forKey:@"compoundActivity"];
+
     [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
     [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
@@ -132,8 +145,9 @@
 	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	[self.survey awakeFromDictionaryRepresentationInit];
 	[self.task awakeFromDictionaryRepresentationInit];
+	[self.survey awakeFromDictionaryRepresentationInit];
+	[self.compoundActivity awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -158,6 +172,13 @@
 
         self.labelDetail = managedObject.labelDetail;
 
+            NSManagedObject *compoundActivityManagedObj = managedObject.compoundActivity;
+        Class compoundActivityClass = [SBBObjectManager bridgeClassFromType:compoundActivityManagedObj.entity.name];
+        SBBCompoundActivity *compoundActivityObj = [[compoundActivityClass alloc] initWithManagedObject:compoundActivityManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if (compoundActivityObj != nil)
+        {
+          self.compoundActivity = compoundActivityObj;
+        }
             NSManagedObject *surveyManagedObj = managedObject.survey;
         Class surveyClass = [SBBObjectManager bridgeClassFromType:surveyManagedObj.entity.name];
         SBBSurveyReference *surveyObj = [[surveyClass alloc] initWithManagedObject:surveyManagedObj objectManager:objectManager cacheManager:cacheManager];
@@ -213,6 +234,14 @@
 
     managedObject.labelDetail = ((id)self.labelDetail == [NSNull null]) ? nil : self.labelDetail;
 
+    // destination entity CompoundActivity is not directly cacheable, so delete it and create the replacement
+    if (managedObject.compoundActivity) {
+        [cacheContext deleteObject:managedObject.compoundActivity];
+    }
+    NSManagedObject *relMoCompoundActivity = [self.compoundActivity createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
+    [managedObject setCompoundActivity:relMoCompoundActivity];
+
     // destination entity SurveyReference is not directly cacheable, so delete it and create the replacement
     if (managedObject.survey) {
         [cacheContext deleteObject:managedObject.survey];
@@ -233,6 +262,23 @@
 }
 
 #pragma mark Direct access
+
+- (void) setCompoundActivity: (SBBCompoundActivity*) compoundActivity_ settingInverse: (BOOL) setInverse
+{
+
+    _compoundActivity = compoundActivity_;
+
+}
+
+- (void) setCompoundActivity: (SBBCompoundActivity*) compoundActivity_
+{
+    [self setCompoundActivity: compoundActivity_ settingInverse: YES];
+}
+
+- (SBBCompoundActivity*) compoundActivity
+{
+    return _compoundActivity;
+}
 
 - (void) setSurvey: (SBBSurveyReference*) survey_ settingInverse: (BOOL) setInverse
 {
@@ -268,6 +314,6 @@
     return _task;
 }
 
-@synthesize survey = _survey;@synthesize task = _task;
+@synthesize compoundActivity = _compoundActivity;@synthesize survey = _survey;@synthesize task = _task;
 
 @end

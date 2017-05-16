@@ -1,5 +1,5 @@
 //
-//  _SBBStringConstraints.h
+//  _SBBCompoundActivity.h
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,30 +27,37 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBStringConstraints.h instead.
+// Make changes to SBBCompoundActivity.h instead.
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBSurveyConstraints.h"
+#import "SBBBridgeObject.h"
 
-@protocol _SBBStringConstraints
+@class SBBSchemaReference;
+@class SBBSurveyReference;
+
+@protocol _SBBCompoundActivity
 
 @end
 
-@interface _SBBStringConstraints : SBBSurveyConstraints
+@interface _SBBCompoundActivity : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* maxLength;
+@property (nonatomic, strong) NSString* taskIdentifier;
 
-@property (nonatomic, assign) int64_t maxLengthValue;
+@property (nonatomic, strong, readonly) NSArray *schemaList;
 
-@property (nonatomic, strong) NSNumber* minLength;
+@property (nonatomic, strong, readonly) NSArray *surveyList;
 
-@property (nonatomic, assign) int64_t minLengthValue;
+- (void)addSchemaListObject:(SBBSchemaReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)addSchemaListObject:(SBBSchemaReference*)value_;
+- (void)removeSchemaListObjects;
+- (void)removeSchemaListObject:(SBBSchemaReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeSchemaListObject:(SBBSchemaReference*)value_;
 
-@property (nonatomic, strong) NSString* pattern;
-
-@property (nonatomic, strong) NSString* patternErrorMessage;
-
-@property (nonatomic, strong) NSString* patternPlaceholder;
+- (void)addSurveyListObject:(SBBSurveyReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)addSurveyListObject:(SBBSurveyReference*)value_;
+- (void)removeSurveyListObjects;
+- (void)removeSurveyListObject:(SBBSurveyReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeSurveyListObject:(SBBSurveyReference*)value_;
 
 @end

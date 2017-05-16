@@ -1,5 +1,5 @@
 //
-//  _SBBStringConstraints.h
+//  SBBSchemaReference.m
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -26,31 +26,13 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBStringConstraints.h instead.
-//
 
-#import <Foundation/Foundation.h>
-#import "SBBSurveyConstraints.h"
+#import "SBBSchemaReference.h"
 
-@protocol _SBBStringConstraints
+@implementation SBBSchemaReference
 
-@end
+#pragma mark Abstract method overrides
 
-@interface _SBBStringConstraints : SBBSurveyConstraints
-
-@property (nonatomic, strong) NSNumber* maxLength;
-
-@property (nonatomic, assign) int64_t maxLengthValue;
-
-@property (nonatomic, strong) NSNumber* minLength;
-
-@property (nonatomic, assign) int64_t minLengthValue;
-
-@property (nonatomic, strong) NSString* pattern;
-
-@property (nonatomic, strong) NSString* patternErrorMessage;
-
-@property (nonatomic, strong) NSString* patternPlaceholder;
+// Custom logic goes here.
 
 @end

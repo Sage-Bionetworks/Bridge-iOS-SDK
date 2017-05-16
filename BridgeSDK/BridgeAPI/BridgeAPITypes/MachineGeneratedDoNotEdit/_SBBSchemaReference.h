@@ -1,5 +1,5 @@
 //
-//  _SBBStringConstraints.h
+//  _SBBSchemaReference.h
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,30 +27,22 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBStringConstraints.h instead.
+// Make changes to SBBSchemaReference.h instead.
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBSurveyConstraints.h"
+#import "SBBBridgeObject.h"
 
-@protocol _SBBStringConstraints
+@protocol _SBBSchemaReference
 
 @end
 
-@interface _SBBStringConstraints : SBBSurveyConstraints
+@interface _SBBSchemaReference : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* maxLength;
+@property (nonatomic, strong) NSString* id;
 
-@property (nonatomic, assign) int64_t maxLengthValue;
+@property (nonatomic, strong) NSNumber* revision;
 
-@property (nonatomic, strong) NSNumber* minLength;
-
-@property (nonatomic, assign) int64_t minLengthValue;
-
-@property (nonatomic, strong) NSString* pattern;
-
-@property (nonatomic, strong) NSString* patternErrorMessage;
-
-@property (nonatomic, strong) NSString* patternPlaceholder;
+@property (nonatomic, assign) int64_t revisionValue;
 
 @end

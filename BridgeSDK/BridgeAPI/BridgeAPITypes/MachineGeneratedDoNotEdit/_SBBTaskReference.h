@@ -1,7 +1,7 @@
 //
 //  _SBBTaskReference.h
 //
-//	Copyright (c) 2014-2016 Sage Bionetworks
+//	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+@class SBBSchemaReference;
+
 @protocol _SBBTaskReference
 
 @end
@@ -40,5 +42,9 @@
 @interface _SBBTaskReference : SBBBridgeObject
 
 @property (nonatomic, strong) NSString* identifier;
+
+@property (nonatomic, strong, readwrite) SBBSchemaReference *schema;
+
+- (void) setSchema: (SBBSchemaReference*) schema_ settingInverse: (BOOL) setInverse;
 
 @end
