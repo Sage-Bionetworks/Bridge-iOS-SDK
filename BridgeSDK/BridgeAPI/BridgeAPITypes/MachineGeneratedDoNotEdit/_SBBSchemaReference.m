@@ -1,5 +1,5 @@
 //
-//  _SBBBooleanConstraints.m
+//  _SBBSchemaReference.m
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,23 +27,31 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBBooleanConstraints.m instead.
+// Make changes to SBBSchemaReference.m instead.
 //
 
-#import "_SBBBooleanConstraints.h"
+#import "_SBBSchemaReference.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBBooleanConstraints()
+@interface _SBBSchemaReference()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (BooleanConstraints)
+@interface NSManagedObject (SchemaReference)
+
+@property (nullable, nonatomic, retain) NSString* id;
+
+@property (nullable, nonatomic, retain) NSNumber* revision;
+
+@property (nullable, nonatomic, retain) NSManagedObject *compoundActivity;
+
+@property (nullable, nonatomic, retain) NSManagedObject *taskReference;
 
 @end
 
-@implementation _SBBBooleanConstraints
+@implementation _SBBSchemaReference
 
 - (instancetype)init
 {
@@ -57,17 +65,35 @@
 
 #pragma mark Scalar values
 
+- (int64_t)revisionValue
+{
+	return [self.revision longLongValue];
+}
+
+- (void)setRevisionValue:(int64_t)value_
+{
+	self.revision = [NSNumber numberWithLongLong:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.id = [dictionary objectForKey:@"id"];
+
+    self.revision = [dictionary objectForKey:@"revision"];
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+
+    [dict setObjectIfNotNil:self.id forKey:@"id"];
+
+    [dict setObjectIfNotNil:self.revision forKey:@"revision"];
 
 	return [dict copy];
 }
@@ -84,13 +110,17 @@
 
 + (NSString *)entityName
 {
-    return @"BooleanConstraints";
+    return @"SchemaReference";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        self.id = managedObject.id;
+
+        self.revision = managedObject.revision;
 
     }
 
@@ -100,7 +130,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"BooleanConstraints" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SchemaReference" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -123,6 +153,10 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    managedObject.id = ((id)self.id == [NSNull null]) ? nil : self.id;
+
+    managedObject.revision = ((id)self.revision == [NSNull null]) ? nil : self.revision;
 
     // Calling code will handle saving these changes to cacheContext.
 }

@@ -66,6 +66,39 @@
           @"scheduledOn": @"2015-05-07T00:00:00.000Z",
           @"expiresOn": @"2020-05-07T00:00:00.000Z",
           @"status": @"available"
+          },
+      @{
+          @"type": @"ScheduledActivity",
+          @"guid": @"task-3-guid",
+          @"activity": @{
+                  @"activityType": @"compound",
+                  @"label": @"This is a compound activity",
+                  @"labelDetail": @"It will be tricky and frustrating to perform",
+                  @"compoundActivity": @{
+                          @"type": @"CompoundActivity",
+                          @"taskIdentifier": @"this-is-a-compound-activity",
+                          @"schemaList": @[
+                                         @{
+                                             @"id": @"this-is-a-schema-ref",
+                                             @"revision": @(0),
+                                             @"type": @"SchemaReference"
+                                         }
+                                         ],
+                          @"surveyList": @[
+                                         @{
+                                             @"identifier": @"this-is-a-survey-ref",
+                                             @"guid": @"survey-guid",
+                                             @"createdOn": @"2017-05-09T18:26:02.523Z",
+                                             @"href": @"url-to-retrieve-survey/guid-goes-here/2017-05-09T18:26:02.523Z",
+                                             @"type": @"SurveyReference"
+                                         }
+                                         ],
+                          },
+                  @"type": @"Activity"
+                  },
+          @"scheduledOn": @"2015-05-07T00:00:00.000Z",
+          @"expiresOn": @"2020-05-07T00:00:00.000Z",
+          @"status": @"available"
           }
       ];
     NSDictionary *response = @{
@@ -92,6 +125,21 @@
             XCTAssert([activity1 isKindOfClass:[SBBActivity class]], @"Activity of second task is also an SBBActivity object");
             XCTAssert([activity1.activityType isEqualToString:@"task"], @"Put tasks into array in correct order");
             XCTAssert([activity1.task isKindOfClass:[SBBTaskReference class]], @"Converted 'task' json to SBBTaskReference object");
+            SBBScheduledActivity *task2 = tasks[2];
+            SBBActivity *activity2 = task2.activity;
+            XCTAssert([activity2 isKindOfClass:[SBBActivity class]], @"Activity of third task is also an SBBActivity object");
+            XCTAssert([activity2.activityType isEqualToString:@"compound"], @"Put tasks into array in correct order");
+            XCTAssert([activity2.compoundActivity isKindOfClass:[SBBCompoundActivity class]], @"Converted 'compoundActivity' json to SBBCompoundActivity object");
+            XCTAssert(activity2.compoundActivity.schemaList.count == 1, @"Expected 1 object in schemaList, got %@", @(activity2.compoundActivity.schemaList.count));
+            if (activity2.compoundActivity.schemaList.count) {
+                SBBSchemaReference *schemaRef = activity2.compoundActivity.schemaList[0];
+                XCTAssert([schemaRef isKindOfClass:[SBBSchemaReference class]], @"Expected SBBSchemaReference, got %@", [schemaRef class]);
+            }
+            XCTAssert(activity2.compoundActivity.surveyList.count == 1, @"Expected 1 object in surveyList, got %@", @(activity2.compoundActivity.surveyList.count));
+            if (activity2.compoundActivity.surveyList.count) {
+                SBBSurveyReference *surveyRef = activity2.compoundActivity.surveyList[0];
+                XCTAssert([surveyRef isKindOfClass:[SBBSurveyReference class]], @"Expected SBBSurveyReference, got %@", [surveyRef class]);
+            }
         }
         [expectGotActivities fulfill];
     }];

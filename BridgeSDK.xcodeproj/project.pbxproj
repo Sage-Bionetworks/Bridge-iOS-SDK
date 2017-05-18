@@ -266,6 +266,14 @@
 		8053B6341A00357400A2E6C4 /* SBBResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 8053B6321A00357400A2E6C4 /* SBBResourceList.m */; };
 		80561DB71E6A0866005FBFA3 /* _SBBResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80561DB61E6A0865005FBFA3 /* _SBBResourceListInternal.h */; };
 		80561DB91E6A0879005FBFA3 /* SBBResourceListInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80561DB81E6A0879005FBFA3 /* SBBResourceListInternal.h */; };
+		805D4BE81ECBAC2E002143F0 /* _SBBCompoundActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 805D4BE61ECBAC2E002143F0 /* _SBBCompoundActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		805D4BE91ECBAC2E002143F0 /* _SBBCompoundActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 805D4BE71ECBAC2E002143F0 /* _SBBCompoundActivity.m */; };
+		805D4BEC1ECBAC57002143F0 /* _SBBSchemaReference.h in Headers */ = {isa = PBXBuildFile; fileRef = 805D4BEA1ECBAC57002143F0 /* _SBBSchemaReference.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		805D4BED1ECBAC57002143F0 /* _SBBSchemaReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 805D4BEB1ECBAC57002143F0 /* _SBBSchemaReference.m */; };
+		805D4BF01ECBAC74002143F0 /* SBBCompoundActivity.h in Headers */ = {isa = PBXBuildFile; fileRef = 805D4BEE1ECBAC74002143F0 /* SBBCompoundActivity.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		805D4BF11ECBAC74002143F0 /* SBBCompoundActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 805D4BEF1ECBAC74002143F0 /* SBBCompoundActivity.m */; };
+		805D4BF41ECBACDD002143F0 /* SBBSchemaReference.h in Headers */ = {isa = PBXBuildFile; fileRef = 805D4BF21ECBACDD002143F0 /* SBBSchemaReference.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		805D4BF51ECBACDD002143F0 /* SBBSchemaReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 805D4BF31ECBACDD002143F0 /* SBBSchemaReference.m */; };
 		80643BE71DA6E4E900EB91C6 /* _SBBUserProfileInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */; };
 		807747801E28289C000C13CD /* SBBBridgeAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		807AE28C1B603309002588BB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28B1B603309002588BB /* main.m */; };
@@ -795,6 +803,15 @@
 		80561DA71E69EF7E005FBFA3 /* SBBDataModelV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV3.xcdatamodel; sourceTree = "<group>"; };
 		80561DB61E6A0865005FBFA3 /* _SBBResourceListInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBResourceListInternal.h; sourceTree = "<group>"; };
 		80561DB81E6A0879005FBFA3 /* SBBResourceListInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBResourceListInternal.h; sourceTree = "<group>"; };
+		805D4BD71ECBA75A002143F0 /* SBBDataModelV5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV5.xcdatamodel; sourceTree = "<group>"; };
+		805D4BE61ECBAC2E002143F0 /* _SBBCompoundActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBCompoundActivity.h; sourceTree = "<group>"; };
+		805D4BE71ECBAC2E002143F0 /* _SBBCompoundActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBCompoundActivity.m; sourceTree = "<group>"; };
+		805D4BEA1ECBAC57002143F0 /* _SBBSchemaReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSchemaReference.h; sourceTree = "<group>"; };
+		805D4BEB1ECBAC57002143F0 /* _SBBSchemaReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBSchemaReference.m; sourceTree = "<group>"; };
+		805D4BEE1ECBAC74002143F0 /* SBBCompoundActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBCompoundActivity.h; sourceTree = "<group>"; };
+		805D4BEF1ECBAC74002143F0 /* SBBCompoundActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCompoundActivity.m; sourceTree = "<group>"; };
+		805D4BF21ECBACDD002143F0 /* SBBSchemaReference.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSchemaReference.h; sourceTree = "<group>"; };
+		805D4BF31ECBACDD002143F0 /* SBBSchemaReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSchemaReference.m; sourceTree = "<group>"; };
 		80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBUserProfileInternal.h; sourceTree = "<group>"; };
 		8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAppDelegate.h; sourceTree = "<group>"; };
 		807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdminAuthDelegate.h; path = ../BridgeSDKTests/TestAdminAuthDelegate.h; sourceTree = "<group>"; };
@@ -1058,6 +1075,8 @@
 				80104A5F19D4CDC4001F2573 /* SBBBridgeObject.h */,
 				80104A6019D4CDC4001F2573 /* SBBBridgeObject.m */,
 				60F1E4021A39330B009B380E /* SBBBridgeObjectInternal.h */,
+				805D4BEE1ECBAC74002143F0 /* SBBCompoundActivity.h */,
+				805D4BEF1ECBAC74002143F0 /* SBBCompoundActivity.m */,
 				80BA3D931C3F19D400AA70FB /* SBBConsentSignature.h */,
 				80BA3D941C3F19D400AA70FB /* SBBConsentSignature.m */,
 				80BA3D951C3F19D400AA70FB /* SBBConsentStatus.h */,
@@ -1090,6 +1109,8 @@
 				80E60DA319FAD5860053D166 /* SBBSchedule.m */,
 				80F88E4D1AF991950090D462 /* SBBScheduledActivity.h */,
 				80F88E4E1AF991950090D462 /* SBBScheduledActivity.m */,
+				805D4BF21ECBACDD002143F0 /* SBBSchemaReference.h */,
+				805D4BF31ECBACDD002143F0 /* SBBSchemaReference.m */,
 				800E796119ED74B600EEE612 /* SBBStringConstraints.h */,
 				800E796219ED74B600EEE612 /* SBBStringConstraints.m */,
 				6056DE161CF61F4000C21E82 /* SBBStudyParticipant.h */,
@@ -1584,6 +1605,8 @@
 				80F7C32E19E5DC0D00574800 /* _SBBBridgeObject.h */,
 				80F7C32F19E5DC0D00574800 /* _SBBBridgeObject.m */,
 				60F1E3FE1A392F7D009B380E /* _SBBBridgeObjectInternal.h */,
+				805D4BE61ECBAC2E002143F0 /* _SBBCompoundActivity.h */,
+				805D4BE71ECBAC2E002143F0 /* _SBBCompoundActivity.m */,
 				80BA3D8B1C3F19A100AA70FB /* _SBBConsentSignature.h */,
 				80BA3D8C1C3F19A100AA70FB /* _SBBConsentSignature.m */,
 				80BA3D8D1C3F19A100AA70FB /* _SBBConsentStatus.h */,
@@ -1616,6 +1639,8 @@
 				80E60D9E19FAD56C0053D166 /* _SBBSchedule.m */,
 				80F88E511AF991B10090D462 /* _SBBScheduledActivity.h */,
 				80F88E521AF991B10090D462 /* _SBBScheduledActivity.m */,
+				805D4BEA1ECBAC57002143F0 /* _SBBSchemaReference.h */,
+				805D4BEB1ECBAC57002143F0 /* _SBBSchemaReference.m */,
 				800E793919ED744000EEE612 /* _SBBStringConstraints.h */,
 				800E793A19ED744000EEE612 /* _SBBStringConstraints.m */,
 				6056DE051CF61ECD00C21E82 /* _SBBStudyParticipant.h */,
@@ -1680,6 +1705,7 @@
 				80F88E4B1AF98DA70090D462 /* SBBActivityManager.h in Headers */,
 				80561DB71E6A0866005FBFA3 /* _SBBResourceListInternal.h in Headers */,
 				80B2C6421E3AD493001F9FEA /* ZZDataChannelOutput.h in Headers */,
+				805D4BEC1ECBAC57002143F0 /* _SBBSchemaReference.h in Headers */,
 				800E793119ED740F00EEE612 /* _SBBDecimalConstraints.h in Headers */,
 				8017AF7219DA0359001AF9BA /* UIDevice+Hardware.h in Headers */,
 				8026D69219E892B5008942B0 /* SBBUploadRequest.h in Headers */,
@@ -1693,6 +1719,7 @@
 				8026D68E19E89149008942B0 /* _SBBUploadRequest.h in Headers */,
 				8053B62E1A00356000A2E6C4 /* _SBBResourceList.h in Headers */,
 				80F7C34719E5DC0D00574800 /* _SBBSurveyQuestion.h in Headers */,
+				805D4BF41ECBACDD002143F0 /* SBBSchemaReference.h in Headers */,
 				6056DE1D1CF61F4000C21E82 /* SBBStudyParticipant.h in Headers */,
 				807AE2EE1B62E8C3002588BB /* _SBBUserSessionInfo.h in Headers */,
 				80F7C34D19E5DC0D00574800 /* SBBSurvey.h in Headers */,
@@ -1713,6 +1740,7 @@
 				807AE2DD1B62ADB1002588BB /* SBBSurveyManagerInternal.h in Headers */,
 				80E819731A83E8EB00513919 /* SBBImage.h in Headers */,
 				80E819661A83E89E00513919 /* _SBBImage.h in Headers */,
+				805D4BE81ECBAC2E002143F0 /* _SBBCompoundActivity.h in Headers */,
 				800E797719ED7BCB00EEE612 /* SBBSurveyRule.h in Headers */,
 				807AE2D51B61AE76002588BB /* SBBUserManagerInternal.h in Headers */,
 				80643BE71DA6E4E900EB91C6 /* _SBBUserProfileInternal.h in Headers */,
@@ -1833,6 +1861,7 @@
 				80F88E531AF991B10090D462 /* _SBBScheduledActivity.h in Headers */,
 				606FDE211A2F9DC800898466 /* _SBBIdentifierHolder.h in Headers */,
 				FFEA839C1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h in Headers */,
+				805D4BF01ECBAC74002143F0 /* SBBCompoundActivity.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2334,6 +2363,7 @@
 				8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */,
 				80B2C6501E3AD493001F9FEA /* ZZNewArchiveEntry.mm in Sources */,
 				FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */,
+				805D4BED1ECBAC57002143F0 /* _SBBSchemaReference.m in Sources */,
 				8026BD1E19C883FC0077F3EB /* BridgeSDK.m in Sources */,
 				800E796819ED74B600EEE612 /* SBBStringConstraints.m in Sources */,
 				80104A5D19D4CD9E001F2573 /* SBBUserProfile.m in Sources */,
@@ -2361,8 +2391,10 @@
 				807AE2E91B62E8C3002588BB /* _SBBSurveyReference.m in Sources */,
 				80B2C65B1E3AD493001F9FEA /* ZZStandardDecryptInputStream.mm in Sources */,
 				8026D67F19E857FC008942B0 /* SBBBridgeAPIManager.m in Sources */,
+				805D4BE91ECBAC2E002143F0 /* _SBBCompoundActivity.m in Sources */,
 				8026D65F19E7527F008942B0 /* SBBSurveyManager.m in Sources */,
 				8051DCE01A1E6FDB0068D06E /* RNDecryptor.m in Sources */,
+				805D4BF51ECBACDD002143F0 /* SBBSchemaReference.m in Sources */,
 				80104A4319D1F817001F2573 /* SBBConsentManager.m in Sources */,
 				80F7C34C19E5DC0D00574800 /* SBBDataModel.xcdatamodeld in Sources */,
 				8017AF7719DA038D001AF9BA /* NSDate+SBBAdditions.m in Sources */,
@@ -2419,6 +2451,7 @@
 				800E794819ED744000EEE612 /* _SBBTimeConstraints.m in Sources */,
 				80F7C34619E5DC0D00574800 /* _SBBSurveyConstraints.m in Sources */,
 				80BA3D901C3F19A100AA70FB /* _SBBConsentSignature.m in Sources */,
+				805D4BF11ECBAC74002143F0 /* SBBCompoundActivity.m in Sources */,
 				60F1E4171A420E96009B380E /* _SBBActivity.m in Sources */,
 				800E794419ED744000EEE612 /* _SBBStringConstraints.m in Sources */,
 			);
@@ -3015,6 +3048,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				805D4BD71ECBA75A002143F0 /* SBBDataModelV5.xcdatamodel */,
 				80CE622C1E8DDBBC00CD154C /* SBBDataModelV4.xcdatamodel */,
 				80561DA71E69EF7E005FBFA3 /* SBBDataModelV3.xcdatamodel */,
 				80C565751E40FC4000D83A72 /* SBBDataModelV2.xcdatamodel */,

@@ -1,5 +1,5 @@
 //
-//  _SBBSurveyReference.h
+//  SBBSchemaReference.m
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -26,25 +26,13 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyReference.h instead.
-//
 
-#import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import "SBBSchemaReference.h"
 
-@protocol _SBBSurveyReference
+@implementation SBBSchemaReference
 
-@end
+#pragma mark Abstract method overrides
 
-@interface _SBBSurveyReference : SBBBridgeObject
-
-@property (nonatomic, strong) NSDate* createdOn;
-
-@property (nonatomic, strong) NSString* guid;
-
-@property (nonatomic, strong) NSString* href;
-
-@property (nonatomic, strong) NSString* identifier;
+// Custom logic goes here.
 
 @end

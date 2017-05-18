@@ -1,5 +1,5 @@
 //
-//  _SBBSurveyReference.h
+//  _SBBSchemaReference.h
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,24 +27,22 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyReference.h instead.
+// Make changes to SBBSchemaReference.h instead.
 //
 
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-@protocol _SBBSurveyReference
+@protocol _SBBSchemaReference
 
 @end
 
-@interface _SBBSurveyReference : SBBBridgeObject
+@interface _SBBSchemaReference : SBBBridgeObject
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nonatomic, strong) NSString* id;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSNumber* revision;
 
-@property (nonatomic, strong) NSString* href;
-
-@property (nonatomic, strong) NSString* identifier;
+@property (nonatomic, assign) int64_t revisionValue;
 
 @end

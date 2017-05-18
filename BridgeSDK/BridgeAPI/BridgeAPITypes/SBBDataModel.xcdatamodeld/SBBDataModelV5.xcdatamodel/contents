@@ -5,7 +5,6 @@
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="labelDetail" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="compoundActivity" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CompoundActivity" inverseName="activity" inverseEntity="CompoundActivity" syncable="YES"/>
         <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Schedule" inverseName="activities" inverseEntity="Schedule" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
@@ -16,8 +15,8 @@
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="activity" inverseEntity="SurveyReference" syncable="YES"/>
-        <relationship name="task" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TaskReference" inverseName="activity" inverseEntity="TaskReference" syncable="YES"/>
+        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="activityForSurvey" inverseEntity="SurveyReference" syncable="YES"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TaskReference" inverseName="activityForTask" inverseEntity="TaskReference" syncable="YES"/>
     </entity>
     <entity name="BooleanConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="BridgeObject" isAbstract="YES" syncable="YES">
@@ -41,16 +40,6 @@
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-    </entity>
-    <entity name="CompoundActivity" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="taskIdentifier" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="compoundActivity" inverseEntity="Activity" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
-        <relationship name="schemaList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SchemaReference" inverseName="compoundActivity" inverseEntity="SchemaReference" syncable="YES"/>
-        <relationship name="surveyList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="compoundActivity" inverseEntity="SurveyReference" syncable="YES"/>
     </entity>
     <entity name="ConsentSignature" parentEntity="BridgeObject" syncable="YES">
         <attribute name="birthdate" optional="YES" attributeType="String" syncable="YES"/>
@@ -208,20 +197,6 @@
             <entry key="hasClientWritableFields" value="1"/>
         </userInfo>
     </entity>
-    <entity name="SchemaReference" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="revision" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="compoundActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompoundActivity" inverseName="schemaList" inverseEntity="CompoundActivity" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
-        <relationship name="taskReference" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskReference" inverseName="schema" inverseEntity="TaskReference" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
-    </entity>
     <entity name="StringConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="minLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -347,17 +322,11 @@
             </userInfo>
         </relationship>
     </entity>
-    <entity name="SurveyReference" parentEntity="BridgeObject" syncable="YES">
+    <entity name="SurveyReference" parentEntity="TaskReference" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="href" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="survey" inverseEntity="Activity" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
-        <relationship name="compoundActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompoundActivity" inverseName="surveyList" inverseEntity="CompoundActivity" syncable="YES">
+        <relationship name="activityForSurvey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="survey" inverseEntity="Activity" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
@@ -376,12 +345,11 @@
     </entity>
     <entity name="TaskReference" parentEntity="BridgeObject" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="task" inverseEntity="Activity" syncable="YES">
+        <relationship name="activityForTask" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="task" inverseEntity="Activity" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-        <relationship name="schema" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SchemaReference" inverseName="taskReference" inverseEntity="SchemaReference" syncable="YES"/>
     </entity>
     <entity name="TimeConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="UploadRequest" parentEntity="BridgeObject" syncable="YES">
@@ -434,10 +402,9 @@
         </userInfo>
     </entity>
     <elements>
-        <element name="Activity" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="Activity" positionX="0" positionY="0" width="128" height="165"/>
         <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
         <element name="BridgeObject" positionX="0" positionY="0" width="128" height="105"/>
-        <element name="CompoundActivity" positionX="18" positionY="162" width="128" height="105"/>
         <element name="ConsentSignature" positionX="9" positionY="99" width="128" height="120"/>
         <element name="ConsentStatus" positionX="0" positionY="90" width="128" height="135"/>
         <element name="DataGroups" positionX="0" positionY="90" width="128" height="60"/>
@@ -453,7 +420,6 @@
         <element name="ResourceList" positionX="0" positionY="0" width="128" height="90"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
         <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="SchemaReference" positionX="9" positionY="153" width="128" height="105"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
         <element name="StudyParticipant" positionX="18" positionY="108" width="128" height="270"/>
         <element name="Survey" positionX="0" positionY="0" width="128" height="180"/>
@@ -462,9 +428,9 @@
         <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="75"/>
         <element name="SurveyQuestion" positionX="0" positionY="0" width="128" height="75"/>
         <element name="SurveyQuestionOption" positionX="0" positionY="0" width="128" height="120"/>
-        <element name="SurveyReference" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="SurveyReference" positionX="0" positionY="0" width="128" height="105"/>
         <element name="SurveyRule" positionX="0" positionY="0" width="128" height="90"/>
-        <element name="TaskReference" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="TaskReference" positionX="0" positionY="0" width="128" height="75"/>
         <element name="TimeConstraints" positionX="0" positionY="0" width="128" height="45"/>
         <element name="UploadRequest" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>

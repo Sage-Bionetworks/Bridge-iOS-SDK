@@ -1,7 +1,7 @@
 //
 //  _SBBTaskReference.m
 //
-//	Copyright (c) 2014-2016 Sage Bionetworks
+//	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,8 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBSchemaReference.h"
+
 @interface _SBBTaskReference()
 
 @end
@@ -43,7 +45,9 @@
 
 @property (nullable, nonatomic, retain) NSString* identifier;
 
-@property (nullable, nonatomic, retain) NSManagedObject *activityForTask;
+@property (nullable, nonatomic, retain) NSManagedObject *activity;
+
+@property (nullable, nonatomic, retain) NSManagedObject *schema;
 
 @end
 
@@ -69,6 +73,14 @@
 
     self.identifier = [dictionary objectForKey:@"identifier"];
 
+    NSDictionary *schemaDict = [dictionary objectForKey:@"schema"];
+
+    if (schemaDict != nil)
+    {
+        SBBSchemaReference *schemaObj = [objectManager objectFromBridgeJSON:schemaDict];
+        self.schema = schemaObj;
+    }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -77,6 +89,8 @@
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.schema] forKey:@"schema"];
+
 	return [dict copy];
 }
 
@@ -84,6 +98,8 @@
 {
 	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
+
+	[self.schema awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -102,6 +118,13 @@
 
         self.identifier = managedObject.identifier;
 
+            NSManagedObject *schemaManagedObj = managedObject.schema;
+        Class schemaClass = [SBBObjectManager bridgeClassFromType:schemaManagedObj.entity.name];
+        SBBSchemaReference *schemaObj = [[schemaClass alloc] initWithManagedObject:schemaManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if (schemaObj != nil)
+        {
+          self.schema = schemaObj;
+        }
     }
 
     return self;
@@ -133,12 +156,40 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+    NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
+
+    // destination entity SchemaReference is not directly cacheable, so delete it and create the replacement
+    if (managedObject.schema) {
+        [cacheContext deleteObject:managedObject.schema];
+    }
+    NSManagedObject *relMoSchema = [self.schema createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
+    [managedObject setSchema:relMoSchema];
 
     // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access
+
+- (void) setSchema: (SBBSchemaReference*) schema_ settingInverse: (BOOL) setInverse
+{
+
+    _schema = schema_;
+
+}
+
+- (void) setSchema: (SBBSchemaReference*) schema_
+{
+    [self setSchema: schema_ settingInverse: YES];
+}
+
+- (SBBSchemaReference*) schema
+{
+    return _schema;
+}
+
+@synthesize schema = _schema;
 
 @end

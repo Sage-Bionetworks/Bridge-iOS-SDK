@@ -1,5 +1,5 @@
 //
-//  _SBBSurveyReference.h
+//  _SBBCompoundActivity.h
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,24 +27,37 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyReference.h instead.
+// Make changes to SBBCompoundActivity.h instead.
 //
 
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-@protocol _SBBSurveyReference
+@class SBBSchemaReference;
+@class SBBSurveyReference;
+
+@protocol _SBBCompoundActivity
 
 @end
 
-@interface _SBBSurveyReference : SBBBridgeObject
+@interface _SBBCompoundActivity : SBBBridgeObject
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nonatomic, strong) NSString* taskIdentifier;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nonatomic, strong, readonly) NSArray *schemaList;
 
-@property (nonatomic, strong) NSString* href;
+@property (nonatomic, strong, readonly) NSArray *surveyList;
 
-@property (nonatomic, strong) NSString* identifier;
+- (void)addSchemaListObject:(SBBSchemaReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)addSchemaListObject:(SBBSchemaReference*)value_;
+- (void)removeSchemaListObjects;
+- (void)removeSchemaListObject:(SBBSchemaReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeSchemaListObject:(SBBSchemaReference*)value_;
+
+- (void)addSurveyListObject:(SBBSurveyReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)addSurveyListObject:(SBBSurveyReference*)value_;
+- (void)removeSurveyListObjects;
+- (void)removeSurveyListObject:(SBBSurveyReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeSurveyListObject:(SBBSurveyReference*)value_;
 
 @end
