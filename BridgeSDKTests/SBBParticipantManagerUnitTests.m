@@ -111,4 +111,41 @@
     }];
 }
 
+- (void)testUpdateDataGroups
+{
+    SBBParticipantManager *pMan = [SBBParticipantManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
+    
+    XCTestExpectation *expectSetParticipant = [self expectationWithDescription:@"Set study participant in cache by fetching it"];
+    [self.mockURLSession setJson:_testParticipantJSON andResponseCode:200 forEndpoint:kSBBParticipantAPI andMethod:@"GET"];
+    [pMan getParticipantRecordWithCompletion:^(SBBStudyParticipant *participant, NSError *error) {
+        XCTAssert([participant isKindOfClass:[SBBStudyParticipant class]], @"Converted incoming json to SBBStudyParticipant");
+        XCTAssertEqualObjects(_testParticipant.attributes.customStringField, participant.attributes.customStringField, @"Custom string field: object equal to original");
+        XCTAssertEqualObjects(_testParticipant.attributes.customDictField, participant.attributes.customDictField, @"Custom dict field: object equal to original");
+        XCTAssertEqualObjects(_testParticipant.attributes.customArrayField, participant.attributes.customArrayField, @"Custom array field: object equal to original");
+        [expectSetParticipant fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout setting study participant record in cache: %@", error);
+        }
+    }];
+    
+    XCTestExpectation *expectUpdatedParticipant = [self expectationWithDescription:@"Updated study participant"];
+
+    [self.mockURLSession setJson:nil andResponseCode:500 forEndpoint:kSBBParticipantAPI andMethod:@"POST"];
+    NSSet<NSString *> *groups = [NSSet setWithArray:@[@"group1", @"group2", @"group4"]];
+    [pMan updateDataGroupsWithGroups:groups completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+        // now check that it's updated in local cache in spite of "server error"
+        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
+        XCTAssert(expression, ...)
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout updating study participant: %@", error);
+        }
+    }];
+}
+
 @end
