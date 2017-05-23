@@ -137,8 +137,9 @@
     NSSet<NSString *> *groups = [NSSet setWithArray:@[@"group1", @"group2", @"group4"]];
     [pMan updateDataGroupsWithGroups:groups completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
         // now check that it's updated in local cache in spite of "server error"
-        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
-        XCTAssert(expression, ...)
+        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:SBBStudyParticipant.entityName createIfMissing:NO];
+        XCTAssertEqualObjects(groups, cachedParticipant.dataGroups, @"Expected data groups to be %@ but got %@", groups, cachedParticipant.dataGroups);
+        [expectUpdatedParticipant fulfill];
     }];
     
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
