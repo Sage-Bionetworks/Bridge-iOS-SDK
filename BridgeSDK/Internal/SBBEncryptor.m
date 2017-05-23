@@ -34,7 +34,10 @@
 #import "SBBEncryptor.h"
 #import "BridgeSDK+Internal.h"
 @import UIKit;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation"
 #import <openssl/openssl.h>
+#pragma clang diagnostic pop
 
 static NSString *kEncryptedDataFilename = @"encrypted.zip";
 static NSString *kEncryptedFileBaseFolder = @"encryptor";
