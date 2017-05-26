@@ -260,8 +260,9 @@
         XCTAssert([tasksList isKindOfClass:[NSArray class]], @"Method returned an NSArray");
         SBBScheduledActivity *task = [tasksList lastObject];
         XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], @"Method returned a list of ScheduledActivity objects");
-        task.startedOn = [NSDate date];
-        task.finishedOn = [NSDate date];
+        NSDate *now = [NSDate date];
+        task.startedOn = now;
+        task.finishedOn = now;
         task.clientData = validJSON;
         [SBBComponent(SBBActivityManager) updateScheduledActivities:@[task] withCompletion:^(id responseObject, NSError *error) {
             BOOL isDictionary = [responseObject isKindOfClass:[NSDictionary class]];
@@ -280,7 +281,9 @@
                     if (matchingTasks.count == 1) {
                         SBBScheduledActivity *newTask = matchingTasks[0];
                         XCTAssertNotEqual(task, newTask, @"Somehow even after deleting from cache, the fetched object is the same one as before");
-                        XCTAssertEqualObjects(task, newTask, @"The object as saved to Bridge does not match what came back");
+                        XCTAssertEqualObjects(task.clientData, newTask.clientData, @"The clientData as saved to Bridge does not match what came back");
+                        XCTAssertEqualObjects(task.startedOn, now, @"The startedOn date as saved to Bridge does not match what came back");
+                        XCTAssertEqualObjects(task.finishedOn, now, @"The finishedOn date as saved to Bridge does not match what came back");
                     }
                     [expectTasks fulfill];
                 }];
