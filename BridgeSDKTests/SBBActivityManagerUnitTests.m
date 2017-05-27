@@ -161,6 +161,29 @@
     NSString *scheduledActivityGuid2 = [NSString stringWithFormat:@"%@:%@", activityGuid, task2ScheduledString];
     NSDate *fromDate = [NSDate dateWithISO8601String:fromDateString];
     NSDate *toDate = [NSDate dateWithISO8601String:toDateString];
+    NSDictionary *serverClientData = @{
+                                       @"thing": @{
+                                               @"thing1": @"today's-date-as-a-string",
+                                               @"thing2": [[NSDate date] ISO8601StringUTC]
+                                               }
+                                       };
+
+    NSDictionary *localClientData = @{
+                                      @"thing": @{
+                                              @"thing1": @"today's-date-as-a-string",
+                                              @"thing2": [[NSDate date] ISO8601StringUTC]
+                                              },
+                                      @"anotherThing": @[
+                                              @"anotherThing1",
+                                              @(12345),
+                                              @(NO),
+                                              @(3.14159),
+                                              @{
+                                                  @"andAnotherThing": @"never mind"
+                                                  }
+                                              ]
+                                      };
+
     NSDictionary *task1 =
     @{
       @"type": @"ScheduledActivity",
@@ -180,7 +203,8 @@
               },
       @"scheduledOn": task1ScheduledString,
       @"expiresOn": @"2017-04-01T04:55:07.867",
-      @"status": @"available"
+      @"status": @"available",
+      @"clientData": serverClientData
       };
     NSDictionary *task2 =
     @{
@@ -201,7 +225,8 @@
               },
       @"scheduledOn": task2ScheduledString,
       @"expiresOn": @"2017-03-31T04:55:07.867",
-      @"status": @"available"
+      @"status": @"available",
+      @"clientData": serverClientData
       };
     NSDictionary *response1 = @{
                                @"type": @"ForwardCursorPagedResourceList",
@@ -247,6 +272,39 @@
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout getting historical activities: %@", error);
+        }
+    }];
+    
+    // now try the same thing, but with the two ScheduledActivities already cached and with different
+    // clientData from what the "server" will return; and make sure the clientData gets reconciled correctly.
+    [self.cacheManager removeFromCacheObjectOfType:SBBScheduledActivity.entityName withId:scheduledActivityGuid1];
+    [self.cacheManager removeFromCacheObjectOfType:SBBScheduledActivity.entityName withId:scheduledActivityGuid2];
+    NSMutableDictionary *task1Local = [task1 mutableCopy];
+    task1Local[@"clientData"] = localClientData;
+    [self.objectManager objectFromBridgeJSON:task1Local];
+    NSMutableDictionary *task2Local = [task2 mutableCopy];
+    task2Local[@"clientData"] = nil;
+    [self.objectManager objectFromBridgeJSON:task2Local];
+    
+    [self.mockURLSession setJson:response1 andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    [self.mockURLSession setJson:response2 andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    
+    XCTestExpectation *expectReGotActivities = [self expectationWithDescription:@"Got historical activities again"];
+    
+    [tMan getScheduledActivitiesForGuid:activityGuid scheduledFrom:fromDate to:toDate withCompletion:^(NSArray *tasks, NSError *error) {
+        XCTAssert(tasks.count == 2, @"Expected to retrieve 2 historical activities, got %@", @(tasks.count));
+        if (tasks.count == 2) {
+            SBBScheduledActivity *task0 = tasks[0];
+            XCTAssertEqualObjects(localClientData, task0.clientData, @"Expected task0 to still have local client data, but have this instead:\n%@", task0.clientData);
+            SBBScheduledActivity *task1 = tasks[1];
+            XCTAssertEqualObjects(serverClientData, task1.clientData, @"Expected task1 to have gotten the client data from the server, but have this instead:\n%@", task1.clientData);
+        }
+        [expectReGotActivities fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout getting historical activities again: %@", error);
         }
     }];
 }
