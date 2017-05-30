@@ -95,22 +95,22 @@ NSString * const SBBScheduledActivityStatusStringDeleted = @"deleted";
 - (void)reconcileWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerInternalProtocol>)objectManager
 {
     // For all but the client-writable fields, the server value is completely canonical.
-    // For the client-writable fields, the server value is canonical unless it is nil.
+    // For the client-writable fields, the client value is canonical unless it is nil.
     NSDate *savedStartedOn = self.startedOn;
     NSDate *savedFinishedOn = self.finishedOn;
     id<SBBJSONValue> savedClientData = self.clientData;
     
     [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
     
-    if (!self.startedOn) {
+    if (savedStartedOn) {
         self.startedOn = savedStartedOn;
     }
     
-    if (!self.finishedOn) {
+    if (savedFinishedOn) {
         self.finishedOn = savedFinishedOn;
     }
     
-    if (!self.clientData) {
+    if (savedClientData) {
         self.clientData = savedClientData;
     }
 }
