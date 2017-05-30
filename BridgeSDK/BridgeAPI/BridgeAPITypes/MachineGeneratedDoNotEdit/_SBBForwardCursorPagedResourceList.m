@@ -120,6 +120,12 @@
 
     self.hasNext = [dictionary objectForKey:@"hasNext"];
 
+    // Set the entity ID key path with the key value if available, even when it's not normally
+    // included in the PONSO dictionary
+    NSString *keyValue = [dictionary objectForKey:@"listID__"];
+    if (keyValue)
+        self.listID__ = keyValue;
+
     self.offsetBy = [NSDate dateWithISO8601String:[dictionary objectForKey:@"offsetBy"]];
 
     self.pageSize = [dictionary objectForKey:@"pageSize"];

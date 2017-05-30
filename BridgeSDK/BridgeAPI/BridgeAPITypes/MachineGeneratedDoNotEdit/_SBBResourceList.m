@@ -98,6 +98,12 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    // Set the entity ID key path with the key value if available, even when it's not normally
+    // included in the PONSO dictionary
+    NSString *keyValue = [dictionary objectForKey:@"listID__"];
+    if (keyValue)
+        self.listID__ = keyValue;
+
     self.total = [dictionary objectForKey:@"total"];
 
     // overwrite the old items relationship entirely rather than adding to it

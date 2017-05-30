@@ -140,6 +140,20 @@
                 SBBSurveyReference *surveyRef = activity2.compoundActivity.surveyList[0];
                 XCTAssert([surveyRef isKindOfClass:[SBBSurveyReference class]], @"Expected SBBSurveyReference, got %@", [surveyRef class]);
             }
+            
+            // Also make sure the ResourceList containing the activities is properly identified
+            // in the cache for later retrieval
+            NSString *rlistName = SBBResourceList.entityName;
+            NSString *saName = SBBScheduledActivity.entityName;
+            SBBResourceList *activitiesRList = [self.cacheManager cachedObjectOfType:rlistName withId:saName createIfMissing:NO];
+            XCTAssertNotNil(activitiesRList, @"Failed to retrieve %@ with listID__ '%@'", rlistName, saName);
+            
+            // ...and make sure it's in the backing store, not just the in-memory cache
+            NSManagedObjectContext *context = self.cacheManager.cacheIOContext;
+            NSEntityDescription *entity = [NSEntityDescription entityForName:rlistName inManagedObjectContext:context];
+            NSString *keyPath = entity.userInfo[@"entityIDKeyPath"];
+            NSManagedObject *mo = [self.cacheManager managedObjectOfEntity:entity withId:saName atKeyPath:keyPath];
+            XCTAssertNotNil(mo, @"Failed to retrieve %@ with %@ == '%@' from core data cache", rlistName, keyPath, saName);
         }
         [expectGotActivities fulfill];
     }];

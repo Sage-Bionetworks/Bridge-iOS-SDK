@@ -778,6 +778,7 @@
 		80314E8D1B56FF4700D029D3 /* SBBBridgeAPIIntegrationTestCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SBBBridgeAPIIntegrationTestCase.h; path = ../BridgeSDKTests/SBBBridgeAPIIntegrationTestCase.h; sourceTree = "<group>"; };
 		80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBAuthManagerIntegrationTests.m; path = ../BridgeSDKTests/SBBAuthManagerIntegrationTests.m; sourceTree = "<group>"; };
 		8031DB021DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBCacheManagerIntegrationTests.m; path = BridgeSDKTests/SBBCacheManagerIntegrationTests.m; sourceTree = SOURCE_ROOT; };
+		8032B1041EDE246F0067961A /* SBBDataModelV6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV6.xcdatamodel; sourceTree = "<group>"; };
 		8034F6691E05BCE10002BD42 /* SBBParticipantManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBParticipantManagerIntegrationTests.m; path = BridgeSDKTests/SBBParticipantManagerIntegrationTests.m; sourceTree = SOURCE_ROOT; };
 		804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNCryptor+Namespace.h"; sourceTree = SOURCE_ROOT; };
 		8045458C1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeSDKPrefixHeader.pch; sourceTree = "<group>"; };
@@ -3048,6 +3049,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				8032B1041EDE246F0067961A /* SBBDataModelV6.xcdatamodel */,
 				805D4BD71ECBA75A002143F0 /* SBBDataModelV5.xcdatamodel */,
 				80CE622C1E8DDBBC00CD154C /* SBBDataModelV4.xcdatamodel */,
 				80561DA71E69EF7E005FBFA3 /* SBBDataModelV3.xcdatamodel */,
