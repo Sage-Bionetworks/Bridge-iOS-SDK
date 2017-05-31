@@ -227,7 +227,7 @@
                 // if there's an entityIDKeyPath, we're going to look for an existing object to update
                 NSManagedObject *existingObject = nil;
                 if (entityIDKeyPath.length) {
-                    NSString *entityID = [[self dictionaryRepresentationFromObjectManager:objectManager] valueForKeyPath:entityIDKeyPath];
+                    NSString *entityID = [self valueForKeyPath:entityIDKeyPath];
                     existingObject = [cacheManager managedObjectOfEntity:entity withId:entityID atKeyPath:entityIDKeyPath];
                 }
                 
