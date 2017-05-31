@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="activityType" optional="YES" attributeType="String" regularExpressionString="^(task|survey|compound)$" syncable="YES"/>
+        <attribute name="activityType" optional="YES" attributeType="String" regularExpressionString="^(task|survey)$" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="labelDetail" optional="YES" attributeType="String" syncable="YES"/>

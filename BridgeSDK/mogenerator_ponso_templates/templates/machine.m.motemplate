@@ -277,6 +277,12 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     self.<$Attribute.name$> = [dictionary objectForKey:@"<$Attribute.name$>"];
     <$endif$>
 <$endif$>
+    <$elseif Attribute.name == userInfo.entityIDKeyPath && !userInfo.syntheticKeyComponentPaths $>
+    // Set the entity ID key path with the key value if available, even when it's not normally
+    // included in the PONSO dictionary
+    NSString *keyValue = [dictionary objectForKey:@"<$Attribute.name$>"];
+    if (keyValue)
+        self.<$Attribute.name$> = keyValue;
     <$endif$><$endif$><$endforeach do$>
 <$if userInfo.syntheticKeyComponentPaths.length$><$if userInfo.entityIDKeyPath.length$>
     NSArray *paths = [@"<$userInfo.syntheticKeyComponentPaths$>" componentsSeparatedByString:@","];
