@@ -117,6 +117,14 @@
 @optional
 
 /*!
+ *  Implement this delegate method if you want the Auth Manager to notify you when it has updated the UserSessionInfo (and StudyParticipant) as a result of signing in, whether due to user action or to auto-refreshing the session token, or signing out. If you use any of the information contained in either of those objects, you should implement this method and update your app's state accordingly each time it's called, so you know you always have the most current versions of those objects and you always know your app's state reflects the current state of the participant's account on the server.
+ *
+ *  @param authManager The auth manager instance making the delegate request.
+ *  @param sessionInfo The new user session info, or nil if signed out. By default, the SBBUserSessionInfo object (which includes a pointer to the SBBStudyParticipant object), unless the UserSessionInfo type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:.
+ */
+- (void)authManager:(nullable id<SBBAuthManagerProtocol>)authManager didReceiveUserSessionInfo:(nullable id)sessionInfo;
+
+/*!
  *  For backward compatibility only. Implement emailForAuthManager: instead, which will always be called by the SDK in preference to this.
  *
  *  @param authManager The auth manager instance making the delegate request.
