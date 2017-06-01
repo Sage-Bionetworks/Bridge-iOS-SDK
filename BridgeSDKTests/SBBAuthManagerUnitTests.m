@@ -34,62 +34,67 @@
     [super tearDown];
 }
 
- - (void)testSignIn {
-  [self.mockNetworkManager setJson:nil andResponseCode:404 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
-  SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
-  // always use an auth delegate so we don't pollute the keychain for integration tests
-  SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-  aMan.authDelegate = delegate;
-  [aMan signInWithEmail:@"notSignedUp" password:@"" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
-  }];
-  
-  NSString *uuid = [[NSProcessInfo processInfo] globallyUniqueString];
-  NSDictionary *sessionInfoJson = @{@"email": @"signedUpUser",
-                                    @"sessionToken": uuid,
-                                    @"type": @"UserSessionInfo",
-                                    @"consented": @NO,
-                                    @"authenticated":@YES};
-  [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
-  [aMan signInWithEmail:@"signedUpUser" password:@"123456" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
-    XCTAssert([delegate.sessionToken isEqualToString:uuid], @"Delegate received sessionToken");
-  }];
+- (void)testSignIn {
+    [self.mockNetworkManager setJson:nil andResponseCode:404 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
+    SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
+    // always use an auth delegate so we don't pollute the keychain for integration tests
+    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
+    aMan.authDelegate = delegate;
+    [aMan signInWithEmail:@"notSignedUp" password:@"" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
+    }];
+    
+    NSString *uuid = [[NSProcessInfo processInfo] globallyUniqueString];
+    NSString *email = @"signedUpUser";
+    NSDictionary *sessionInfoJson = @{@"email": email,
+                                      @"sessionToken": uuid,
+                                      @"type": @"UserSessionInfo",
+                                      @"consented": @NO,
+                                      @"authenticated":@YES};
+    
+    SBBUserSessionInfo *sessionInfo = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:sessionInfoJson];
+    [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
+    [aMan signInWithEmail:@"signedUpUser" password:@"123456" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
+        XCTAssert([delegate.sessionToken isEqualToString:uuid], @"Delegate received sessionToken");
+        XCTAssertEqualObjects(delegate.sessionInfo, sessionInfo, @"Expected sessionInfo to be:\n%@ but got:\n%@", sessionInfo, delegate.sessionInfo);
+        XCTAssertEqualObjects(sessionInfo.studyParticipant.email, email, @"Expected sessionInfo.studyParticipant.email to be %@ but got %@", email, sessionInfo.studyParticipant.email);
+    }];
 }
 
 - (void)testEnsureSignedIn
 {
-  NSString *sessionToken = [[NSProcessInfo processInfo] globallyUniqueString];
-  NSString *email = @"signedUpUser";
-  NSString *password = @"123456";
-  NSDictionary *sessionInfoJson = @{@"email": email,
-                                    @"sessionToken": sessionToken,
-                                    @"type": @"UserSessionInfo",
-                                    @"consented": @NO,
-                                    @"authenticated":@YES};
-  [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
-  SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
-
-  SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-  aMan.authDelegate = delegate;
-  
-  // first try it with no saved credentials
-  [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    XCTAssert(error.code == SBBErrorCodeNoCredentialsAvailable, @"Correct error when no credentials available");
-    XCTAssert(delegate.sessionToken == nil, @"Did not attempt to call signIn endpoint without credentials");
-  }];
-  
-  // now try it with saved username/password
-  delegate.email = email;
-  delegate.password = password;
-  [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
-  }];
-  
-  // now try it with already-saved sessionToken
-  [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    XCTAssert(!task && !responseObject && !error, @"Seen as already signed in, did not attempt to sign in again");
-  }];
+    NSString *sessionToken = [[NSProcessInfo processInfo] globallyUniqueString];
+    NSString *email = @"signedUpUser";
+    NSString *password = @"123456";
+    NSDictionary *sessionInfoJson = @{@"email": email,
+                                      @"sessionToken": sessionToken,
+                                      @"type": @"UserSessionInfo",
+                                      @"consented": @NO,
+                                      @"authenticated":@YES};
+    [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
+    SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
+    
+    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
+    aMan.authDelegate = delegate;
+    
+    // first try it with no saved credentials
+    [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        XCTAssert(error.code == SBBErrorCodeNoCredentialsAvailable, @"Correct error when no credentials available");
+        XCTAssert(delegate.sessionToken == nil, @"Did not attempt to call signIn endpoint without credentials");
+    }];
+    
+    // now try it with saved username/password
+    delegate.email = email;
+    delegate.password = password;
+    [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
+    }];
+    
+    // now try it with already-saved sessionToken
+    [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        XCTAssert(!task && !responseObject && !error, @"Seen as already signed in, did not attempt to sign in again");
+    }];
 }
 
 - (void)testAutoRenew
@@ -121,7 +126,7 @@
     MockURLSession *mockURLSession = [MockURLSession new];
     SBBBridgeNetworkManager *bridgeNetMan = [[SBBBridgeNetworkManager alloc] initWithAuthManager:aMan];
     bridgeNetMan.mainSession = mockURLSession;
-
+    
     // ("arbitrary" in this case being the user profile endpoint)
     NSDictionary *userProfile =
     @{

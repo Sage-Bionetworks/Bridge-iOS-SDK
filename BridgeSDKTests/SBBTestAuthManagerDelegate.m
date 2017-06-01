@@ -3,7 +3,7 @@
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 10/2/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//  Copyright (c) 2014-2017 Sage Bionetworks. All rights reserved.
 //
 
 #import "SBBTestAuthManagerDelegate.h"
@@ -20,6 +20,11 @@
     _sessionToken = sessionToken;
     _email = email;
     _password = password;
+}
+
+- (void)authManager:(id<SBBAuthManagerProtocol>)authManager didReceiveUserSessionInfo:(id)sessionInfo
+{
+    _sessionInfo = sessionInfo;
 }
 
 - (NSString *)emailForAuthManager:(id<SBBAuthManagerProtocol>)authManager
