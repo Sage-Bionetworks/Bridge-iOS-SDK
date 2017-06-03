@@ -392,15 +392,20 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             // As a result, we also have to wait until here to tell the auth delegate about the new UserSessionInfo,
             // rather than just passing it to the delegate in the above call in place of the sessionToken. emm2017-06-01
             id sessionInfo = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
-            if ([_authDelegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)]) {
-                [_authDelegate authManager:self didReceiveUserSessionInfo:sessionInfo];
-            }
+            [self notifyDelegateOfNewSessionInfo:sessionInfo];
         }
         
         if (completion) {
             completion(task, responseObject, error);
         }
     }];
+}
+
+- (void)notifyDelegateOfNewSessionInfo:(id)sessionInfo
+{
+    if ([_authDelegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)]) {
+        [_authDelegate authManager:self didReceiveUserSessionInfo:sessionInfo];
+    }
 }
 
 - (NSURLSessionTask *)signOutWithCompletion:(SBBNetworkManagerCompletionBlock)completion

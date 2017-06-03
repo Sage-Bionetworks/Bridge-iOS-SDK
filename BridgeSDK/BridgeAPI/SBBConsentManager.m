@@ -32,7 +32,7 @@
 
 #import "SBBConsentManagerInternal.h"
 #import "SBBComponentManager.h"
-#import "SBBAuthManager.h"
+#import "SBBAuthManagerInternal.h"
 #import "SBBUserManagerInternal.h"
 #import "BridgeSDK+Internal.h"
 #import "SBBConsentSignature.h"
@@ -118,9 +118,11 @@ NSString * const kSBBMimeTypePng = @"image/png";
                                       [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
                                       
                                       // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
-                                      // (which UserSessionInfo now extends). Even though we can't return the values from here, though, we do
-                                      // want to update them in the cache, which calling objectFromBridgeJSON: will do.
-                                      [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
+                                      // (which UserSessionInfo now extends). So we can't return the values from here, but we do
+                                      // want to update them in the cache, which calling objectFromBridgeJSON: will do; and we do want to notify
+                                      // the auth delegate (if any).
+                                      id sessionInfo = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
+                                      [(id<SBBAuthManagerInternalProtocol>)(self.authManager) notifyDelegateOfNewSessionInfo:sessionInfo];
                                   }
                               }
                               if (completion) {
