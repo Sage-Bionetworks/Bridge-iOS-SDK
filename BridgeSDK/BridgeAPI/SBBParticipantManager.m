@@ -127,8 +127,9 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
             [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
             [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
             
-            // ...and re-create it from the UserSessionInfo in the response
-            __unused id info = [self.objectManager objectFromBridgeJSON:responseObject];
+            // ...and re-create it from the UserSessionInfo in the response, and notify the auth delegate
+            id sessionInfo = [self.objectManager objectFromBridgeJSON:responseObject];
+            [(id<SBBAuthManagerInternalProtocol>)(self.authManager) notifyDelegateOfNewSessionInfo:sessionInfo];
         }
         if (completion) {
             completion(responseObject, error);
