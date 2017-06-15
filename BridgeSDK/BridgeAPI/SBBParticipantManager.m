@@ -40,6 +40,21 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     return shared;
 }
 
++ (NSArray<NSString *> *)dataSharingScopeStrings
+{
+    static NSArray<NSString *> *scopeStrings = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        scopeStrings =  @[
+                          kSBBParticipantDataSharingScopeStrings[0],
+                          kSBBParticipantDataSharingScopeStrings[1],
+                          kSBBParticipantDataSharingScopeStrings[2]
+                          ];
+    });
+    
+    return scopeStrings;
+}
+
 - (id<SBBActivityManagerInternalProtocol>)activityManager
 {
     if (!_activityManager) {
@@ -141,10 +156,16 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 {
     id participantJSON = [self.objectManager bridgeJSONFromObject:participant];
     if (gSBBUseCache) {
-        if (!participant) {
+        NSString *participantType = [SBBStudyParticipant entityName];
+        SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
+        if (participant) {
+            // Double-check that what was passed in was the singleton instance of the SBBStudyParticipant object from
+            // in-memory cache, and if it was, update it to CoreData before sending off to Bridge.
+            if (participant == cachedParticipant) {
+                [participant saveToCoreDataCacheWithObjectManager:self.objectManager];
+            }
+        } else {
             // nil parameter means sync the cached StudyParticipant object to Bridge
-            NSString *participantType = [SBBStudyParticipant entityName];
-            SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
             participantJSON = [self.objectManager bridgeJSONFromObject:cachedParticipant];
         }
     }

@@ -154,4 +154,10 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
 
 @interface SBBParticipantManager : SBBBridgeAPIManager<SBBComponent, SBBParticipantManagerProtocol>
 
+
+/*!
+ * Returns an array for mapping SBBParticipantDataSharingScope enum values to their Bridge string equivalents.
+ */
++ (nonnull NSArray<NSString *> *)dataSharingScopeStrings;
+
 @end
