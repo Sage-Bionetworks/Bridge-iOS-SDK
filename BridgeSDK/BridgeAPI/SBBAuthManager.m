@@ -39,6 +39,7 @@
 #import "SBBUserManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
 #import "SBBParticipantManagerInternal.h"
+#import "ModelObjectInternal.h"
 
 #define AUTH_API GLOBAL_API_PREFIX @"/auth"
 
@@ -296,14 +297,19 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }
 }
 
-- (NSURLSessionTask *)signUpWithJSON:(NSDictionary *)json completion:(SBBNetworkManagerCompletionBlock)completion
-{
-    return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:json completion:completion];
-}
-
 - (NSURLSessionTask *)signUpStudyParticipant:(SBBSignUp *)signUp completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    NSMutableDictionary *json = [[signUp dictionaryRepresentation] mutableCopy];
+    // If there's a placeholder StudyParticipant object, it may be partially filled-in, so let's start with that
+    NSString *studyParticipantType = SBBStudyParticipant.entityName;
+    SBBStudyParticipant *studyParticipant = (SBBStudyParticipant *)[SBBComponent(SBBCacheManager) cachedSingletonObjectOfType:studyParticipantType createIfMissing:NO];
+    NSMutableDictionary *json = [NSMutableDictionary dictionary];
+    if (studyParticipant) {
+        json = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:studyParticipant];
+    }
+    
+    // now overwrite with entries from signUp object
+    NSDictionary *signUpJson = [signUp dictionaryRepresentation];
+    [json addEntriesFromDictionary:signUpJson];
     json[@"study"] = [SBBBridgeInfo shared].studyIdentifier;
     return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:json completion:completion];
 }
