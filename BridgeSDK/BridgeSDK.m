@@ -34,7 +34,9 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBCacheManager.h"
 #import "BridgeAPI/SBBBridgeInfo+Internal.h"
+#import "ModelObjectInternal.h"
 #import "SBBEncryptor.h"
+#import <objc/runtime.h>
 
 const NSInteger SBBDefaultCacheDaysAhead = 4;
 const NSInteger SBBDefaultCacheDaysBehind = 7;
@@ -163,6 +165,27 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 + (void)setAuthDelegate:(id<SBBAuthManagerDelegateProtocol>)delegate
 {
     [SBBComponent(SBBAuthManager) setAuthDelegate:delegate];
+    
+    // give it the current UserSessionInfo on startup (creating one as a placeholder for onboarding if the participant is not already signed in)
+    if ([delegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)] && gSBBUseCache) {
+        NSString *userSessionInfoType = SBBUserSessionInfo.entityName;
+        SBBCacheManager *cacheManager = (SBBCacheManager *)SBBComponent(SBBCacheManager);
+        SBBUserSessionInfo *info = (SBBUserSessionInfo *)[cacheManager cachedSingletonObjectOfType:userSessionInfoType createIfMissing:YES];
+        if (!info.studyParticipant) {
+            NSString *studyParticipantType = SBBStudyParticipant.entityName;
+            info.studyParticipant = (SBBStudyParticipant *)[cacheManager cachedSingletonObjectOfType:studyParticipantType createIfMissing:YES];
+            
+            // if the custom attributes object has any properties (they'd be defined in a category), include it as well
+            unsigned int numProperties;
+            objc_property_t *properties = class_copyPropertyList(SBBStudyParticipantCustomAttributes.class, &numProperties);
+            free(properties);
+
+            if (!info.studyParticipant.attributes && numProperties > 0) {
+                info.studyParticipant.attributes = [[SBBStudyParticipantCustomAttributes alloc] init];
+            }
+        }
+        [delegate authManager:nil didReceiveUserSessionInfo:info];
+    }
 }
 
 + (void)setErrorUIDelegate:(id<SBBBridgeErrorUIDelegate>)delegate
