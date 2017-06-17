@@ -304,7 +304,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     SBBStudyParticipant *studyParticipant = (SBBStudyParticipant *)[SBBComponent(SBBCacheManager) cachedSingletonObjectOfType:studyParticipantType createIfMissing:NO];
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
     if (studyParticipant) {
-        json = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:studyParticipant];
+        json = [[SBBComponent(SBBObjectManager) bridgeJSONFromObject:studyParticipant] mutableCopy];
     }
     
     // now overwrite with entries from signUp object
