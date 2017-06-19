@@ -45,11 +45,11 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     static NSArray<NSString *> *scopeStrings = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        scopeStrings =  @[
-                          kSBBParticipantDataSharingScopeStrings[0],
-                          kSBBParticipantDataSharingScopeStrings[1],
-                          kSBBParticipantDataSharingScopeStrings[2]
-                          ];
+        NSMutableArray *scopeArray = [NSMutableArray arrayWithCapacity:sizeof(kSBBParticipantDataSharingScopeStrings)];
+        for (int i = 0; i < sizeof(kSBBParticipantDataSharingScopeStrings); ++i) {
+            scopeArray[i] = kSBBParticipantDataSharingScopeStrings[i];
+        }
+        scopeStrings = [scopeArray copy];
     });
     
     return scopeStrings;
