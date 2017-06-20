@@ -31,6 +31,8 @@
 //
 
 #import "SBBAuthManager.h"
+#import "SBBCacheManager.h"
+#import "SBBObjectManagerInternal.h"
 
 extern NSString * const kSBBAuthSignUpAPI;
 extern NSString * const kSBBAuthResendAPI;
@@ -49,7 +51,19 @@ extern NSString * const kSBBAuthResetAPI;
 
 @end
 
-@interface SBBAuthManager(internal)<SBBAuthManagerInternalProtocol>
+@interface SBBAuthManager()<SBBAuthManagerInternalProtocol>
+
+@property (nonatomic, strong) NSString *sessionToken;
+@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
+@property (nonatomic, strong) id<SBBCacheManagerProtocol> cacheManager;
+@property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
+@property (nonatomic, strong) SBBUserSessionInfo *placeholderSessionInfo;
+
++ (void)resetAuthKeychain;
+
+- (instancetype)initWithBaseURL:(NSString *)baseURL;
+- (instancetype)initWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager;
+
 
 - (void)clearKeychainStore;
 

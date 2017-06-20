@@ -135,14 +135,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 @interface SBBAuthManager()
 
-@property (nonatomic, strong) NSString *sessionToken;
-@property (nonatomic, strong) id<SBBNetworkManagerProtocol> networkManager;
-
-+ (void)resetAuthKeychain;
-
-- (instancetype)initWithBaseURL:(NSString *)baseURL;
-- (instancetype)initWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager;
-
 @end
 
 @implementation SBBAuthManager
@@ -296,23 +288,61 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     // give it the current UserSessionInfo on startup (creating one as a placeholder for onboarding if the participant is not already signed in)
     if ([delegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)] && gSBBUseCache) {
         NSString *userSessionInfoType = SBBUserSessionInfo.entityName;
-        SBBCacheManager *cacheManager = (SBBCacheManager *)SBBComponent(SBBCacheManager);
-        SBBUserSessionInfo *info = (SBBUserSessionInfo *)[cacheManager cachedSingletonObjectOfType:userSessionInfoType createIfMissing:YES];
-        if (!info.studyParticipant) {
-            NSString *studyParticipantType = SBBStudyParticipant.entityName;
-            info.studyParticipant = (SBBStudyParticipant *)[cacheManager cachedSingletonObjectOfType:studyParticipantType createIfMissing:YES];
+        SBBUserSessionInfo *info = (SBBUserSessionInfo *)[self.cacheManager cachedSingletonObjectOfType:userSessionInfoType createIfMissing:NO];
+        if (info) {
             
-            // if the custom attributes object has any properties (they'd be defined in a category), include it as well
-            unsigned int numProperties;
-            objc_property_t *properties = class_copyPropertyList(SBBStudyParticipantCustomAttributes.class, &numProperties);
-            free(properties);
-            
-            if (!info.studyParticipant.attributes && numProperties > 0) {
-                info.studyParticipant.attributes = [[SBBStudyParticipantCustomAttributes alloc] init];
-            }
+            self.placeholderSessionInfo = nil;
+        } else {
+            info = self.placeholderSessionInfo;
         }
+        
         [delegate authManager:nil didReceiveUserSessionInfo:info];
     }
+}
+
+- (id<SBBCacheManagerProtocol>)cacheManager {
+    if (!_cacheManager) {
+        if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
+            _cacheManager = ((id<SBBObjectManagerInternalProtocol>)self.objectManager).cacheManager;
+        } else {
+            _cacheManager = SBBComponent(SBBCacheManager);
+        }
+    }
+    
+    return _cacheManager;
+}
+
+- (id<SBBObjectManagerProtocol>)objectManager {
+    if (!_objectManager) {
+        _objectManager = SBBComponent(SBBObjectManager);
+    }
+    
+    return _objectManager;
+}
+
+
+- (SBBUserSessionInfo *)placeholderSessionInfo {
+    // If we're using cache, and not authed yet, and we've set an auth delegate that expects to receive
+    // UserSessionInfo updates, the app is in the onboarding phase and may find it useful to have a
+    // StudyParticipant object to pre-populate before calling signUp. In that case, we create a blank placeholder
+    // SBBUserSessionInfo with SBBStudyParticipant, and SBBStudyParticipantCustomAttributes (if any have been declared),
+    // to give to the delegate. Otherwise, we just return whatever we have (presumably nil but we really don't care).
+    if (!_placeholderSessionInfo) {
+        SBBUserSessionInfo *info = [[SBBUserSessionInfo alloc] init];
+        info.studyParticipant = [[SBBStudyParticipant alloc] init];
+        
+        // if the custom attributes object has any properties (they'd be defined in a category), include it as well
+        unsigned int numProperties;
+        objc_property_t *properties = class_copyPropertyList(SBBStudyParticipantCustomAttributes.class, &numProperties);
+        free(properties);
+        
+        if (numProperties > 0) {
+            info.studyParticipant.attributes = [[SBBStudyParticipantCustomAttributes alloc] init];
+        }
+        _placeholderSessionInfo = info;
+    }
+
+    return _placeholderSessionInfo;
 }
 
 - (NSString *)sessionToken
@@ -327,11 +357,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (NSURLSessionTask *)signUpStudyParticipant:(SBBSignUp *)signUp completion:(SBBNetworkManagerCompletionBlock)completion
 {
     // If there's a placeholder StudyParticipant object, it may be partially filled-in, so let's start with that
-    NSString *studyParticipantType = SBBStudyParticipant.entityName;
-    SBBStudyParticipant *studyParticipant = (SBBStudyParticipant *)[SBBComponent(SBBCacheManager) cachedSingletonObjectOfType:studyParticipantType createIfMissing:NO];
+    SBBStudyParticipant *studyParticipant = self.placeholderSessionInfo.studyParticipant;
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
     if (studyParticipant) {
-        json = [[SBBComponent(SBBObjectManager) bridgeJSONFromObject:studyParticipant] mutableCopy];
+        json = [[self.objectManager bridgeJSONFromObject:studyParticipant] mutableCopy];
     }
     
     // now overwrite with entries from signUp object
@@ -366,20 +395,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (void)resetUserSessionInfo
 {
-    // Do nothing if we're authenticated to Bridge--we must always have a valid UserSessionInfo and StudyParticipant when authenticated.
-    // Also do nothing if the auth delegate doesn't respond to the authManager:didReceiveUserSessionInfo: selector, since placeholder objects
-    // are only created if it does.
-    id<SBBAuthManagerDelegateProtocol> delegate = self.authDelegate;
-    if (gSBBUseCache && !self.isAuthenticated && [delegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)]) {
-        // Delete the old UserSessionInfo. The StudyParticipant object will be cascade-deleted as a result.
-        // Note: we use the Bridge type (which is the same as the CoreData entity name) as the unique key
-        // to treat a class as a singleton for caching purposes.
-        NSString *sessionInfoType = [SBBUserSessionInfo entityName];
-        [SBBComponent(SBBCacheManager) removeFromCacheObjectOfType:sessionInfoType withId:sessionInfoType];
-        
-        // Now, set the auth delegate again so the placeholders will be re-created.
-        [self setAuthDelegate:delegate];
-    }
+    // clears the placeholder session info so it will be recreated fresh if needed
+    self.placeholderSessionInfo = nil;
 }
 
 - (NSURLSessionTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
@@ -442,7 +459,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             
             // As a result, we also have to wait until here to tell the auth delegate about the new UserSessionInfo,
             // rather than just passing it to the delegate in the above call in place of the sessionToken. emm2017-06-01
-            id sessionInfo = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
+            id sessionInfo = [self.objectManager objectFromBridgeJSON:responseObject];
             [self notifyDelegateOfNewSessionInfo:sessionInfo];
         }
         
