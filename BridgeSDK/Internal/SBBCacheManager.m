@@ -41,6 +41,7 @@
 BOOL gSBBUseCache = NO;
 
 static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
+static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
 
 @interface SBBCacheManager ()<NSCacheDelegate>
 
@@ -68,6 +69,7 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 + (void)initialize
 {
     gCoreDataQueuesByPersistentStoreName = [[NSMutableDictionary alloc] init];
+    gCoreDataCacheIOContextsByPersistentStoreName = [[NSMutableDictionary alloc] init];
 }
 
 + (instancetype)defaultComponent
@@ -325,28 +327,36 @@ static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 - (void)removeFromCacheObjectOfType:(NSString *)type withId:(NSString *)objectId
 {
     NSManagedObjectContext *context = self.cacheIOContext;
+    NSEntityDescription *entity = [NSEntityDescription entityForName:type inManagedObjectContext:context];
+    if (!entity) {
+        return;
+    }
+    
+    NSString *keyPath = entity.userInfo[@"entityIDKeyPath"];
+    if (!keyPath.length) {
+        // not cacheable
+        return;
+    }
+    
     [context performBlock:^{
-        SBBBridgeObject *obj = [self cachedObjectOfType:type withId:objectId createIfMissing:NO];
-        if (obj) {
-            NSManagedObject *fetchedMO = [self cachedObjectForBridgeObject:obj inContext:context];
-            if (fetchedMO) {
-                [context deleteObject:fetchedMO];
-                [context processPendingChanges];
-                
-                // if it has *any* relationships with cascade-delete rules, we'll run through the entire mem cache and clean out
-                // anything with no corresponding managed object, just to be sure it's correct and up-to-date
-                NSDictionary <NSString *, NSRelationshipDescription *> *relationshipsByName = fetchedMO.entity.relationshipsByName;
-                for (NSString *relationshipName in relationshipsByName.allKeys) {
-                    NSRelationshipDescription *relationship = relationshipsByName[relationshipName];
-                    if (relationship.deleteRule == NSCascadeDeleteRule) {
-                        [self cleanupDeletedManagedObjectsFromMemoryCache];
-                        break;
-                    }
+        NSManagedObject *fetchedMO = [self managedObjectOfEntity:entity withId:objectId atKeyPath:keyPath];
+        if (fetchedMO) {
+            [context deleteObject:fetchedMO];
+            [context processPendingChanges];
+            
+            // if it has *any* relationships with cascade-delete rules, we'll run through the entire mem cache and clean out
+            // anything with no corresponding managed object, just to be sure it's correct and up-to-date
+            NSDictionary <NSString *, NSRelationshipDescription *> *relationshipsByName = fetchedMO.entity.relationshipsByName;
+            for (NSString *relationshipName in relationshipsByName.allKeys) {
+                NSRelationshipDescription *relationship = relationshipsByName[relationshipName];
+                if (relationship.deleteRule == NSCascadeDeleteRule) {
+                    [self cleanupDeletedManagedObjectsFromMemoryCache];
+                    break;
                 }
             }
-            
-            [self removeFromMemoryBridgeObjectOfType:type andId:objectId];
         }
+        
+        [self removeFromMemoryBridgeObjectOfType:type andId:objectId];
     }];
 }
 
@@ -602,9 +612,16 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
         [self dispatchSyncToCacheManagerCoreDataQueue:^{
             // check again in case it got set before we got our turn in the core data queue
             if (!_cacheIOContext) {
+                // now check if one already exists for this persistent store name
+                _cacheIOContext = gCoreDataCacheIOContextsByPersistentStoreName[self.persistentStoreName];
+            }
+            
+            if (!_cacheIOContext) {
+                // if not, then create one for this persistent store name and store it where other CacheManager instances can find it
                 _cacheIOContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
                 _cacheIOContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
                 _cacheIOContext.undoManager = [[NSUndoManager alloc] init];
+                gCoreDataCacheIOContextsByPersistentStoreName[self.persistentStoreName] = _cacheIOContext;
             }
         }];
     }
@@ -648,6 +665,10 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     [context performBlockAndWait:^{
         self.objectsCachedByTypeAndID = [NSMutableDictionary dictionary];
         reset = [self resetDatabase];
+        if (reset) {
+            // remove ourselves from the global cacheIOContext map
+            gCoreDataCacheIOContextsByPersistentStoreName[self.persistentStoreName] = nil;
+        }
     }];
     
     return reset;

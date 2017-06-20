@@ -212,6 +212,13 @@
 - (nonnull NSURLSessionTask *)resendEmailVerification:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
+ Reset UserSessionInfo and StudyParticipant to a pristine state and notify the auth delegate.
+ 
+ @note This method should only be called if the prospective participant got partway through onboarding/consent, set some values on the StudyParticipant sub-object or its attributes, and decided to cancel or restart the whole process. It does nothing if we're currently authenticated to Bridge (i.e. we have a session token). It also does nothing if there's no auth delegate currently set, since no placeholder objects will have been created.
+ */
+- (void)resetUserSessionInfo;
+
+/*!
  * Sign in to an existing account with an email and password.
  *
  * @param email The email address of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.

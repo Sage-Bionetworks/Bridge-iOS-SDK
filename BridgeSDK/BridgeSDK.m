@@ -34,6 +34,7 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBCacheManager.h"
 #import "BridgeAPI/SBBBridgeInfo+Internal.h"
+#import "ModelObjectInternal.h"
 #import "SBBEncryptor.h"
 
 const NSInteger SBBDefaultCacheDaysAhead = 4;
