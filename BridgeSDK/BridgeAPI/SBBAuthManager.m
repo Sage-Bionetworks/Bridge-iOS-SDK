@@ -395,8 +395,16 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (void)resetUserSessionInfo
 {
-    // clears the placeholder session info so it will be recreated fresh if needed
-    self.placeholderSessionInfo = nil;
+    // clear the placeholder session info so it will be recreated fresh
+    _placeholderSessionInfo = nil;
+    
+    // now, if there's an auth delegate and it expects UserSessionInfo updates, set it again
+    // so it will get a fresh set of placeholders.
+    id<SBBAuthManagerDelegateProtocol> delegate = self.authDelegate;
+    if (gSBBUseCache && !self.isAuthenticated && [delegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)]) {
+        [self setAuthDelegate:delegate];
+
+    }
 }
 
 - (NSURLSessionTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
