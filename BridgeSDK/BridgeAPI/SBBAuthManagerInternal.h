@@ -43,7 +43,6 @@ extern NSString * const kSBBAuthResetAPI;
 
 @protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>
 
-- (BOOL)isAuthenticated;
 - (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
 - (void)setSessionToken:(NSString *)sessionToken;
 - (void)clearSessionToken;

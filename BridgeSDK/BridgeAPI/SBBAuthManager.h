@@ -274,6 +274,14 @@
  */
 - (void)addAuthHeaderToHeaders:(nonnull NSMutableDictionary *)headers;
 
+/*!
+ *  This method is used by the Participant Manager to determine whether to propagate StudyParticipant changes to cache
+ *  and to Bridge. Until the participant has successfully signed up and signed in, a placeholder StudyParticipant exists
+ *  for convenience, and will be used to help populate the signUp request JSON.
+ *  @return Whether the auth manager is currently authenticated (has a session token which may or may not be currently valid)
+ */
+- (BOOL)isAuthenticated;
+
 @optional
 
 /*!
