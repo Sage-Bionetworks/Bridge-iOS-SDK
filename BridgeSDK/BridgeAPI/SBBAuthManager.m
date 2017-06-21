@@ -359,13 +359,29 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     // If there's a placeholder StudyParticipant object, it may be partially filled-in, so let's start with that
     SBBStudyParticipant *studyParticipant = self.placeholderSessionInfo.studyParticipant;
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
+    NSMutableDictionary *attributesJson = [NSMutableDictionary dictionary];
+    NSMutableSet<NSString *> *dataGroups = [NSMutableSet set];
+    NSString *attributesKey = NSStringFromSelector(@selector(attributes));
+    NSString *dataGroupsKey = NSStringFromSelector(@selector(dataGroups));
     if (studyParticipant) {
         json = [[self.objectManager bridgeJSONFromObject:studyParticipant] mutableCopy];
+        attributesJson = [[json valueForKey:attributesKey] mutableCopy];
+        dataGroups = [studyParticipant.dataGroups mutableCopy];
     }
     
     // now overwrite with entries from signUp object
     NSDictionary *signUpJson = [signUp dictionaryRepresentation];
+    NSDictionary *signUpAttributesJson = [signUpJson valueForKey:attributesKey];
+    NSSet<NSString *> *signUpDataGroups = signUp.dataGroups;
     [json addEntriesFromDictionary:signUpJson];
+    
+    // also merge attributes and dataGroups by overwriting with entries from signUp
+    [attributesJson addEntriesFromDictionary:signUpAttributesJson];
+    [json setValue:attributesJson forKey:attributesKey];
+    [dataGroups unionSet:signUpDataGroups];
+    NSArray *dataGroupsArray = [dataGroups allObjects];
+    [json setValue:dataGroupsArray forKey:dataGroupsKey];
+    
     json[@"study"] = [SBBBridgeInfo shared].studyIdentifier;
     return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:json completion:completion];
 }
