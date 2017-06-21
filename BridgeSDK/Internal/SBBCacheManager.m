@@ -190,7 +190,10 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
             if (fetchedMO) {
                 if ([fetchedClass instancesRespondToSelector:@selector(initWithManagedObject:objectManager:cacheManager:)]) {
                     fetched = [[fetchedClass alloc] initWithManagedObject:fetchedMO objectManager:om cacheManager:self];
-                    NSAssert(fetched, @"Failed to create %@ instance from %@ managed object--probably trying to access encrypted data without login credentials", NSStringFromClass(fetchedClass), entity.name);
+                    if (!fetched) {
+                        NSLog(@"Failed to create %@ instance from %@ managed object--probably trying to access encrypted data without login credentials", NSStringFromClass(fetchedClass), entity.name);
+                    }
+                    NSAssert(!create || fetched, @"Attempting to create duplicate %@ with %@ == %@ in cache", entity.name, keyPath, objectId);
                 }
             } else if (create) {
                 fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
