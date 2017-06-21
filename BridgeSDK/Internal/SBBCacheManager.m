@@ -100,6 +100,11 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
     return cm;
 }
 
++ (instancetype)inMemoryCacheManagerWithAuthManager:(id<SBBAuthManagerProtocol>)authManager
+{
+    return [self cacheManagerWithDataModelName:@"SBBDataModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:authManager];
+}
+
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -185,10 +190,12 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
             if (fetchedMO) {
                 if ([fetchedClass instancesRespondToSelector:@selector(initWithManagedObject:objectManager:cacheManager:)]) {
                     fetched = [[fetchedClass alloc] initWithManagedObject:fetchedMO objectManager:om cacheManager:self];
+                    if (!fetched) {
+                        NSLog(@"Failed to create %@ instance from %@ managed object--probably trying to access encrypted data without login credentials", NSStringFromClass(fetchedClass), entity.name);
+                    }
+                    NSAssert(!create || fetched, @"Attempting to create duplicate %@ with %@ == %@ in cache", entity.name, keyPath, objectId);
                 }
-            }
-            
-            if (!fetched && create) {
+            } else if (create) {
                 fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
                 [fetched createInContext:context withObjectManager:om cacheManager:self];
                 [self saveCacheIOContext];

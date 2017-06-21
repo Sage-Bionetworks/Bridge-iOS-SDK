@@ -75,4 +75,6 @@ extern  BOOL gSBBUseCache;
 
 + (instancetype)cacheManagerWithDataModelName:(NSString *)modelName bundleId:(NSString *)bundleId storeType:(NSString *)storeType authManager:(id<SBBAuthManagerProtocol>)authManager;
 
++ (instancetype)inMemoryCacheManagerWithAuthManager:(id<SBBAuthManagerProtocol>)authManager;
+
 @end

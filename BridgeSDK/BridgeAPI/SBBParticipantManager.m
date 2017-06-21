@@ -134,6 +134,12 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 
 - (NSURLSessionTask *)updateParticipantJSONToBridge:(id)json completion:(SBBParticipantManagerCompletionBlock)completion
 {
+    if (!self.authManager.isAuthenticated) {
+        if (completion) {
+            completion(nil, nil);
+        }
+        return nil;
+    }
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     return [self.networkManager post:kSBBParticipantAPI headers:headers parameters:json background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
@@ -155,7 +161,7 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 - (NSURLSessionTask *)updateParticipantRecordWithRecord:(id)participant completion:(SBBParticipantManagerCompletionBlock)completion
 {
     id participantJSON = [self.objectManager bridgeJSONFromObject:participant];
-    if (gSBBUseCache) {
+    if (gSBBUseCache && self.authManager.isAuthenticated) {
         NSString *participantType = [SBBStudyParticipant entityName];
         SBBStudyParticipant *cachedParticipant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:participantType createIfMissing:NO];
         if (participant) {
