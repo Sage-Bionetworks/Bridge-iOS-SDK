@@ -395,7 +395,7 @@ NSInteger const     kFetchPageSize =     100;
 
 - (NSArray *)filterAndMapTasks:(NSArray *)tasks scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo
 {
-    if (!tasks) {
+    if (![tasks isKindOfClass:[NSArray class]]) {
         return nil;
     }
     
