@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+@class SBBSurveyRule;
+
 @protocol _SBBSurveyElement
 
 @end
@@ -46,5 +48,22 @@
 @property (nonatomic, strong) NSString* prompt;
 
 @property (nonatomic, strong) NSString* promptDetail;
+
+@property (nonatomic, strong) NSString* title;
+
+@property (nonatomic, strong, readonly) NSArray *rules;
+
+- (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
+- (void)addRulesObject:(SBBSurveyRule*)value_;
+- (void)removeRulesObjects;
+- (void)removeRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeRulesObject:(SBBSurveyRule*)value_;
+
+- (void)insertObject:(SBBSurveyRule*)value inRulesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromRulesAtIndex:(NSUInteger)idx;
+- (void)insertRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeRulesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
+- (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
 
 @end

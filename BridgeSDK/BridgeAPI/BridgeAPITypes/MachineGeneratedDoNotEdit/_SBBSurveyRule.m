@@ -51,6 +51,8 @@
 
 @property (nullable, nonatomic, retain) NSManagedObject *surveyConstraints;
 
+@property (nullable, nonatomic, retain) NSManagedObject *surveyElement;
+
 @end
 
 @implementation _SBBSurveyRule

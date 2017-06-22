@@ -43,8 +43,6 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyInfoScreen)
 
-@property (nullable, nonatomic, retain) NSString* title;
-
 @property (nullable, nonatomic, retain) NSManagedObject *image;
 
 @end
@@ -69,8 +67,6 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.title = [dictionary objectForKey:@"title"];
-
     NSDictionary *imageDict = [dictionary objectForKey:@"image"];
 
     if (imageDict != nil)
@@ -84,8 +80,6 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
-
-    [dict setObjectIfNotNil:self.title forKey:@"title"];
 
     [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.image] forKey:@"image"];
 
@@ -113,8 +107,6 @@
 {
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
-
-        self.title = managedObject.title;
 
             NSManagedObject *imageManagedObj = managedObject.image;
         Class imageClass = [SBBObjectManager bridgeClassFromType:imageManagedObj.entity.name];
@@ -155,8 +147,6 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
-
-    managedObject.title = ((id)self.title == [NSNull null]) ? nil : self.title;
 
     // destination entity Image is not directly cacheable, so delete it and create the replacement
     if (managedObject.image) {

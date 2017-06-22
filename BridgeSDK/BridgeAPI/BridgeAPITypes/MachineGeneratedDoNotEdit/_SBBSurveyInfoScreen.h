@@ -41,8 +41,6 @@
 
 @interface _SBBSurveyInfoScreen : SBBSurveyElement
 
-@property (nonatomic, strong) NSString* title;
-
 @property (nonatomic, strong, readwrite) SBBImage *image;
 
 - (void) setImage: (SBBImage*) image_ settingInverse: (BOOL) setInverse;

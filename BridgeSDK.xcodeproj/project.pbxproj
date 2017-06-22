@@ -856,6 +856,7 @@
 		80855F6C19BE27ED006601C7 /* SBBNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBNetworkManager.m; sourceTree = "<group>"; };
 		80855F7B19BE41C9006601C7 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		80855F7C19BE41C9006601C7 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		808B29561EFC61EC003390E1 /* SBBDataModelV7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV7.xcdatamodel; sourceTree = "<group>"; };
 		808D03B91E96BC810030F23E /* SBBJSONValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBJSONValue.h; sourceTree = "<group>"; };
 		808D03C91E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBForwardCursorPagedResourceList.h; sourceTree = "<group>"; };
 		808D03CA1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBForwardCursorPagedResourceList.m; sourceTree = "<group>"; };
@@ -3049,6 +3050,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				808B29561EFC61EC003390E1 /* SBBDataModelV7.xcdatamodel */,
 				8032B1041EDE246F0067961A /* SBBDataModelV6.xcdatamodel */,
 				805D4BD71ECBA75A002143F0 /* SBBDataModelV5.xcdatamodel */,
 				80CE622C1E8DDBBC00CD154C /* SBBDataModelV4.xcdatamodel */,
