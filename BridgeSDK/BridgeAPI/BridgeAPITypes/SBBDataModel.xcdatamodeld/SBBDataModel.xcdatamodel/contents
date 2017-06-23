@@ -321,7 +321,7 @@
         <attribute name="prompt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="promptDetail" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="rules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyElement" inverseEntity="SurveyRule" syncable="YES"/>
+        <relationship name="afterRules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyElement" inverseEntity="SurveyRule" syncable="YES"/>
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Survey" inverseName="elements" inverseEntity="Survey" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
@@ -385,7 +385,7 @@
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-        <relationship name="surveyElement" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyElement" inverseName="rules" inverseEntity="SurveyElement" syncable="YES">
+        <relationship name="surveyElement" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyElement" inverseName="afterRules" inverseEntity="SurveyElement" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
@@ -460,6 +460,7 @@
         <element name="DataGroups" positionX="0" positionY="90" width="128" height="60"/>
         <element name="DateConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="DateTimeConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="DateTimeRangeResourceList" positionX="18" positionY="153" width="128" height="75"/>
         <element name="DecimalConstraints" positionX="0" positionY="0" width="128" height="105"/>
         <element name="DurationConstraints" positionX="0" positionY="0" width="128" height="60"/>
         <element name="ForwardCursorPagedResourceList" positionX="9" positionY="153" width="128" height="165"/>
@@ -487,6 +488,5 @@
         <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="DateTimeRangeResourceList" positionX="18" positionY="153" width="128" height="75"/>
     </elements>
 </model>

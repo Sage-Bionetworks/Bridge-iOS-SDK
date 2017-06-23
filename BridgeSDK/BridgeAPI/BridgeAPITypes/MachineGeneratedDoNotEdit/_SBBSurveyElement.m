@@ -40,7 +40,7 @@
 
 // redefine relationships internally as readwrite
 
-@property (nonatomic, strong, readwrite) NSArray *rules;
+@property (nonatomic, strong, readwrite) NSArray *afterRules;
 
 @end
 
@@ -57,21 +57,21 @@
 
 @property (nullable, nonatomic, retain) NSString* title;
 
-@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *rules;
+@property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *afterRules;
 
 @property (nullable, nonatomic, retain) NSManagedObject *survey;
 
-- (void)addRulesObject:(NSManagedObject *)value;
-- (void)removeRulesObject:(NSManagedObject *)value;
-- (void)addRules:(NSOrderedSet<NSManagedObject *> *)values;
-- (void)removeRules:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)addAfterRulesObject:(NSManagedObject *)value;
+- (void)removeAfterRulesObject:(NSManagedObject *)value;
+- (void)addAfterRules:(NSOrderedSet<NSManagedObject *> *)values;
+- (void)removeAfterRules:(NSOrderedSet<NSManagedObject *> *)values;
 
-- (void)insertObject:(NSManagedObject *)value inRulesAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromRulesAtIndex:(NSUInteger)idx;
-- (void)insertRules:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeRulesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
-- (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray<NSManagedObject *> *)values;
+- (void)insertObject:(NSManagedObject *)value inAfterRulesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromAfterRulesAtIndex:(NSUInteger)idx;
+- (void)insertAfterRules:(NSArray<NSManagedObject *> *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeAfterRulesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInAfterRulesAtIndex:(NSUInteger)idx withObject:(NSManagedObject *)value;
+- (void)replaceAfterRulesAtIndexes:(NSIndexSet *)indexes withAfterRules:(NSArray<NSManagedObject *> *)values;
 
 @end
 
@@ -105,14 +105,14 @@
 
     self.title = [dictionary objectForKey:@"title"];
 
-    // overwrite the old rules relationship entirely rather than adding to it
-    [self removeRulesObjects];
+    // overwrite the old afterRules relationship entirely rather than adding to it
+    [self removeAfterRulesObjects];
 
-    for (id dictRepresentationForObject in [dictionary objectForKey:@"rules"])
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"afterRules"])
     {
-        SBBSurveyRule *rulesObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
+        SBBSurveyRule *afterRulesObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
 
-        [self addRulesObject:rulesObj];
+        [self addAfterRulesObject:afterRulesObj];
     }
 
 }
@@ -131,16 +131,16 @@
 
     [dict setObjectIfNotNil:self.title forKey:@"title"];
 
-    if ([self.rules count] > 0)
+    if ([self.afterRules count] > 0)
 	{
 
-		NSMutableArray *rulesRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.rules count]];
+		NSMutableArray *afterRulesRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.afterRules count]];
 
-		for (SBBSurveyRule *obj in self.rules)
+		for (SBBSurveyRule *obj in self.afterRules)
         {
-            [rulesRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+            [afterRulesRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
 		}
-		[dict setObjectIfNotNil:rulesRepresentationsForDictionary forKey:@"rules"];
+		[dict setObjectIfNotNil:afterRulesRepresentationsForDictionary forKey:@"afterRules"];
 
 	}
 
@@ -152,9 +152,9 @@
 	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for (SBBSurveyRule *rulesObj in self.rules)
+	for (SBBSurveyRule *afterRulesObj in self.afterRules)
 	{
-		[rulesObj awakeFromDictionaryRepresentationInit];
+		[afterRulesObj awakeFromDictionaryRepresentationInit];
 	}
 
 	[super awakeFromDictionaryRepresentationInit];
@@ -182,13 +182,13 @@
 
         self.title = managedObject.title;
 
-		for (NSManagedObject *rulesManagedObj in managedObject.rules)
+		for (NSManagedObject *afterRulesManagedObj in managedObject.afterRules)
 		{
-            Class objectClass = [SBBObjectManager bridgeClassFromType:rulesManagedObj.entity.name];
-            SBBSurveyRule *rulesObj = [[objectClass alloc] initWithManagedObject:rulesManagedObj objectManager:objectManager cacheManager:cacheManager];
-            if (rulesObj != nil)
+            Class objectClass = [SBBObjectManager bridgeClassFromType:afterRulesManagedObj.entity.name];
+            SBBSurveyRule *afterRulesObj = [[objectClass alloc] initWithManagedObject:afterRulesManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if (afterRulesObj != nil)
             {
-                [self addRulesObject:rulesObj];
+                [self addAfterRulesObject:afterRulesObj];
             }
 		}
     }
@@ -235,16 +235,16 @@
     managedObject.title = ((id)self.title == [NSNull null]) ? nil : self.title;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
-    NSOrderedSet *rulesCopy = [managedObject.rules copy];
+    NSOrderedSet *afterRulesCopy = [managedObject.afterRules copy];
 
     // now remove all items from the existing relationship
     // to work pre-iOS 10, we have to work around this issue: http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
-    NSMutableOrderedSet *workingRulesSet = [managedObject mutableOrderedSetValueForKey:NSStringFromSelector(@selector(rules))];
-    [workingRulesSet removeAllObjects];
+    NSMutableOrderedSet *workingAfterRulesSet = [managedObject mutableOrderedSetValueForKey:NSStringFromSelector(@selector(afterRules))];
+    [workingAfterRulesSet removeAllObjects];
 
     // now put the "new" items, if any, into the relationship
-    if ([self.rules count] > 0) {
-		for (SBBSurveyRule *obj in self.rules) {
+    if ([self.afterRules count] > 0) {
+		for (SBBSurveyRule *obj in self.afterRules) {
             NSManagedObject *relMo = nil;
             if ([obj isDirectlyCacheableWithContext:cacheContext]) {
                 // get it from the cache manager
@@ -255,116 +255,116 @@
                 relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
             }
 
-            [workingRulesSet addObject:relMo];
+            [workingAfterRulesSet addObject:relMo];
 
         }
 	}
 
     // now release any objects that aren't still in the relationship (they will be deleted when they no longer belong to any to-many relationships)
-    for (NSManagedObject *relMo in rulesCopy) {
+    for (NSManagedObject *relMo in afterRulesCopy) {
         if (![relMo valueForKey:@"surveyElement"]) {
            [self releaseManagedObject:relMo inContext:cacheContext];
         }
     }
 
     // ...and let go of the collection copy
-    rulesCopy = nil;
+    afterRulesCopy = nil;
 
     // Calling code will handle saving these changes to cacheContext.
 }
 
 #pragma mark Direct access
 
-- (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse
+- (void)addAfterRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse
 {
-    if (self.rules == nil)
+    if (self.afterRules == nil)
 	{
 
-		self.rules = [NSMutableArray array];
+		self.afterRules = [NSMutableArray array];
 
 	}
 
-	[(NSMutableArray *)self.rules addObject:value_];
+	[(NSMutableArray *)self.afterRules addObject:value_];
 
 }
 
-- (void)addRulesObject:(SBBSurveyRule*)value_
+- (void)addAfterRulesObject:(SBBSurveyRule*)value_
 {
-    [self addRulesObject:(SBBSurveyRule*)value_ settingInverse: YES];
+    [self addAfterRulesObject:(SBBSurveyRule*)value_ settingInverse: YES];
 }
 
-- (void)removeRulesObjects
-{
-
-    self.rules = [NSMutableArray array];
-
-}
-
-- (void)removeRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse
+- (void)removeAfterRulesObjects
 {
 
-    [(NSMutableArray *)self.rules removeObject:value_];
+    self.afterRules = [NSMutableArray array];
 
 }
 
-- (void)removeRulesObject:(SBBSurveyRule*)value_
+- (void)removeAfterRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse
 {
-    [self removeRulesObject:(SBBSurveyRule*)value_ settingInverse: YES];
-}
 
-- (void)insertObject:(SBBSurveyRule*)value inRulesAtIndex:(NSUInteger)idx {
-    [self insertObject:value inRulesAtIndex:idx settingInverse:YES];
-}
-
-- (void)insertObject:(SBBSurveyRule*)value inRulesAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
-
-    [(NSMutableArray *)self.rules insertObject:value atIndex:idx];
+    [(NSMutableArray *)self.afterRules removeObject:value_];
 
 }
 
-- (void)removeObjectFromRulesAtIndex:(NSUInteger)idx {
-    [self removeObjectFromRulesAtIndex:idx settingInverse:YES];
+- (void)removeAfterRulesObject:(SBBSurveyRule*)value_
+{
+    [self removeAfterRulesObject:(SBBSurveyRule*)value_ settingInverse: YES];
 }
 
-- (void)removeObjectFromRulesAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
-    SBBSurveyRule *object = [self.rules objectAtIndex:idx];
-    [self removeRulesObject:object settingInverse:YES];
+- (void)insertObject:(SBBSurveyRule*)value inAfterRulesAtIndex:(NSUInteger)idx {
+    [self insertObject:value inAfterRulesAtIndex:idx settingInverse:YES];
 }
 
-- (void)insertRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes {
-    [self insertRules:value atIndexes:indexes settingInverse:YES];
-}
+- (void)insertObject:(SBBSurveyRule*)value inAfterRulesAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
 
-- (void)insertRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
-    [(NSMutableArray *)self.rules insertObjects:value atIndexes:indexes];
+    [(NSMutableArray *)self.afterRules insertObject:value atIndex:idx];
 
 }
 
-- (void)removeRulesAtIndexes:(NSIndexSet *)indexes {
-    [self removeRulesAtIndexes:indexes settingInverse:YES];
+- (void)removeObjectFromAfterRulesAtIndex:(NSUInteger)idx {
+    [self removeObjectFromAfterRulesAtIndex:idx settingInverse:YES];
 }
 
-- (void)removeRulesAtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
-
-    [(NSMutableArray *)self.rules removeObjectsAtIndexes:indexes];
+- (void)removeObjectFromAfterRulesAtIndex:(NSUInteger)idx settingInverse:(BOOL)setInverse {
+    SBBSurveyRule *object = [self.afterRules objectAtIndex:idx];
+    [self removeAfterRulesObject:object settingInverse:YES];
 }
 
-- (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value {
-    [self replaceObjectInRulesAtIndex:idx withObject:value settingInverse:YES];
+- (void)insertAfterRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes {
+    [self insertAfterRules:value atIndexes:indexes settingInverse:YES];
 }
 
-- (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value settingInverse:(BOOL)setInverse {
+- (void)insertAfterRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
+    [(NSMutableArray *)self.afterRules insertObjects:value atIndexes:indexes];
 
-    [(NSMutableArray *)self.rules replaceObjectAtIndex:idx withObject:value];
 }
 
-- (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)value {
-    [self replaceRulesAtIndexes:indexes withRules:value settingInverse:YES];
+- (void)removeAfterRulesAtIndexes:(NSIndexSet *)indexes {
+    [self removeAfterRulesAtIndexes:indexes settingInverse:YES];
 }
 
-- (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)value settingInverse:(BOOL)setInverse {
+- (void)removeAfterRulesAtIndexes:(NSIndexSet *)indexes settingInverse:(BOOL)setInverse {
 
-    [(NSMutableArray *)self.rules replaceObjectsAtIndexes:indexes withObjects:value];
+    [(NSMutableArray *)self.afterRules removeObjectsAtIndexes:indexes];
+}
+
+- (void)replaceObjectInAfterRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value {
+    [self replaceObjectInAfterRulesAtIndex:idx withObject:value settingInverse:YES];
+}
+
+- (void)replaceObjectInAfterRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value settingInverse:(BOOL)setInverse {
+
+    [(NSMutableArray *)self.afterRules replaceObjectAtIndex:idx withObject:value];
+}
+
+- (void)replaceAfterRulesAtIndexes:(NSIndexSet *)indexes withAfterRules:(NSArray *)value {
+    [self replaceAfterRulesAtIndexes:indexes withAfterRules:value settingInverse:YES];
+}
+
+- (void)replaceAfterRulesAtIndexes:(NSIndexSet *)indexes withAfterRules:(NSArray *)value settingInverse:(BOOL)setInverse {
+
+    [(NSMutableArray *)self.afterRules replaceObjectsAtIndexes:indexes withObjects:value];
 }
 
 @end
