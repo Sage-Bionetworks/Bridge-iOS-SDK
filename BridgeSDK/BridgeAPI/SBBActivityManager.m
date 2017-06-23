@@ -1,8 +1,8 @@
 //
-//  SBBTaskManager.m
+//  SBBActivityManager.m
 //  BridgeSDK
 //
-//	Copyright (c) 2015-2016, Sage Bionetworks
+//	Copyright (c) 2015-2017, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -40,16 +40,12 @@
 #import "BridgeSDK+Internal.h"
 #import "SBBBridgeInfo.h"
 #import "ModelObjectInternal.h"
-#import "SBBResourceListInternal.h"
-#import "SBBForwardCursorPagedResourceListInternal.h"
+#import "SBBDateTimeRangeResourceList.h"
 
-#define ACTIVITY_API GLOBAL_API_PREFIX @"/activities"
+#define ACTIVITY_API V4_API_PREFIX @"/activities"
 
 NSString * const kSBBActivityAPI =       ACTIVITY_API;
-NSString * const kSBBHistoricalActivityAPIFormat = ACTIVITY_API @"/%@";
-NSTimeInterval const kSBB24Hours =       86400;
-NSInteger const     kMaxAdvance  =       4; // server only supports 4 days ahead
-NSInteger const     kFetchPageSize =     100;
+NSInteger const kMaxDateRange =     14; // server supports requesting a span of < 15 days at a time
 
 @interface SBBActivityManager()<SBBActivityManagerInternalProtocol, SBBBridgeAPIManagerInternalProtocol>
 
@@ -71,22 +67,27 @@ NSInteger const     kFetchPageSize =     100;
 
 - (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead withCompletion:(SBBActivityManagerGetCompletionBlock)completion {
     SBBCachingPolicy policy = gSBBUseCache ? SBBCachingPolicyFallBackToCached : SBBCachingPolicyNoCaching;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     return [self getScheduledActivitiesForDaysAhead:daysAhead cachingPolicy:policy withCompletion:completion];
+#pragma clang diagnostic pop
 }
 
 - (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     return [self getScheduledActivitiesForDaysAhead:daysAhead daysBehind:1 cachingPolicy:policy withCompletion:completion];
+#pragma clang diagnostic pop
 }
 
+// for backward compatibility for laggards still using the deprecated daysAhead/daysBehind methods
 - (NSArray *)filterTasks:(NSArray *)tasks forDaysAhead:(NSInteger)daysAhead andDaysBehind:(NSInteger)daysBehind excludeStillValid:(BOOL)excludeValid
 {
-    NSCalendar *cal = [NSCalendar currentCalendar];
-    NSDate *windowStart = [cal startOfDayForDate:[NSDate dateWithTimeIntervalSinceNow:-daysBehind * kSBB24Hours]];
-    NSDate *todayStart = [cal startOfDayForDate:[NSDate date]];
     NSDate *now = [NSDate date];
-    NSDate *todayEnd = [cal startOfDayForDate:[NSDate dateWithTimeIntervalSinceNow:kSBB24Hours]];
-    NSDate *windowEnd = [cal startOfDayForDate:[todayEnd dateByAddingTimeInterval:daysAhead * kSBB24Hours]];
+    NSDate *todayStart = [[NSCalendar currentCalendar] startOfDayForDate:now];
+    NSDate *windowStart, *windowEnd;
+    [self startDate:&windowStart andEndDate:&windowEnd fromDaysAhead:daysAhead andDaysBehind:daysBehind];
     
     // things that either expired during the daysBefore period, or expire after that but start before the end of daysAhead
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K != nil AND %K > %@ AND %K < %@) OR ((%K == nil OR %K >= %@) AND %K < %@)",
@@ -98,7 +99,8 @@ NSInteger const     kFetchPageSize =     100;
                               NSStringFromSelector(@selector(scheduledOn)), windowEnd];
     NSArray *filtered = [tasks filteredArrayUsingPredicate:predicate];
     if (excludeValid) {
-        // "valid things" are defined as the subset of the above things that the server would return.
+        // "valid things" are defined as the subset of the above things that the server would have returned
+        // from the old /v3/activities endpoint.
         // valid things expire after now and are not marked as finished. the flag is
         // set so we want to exclude those things.
         predicate = [NSPredicate predicateWithFormat:@"NOT ((%K == nil OR %K >= %@) AND %K == nil)",
@@ -114,10 +116,13 @@ NSInteger const     kFetchPageSize =     100;
 
 - (NSArray *)filterTasks:(NSArray *)tasks scheduledFrom:(NSDate *)startDate to:(NSDate *)endDate
 {
-    NSString *comparisonKey = NSStringFromSelector(@selector(scheduledOn));
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K < %@",
-                              comparisonKey, startDate,
-                              comparisonKey, endDate];
+    NSString *scheduledOnKey = NSStringFromSelector(@selector(scheduledOn));
+    NSString *finishedOnKey = NSStringFromSelector(@selector(finishedOn));
+    NSString *expiresOnKey = NSStringFromSelector(@selector(expiresOn));
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K >= %@ OR %K >= %@) AND %K < %@",
+                              finishedOnKey, startDate,
+                              expiresOnKey, startDate,
+                              scheduledOnKey, endDate];
     
     return [tasks filteredArrayUsingPredicate:predicate];
 }
@@ -166,91 +171,27 @@ NSInteger const     kFetchPageSize =     100;
     return [SBBScheduledActivity entityName];
 }
 
+- (void)startDate:(NSDate **)startDate andEndDate:(NSDate **)endDate fromDaysAhead:(NSInteger)daysAhead andDaysBehind:(NSInteger)daysBehind
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *now = [NSDate date];
+    
+    if (startDate) {
+        NSDate *startOfToday = [calendar startOfDayForDate:now];
+        *startDate = [calendar dateByAddingUnit:NSCalendarUnitDay value:-daysBehind toDate:startOfToday options:0];
+    }
+    
+    if (endDate) {
+        NSDate *endOfToday = [calendar nextDateAfterDate:now matchingHour:0 minute:0 second:0 options:NSCalendarMatchNextTimePreservingSmallerUnits];
+        *endDate = [calendar dateByAddingUnit:NSCalendarUnitDay value:daysAhead toDate:endOfToday options:0];
+    }
+}
+
 - (NSURLSessionTask *)getScheduledActivitiesForDaysAhead:(NSInteger)daysAhead daysBehind:(NSInteger)daysBehind cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
-    // if we're going straight to cache, just get it and get out
-    if (policy == SBBCachingPolicyCachedOnly) {
-        SBBResourceList *tasks = [self cachedTasksFromCacheManager:self.cacheManager];
-        
-        if (completion) {
-            NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
-            [self mapSubObjectsInTaskList:requestedTasks];
-            completion(requestedTasks, nil);
-        }
-        
-        return nil;
-    }
-
-    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-    [self.authManager addAuthHeaderToHeaders:headers];
-    
-    // If caching, always request the maximum days ahead from the server so we have them cached
-    // and if the desiredDaysAhead is more than the max allowed, then fetch a minimum number of
-    // items per schedule.
-    NSInteger desiredDaysAhead = gSBBUseCache ? [SBBBridgeInfo shared].cacheDaysAhead : daysAhead;
-    NSInteger fetchDaysAhead = MIN(kMaxAdvance, desiredDaysAhead);
-    NSInteger fetchMinimumPerSchedule = (fetchDaysAhead < desiredDaysAhead) ? kMaxAdvance : 0;
-    NSDictionary *parameters = @{@"daysAhead": @(fetchDaysAhead),
-                                 @"minimumPerSchedule": @(fetchMinimumPerSchedule),
-                                 @"offset": [[NSDate date] ISO8601OffsetString]};
-    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        if (gSBBUseCache) {
-            [self.cacheManager.cacheIOContext performBlock:^{
-                SBBResourceList *tasks = [self cachedTasksFromCacheManager:self.cacheManager];
-                
-                // before processing updated data, save all tasks from the past kDaysToCache days,
-                // and finished ones from today (or later?) (because the server doesn't give us those)
-                NSArray<SBBScheduledActivity *> *savedTasks = [self savedTasksFromCachedTasks:tasks.items];
-
-                // now process the new data into the cache
-                if (!error) {
-                    // first, set an identifier in the JSON so we can find the cached object later--since
-                    // ResourceList doesn't come with anything by which to distinguish one from another if the
-                    // items[] list is empty.
-                    NSMutableDictionary *objectWithEntityID = [responseObject mutableCopy];
-                    
-                    // -- get the identifier key path we need to set from the cache manager core data entity description
-                    //    rather than hardcoding it with a string literal
-                    NSEntityDescription *entityDescription = [SBBResourceList entityForContext:self.cacheManager.cacheIOContext];
-                    NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
-                    
-                    // -- set it in the JSON to the identifier for the list this manager manages
-                    [objectWithEntityID setValue:[self listIdentifier] forKeyPath:entityIDKeyPath];
-                    
-                    // -- now process into the cache
-                    [self.objectManager objectFromBridgeJSON:objectWithEntityID];
-                }
-                
-                // we've either updated the cached tasks list from the server, or not, as the case may be;
-                // in either case, we want to pass the cached tasks list to the completion handler.
-                tasks = (SBBResourceList *)[self.cacheManager cachedObjectOfType:@"ResourceList" withId:[self listIdentifier] createIfMissing:NO];
-                
-                // ...ok, if we *did* update from the server though, we want to add back any we saved from before.
-                if (!error && savedTasks.count) {
-                    [self addSavedTasks:savedTasks toResourceList:tasks];
-                }
-                
-                if (completion) {
-                    NSMutableArray *requestedTasks = [[self filterTasks:tasks.items forDaysAhead:daysAhead andDaysBehind:daysBehind excludeStillValid:NO] mutableCopy];
-                    [self mapSubObjectsInTaskList:requestedTasks];
-                    
-                    // now get the heck out of the cacheIOContext queue
-                    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
-                        completion(requestedTasks, error);
-                    });
-                }
-            }];
-        } else {
-            // not caching, do it the old-fashioned way (-ish)
-            SBBResourceList *tasks = nil;
-            if (!error) {
-                tasks = [self.objectManager objectFromBridgeJSON:responseObject];
-            }
-            if (completion) {
-                completion(tasks.items, error);
-            }
-        }
-    }];
+    NSDate *startDate, *endDate;
+    [self startDate:&startDate andEndDate:&endDate fromDaysAhead:daysAhead andDaysBehind:daysBehind];
+    return [self getScheduledActivitiesFrom:startDate to:endDate cachingPolicy:policy withCompletion:completion];
 }
 
 - (NSURLSessionTask *)startScheduledActivity:(SBBScheduledActivity *)scheduledActivity asOf:(NSDate *)startDate withCompletion:(SBBActivityManagerUpdateCompletionBlock)completion
@@ -323,71 +264,64 @@ NSInteger const     kFetchPageSize =     100;
 }
 
 // pass in an initialized NSMutableArray in accumulatedItems either if not caching, or ignoring cache
-- (NSURLSessionTask *)fetchHistoricalActivitiesForGuid:(NSString *)activityGuid withParameters:(NSDictionary *)parameters offsetBy:(NSDate *)offsetBy accumulatedItems:(NSMutableArray *)accumulatedItems completion:(SBBActivityManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)fetchHistoricalActivitiesFrom:(NSDate *)start to:(NSDate *)end accumulatedItems:(NSMutableArray *)accumulatedItems objectManager:(id<SBBObjectManagerProtocol>)objectManager completion:(SBBActivityManagerGetCompletionBlock)completion
 {
-    if (offsetBy) {
-        NSString *offsetString = [offsetBy ISO8601DateTimeOnlyString];
-        NSMutableDictionary *parametersWithOffset = [parameters mutableCopy];
-        parametersWithOffset[NSStringFromSelector(@selector(offsetBy))] = offsetString;
-        parameters = [parametersWithOffset copy];
-    }
-    
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    NSString *endpoint = [NSString stringWithFormat:kSBBHistoricalActivityAPIFormat, activityGuid];
-    
-    return [self.networkManager get:endpoint headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *finish = [calendar dateByAddingUnit:NSCalendarUnitDay value:kMaxDateRange toDate:start options:0];
+    NSDate *stop = [finish compare:end] == NSOrderedAscending ? finish : end;
+    NSDictionary *parameters = @{
+                                 @"startTime": [start ISO8601String],
+                                 @"endTime": [stop ISO8601String]
+                                 };
+    return [self.networkManager get:kSBBActivityAPI headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) {
-            if (gSBBUseCache) {
-                // clear lastOffsetBy__ for the next time we fetch this activity's history
-                SBBForwardCursorPagedResourceList *list = [self cachedListForActivityGuid:activityGuid];
-                list.lastOffsetBy__ = nil;
-                [list saveToCoreDataCacheWithObjectManager:self.objectManager];
-            }
+#if DEBUG
+            NSLog(@"Error fetching scheduled activities from Bridge from %@ to %@", parameters[@"startTime"], parameters[@"endTime"]);
+#endif
             if (completion) {
                 completion(responseObject, error);
             }
         } else {
             NSDictionary *objectJSON = responseObject;
             if (gSBBUseCache) {
-                // first, set an identifier in the JSON so we can find the cached object later--since
-                // ForwardCursorPagedResourceList doesn't come with anything by which to distinguish one
+                // Set an identifier in the JSON so we can find the cached object later--since
+                // DateTimeRangeResourceList doesn't come with anything by which to distinguish one
                 // from another if the items[] list is empty.
-                NSMutableDictionary *objectWithActivityGuid = [responseObject mutableCopy];
+                NSMutableDictionary *objectWithListIdentifier = [responseObject mutableCopy];
                 
                 // -- get the identifier key path we need to set from the cache manager core data entity description
                 //    rather than hardcoding it with a string literal
-                NSEntityDescription *entityDescription = [SBBForwardCursorPagedResourceList entityForContext:self.cacheManager.cacheIOContext];
+                NSEntityDescription *entityDescription = [SBBDateTimeRangeResourceList entityForContext:self.cacheManager.cacheIOContext];
                 NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
                 
-                // -- set it in the JSON to the activityGuid we're fetching
-                [objectWithActivityGuid setValue:activityGuid forKeyPath:entityIDKeyPath];
-                objectJSON = [objectWithActivityGuid copy];
+                // -- set it in the JSON to this Activity Manager's list identifier
+                [objectWithListIdentifier setValue:[self listIdentifier] forKeyPath:entityIDKeyPath];
+                objectJSON = [objectWithListIdentifier copy];
             }
             
-            // -- now process into the cache (if caching), and in any case, get the PONSO object
-            //    so we can check if we're done yet
-            SBBForwardCursorPagedResourceList *fcprl = (SBBForwardCursorPagedResourceList *)[self.objectManager objectFromBridgeJSON:objectJSON];
+            // convert result to an object (reading the results into cache if we're doing that)
+            // so we can accumulate the results (if we're doing that)
+            SBBDateTimeRangeResourceList *dtrrList = (SBBDateTimeRangeResourceList *)[objectManager objectFromBridgeJSON:objectJSON];
+            if (accumulatedItems) {
+                // if we're not caching or are ignoring cache, accumulate the raw list of items from Bridge
+                // as we go
+                [accumulatedItems addObjectsFromArray:dtrrList.items];
+            }
             
-            // -- now see if we're done, and act accordingly
-            if (fcprl.hasNextValue) {
-                // not done, keep paging in more activities
-                NSDate *newOffset = fcprl.offsetBy;
-                if (accumulatedItems) {
-                    // if we're not caching or are ignoring cache, accumulate the raw list of items from Bridge
-                    // as we go
-                    [accumulatedItems addObjectsFromArray:fcprl.items];
-                }
-                [self fetchHistoricalActivitiesForGuid:activityGuid withParameters:parameters offsetBy:newOffset accumulatedItems:accumulatedItems completion:completion];
-            } else {
-                // done, call completion
+            // see if we're done
+            if ([stop isEqualToDate:end]) {
                 if (completion) {
                     if (accumulatedItems) {
-                        completion([accumulatedItems copy], error);
+                        completion([accumulatedItems copy], nil);
                     } else {
-                        completion(fcprl.items, error);
+                        completion(dtrrList.items, nil);
                     }
                 }
+            } else {
+                // keep going
+                [self fetchHistoricalActivitiesFrom:stop to:end accumulatedItems:accumulatedItems objectManager:objectManager completion:completion];
             }
         }
     }];
@@ -404,19 +338,36 @@ NSInteger const     kFetchPageSize =     100;
     return [requestedTasks copy];
 }
 
-- (SBBForwardCursorPagedResourceList *)cachedListForActivityGuid:(NSString *)activityGuid
+- (SBBDateTimeRangeResourceList *)cachedDateTimeRangeList
 {
-    SBBForwardCursorPagedResourceList *fcprl = (SBBForwardCursorPagedResourceList *)[self.cacheManager cachedObjectOfType:[SBBForwardCursorPagedResourceList entityName] withId:activityGuid createIfMissing:NO];
+    SBBDateTimeRangeResourceList *dtrrl = (SBBDateTimeRangeResourceList *)[self.cacheManager cachedObjectOfType:SBBDateTimeRangeResourceList.entityName withId:[self listIdentifier] createIfMissing:NO];
 
-    return fcprl;
+    return dtrrl;
 }
 
-- (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+- (id<SBBObjectManagerProtocol>)nonCachingObjectManager
+{
+    SBBObjectManager *original = (SBBObjectManager *)self.objectManager;
+    if (![original isKindOfClass:[SBBObjectManager class]]) {
+        return original; // don't mess with a custom object manager that doesn't inherit from ours
+    }
+    SBBObjectManager *objectManager = [SBBObjectManager objectManager];
+    objectManager.bypassCache = YES;
+    
+    // make sure it does the same mappings
+    objectManager.classForType = [original.classForType mutableCopy];
+    objectManager.typeForClass = [original.typeForClass mutableCopy];
+    objectManager.mappingsForType = [original.mappingsForType mutableCopy];
+    
+    return objectManager;
+}
+
+- (NSURLSessionTask *)getScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo cachingPolicy:(SBBCachingPolicy)policy withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     // if we're going straight to cache, just get it and get out
     if (gSBBUseCache && policy == SBBCachingPolicyCachedOnly) {
         if (completion) {
-            SBBForwardCursorPagedResourceList *list = [self cachedListForActivityGuid:activityGuid];
+            SBBDateTimeRangeResourceList *list = [self cachedDateTimeRangeList];
             NSArray *requestedTasks = [self filterAndMapTasks:list.items scheduledFrom:scheduledFrom to:scheduledTo];
             completion(requestedTasks, nil);
         }
@@ -424,14 +375,16 @@ NSInteger const     kFetchPageSize =     100;
         return nil;
     }
     
-    NSDictionary *parameters = @{@"scheduledOnStart": [scheduledFrom ISO8601String],
-                                 @"scheduledOnEnd": [scheduledTo ISO8601String],
-                                 @"pageSize": @(kFetchPageSize)};
     NSMutableArray *accumulatedItems = nil;
+    id<SBBObjectManagerProtocol> objectManager = self.objectManager;
+    
     if (!gSBBUseCache || policy == SBBCachingPolicyNoCaching) {
+        objectManager = [self nonCachingObjectManager];
         accumulatedItems = [NSMutableArray array];
+        
     }
-    return [self fetchHistoricalActivitiesForGuid:activityGuid withParameters:parameters offsetBy:nil accumulatedItems:accumulatedItems completion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+    
+    return [self fetchHistoricalActivitiesFrom:scheduledFrom to:scheduledTo accumulatedItems:accumulatedItems objectManager:objectManager completion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
         if (completion) {
             NSArray *requestedTasks = [self filterAndMapTasks:activitiesList scheduledFrom:scheduledFrom to:scheduledTo];
             completion(requestedTasks, error);
@@ -439,11 +392,11 @@ NSInteger const     kFetchPageSize =     100;
     }];
 }
 
-- (NSURLSessionTask *)getScheduledActivitiesForGuid:(NSString *)activityGuid scheduledFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo withCompletion:(SBBActivityManagerGetCompletionBlock)completion
+- (NSURLSessionTask *)getScheduledActivitiesFrom:(NSDate *)scheduledFrom to:(NSDate *)scheduledTo withCompletion:(SBBActivityManagerGetCompletionBlock)completion
 {
     SBBCachingPolicy policy = gSBBUseCache ? SBBCachingPolicyFallBackToCached : SBBCachingPolicyNoCaching;
 
-    return [self getScheduledActivitiesForGuid:activityGuid scheduledFrom:scheduledFrom to:scheduledTo cachingPolicy:policy withCompletion:completion];
+    return [self getScheduledActivitiesFrom:scheduledFrom to:scheduledTo cachingPolicy:policy withCompletion:completion];
 }
 
 // Note: this method blocks until it gets its turn in the cache IO context queue

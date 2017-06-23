@@ -33,7 +33,6 @@
 
 /* CONSTANTS */
 extern NSString * const kSBBActivityAPI;
-extern NSString * const kSBBHistoricalActivityAPIFormat;
 
 @protocol SBBActivityManagerInternalProtocol <SBBActivityManagerProtocol>
 

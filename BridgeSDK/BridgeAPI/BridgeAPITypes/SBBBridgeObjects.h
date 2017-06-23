@@ -7,6 +7,7 @@
 #import "SBBDataGroups.h"
 #import "SBBDateConstraints.h"
 #import "SBBDateTimeConstraints.h"
+#import "SBBDateTimeRangeResourceList.h"
 #import "SBBDecimalConstraints.h"
 #import "SBBDurationConstraints.h"
 #import "SBBForwardCursorPagedResourceList.h"

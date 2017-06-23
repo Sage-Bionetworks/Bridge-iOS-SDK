@@ -4,7 +4,7 @@
 //
 //  Created by Erin Mounts on 9/25/14.
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2017, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -40,6 +40,7 @@
 
 
 @implementation SBBObjectManager
+@synthesize bypassCache = _bypassCache;
 
 @synthesize cacheManager;
 
@@ -718,7 +719,7 @@
         id bridgeJson = json;
         
         id bridgeObject = nil;
-        if (gSBBUseCache) {
+        if (gSBBUseCache && !_bypassCache) {
             // Try the cache first (if it's not a directly cacheable entity, this will be nil)
             id<SBBCacheManagerProtocol> cacheMan = self.cacheManager ?: SBBComponent(SBBCacheManager);
             bridgeObject = [cacheMan cachedObjectFromBridgeJSON:json];

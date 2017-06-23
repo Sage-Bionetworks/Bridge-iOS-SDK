@@ -96,14 +96,6 @@
         <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
-    <entity name="DateTimeRangeResourceList" parentEntity="ResourceList" syncable="YES">
-        <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <userInfo>
-            <entry key="entityIDKeyPath" value="listID__"/>
-            <entry key="entityIDRegex" value="^(ScheduledActivity)$"/>
-        </userInfo>
-    </entity>
     <entity name="DecimalConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="minValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
@@ -173,7 +165,7 @@
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="resourceList" inverseEntity="BridgeObject" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="listID__"/>
-            <entry key="entityIDRegex" value="^(Schedule)$"/>
+            <entry key="entityIDRegex" value="^(ScheduledActivity|Schedule)$"/>
         </userInfo>
     </entity>
     <entity name="Schedule" parentEntity="BridgeObject" syncable="YES">
@@ -284,7 +276,6 @@
         </userInfo>
     </entity>
     <entity name="Survey" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="copyrightNotice" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="guidAndCreatedOn" optional="YES" attributeType="String" syncable="YES">
@@ -294,8 +285,6 @@
         </attribute>
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="moduleId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="moduleVersion" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="published" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="schemaRevision" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
@@ -320,8 +309,6 @@
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="prompt" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="promptDetail" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="rules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyElement" inverseEntity="SurveyRule" syncable="YES"/>
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Survey" inverseName="elements" inverseEntity="Survey" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
@@ -332,6 +319,7 @@
         </userInfo>
     </entity>
     <entity name="SurveyInfoScreen" parentEntity="SurveyElement" syncable="YES">
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image" inverseName="surveyInfoScreen" inverseEntity="Image" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="guid"/>
@@ -381,11 +369,6 @@
         <attribute name="skipTo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="Transformable" syncable="YES"/>
         <relationship name="surveyConstraints" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyConstraints" inverseName="rules" inverseEntity="SurveyConstraints" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
-        <relationship name="surveyElement" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyElement" inverseName="rules" inverseEntity="SurveyElement" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
@@ -473,20 +456,19 @@
         <element name="SchemaReference" positionX="9" positionY="153" width="128" height="105"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
         <element name="StudyParticipant" positionX="18" positionY="108" width="128" height="270"/>
-        <element name="Survey" positionX="0" positionY="0" width="128" height="240"/>
+        <element name="Survey" positionX="0" positionY="0" width="128" height="180"/>
         <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="75"/>
-        <element name="SurveyElement" positionX="0" positionY="0" width="128" height="150"/>
-        <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="SurveyElement" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="75"/>
         <element name="SurveyQuestion" positionX="0" positionY="0" width="128" height="75"/>
         <element name="SurveyQuestionOption" positionX="0" positionY="0" width="128" height="120"/>
         <element name="SurveyReference" positionX="0" positionY="0" width="128" height="135"/>
-        <element name="SurveyRule" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="SurveyRule" positionX="0" positionY="0" width="128" height="90"/>
         <element name="TaskReference" positionX="0" positionY="0" width="128" height="90"/>
         <element name="TimeConstraints" positionX="0" positionY="0" width="128" height="45"/>
         <element name="UploadRequest" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="DateTimeRangeResourceList" positionX="18" positionY="153" width="128" height="75"/>
     </elements>
 </model>

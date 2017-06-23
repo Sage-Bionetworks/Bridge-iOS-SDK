@@ -1,5 +1,5 @@
 //
-//  _SBBSurveyRule.m
+//  _SBBDateTimeRangeResourceList.m
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,35 +27,27 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyRule.m instead.
+// Make changes to SBBDateTimeRangeResourceList.m instead.
 //
 
-#import "_SBBSurveyRule.h"
+#import "_SBBDateTimeRangeResourceList.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBSurveyRule()
+@interface _SBBDateTimeRangeResourceList()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (SurveyRule)
+@interface NSManagedObject (DateTimeRangeResourceList)
 
-@property (nullable, nonatomic, retain) NSNumber* endSurvey;
+@property (nullable, nonatomic, retain) NSDate* endTime;
 
-@property (nullable, nonatomic, retain) NSString* operator;
-
-@property (nullable, nonatomic, retain) NSString* skipTo;
-
-@property (nullable, nonatomic, retain) id value;
-
-@property (nullable, nonatomic, retain) NSManagedObject *surveyConstraints;
-
-@property (nullable, nonatomic, retain) NSManagedObject *surveyElement;
+@property (nullable, nonatomic, retain) NSDate* startTime;
 
 @end
 
-@implementation _SBBSurveyRule
+@implementation _SBBDateTimeRangeResourceList
 
 - (instancetype)init
 {
@@ -69,29 +61,15 @@
 
 #pragma mark Scalar values
 
-- (BOOL)endSurveyValue
-{
-	return [self.endSurvey boolValue];
-}
-
-- (void)setEndSurveyValue:(BOOL)value_
-{
-	self.endSurvey = [NSNumber numberWithBool:value_];
-}
-
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.endSurvey = [dictionary objectForKey:@"endSurvey"];
+    self.endTime = [NSDate dateWithISO8601String:[dictionary objectForKey:@"endTime"]];
 
-    self.operator = [dictionary objectForKey:@"operator"];
-
-    self.skipTo = [dictionary objectForKey:@"skipTo"];
-
-    self.value = [dictionary objectForKey:@"value"];
+    self.startTime = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startTime"]];
 
 }
 
@@ -99,13 +77,9 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
-    [dict setObjectIfNotNil:self.endSurvey forKey:@"endSurvey"];
+    [dict setObjectIfNotNil:[self.endTime ISO8601String] forKey:@"endTime"];
 
-    [dict setObjectIfNotNil:self.operator forKey:@"operator"];
-
-    [dict setObjectIfNotNil:self.skipTo forKey:@"skipTo"];
-
-    [dict setObjectIfNotNil:self.value forKey:@"value"];
+    [dict setObjectIfNotNil:[self.startTime ISO8601String] forKey:@"startTime"];
 
 	return [dict copy];
 }
@@ -122,7 +96,7 @@
 
 + (NSString *)entityName
 {
-    return @"SurveyRule";
+    return @"DateTimeRangeResourceList";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
@@ -130,13 +104,9 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
-        self.endSurvey = managedObject.endSurvey;
+        self.endTime = managedObject.endTime;
 
-        self.operator = managedObject.operator;
-
-        self.skipTo = managedObject.skipTo;
-
-        self.value = managedObject.value;
+        self.startTime = managedObject.startTime;
 
     }
 
@@ -146,7 +116,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"SurveyRule" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"DateTimeRangeResourceList" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -170,13 +140,9 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.endSurvey = ((id)self.endSurvey == [NSNull null]) ? nil : self.endSurvey;
+    managedObject.endTime = ((id)self.endTime == [NSNull null]) ? nil : self.endTime;
 
-    managedObject.operator = ((id)self.operator == [NSNull null]) ? nil : self.operator;
-
-    managedObject.skipTo = ((id)self.skipTo == [NSNull null]) ? nil : self.skipTo;
-
-    managedObject.value = ((id)self.value == [NSNull null]) ? nil : self.value;
+    managedObject.startTime = ((id)self.startTime == [NSNull null]) ? nil : self.startTime;
 
     // Calling code will handle saving these changes to cacheContext.
 }

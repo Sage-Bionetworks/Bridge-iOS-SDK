@@ -45,8 +45,8 @@
 #import "NSString+SBBAdditions.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 
-#define UPLOAD_API GLOBAL_API_PREFIX @"/uploads"
-#define UPLOAD_STATUS_API GLOBAL_API_PREFIX @"/uploadstatuses"
+#define UPLOAD_API V3_API_PREFIX @"/uploads"
+#define UPLOAD_STATUS_API V3_API_PREFIX @"/uploadstatuses"
 
 static NSString * const uuidPrefixRegexPattern =  @"^" UUID_REGEX_PATTERN @"_";
 

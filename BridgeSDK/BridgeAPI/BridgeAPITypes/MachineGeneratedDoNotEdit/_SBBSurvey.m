@@ -48,6 +48,8 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (Survey)
 
+@property (nullable, nonatomic, retain) NSString* copyrightNotice;
+
 @property (nullable, nonatomic, retain) NSDate* createdOn;
 
 @property (nullable, nonatomic, retain) NSString* guid;
@@ -57,6 +59,10 @@
 @property (nullable, nonatomic, retain) NSString* identifier;
 
 @property (nullable, nonatomic, retain) NSDate* modifiedOn;
+
+@property (nullable, nonatomic, retain) NSString* moduleId;
+
+@property (nullable, nonatomic, retain) NSNumber* moduleVersion;
 
 @property (nullable, nonatomic, retain) NSString* name;
 
@@ -96,6 +102,16 @@
 
 #pragma mark Scalar values
 
+- (int64_t)moduleVersionValue
+{
+	return [self.moduleVersion longLongValue];
+}
+
+- (void)setModuleVersionValue:(int64_t)value_
+{
+	self.moduleVersion = [NSNumber numberWithLongLong:value_];
+}
+
 - (BOOL)publishedValue
 {
 	return [self.published boolValue];
@@ -132,6 +148,8 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.copyrightNotice = [dictionary objectForKey:@"copyrightNotice"];
+
     self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
 
     self.guid = [dictionary objectForKey:@"guid"];
@@ -139,6 +157,10 @@
     self.identifier = [dictionary objectForKey:@"identifier"];
 
     self.modifiedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"modifiedOn"]];
+
+    self.moduleId = [dictionary objectForKey:@"moduleId"];
+
+    self.moduleVersion = [dictionary objectForKey:@"moduleVersion"];
 
     self.name = [dictionary objectForKey:@"name"];
 
@@ -178,6 +200,8 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
+    [dict setObjectIfNotNil:self.copyrightNotice forKey:@"copyrightNotice"];
+
     [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
@@ -185,6 +209,10 @@
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
 
     [dict setObjectIfNotNil:[self.modifiedOn ISO8601String] forKey:@"modifiedOn"];
+
+    [dict setObjectIfNotNil:self.moduleId forKey:@"moduleId"];
+
+    [dict setObjectIfNotNil:self.moduleVersion forKey:@"moduleVersion"];
 
     [dict setObjectIfNotNil:self.name forKey:@"name"];
 
@@ -235,6 +263,8 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
+        self.copyrightNotice = managedObject.copyrightNotice;
+
         self.createdOn = managedObject.createdOn;
 
         self.guid = managedObject.guid;
@@ -244,6 +274,10 @@
         self.identifier = managedObject.identifier;
 
         self.modifiedOn = managedObject.modifiedOn;
+
+        self.moduleId = managedObject.moduleId;
+
+        self.moduleVersion = managedObject.moduleVersion;
 
         self.name = managedObject.name;
 
@@ -295,6 +329,8 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
+    managedObject.copyrightNotice = ((id)self.copyrightNotice == [NSNull null]) ? nil : self.copyrightNotice;
+
     managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
 
     managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
@@ -304,6 +340,10 @@
     managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
 
     managedObject.modifiedOn = ((id)self.modifiedOn == [NSNull null]) ? nil : self.modifiedOn;
+
+    managedObject.moduleId = ((id)self.moduleId == [NSNull null]) ? nil : self.moduleId;
+
+    managedObject.moduleVersion = ((id)self.moduleVersion == [NSNull null]) ? nil : self.moduleVersion;
 
     managedObject.name = ((id)self.name == [NSNull null]) ? nil : self.name;
 
