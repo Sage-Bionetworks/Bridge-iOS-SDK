@@ -102,16 +102,19 @@
           }
       ];
     NSDictionary *response = @{
-                                  @"type": @"ResourceList",
+                                  @"type": @"DateTimeRangeResourceList",
                                   @"items": tasks,
-                                  @"total": @(tasks.count)
+                                  @"total": @(tasks.count),
                                   };
     [self.mockURLSession setJson:response andResponseCode:200 forEndpoint:kSBBActivityAPI andMethod:@"GET"];
     SBBActivityManager *tMan = [SBBActivityManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
     
     XCTestExpectation *expectGotActivities = [self expectationWithDescription:@"Got scheduled activities"];
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [tMan getScheduledActivitiesForDaysAhead:0 withCompletion:^(NSArray *tasks, NSError *error) {
+#pragma clang diagnostic pop
         XCTAssert([tasks isKindOfClass:[NSArray class]], @"Converted incoming object to NSArray");
         XCTAssert(tasks.count, @"Converted object to non-empty NSArray");
         if (tasks.count) {
@@ -165,12 +168,12 @@
     }];
 }
 
-- (void)testGetScheduledActivitiesForGuid {
+- (void)testGetScheduledActivitiesFromTo {
     NSString *activityGuid = @"task-1-guid";
-    NSString *fromDateString = @"2017-03-30T00:00:00.000";
-    NSString *toDateString = @"2017-04-01T00:00:00.000";
-    NSString *task1ScheduledString = @"2017-03-31T04:55:07.867";
-    NSString *task2ScheduledString = @"2017-03-30T04:55:07.867";
+    NSString *fromDateString = @"2017-03-01T00:00:00.000-07:00";
+    NSString *toDateString = @"2017-04-01T00:00:00.000-07:00";
+    NSString *task1ScheduledString = @"2017-03-05T04:55:07.867-07:00";
+    NSString *task2ScheduledString = @"2017-03-30T04:55:07.867-07:00";
     NSString *scheduledActivityGuid1 = [NSString stringWithFormat:@"%@:%@", activityGuid, task1ScheduledString];
     NSString *scheduledActivityGuid2 = [NSString stringWithFormat:@"%@:%@", activityGuid, task2ScheduledString];
     NSDate *fromDate = [NSDate dateWithISO8601String:fromDateString];
@@ -216,7 +219,7 @@
               @"type": @"Activity"
               },
       @"scheduledOn": task1ScheduledString,
-      @"expiresOn": @"2017-04-01T04:55:07.867",
+      @"expiresOn": @"2017-03-06T04:55:07.867-07:00",
       @"status": @"available",
       @"clientData": serverClientData
       };
@@ -238,36 +241,38 @@
               @"type": @"Activity"
               },
       @"scheduledOn": task2ScheduledString,
-      @"expiresOn": @"2017-03-31T04:55:07.867",
+      @"expiresOn": @"2017-03-31T04:55:07.867-07:00",
       @"status": @"available",
       @"clientData": serverClientData
       };
     NSDictionary *response1 = @{
-                               @"type": @"ForwardCursorPagedResourceList",
+                               @"type": @"DateTimeRangeResourceList",
                                @"items": @[task1],
-                               @"offsetBy": @"2017-03-31T00:00:00.000",
-                               @"hasNext": @(YES),
-                               @"scheduledOnStart": fromDateString,
-                               @"scheduledOnEnd": toDateString,
-                               @"pageSize": @(1)
+                               @"startTime": fromDateString,
+                               @"endTime": @"2017-03-15T00:00:00.000-07:00"
                                };
     NSDictionary *response2 = @{
-                                @"type": @"ForwardCursorPagedResourceList",
-                                @"items": @[task2],
-                                @"hasNext": @(NO),
-                                @"scheduledOnStart": fromDateString,
-                                @"scheduledOnEnd": toDateString,
-                                @"pageSize": @(1)
+                                @"type": @"DateTimeRangeResourceList",
+                                @"items": @[],
+                                @"startTime": @"2017-03-15T00:00:00.000-07:00",
+                                @"endTime": @"2017-03-29T00:00:00.000-07:00"
                                 };
-    NSString *endpoint = [NSString stringWithFormat:kSBBHistoricalActivityAPIFormat, @"task-1-guid"];
+    NSDictionary *response3 = @{
+                                @"type": @"DateTimeRangeResourceList",
+                                @"items": @[task2],
+                                @"startTime": @"2017-03-29T00:00:00.000-07:00",
+                                @"endTime": toDateString
+                                };
+    NSString *endpoint = [NSString stringWithFormat:kSBBActivityAPI, @"task-1-guid"];
     [self.mockURLSession setJson:response1 andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
     [self.mockURLSession setJson:response2 andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    [self.mockURLSession setJson:response3 andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
     
     SBBActivityManager *tMan = [SBBActivityManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
     
     XCTestExpectation *expectGotActivities = [self expectationWithDescription:@"Got historical activities"];
     
-    [tMan getScheduledActivitiesForGuid:activityGuid scheduledFrom:fromDate to:toDate withCompletion:^(NSArray *tasks, NSError *error) {
+    [tMan getScheduledActivitiesFrom:fromDate to:toDate withCompletion:^(NSArray *tasks, NSError *error) {
         XCTAssert([tasks isKindOfClass:[NSArray class]], @"Converted incoming object to NSArray");
         XCTAssert(tasks.count == 2, @"Expected to retrieve 2 historical activities, got %@", @(tasks.count));
         if (tasks.count == 2) {
@@ -278,7 +283,7 @@
             SBBScheduledActivity *task1 = tasks[1];
             SBBActivity *activity1 = task1.activity;
             XCTAssert([activity1 isKindOfClass:[SBBActivity class]], @"Activity of second task is also an SBBActivity object");
-            XCTAssert([task0.scheduledOn compare:task1.scheduledOn] == NSOrderedDescending, @"Expected later task first in the array but the order instead is %@ :: %@", task0.scheduledOn, task1.scheduledOn);
+            XCTAssert([task0.scheduledOn compare:task1.scheduledOn] == NSOrderedAscending, @"Expected tasks in the array in ascending order by scheduledOn but the order instead is %@ :: %@", task0.scheduledOn, task1.scheduledOn);
         }
         [expectGotActivities fulfill];
     }];
@@ -302,10 +307,11 @@
     
     [self.mockURLSession setJson:response1 andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
     [self.mockURLSession setJson:response2 andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    [self.mockURLSession setJson:response3 andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
     
     XCTestExpectation *expectReGotActivities = [self expectationWithDescription:@"Got historical activities again"];
     
-    [tMan getScheduledActivitiesForGuid:activityGuid scheduledFrom:fromDate to:toDate withCompletion:^(NSArray *tasks, NSError *error) {
+    [tMan getScheduledActivitiesFrom:fromDate to:toDate withCompletion:^(NSArray *tasks, NSError *error) {
         XCTAssert(tasks.count == 2, @"Expected to retrieve 2 historical activities, got %@", @(tasks.count));
         if (tasks.count == 2) {
             SBBScheduledActivity *task0 = tasks[0];

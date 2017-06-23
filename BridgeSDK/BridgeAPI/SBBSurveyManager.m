@@ -38,7 +38,7 @@
 #import "ModelObjectInternal.h"
 #import "SBBErrors.h"
 
-#define SURVEY_API_FORMAT GLOBAL_API_PREFIX @"/surveys/%@/revisions/%@"
+#define SURVEY_API_FORMAT V3_API_PREFIX @"/surveys/%@/revisions/%@"
 
 NSString * const kSBBSurveyAPIFormat =                          SURVEY_API_FORMAT;
 

@@ -42,7 +42,7 @@
 #import "ModelObjectInternal.h"
 #import <objc/runtime.h>
 
-#define AUTH_API GLOBAL_API_PREFIX @"/auth"
+#define AUTH_API V3_API_PREFIX @"/auth"
 
 NSString * const kSBBAuthSignUpAPI =       AUTH_API @"/signUp";
 NSString * const kSBBAuthResendAPI =       AUTH_API @"/resendEmailVerification";

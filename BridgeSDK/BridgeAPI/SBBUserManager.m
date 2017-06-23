@@ -41,7 +41,7 @@
 #import "SBBDataGroups.h"
 #import "ModelObjectInternal.h"
 
-#define USER_API GLOBAL_API_PREFIX @"/users/self"
+#define USER_API V3_API_PREFIX @"/users/self"
 
 NSString * const kSBBUserProfileAPI =       USER_API;
 NSString * const kSBBUserExternalIdAPI =    USER_API @"/externalId";

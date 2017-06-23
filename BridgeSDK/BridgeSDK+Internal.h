@@ -30,7 +30,8 @@
 
 #import "BridgeSDK.h"
 
-#define GLOBAL_API_PREFIX @"/v3"
+#define V3_API_PREFIX @"/v3"
+#define V4_API_PREFIX @"/v4"
 
 // SBBBUNDLEID is a preprocessor macro defined in the build settings; this converts it to an NSString literal
 #define STRINGIZE(x) #x

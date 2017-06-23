@@ -383,6 +383,10 @@
 		80BA3D981C3F19D400AA70FB /* SBBConsentSignature.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BA3D941C3F19D400AA70FB /* SBBConsentSignature.m */; };
 		80BA3D991C3F19D400AA70FB /* SBBConsentStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BA3D951C3F19D400AA70FB /* SBBConsentStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80BA3D9A1C3F19D400AA70FB /* SBBConsentStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BA3D961C3F19D400AA70FB /* SBBConsentStatus.m */; };
+		80BAFD4F1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BAFD4D1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80BAFD501EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BAFD4E1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.m */; };
+		80BAFD611EFCA4600000FC59 /* SBBDateTimeRangeResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BAFD5F1EFCA4600000FC59 /* SBBDateTimeRangeResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80BAFD621EFCA4600000FC59 /* SBBDateTimeRangeResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BAFD601EFCA4600000FC59 /* SBBDateTimeRangeResourceList.m */; };
 		80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BB09F619C2234100E419A1 /* SBBAuthManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80BB09F919C2234100E419A1 /* SBBAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BB09F719C2234100E419A1 /* SBBAuthManager.m */; };
 		80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */; };
@@ -930,6 +934,10 @@
 		80BA3D941C3F19D400AA70FB /* SBBConsentSignature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentSignature.m; sourceTree = "<group>"; };
 		80BA3D951C3F19D400AA70FB /* SBBConsentStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBConsentStatus.h; sourceTree = "<group>"; };
 		80BA3D961C3F19D400AA70FB /* SBBConsentStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentStatus.m; sourceTree = "<group>"; };
+		80BAFD4D1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBDateTimeRangeResourceList.h; sourceTree = "<group>"; };
+		80BAFD4E1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBDateTimeRangeResourceList.m; sourceTree = "<group>"; };
+		80BAFD5F1EFCA4600000FC59 /* SBBDateTimeRangeResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDateTimeRangeResourceList.h; sourceTree = "<group>"; };
+		80BAFD601EFCA4600000FC59 /* SBBDateTimeRangeResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBDateTimeRangeResourceList.m; sourceTree = "<group>"; };
 		80BB09F619C2234100E419A1 /* SBBAuthManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBAuthManager.h; sourceTree = "<group>"; };
 		80BB09F719C2234100E419A1 /* SBBAuthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBAuthManager.m; sourceTree = "<group>"; };
 		80C3D07419DCA03C00DEA044 /* BridgeSDK.hdoc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BridgeSDK.hdoc; path = BridgeSDK/BridgeSDK.hdoc; sourceTree = "<group>"; };
@@ -1089,6 +1097,8 @@
 				800E794E19ED74A600EEE612 /* SBBDateConstraints.m */,
 				800E794F19ED74A600EEE612 /* SBBDateTimeConstraints.h */,
 				800E795019ED74A600EEE612 /* SBBDateTimeConstraints.m */,
+				80BAFD5F1EFCA4600000FC59 /* SBBDateTimeRangeResourceList.h */,
+				80BAFD601EFCA4600000FC59 /* SBBDateTimeRangeResourceList.m */,
 				800E795119ED74A600EEE612 /* SBBDecimalConstraints.h */,
 				800E795219ED74A600EEE612 /* SBBDecimalConstraints.m */,
 				800E795319ED74A600EEE612 /* SBBDurationConstraints.h */,
@@ -1619,6 +1629,8 @@
 				800E792619ED740F00EEE612 /* _SBBDateConstraints.m */,
 				800E792719ED740F00EEE612 /* _SBBDateTimeConstraints.h */,
 				800E792819ED740F00EEE612 /* _SBBDateTimeConstraints.m */,
+				80BAFD4D1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.h */,
+				80BAFD4E1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.m */,
 				800E792919ED740F00EEE612 /* _SBBDecimalConstraints.h */,
 				800E792A19ED740F00EEE612 /* _SBBDecimalConstraints.m */,
 				800E792B19ED740F00EEE612 /* _SBBDurationConstraints.h */,
@@ -1819,6 +1831,7 @@
 				80B2C64D1E3AD493001F9FEA /* ZZInflateInputStream.h in Headers */,
 				807AE2DB1B61C2ED002588BB /* SBBScheduleManagerInternal.h in Headers */,
 				80561DB91E6A0879005FBFA3 /* SBBResourceListInternal.h in Headers */,
+				80BAFD4F1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.h in Headers */,
 				80DB99221CC01BD300B56EAE /* NSManagedObject+SBBAdditions.h in Headers */,
 				80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */,
 				80B2C6551E3AD493001F9FEA /* ZZOldArchiveEntryWriter.h in Headers */,
@@ -1856,6 +1869,7 @@
 				800E792F19ED740F00EEE612 /* _SBBDateTimeConstraints.h in Headers */,
 				8051DCE11A1E6FDB0068D06E /* RNEncryptor.h in Headers */,
 				8051DCDF1A1E6FDB0068D06E /* RNDecryptor.h in Headers */,
+				80BAFD611EFCA4600000FC59 /* SBBDateTimeRangeResourceList.h in Headers */,
 				606FDE161A23EB4E00898466 /* SBBObjectManagerInternal.h in Headers */,
 				80B2C6481E3AD493001F9FEA /* ZZFileChannel.h in Headers */,
 				80B2C6441E3AD493001F9FEA /* ZZDataProvider.h in Headers */,
@@ -2350,6 +2364,7 @@
 				80B2C6471E3AD493001F9FEA /* ZZError.m in Sources */,
 				60F1E4201A420EE4009B380E /* SBBActivity.m in Sources */,
 				807AE2FD1B62E98C002588BB /* SBBTaskReference.m in Sources */,
+				80BAFD621EFCA4600000FC59 /* SBBDateTimeRangeResourceList.m in Sources */,
 				800E795A19ED74A600EEE612 /* SBBDecimalConstraints.m in Sources */,
 				80B2C6411E3AD493001F9FEA /* ZZDataChannel.m in Sources */,
 				8026D67B19E77518008942B0 /* SBBUploadManager.m in Sources */,
@@ -2423,6 +2438,7 @@
 				80BA3D921C3F19A100AA70FB /* _SBBConsentStatus.m in Sources */,
 				807AE2ED1B62E8C3002588BB /* _SBBTaskReference.m in Sources */,
 				80B2C63A1E3AD493001F9FEA /* ZZArchive.mm in Sources */,
+				80BAFD501EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.m in Sources */,
 				8026BD2319C892E40077F3EB /* SBBComponentManager.m in Sources */,
 				80B2C6491E3AD493001F9FEA /* ZZFileChannel.m in Sources */,
 				800E797819ED7BCB00EEE612 /* SBBSurveyRule.m in Sources */,

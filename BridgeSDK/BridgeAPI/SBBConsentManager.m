@@ -41,8 +41,8 @@
 #import "SBBParticipantManagerInternal.h"
 #import "ModelObjectInternal.h"
 
-#define CONSENT_API GLOBAL_API_PREFIX @"/consents/signature"
-#define CONSENT_SUBPOPULATIONS_API_FORMAT GLOBAL_API_PREFIX @"/subpopulations/%@/consents/signature"
+#define CONSENT_API V3_API_PREFIX @"/consents/signature"
+#define CONSENT_SUBPOPULATIONS_API_FORMAT V3_API_PREFIX @"/subpopulations/%@/consents/signature"
 
 // deprecated APIs
 NSString * const kSBBConsentAPI = CONSENT_API;

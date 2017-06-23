@@ -1,10 +1,7 @@
 //
-//  SBBScheduleManager.m
-//  BridgeSDK
+//  SBBDateTimeRangeResourceList.h
 //
-//  Created by Erin Mounts on 10/24/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,41 +27,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBScheduleManagerInternal.h"
-#import "SBBComponentManager.h"
-#import "SBBAuthManager.h"
-#import "SBBObjectManager.h"
-#import "SBBBridgeObjects.h"
-#import "BridgeSDK+Internal.h"
+#import "_SBBDateTimeRangeResourceList.h"
 
-#define SCHEDULE_API V4_API_PREFIX @"/schedules"
-
-NSString * const kSBBScheduleAPI =       SCHEDULE_API;
-
-@implementation SBBScheduleManager
-
-+ (instancetype)defaultComponent
-{
-  static SBBScheduleManager *shared;
-  
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    shared = [self instanceWithRegisteredDependencies];
-  });
-  
-  return shared;
-}
-
-- (NSURLSessionTask *)getSchedulesWithCompletion:(SBBScheduleManagerGetCompletionBlock)completion
-{
-  NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-  [self.authManager addAuthHeaderToHeaders:headers];
-  return [self.networkManager get:kSBBScheduleAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-    SBBResourceList *schedules = [self.objectManager objectFromBridgeJSON:responseObject];
-    if (completion) {
-      completion(schedules, error);
-    }
-  }];
-}
-
+@interface SBBDateTimeRangeResourceList : _SBBDateTimeRangeResourceList <_SBBDateTimeRangeResourceList>
+// Custom logic goes here.
 @end

@@ -14,7 +14,7 @@
 #import "SBBComponentManager.h"
 #import "SBBAuthManagerInternal.h"
 
-#define PARTICIPANT_API GLOBAL_API_PREFIX @"/participants/self"
+#define PARTICIPANT_API V3_API_PREFIX @"/participants/self"
 
 NSString * const kSBBParticipantAPI = PARTICIPANT_API;
 

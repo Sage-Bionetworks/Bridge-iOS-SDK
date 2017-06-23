@@ -96,6 +96,10 @@
         <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
+    <entity name="DateTimeRangeResourceList" parentEntity="ResourceList" syncable="YES">
+        <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
     <entity name="DecimalConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="minValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
@@ -479,5 +483,6 @@
         <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="DateTimeRangeResourceList" positionX="18" positionY="153" width="128" height="75"/>
     </elements>
 </model>
