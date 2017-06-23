@@ -116,10 +116,13 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
 
 - (NSArray *)filterTasks:(NSArray *)tasks scheduledFrom:(NSDate *)startDate to:(NSDate *)endDate
 {
-    NSString *comparisonKey = NSStringFromSelector(@selector(scheduledOn));
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K < %@",
-                              comparisonKey, startDate,
-                              comparisonKey, endDate];
+    NSString *scheduledOnKey = NSStringFromSelector(@selector(scheduledOn));
+    NSString *finishedOnKey = NSStringFromSelector(@selector(finishedOn));
+    NSString *expiresOnKey = NSStringFromSelector(@selector(expiresOn));
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K >= %@ OR %K >= %@) AND %K < %@",
+                              finishedOnKey, startDate,
+                              expiresOnKey, startDate,
+                              scheduledOnKey, endDate];
     
     return [tasks filteredArrayUsingPredicate:predicate];
 }
@@ -281,9 +284,26 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
                 completion(responseObject, error);
             }
         } else {
+            NSDictionary *objectJSON = responseObject;
+            if (gSBBUseCache) {
+                // Set an identifier in the JSON so we can find the cached object later--since
+                // DateTimeRangeResourceList doesn't come with anything by which to distinguish one
+                // from another if the items[] list is empty.
+                NSMutableDictionary *objectWithListIdentifier = [responseObject mutableCopy];
+                
+                // -- get the identifier key path we need to set from the cache manager core data entity description
+                //    rather than hardcoding it with a string literal
+                NSEntityDescription *entityDescription = [SBBDateTimeRangeResourceList entityForContext:self.cacheManager.cacheIOContext];
+                NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
+                
+                // -- set it in the JSON to this Activity Manager's list identifier
+                [objectWithListIdentifier setValue:[self listIdentifier] forKeyPath:entityIDKeyPath];
+                objectJSON = [objectWithListIdentifier copy];
+            }
+            
             // convert result to an object (reading the results into cache if we're doing that)
             // so we can accumulate the results (if we're doing that)
-            SBBDateTimeRangeResourceList *dtrrList = (SBBDateTimeRangeResourceList *)[objectManager objectFromBridgeJSON:responseObject];
+            SBBDateTimeRangeResourceList *dtrrList = (SBBDateTimeRangeResourceList *)[objectManager objectFromBridgeJSON:objectJSON];
             if (accumulatedItems) {
                 // if we're not caching or are ignoring cache, accumulate the raw list of items from Bridge
                 // as we go

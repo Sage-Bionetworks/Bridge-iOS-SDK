@@ -146,9 +146,9 @@
             
             // Also make sure the ResourceList containing the activities is properly identified
             // in the cache for later retrieval
-            NSString *rlistName = SBBResourceList.entityName;
+            NSString *rlistName = SBBDateTimeRangeResourceList.entityName;
             NSString *saName = SBBScheduledActivity.entityName;
-            SBBResourceList *activitiesRList = [self.cacheManager cachedObjectOfType:rlistName withId:saName createIfMissing:NO];
+            SBBDateTimeRangeResourceList *activitiesRList = (SBBDateTimeRangeResourceList *)[self.cacheManager cachedObjectOfType:rlistName withId:saName createIfMissing:NO];
             XCTAssertNotNil(activitiesRList, @"Failed to retrieve %@ with listID__ '%@'", rlistName, saName);
             
             // ...and make sure it's in the backing store, not just the in-memory cache

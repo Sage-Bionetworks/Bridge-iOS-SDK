@@ -99,6 +99,10 @@
     <entity name="DateTimeRangeResourceList" parentEntity="ResourceList" syncable="YES">
         <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="listID__"/>
+            <entry key="entityIDRegex" value="^(ScheduledActivity)$"/>
+        </userInfo>
     </entity>
     <entity name="DecimalConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
@@ -169,7 +173,7 @@
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="resourceList" inverseEntity="BridgeObject" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="listID__"/>
-            <entry key="entityIDRegex" value="^(ScheduledActivity|Schedule)$"/>
+            <entry key="entityIDRegex" value="^(Schedule)$"/>
         </userInfo>
     </entity>
     <entity name="Schedule" parentEntity="BridgeObject" syncable="YES">
