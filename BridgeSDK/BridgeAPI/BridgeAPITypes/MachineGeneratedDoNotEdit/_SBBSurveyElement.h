@@ -51,19 +51,19 @@
 
 @property (nonatomic, strong) NSString* title;
 
-@property (nonatomic, strong, readonly) NSArray *rules;
+@property (nonatomic, strong, readonly) NSArray *afterRules;
 
-- (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
-- (void)addRulesObject:(SBBSurveyRule*)value_;
-- (void)removeRulesObjects;
-- (void)removeRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeRulesObject:(SBBSurveyRule*)value_;
+- (void)addAfterRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
+- (void)addAfterRulesObject:(SBBSurveyRule*)value_;
+- (void)removeAfterRulesObjects;
+- (void)removeAfterRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeAfterRulesObject:(SBBSurveyRule*)value_;
 
-- (void)insertObject:(SBBSurveyRule*)value inRulesAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromRulesAtIndex:(NSUInteger)idx;
-- (void)insertRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeRulesAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
-- (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
+- (void)insertObject:(SBBSurveyRule*)value inAfterRulesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromAfterRulesAtIndex:(NSUInteger)idx;
+- (void)insertAfterRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeAfterRulesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInAfterRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
+- (void)replaceAfterRulesAtIndexes:(NSIndexSet *)indexes withAfterRules:(NSArray *)values;
 
 @end
