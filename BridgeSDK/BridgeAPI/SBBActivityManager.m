@@ -278,7 +278,7 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
     return [self.networkManager get:kSBBActivityAPI headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) {
 #if DEBUG
-            NSLog(@"Error fetching scheduled activities from Bridge from %@ to %@", parameters[@"startTime"], parameters[@"endTime"]);
+            NSLog(@"Error fetching scheduled activities from Bridge from %@ to %@:\n%@\nResponse:\n%@", parameters[@"startTime"], parameters[@"endTime"], error, responseObject);
 #endif
             if (completion) {
                 completion(responseObject, error);
