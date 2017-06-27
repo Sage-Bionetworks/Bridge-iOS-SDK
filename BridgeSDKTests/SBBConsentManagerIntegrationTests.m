@@ -160,7 +160,7 @@
         }
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:20.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout registering subpop consent signature: %@", error);
         }

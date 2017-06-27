@@ -116,12 +116,18 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
 
 - (NSArray *)filterTasks:(NSArray *)tasks scheduledFrom:(NSDate *)startDate to:(NSDate *)endDate
 {
+    // It's in the date range [startDate, endDate) if:
+    //  - it never expires or expires on or after startDate AND
+    //  - it hasn't been marked finished or was marked finished on or after startDate AND
+    //  - it was scheduled before endDate
     NSString *scheduledOnKey = NSStringFromSelector(@selector(scheduledOn));
     NSString *finishedOnKey = NSStringFromSelector(@selector(finishedOn));
     NSString *expiresOnKey = NSStringFromSelector(@selector(expiresOn));
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K >= %@ OR %K >= %@) AND %K < %@",
-                              finishedOnKey, startDate,
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K == nil OR %K >= %@) AND (%K == nil OR %K >= %@) AND %K < %@",
+                              expiresOnKey,
                               expiresOnKey, startDate,
+                              finishedOnKey,
+                              finishedOnKey, startDate,
                               scheduledOnKey, endDate];
     
     return [tasks filteredArrayUsingPredicate:predicate];
@@ -271,10 +277,33 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDate *finish = [calendar dateByAddingUnit:NSCalendarUnitDay value:kMaxDateRange toDate:start options:0];
     NSDate *stop = [finish compare:end] == NSOrderedAscending ? finish : end;
+    
+    // IA-286 Don't request activities across a daylight saving time transition in a single REST API call; Bridge requires
+    // the timezone offset part of startTime and endTime to be the same, and will respond with a 400 error if they are not.
+    NSDate *nextTransition = [NSTimeZone.localTimeZone nextDaylightSavingTimeTransitionAfterDate:start];
+    
+    // Make sure the NSDates we use for the end of this range and the start of the next one will convert to ISO8601 with the
+    // right time zone offset to match the other end of their respective range, by using the instant 1 mSec before the
+    // transition for the endTime of this range, and the transition itself for the startTime of the next range.
+    // (The actual time of the transition converts to ISO8601 with the post-transition timezone offset.)
+    NSDate *justBefore = [nextTransition dateByAddingTimeInterval:-0.001];
+    
+    BOOL willTransition = ([nextTransition compare:stop] == NSOrderedAscending);
+    
+    if (willTransition) {
+        // use the instant just before the transition as the end of this range
+        stop = justBefore;
+    }
     NSDictionary *parameters = @{
                                  @"startTime": [start ISO8601String],
                                  @"endTime": [stop ISO8601String]
                                  };
+    
+    if (willTransition) {
+        // ...and now set up to use the transition as the start of the next range
+        stop = nextTransition;
+    }
+    
     return [self.networkManager get:kSBBActivityAPI headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         if (error) {
 #if DEBUG

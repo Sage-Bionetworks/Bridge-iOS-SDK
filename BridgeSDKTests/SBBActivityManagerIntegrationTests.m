@@ -180,7 +180,7 @@
         [expectTasks fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:10.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error attempting to get tasks for %@: %@", tzStr, error);
         }
@@ -272,8 +272,6 @@
                 
                 // ok now delete the task from local cache to be sure we're not just looking at that, then retrieve from Bridge and make sure the updates "took"
                 [SBBComponent(SBBCacheManager) removeFromCacheObjectOfType:task.type withId:task.guid];
-                NSArray *guidComponents = [task.guid componentsSeparatedByString:@":"];
-                NSString *activityGuid = guidComponents[0];
                 [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:task.scheduledOn to:task.expiresOn withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
                     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", NSStringFromSelector(@selector(guid)), task.guid];
                     NSArray *matchingTasks = [activitiesList filteredArrayUsingPredicate:predicate];
@@ -293,7 +291,7 @@
         }];
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error attempting to get tasks for update test: %@", error);
         }
