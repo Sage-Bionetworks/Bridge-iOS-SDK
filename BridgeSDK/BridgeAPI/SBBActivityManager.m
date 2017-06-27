@@ -283,10 +283,10 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
     NSDate *nextTransition = [NSTimeZone.localTimeZone nextDaylightSavingTimeTransitionAfterDate:start];
     
     // Make sure the NSDates we use for the end of this range and the start of the next one will convert to ISO8601 with the
-    // right time zone offset to match the other end of their respective range, by using the instants 0.1 mSec before and
-    // 0.1 mSec after the transition.
-    NSDate *justBefore = [nextTransition dateByAddingTimeInterval:-0.0001];
-    NSDate *justAfter = [nextTransition dateByAddingTimeInterval:0.0001];
+    // right time zone offset to match the other end of their respective range, by using the instant 1 mSec before the
+    // transition for the endTime of this range, and the transition itself for the startTime of the next range.
+    // (The actual time of the transition converts to ISO8601 with the post-transition timezone offset.)
+    NSDate *justBefore = [nextTransition dateByAddingTimeInterval:-0.001];
     
     BOOL willTransition = ([nextTransition compare:stop] == NSOrderedAscending);
     
@@ -300,8 +300,8 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
                                  };
     
     if (willTransition) {
-        // ...and now set up to use the instant just after as the start of the next range
-        stop = justAfter;
+        // ...and now set up to use the transition as the start of the next range
+        stop = nextTransition;
     }
     
     return [self.networkManager get:kSBBActivityAPI headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
