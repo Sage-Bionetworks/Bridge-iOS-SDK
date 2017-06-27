@@ -118,16 +118,12 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
 {
     // It's in the date range [startDate, endDate) if:
     //  - it never expires or expires on or after startDate AND
-    //  - it hasn't been marked finished or was marked finished on or after startDate AND
     //  - it was scheduled before endDate
     NSString *scheduledOnKey = NSStringFromSelector(@selector(scheduledOn));
-    NSString *finishedOnKey = NSStringFromSelector(@selector(finishedOn));
     NSString *expiresOnKey = NSStringFromSelector(@selector(expiresOn));
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K == nil OR %K >= %@) AND (%K == nil OR %K >= %@) AND %K < %@",
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K == nil OR %K >= %@) AND %K < %@",
                               expiresOnKey,
                               expiresOnKey, startDate,
-                              finishedOnKey,
-                              finishedOnKey, startDate,
                               scheduledOnKey, endDate];
     
     return [tasks filteredArrayUsingPredicate:predicate];
