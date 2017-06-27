@@ -51,7 +51,7 @@
         }
     }];
     
-    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:10.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error trying to create and sign in to all-roles test user account:\n%@", error);
         }
