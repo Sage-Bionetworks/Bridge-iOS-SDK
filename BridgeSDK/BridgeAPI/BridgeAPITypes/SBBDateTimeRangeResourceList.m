@@ -55,17 +55,29 @@
     // as well, since that most likely means there was some kind of problem that required cleanup on the
     // server and the missing ones are no longer canonically valid. We'll look at the startTime and endTime
     // and remove our cached items in that date range (inclusive on the lower bound, exclusive on the upper),
-    // then add in the newly-retrieved ones, and sort by scheduledOn before adding back to
-    // the cached object's items[].
+    // then add in the newly-retrieved ones, and sort by date(s) before setting back as the cached object's items[].
     
-    NSString *comparisonKey = NSStringFromSelector(@selector(scheduledOn));
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K < %@ OR %K >= %@",
-                              comparisonKey, self.startTime,
-                              comparisonKey, self.endTime];
+    NSString *scheduledOnKey = NSStringFromSelector(@selector(scheduledOn));
+    NSString *expiresOnKey = NSStringFromSelector(@selector(expiresOn));
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K < %@ && %K != nil && %K < %@) OR %K >= %@",
+                              scheduledOnKey, self.startTime,
+                              expiresOnKey,
+                              expiresOnKey, self.startTime,
+                              scheduledOnKey, self.endTime];
     savedItems = [savedItems filteredArrayUsingPredicate:predicate];
     savedItems = [savedItems arrayByAddingObjectsFromArray:self.items];
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:comparisonKey ascending:YES];
-    savedItems = [savedItems sortedArrayUsingDescriptors:@[sortDescriptor]];
+    
+    savedItems = [savedItems sortedArrayUsingComparator:^NSComparisonResult(SBBScheduledActivity * _Nonnull obj1, SBBScheduledActivity *  _Nonnull obj2) {
+        NSComparisonResult compareScheduled = [obj1.scheduledOn compare:obj2.scheduledOn];
+        if (compareScheduled == NSOrderedSame) {
+            NSDate *secondary1 = obj1.finishedOn ?: obj1.startedOn ?: obj1.expiresOn ?: NSDate.distantFuture;
+            NSDate *secondary2 = obj2.finishedOn ?: obj2.startedOn ?: obj2.expiresOn ?: NSDate.distantFuture;
+            return [secondary1 compare:secondary2];
+        } else {
+            return compareScheduled;
+        }
+    }];
     
     [self removeItemsObjects];
     for (SBBScheduledActivity *scheduledActivity in savedItems) {
