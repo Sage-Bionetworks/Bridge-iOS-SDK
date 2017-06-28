@@ -40,6 +40,8 @@
 
 BOOL gSBBUseCache = NO;
 
+static NSString *gPersistentStoreSubdirectory = @"_BridgeSDKCache_";
+
 static NSMutableDictionary *gCoreDataQueuesByPersistentStoreName;
 static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
 
@@ -534,7 +536,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     }
     
     NSURL *storeURL = [self storeURL];
-    NSURL *storeDirURL = [storeURL URLByDeletingLastPathComponent];
+    NSURL *storeDirURL = [self storeDirURL];
     NSError *error = nil;
     
     if (![[NSFileManager defaultManager] createDirectoryAtURL:storeDirURL withIntermediateDirectories:YES attributes:nil error:&error]) {
@@ -582,7 +584,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
         NSLog(@"%@", message);
         
         // removing store
-        [[NSFileManager defaultManager] removeItemAtURL:storeURL error:nil];
+        [[NSFileManager defaultManager] removeItemAtURL:storeDirURL error:nil];
         
         // resetting _persistentStoreCoordinator
         _persistentStoreCoordinator = nil;
@@ -592,25 +594,44 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     return _persistentStoreCoordinator;
 }
 
-- (NSURL *)storeURL
+- (NSURL *)storeDirURL
 {
-    NSURL *storeURL = nil;
+    NSURL *storeOrigin = nil;
     NSString *appGroupIdentifier = SBBBridgeInfo.shared.appGroupIdentifier;
     
     // if there's a shared container, use it; otherwise use the Documents directory
     if (appGroupIdentifier.length > 0) {
-        storeURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroupIdentifier];
+        storeOrigin = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroupIdentifier];
     } else {
-        storeURL = [self appDocumentsDirectory];
+        storeOrigin = [self appDocumentsDirectory];
     }
+    
+    // put the persistent store in a subdirectory so it's easy to manage
+    NSURL *storeDirURL = [storeOrigin URLByAppendingPathComponent:gPersistentStoreSubdirectory];
+    
+    // for backward compatibility, check for a persistent store at the old email-hash-based path,
+    // and if it exists, move it to the new path.
     SBBAuthManager *authMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
     if ([authMan respondsToSelector:@selector(savedEmail)]) {
         NSString *emailHash = [[authMan.savedEmail dataUsingEncoding:NSUTF8StringEncoding] hexMD5];
         if (emailHash) {
-            storeURL = [storeURL URLByAppendingPathComponent:emailHash];
+            NSURL *oldStoreURL = [storeOrigin URLByAppendingPathComponent:emailHash];
+            NSFileManager *fm = [NSFileManager defaultManager];
+            if ([fm fileExistsAtPath:oldStoreURL.path]) {
+                NSError *error;
+                [fm moveItemAtURL:oldStoreURL toURL:storeDirURL error:&error];
+                if (error) {
+                    NSLog(@"Error attempting to move legacy cache at %@ to new location %@", oldStoreURL, storeDirURL);
+                }
+            }
         }
     }
-    return [storeURL URLByAppendingPathComponent:self.persistentStoreName];
+    
+    return storeDirURL;
+}
+
+- (NSURL *)storeURL {
+    return [[self storeDirURL] URLByAppendingPathComponent:self.persistentStoreName];
 }
 
 - (NSManagedObjectContext *)cacheIOContext
@@ -687,9 +708,6 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     __block BOOL reset = NO;
     
     [self dispatchSyncToCacheManagerCoreDataQueue:^{
-        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-        [center removeObserver:self.appWillTerminateObserver];
-        
         [_cacheIOContext performBlockAndWait:^{
             [_cacheIOContext reset];
             
@@ -703,10 +721,11 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
             _cacheIOContext= nil;
             _managedObjectModel = nil;
             
-            NSURL *storeURL = [self storeURL];
-            if ([[NSFileManager defaultManager] fileExistsAtPath:storeURL.path]) {
-                if (![[NSFileManager defaultManager] removeItemAtURL:storeURL error:&error]) {
-                    NSLog(@"Unable to delete SQLite db file at %@ : error %@, %@", storeURL, error, [error userInfo]);
+            NSURL *storeDirURL = [self storeDirURL];
+            NSFileManager *fm = [NSFileManager defaultManager];
+            if ([fm fileExistsAtPath:storeDirURL.path]) {
+                if (![fm removeItemAtURL:storeDirURL error:&error]) {
+                    NSLog(@"Unable to delete SQLite db files directory at %@ : error %@, %@", storeDirURL, error, [error userInfo]);
                     return;
                 }
             }

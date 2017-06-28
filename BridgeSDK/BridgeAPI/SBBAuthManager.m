@@ -523,8 +523,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             });
         }
         
-        [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
-        [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
+        [self.cacheManager resetCache];
 
         if ([_authDelegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)]) {
             [_authDelegate authManager:self didReceiveUserSessionInfo:nil];
