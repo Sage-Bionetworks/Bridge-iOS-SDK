@@ -83,12 +83,15 @@
 /*!
  *  Return the registered instance of the component for the given class.
  *
+ *  If the study has not yet been set up (the shared SBBBridgeInfo object's studyIdentifier is nil), this method
+ *  will return nil for all components to prevent premature registration of defaults.
+ *
  *  If no instance is registered, and componentClass implements the SBBComponent protocol, this method will
  *  call the class's defaultComponent: class method and register the returned value as the instance for the class.
  *
  *  @param componentClass The class for which to get (or instantiate and register) the registered component instance.
  *
- *  @return The registered instance for the given componentClass.
+ *  @return The registered instance for the given componentClass, or nil if the study has not yet been set up.
  */
 + (id)component:(Class)componentClass;
 
