@@ -32,6 +32,7 @@
 
 #import "SBBComponentManager.h"
 #import "SBBComponent.h"
+#import "SBBBridgeInfo.h"
 
 #pragma mark ComponentWrapper
 
@@ -136,6 +137,12 @@ void dispatchSyncToCMQueue(void(^dispatchBlock)()) {
 
 + (id)component:(Class)componentClass
 {
+    // Until the study has been set up, don't allow access to any BridgeSDK components
+    // or cause any defaults to be created and registered.
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        return nil;
+    }
+    
   __block ComponentWrapper *cWrapper = nil;
   __block id component = nil;
   __block Class localClass = componentClass;
