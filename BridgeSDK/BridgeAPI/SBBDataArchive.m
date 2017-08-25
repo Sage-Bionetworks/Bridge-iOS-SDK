@@ -306,12 +306,18 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     NSString *contentType;
     if ([extension isEqualToString:@"csv"]) {
         contentType = @"text/csv";
+    }else if ([extension isEqualToString:@"txt"]) {
+        contentType = @"text/plain";
+    }else if ([extension isEqualToString:@"vcf"]) {
+        contentType = @"text/x-vcard";
+    }else if ([extension isEqualToString:@"bz2"]) {
+        contentType = @"application/bzip2";
     }else if ([extension isEqualToString:@"m4a"]) {
         contentType = @"audio/mp4";
     }else {
         contentType = @"application/json";
     }
-    
+
     return contentType;
 }
 
