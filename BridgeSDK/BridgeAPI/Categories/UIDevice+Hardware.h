@@ -111,7 +111,7 @@ typedef enum {
 @interface UIDevice (Hardware)
 - (NSString *) platform;
 - (NSString *) hwmodel;
-- (NSUInteger) platformType;
+- (NSUInteger) _platformType;
 - (NSString *) platformString;
 
 - (NSUInteger) cpuFrequency;

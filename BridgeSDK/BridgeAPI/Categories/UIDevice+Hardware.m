@@ -147,7 +147,8 @@
 }
 
 #pragma mark platform type and name utils
-- (NSUInteger) platformType
+// emm 2017-10-20 Apple appears to have added an undocumented NSString property named platformType to UIDevice, which broke this
+- (NSUInteger) _platformType
 {
     NSString *platform = [self platform];
     
@@ -207,7 +208,7 @@
 
 - (NSString *) platformString
 {
-    switch ([self platformType])
+    switch ([self _platformType])
     {
         case UIDevice1GiPhone: return IPHONE_1G_NAMESTRING;
         case UIDevice3GiPhone: return IPHONE_3G_NAMESTRING;
