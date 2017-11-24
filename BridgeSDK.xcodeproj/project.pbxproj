@@ -454,6 +454,11 @@
 		80F88E541AF991B10090D462 /* _SBBScheduledActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F88E521AF991B10090D462 /* _SBBScheduledActivity.m */; };
 		80FA54DF1A25110E00EDE46E /* SBBCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80FA54DD1A25110E00EDE46E /* SBBCacheManager.h */; };
 		80FA54E01A25110E00EDE46E /* SBBCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80FA54DE1A25110E00EDE46E /* SBBCacheManager.m */; };
+		CBF358201FC627A100075328 /* SBBNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF3581E1FC627A000075328 /* SBBNotificationManager.m */; };
+		CBF358231FC64A4800075328 /* SBBNotificationRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = CBF358221FC64A4800075328 /* SBBNotificationRegistration.m */; };
+		CBF358481FC88D2F00075328 /* SBBNotificationRegistration.h in Headers */ = {isa = PBXBuildFile; fileRef = CBF358211FC64A4700075328 /* SBBNotificationRegistration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CBF358581FC88D3B00075328 /* SBBNotificationManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = CBF3581F1FC627A000075328 /* SBBNotificationManagerInternal.h */; };
+		CBF358591FC88D4000075328 /* SBBNotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = CBF3580C1FC627A000075328 /* SBBNotificationManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */; };
 		D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38021A2B144000E7CF1E /* sample-signature.png */; };
 		FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1014,6 +1019,11 @@
 		80F88E521AF991B10090D462 /* _SBBScheduledActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBScheduledActivity.m; sourceTree = "<group>"; };
 		80FA54DD1A25110E00EDE46E /* SBBCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBCacheManager.h; sourceTree = "<group>"; };
 		80FA54DE1A25110E00EDE46E /* SBBCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManager.m; sourceTree = "<group>"; };
+		CBF3580C1FC627A000075328 /* SBBNotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBNotificationManager.h; sourceTree = "<group>"; };
+		CBF3581E1FC627A000075328 /* SBBNotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBBNotificationManager.m; sourceTree = "<group>"; };
+		CBF3581F1FC627A000075328 /* SBBNotificationManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBNotificationManagerInternal.h; sourceTree = "<group>"; };
+		CBF358211FC64A4700075328 /* SBBNotificationRegistration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBNotificationRegistration.h; sourceTree = "<group>"; };
+		CBF358221FC64A4800075328 /* SBBNotificationRegistration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBBNotificationRegistration.m; sourceTree = "<group>"; };
 		D48FAA211A2E5C6C00D50D1C /* SBBConsentManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBConsentManagerInternal.h; sourceTree = "<group>"; };
 		D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentManagerUnitTests.m; sourceTree = "<group>"; };
 		D4FA38021A2B144000E7CF1E /* sample-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sample-signature.png"; sourceTree = "<group>"; };
@@ -1114,6 +1124,8 @@
 				800E795E19ED74B600EEE612 /* SBBIntegerConstraints.m */,
 				800E795F19ED74B600EEE612 /* SBBMultiValueConstraints.h */,
 				800E796019ED74B600EEE612 /* SBBMultiValueConstraints.m */,
+				CBF358211FC64A4700075328 /* SBBNotificationRegistration.h */,
+				CBF358221FC64A4800075328 /* SBBNotificationRegistration.m */,
 				8053B6311A00357400A2E6C4 /* SBBResourceList.h */,
 				80561DB81E6A0879005FBFA3 /* SBBResourceListInternal.h */,
 				8053B6321A00357400A2E6C4 /* SBBResourceList.m */,
@@ -1552,6 +1564,9 @@
 				80104A4119D1F817001F2573 /* SBBConsentManager.m */,
 				80B2C4431E3A5CED001F9FEA /* SBBDataArchive.h */,
 				80B2C4441E3A5CED001F9FEA /* SBBDataArchive.m */,
+				CBF3580C1FC627A000075328 /* SBBNotificationManager.h */,
+				CBF3581E1FC627A000075328 /* SBBNotificationManager.m */,
+				CBF3581F1FC627A000075328 /* SBBNotificationManagerInternal.h */,
 				80104A6419D4CFE5001F2573 /* SBBObjectManager.h */,
 				606FDE151A23EB4E00898466 /* SBBObjectManagerInternal.h */,
 				80104A6519D4CFE5001F2573 /* SBBObjectManager.m */,
@@ -1761,6 +1776,7 @@
 				804C109E1E2841D2004B68E6 /* SBBBridgeInfoProtocol.h in Headers */,
 				601F7D1C1D67C03400C5FE09 /* NSString+SBBAdditions.h in Headers */,
 				800E793319ED740F00EEE612 /* _SBBDurationConstraints.h in Headers */,
+				CBF358591FC88D4000075328 /* SBBNotificationManager.h in Headers */,
 				80B2C4451E3A5CED001F9FEA /* SBBDataArchive.h in Headers */,
 				80BA3D8F1C3F19A100AA70FB /* _SBBConsentSignature.h in Headers */,
 				80C87F0D1C18E61000FE8A63 /* SBBDataGroups.h in Headers */,
@@ -1792,6 +1808,7 @@
 				80BA3D991C3F19D400AA70FB /* SBBConsentStatus.h in Headers */,
 				80B2C4911E3AA80D001F9FEA /* ZipZap+Namespace.h in Headers */,
 				8017AF7019DA0359001AF9BA /* NSError+SBBAdditions.h in Headers */,
+				CBF358581FC88D3B00075328 /* SBBNotificationManagerInternal.h in Headers */,
 				808D03D41E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h in Headers */,
 				8017AF7619DA038D001AF9BA /* NSDate+SBBAdditions.h in Headers */,
 				80B2C6351E3AD493001F9FEA /* ZZArchiveEntry.h in Headers */,
@@ -1858,6 +1875,7 @@
 				8026D68219E87CF6008942B0 /* NSData+SBBAdditions.h in Headers */,
 				80F7C34319E5DC0D00574800 /* _SBBSurvey.h in Headers */,
 				80B2C6581E3AD493001F9FEA /* ZZStandardCryptoEngine.h in Headers */,
+				CBF358481FC88D2F00075328 /* SBBNotificationRegistration.h in Headers */,
 				60F1E4031A39330B009B380E /* SBBBridgeObjectInternal.h in Headers */,
 				80BA3D971C3F19D400AA70FB /* SBBConsentSignature.h in Headers */,
 				60B635431B14F5C800C4DA63 /* SBBNetworkManagerInternal.h in Headers */,
@@ -2377,6 +2395,7 @@
 				80BA3D9A1C3F19D400AA70FB /* SBBConsentStatus.m in Sources */,
 				800E795619ED74A600EEE612 /* SBBDateConstraints.m in Sources */,
 				80D517361CADD0A8002D2C06 /* NSObject+SBBAdditions.m in Sources */,
+				CBF358201FC627A100075328 /* SBBNotificationManager.m in Sources */,
 				8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */,
 				80B2C6501E3AD493001F9FEA /* ZZNewArchiveEntry.mm in Sources */,
 				FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */,
@@ -2449,6 +2468,7 @@
 				8051DCDC1A1E6FDB0068D06E /* RNCryptor.m in Sources */,
 				601F7D1D1D67C03400C5FE09 /* NSString+SBBAdditions.m in Sources */,
 				80F7C34419E5DC0D00574800 /* _SBBSurvey.m in Sources */,
+				CBF358231FC64A4800075328 /* SBBNotificationRegistration.m in Sources */,
 				80E8196B1A83E89E00513919 /* _SBBSurveyInfoScreen.m in Sources */,
 				60B635411B14ED0500C4DA63 /* SBBBridgeNetworkManager.m in Sources */,
 				6056DE0D1CF61ECD00C21E82 /* _SBBStudyParticipant.m in Sources */,
