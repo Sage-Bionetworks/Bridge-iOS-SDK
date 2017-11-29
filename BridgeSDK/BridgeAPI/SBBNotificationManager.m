@@ -29,7 +29,7 @@
 //
 
 #import "SBBNotificationManagerInternal.h"
-#import "SBBNotificationRegistration.h"
+#import "SBBGuidHolder.h"
 #import "SBBComponentManager.h"
 #import "SBBObjectManager.h"
 #import "BridgeSDK+Internal.h"
@@ -40,11 +40,14 @@
 
 NSString * const kSBBNotifiationsAPI        =   NOTIFICATIONS_API;
 NSString * const kSBBNotifiationsGuidAPI    =   NOTIFICATIONS_API @"/%@";
-NSString * const kSBBSubscriptionsAPI       =   NOTIFICATIONS_API @"/subscriptions";
+NSString * const kSBBSubscriptionsAPI       =   NOTIFICATIONS_API @"/%@/subscriptions";
 
 NSString * const kSBBNotificationGuidKey        = @"guid";
 NSString * const kSBBNotificationTopicGuidsKey  = @"topicGuids";
 NSString * const kSBBNotificationTypeKey        = @"type";
+NSString * const kSBBNotificationDeviceIdKey    = @"deviceId";
+NSString * const kSBBNotificationOsNameKey      = @"osName";
+NSString * const kSBBNotificationOsNameValue    = @"iOS";
 
 @interface SBBNotificationManager()
 
@@ -69,7 +72,7 @@ NSString * const kSBBNotificationTypeKey        = @"type";
 
 - (NSURLSessionTask *)updateRegistrationWithDeviceId:(NSString *)deviceId completion:(SBBNotificationManagerPostDeviceIdCompletionBlock)completion
 {
-    SBBNotificationRegistration* registration = [self getExistingNotificationRegistration];
+    SBBGuidHolder* registration = [self getExistingNotificationRegistration];
     
     NSString* notificationsApi = kSBBNotifiationsAPI;
     // Update existing notification registration if one exists
@@ -79,20 +82,60 @@ NSString * const kSBBNotificationTypeKey        = @"type";
     
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    NSDictionary *params = @{ @"deviceId": deviceId };
+    NSDictionary *params = @{
+                             kSBBNotificationDeviceIdKey: deviceId,
+                             kSBBNotificationOsNameKey: kSBBNotificationOsNameValue
+                             };
     return [self.networkManager post:notificationsApi headers:headers parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        SBBGuidHolder* guidHolder = nil;
         if (error == nil && responseObject != nil) {
-            [self cacheNotificationRegistration:responseObject];
+            guidHolder = [self toCachedObjectFromBridgeJson:responseObject andDeviceId:deviceId];
         }
         if (completion) {
-            completion(responseObject, error);
+            completion(guidHolder, error);
         }
     }];
 }
 
-- (NSURLSessionTask *)deleteNotificationRegistrationWithCompletion:(SBBNotificationManagerPostDeviceIdCompletionBlock)completion
+- (NSURLSessionTask *)updateRegistrationWithDeviceId:(NSString *)deviceId subscribeToTopicGuids:(NSArray *)topicGuids completion:(SBBNotificationManagerPostDeviceIdCompletionBlock)completion
 {
-    SBBNotificationRegistration* registration = [self getExistingNotificationRegistration];
+    return [self updateRegistrationWithDeviceId:deviceId completion:^(SBBGuidHolder* guidHolder, NSError *error) {
+        if (error == nil && guidHolder != nil) {
+            [self subscribeToTopicGuids:topicGuids withRegistration:guidHolder completion:^(id bridgeResponse, NSError *error) {
+                if (completion) {
+                    completion(guidHolder, error);
+                }
+            }];
+        } else {
+            if (completion) {
+                completion(guidHolder, error);
+            }
+        }
+    }];
+}
+
+- (NSURLSessionTask *)subscribeToTopicGuids:(NSArray *)topicGuids withRegistration: (SBBGuidHolder*)guidHolder completion:(SBBNotificationManagerCompletionBlock)completion
+{
+    // Subscribe to topics if registration guid exists
+    if (guidHolder != nil && guidHolder.guid != nil) {
+        NSString* notificationsApi = [NSString stringWithFormat:kSBBSubscriptionsAPI, guidHolder.guid];
+        NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+        [self.authManager addAuthHeaderToHeaders:headers];
+        NSDictionary *params = @{ kSBBNotificationTopicGuidsKey: topicGuids };
+        return [self.networkManager post:notificationsApi headers:headers parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+            if (completion) {
+                completion(responseObject, error);
+            }
+        }];
+    } else {
+        NSLog(@"We have no way to delete this device ID since we do not have a registration cached");
+        return nil;
+    }
+}
+
+- (NSURLSessionTask *)deleteNotificationRegistrationWithCompletion:(SBBNotificationManagerCompletionBlock)completion
+{
+    SBBGuidHolder* registration = [self getExistingNotificationRegistration];
     
     // Delete existing notification registration if one exists
     if (registration != nil && registration.guid != nil) {
@@ -103,40 +146,48 @@ NSString * const kSBBNotificationTypeKey        = @"type";
         return [self.networkManager delete:notificationsApi headers:headers parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             if (error == nil) {
                 [self clearNotificationInfoFromCache];
+                NSLog(@"Successfully unregistered device for push notifications");
+            } else {
+                NSLog(@"Failed to unregister device for push notifications");
             }
             if (completion) {
                 completion(responseObject, error);
             }
         }];
+    } else {
+        NSLog(@"We have no way to unregister device for push notifications since we do not have a registration cached");
+        return nil;
     }
-    
-    NSLog(@"We have no way to delete this device ID since we do not have a registration cached");
-    return nil;
 }
 
-- (void) cacheNotificationRegistration:(SBBNotificationRegistration*)registration {
-    [self.cacheManager.cacheIOContext performBlock:^{
-        [registration saveToCoreDataCacheWithObjectManager:self.objectManager];
-    }];
+- (SBBGuidHolder*) toCachedObjectFromBridgeJson:(id)bridgeDictionary andDeviceId:(NSString*)deviceId {
+    if (![bridgeDictionary isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"Error: notification registartion bridge response MUST be a dictionary");
+        return nil;
+    }
+    NSMutableDictionary* bridgeResponse = [((NSDictionary*)bridgeDictionary) mutableCopy];
+    bridgeResponse[@"deviceId"] = deviceId;
+    SBBGuidHolder* guidHolder = (SBBGuidHolder*)[self.cacheManager cachedObjectFromBridgeJSON:bridgeResponse];
+    return guidHolder;
 }
 
-- (SBBNotificationRegistration*) getExistingNotificationRegistration {
-    // Check for existing notification registration
-    NSString *registrationType = [SBBNotificationRegistration entityName];
-    SBBBridgeObject* registrationObj = [self.cacheManager cachedSingletonObjectOfType:registrationType createIfMissing:NO];
-    if (registrationObj != nil && [registrationObj isKindOfClass:[SBBNotificationRegistration class]]) {
-        return (SBBNotificationRegistration*)registrationObj;
+- (SBBGuidHolder*) getExistingNotificationRegistration {
+    SBBBridgeObject* bridgeObject = [self.cacheManager cachedSingletonObjectOfType:[SBBGuidHolder entityName] createIfMissing:NO];
+    if (bridgeObject != nil && [bridgeObject isKindOfClass:[SBBGuidHolder class]]) {
+        return (SBBGuidHolder*)bridgeObject;
     }
     return nil;
 }
 
 - (void)clearNotificationInfoFromCache
 {
-    NSString *registrationType = [SBBNotificationRegistration entityName];
+    NSString *registrationType = [SBBGuidHolder entityName];
     
     // remove them from cache. note: we use the Bridge type (which is the same as the CoreData entity name) as the unique key
     // to treat a class as a singleton for caching purposes.
-    [self.cacheManager removeFromCacheObjectOfType:registrationType withId:registrationType];
+    [self.cacheManager.cacheIOContext performBlock:^{
+        [self.cacheManager removeFromCacheObjectOfType:registrationType withId:registrationType];
+    }];
 }
 
 #pragma clang diagnostic pop

@@ -1,5 +1,5 @@
 //
-//  SBBNotificationRegistration.m
+//  SBBGuidHolder.m
 //
 //	Copyright (c) 2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,36 +27,24 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBNotificationRegistration.h"
+#import "SBBGuidHolder.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-#import "SBBCompoundActivity.h"
-#import "SBBSurveyReference.h"
-#import "SBBTaskReference.h"
-
-@interface SBBNotificationRegistration()
+@interface SBBGuidHolder()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (SBBNotificationRegistration)
+@interface NSManagedObject (SBBGuidHolder)
 
 @property (nonatomic, strong) NSString* guid;
 
 @property (nonatomic, strong) NSString* deviceId;
 
-@property (nonatomic, strong) NSString* osName;
-
-@property (nonatomic, strong) NSString* createdOn;
-
-@property (nonatomic, strong) NSString* modifiedOn;
-
-@property (nonatomic, strong) NSString* type;
-
 @end
 
-@implementation SBBNotificationRegistration
+@implementation SBBGuidHolder
 
 - (instancetype)init
 {
@@ -78,10 +66,6 @@
 
     self.guid = [dictionary objectForKey:@"guid"];
     self.deviceId = [dictionary objectForKey:@"deviceId"];
-    self.osName = [dictionary objectForKey:@"osName"];
-    self.createdOn = [dictionary objectForKey:@"createdOn"];
-    self.modifiedOn = [dictionary objectForKey:@"modifiedOn"];
-    self.type = [dictionary objectForKey:@"type"];
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -90,10 +74,6 @@
 
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
     [dict setObjectIfNotNil:self.deviceId forKey:@"deviceId"];
-    [dict setObjectIfNotNil:self.osName forKey:@"osName"];
-    [dict setObjectIfNotNil:self.createdOn forKey:@"createdOn"];
-    [dict setObjectIfNotNil:self.modifiedOn forKey:@"modifiedOn"];
-    [dict setObjectIfNotNil:self.type forKey:@"type"];
 
 	return [dict copy];
 }
@@ -110,7 +90,7 @@
 
 + (NSString *)entityName
 {
-    return @"NotificationRegistration";
+    return @"GuidHolder";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
@@ -120,10 +100,6 @@
 
         self.guid = managedObject.guid;
         self.deviceId = managedObject.deviceId;
-        self.osName = managedObject.osName;
-        self.createdOn = managedObject.createdOn;
-        self.modifiedOn = managedObject.modifiedOn;
-        self.type = managedObject.type;
     }
 
     return self;
@@ -132,7 +108,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"NotificationRegistration" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"GuidHolder" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -157,12 +133,8 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
-    managedObject.osName = ((id)self.osName == [NSNull null]) ? nil : self.osName;
     managedObject.deviceId = ((id)self.deviceId == [NSNull null]) ? nil : self.deviceId;
-    managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
-    managedObject.modifiedOn = ((id)self.modifiedOn == [NSNull null]) ? nil : self.modifiedOn;
-    managedObject.type = ((id)self.type == [NSNull null]) ? nil : self.type;
-
+    
     // Calling code will handle saving these changes to cacheContext.
 }
 

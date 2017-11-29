@@ -1,5 +1,5 @@
 //
-//  SBBNotificationRegistration.h
+//  SBBGuidHolder.h
 //
 //	Copyright (c) 2017 Sage Bionetworks
 //	All rights reserved.
@@ -30,11 +30,11 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-@protocol SBBNotificationRegistration
+@protocol SBBGuidHolder
 
 @end
 
-@interface SBBNotificationRegistration : SBBBridgeObject
+@interface SBBGuidHolder : SBBBridgeObject
 
 /*
  The guid is how bridge unqieuly links an account with a group of device IDs
@@ -46,25 +46,5 @@
  This should be either the device token retrieved from the iOS operation system, or the registrationId on Android.
  */
 @property (nonatomic, strong) NSString* deviceId;
-
-/*
-     Information used to track which type of deviceId is being submitted. This string should be either "Android" or "iPhone OS" ("iOS" also works), and should match the operating system from which you retrieved a push notification identifier (deviceId).
- */
-@property (nonatomic, strong) NSString* osName;
-
-/*
- Date the client registered for push notifications with Bridge.
- */
-@property (nonatomic, strong) NSString* createdOn;
-
-/*
- The last time the registration was updated based on a new device identifier being issued by the client operating system (iOS or Android). If an updated registration is submitted but the deviceId has not changed, the record is not modified.
- */
-@property (nonatomic, strong) NSString* modifiedOn;
-
-/*
- Usually "NotificationRegistration"
- */
-@property (nonatomic, strong) NSString* type;
 
 @end

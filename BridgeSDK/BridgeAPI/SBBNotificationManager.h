@@ -30,14 +30,15 @@
 
 #import <Foundation/Foundation.h>
 #import "SBBBridgeAPIManager.h"
+#import "SBBGuidHolder.h"
 
 /*!
  Completion block called when posting the device ID.
  
- @param notificationRegistration a SBBNotificationRegistration object
+ @param guidHolder a SBBGuidHolder object in relation to our registered device Id
  @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBNotificationManagerPostDeviceIdCompletionBlock)(id notificationRegistration, NSError *error);
+typedef void (^SBBNotificationManagerPostDeviceIdCompletionBlock)(SBBGuidHolder* guidHolder, NSError *error);
 
 /*!
  Completion block called when removing notification registration
@@ -45,7 +46,7 @@ typedef void (^SBBNotificationManagerPostDeviceIdCompletionBlock)(id notificatio
  @param bridgeResponse from the server
  @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBNotificationManagerRemoveCompletionBlock)(id bridgeResponse, NSError *error);
+typedef void (^SBBNotificationManagerCompletionBlock)(id bridgeResponse, NSError *error);
 
 /*!
  *  This protocol defines the interface to the SBBUserManager's non-constructor, non-initializer methods. The interface is
@@ -61,9 +62,18 @@ typedef void (^SBBNotificationManagerRemoveCompletionBlock)(id bridgeResponse, N
 - (NSURLSessionTask *)updateRegistrationWithDeviceId:(NSString *)deviceId completion:(SBBNotificationManagerPostDeviceIdCompletionBlock)completion;
 
 /*
+ Should be called with a valid device Id after every app launch, just in case device Id
+ has changed since the pervious run of the app
+ The SBBNotificationManager handles the case of an existing device Id
+ @param deviceId is the one returned in AppDelegate
+ @param topicGuids a list of notification topics the user should subscribe to
+ */
+- (NSURLSessionTask *)updateRegistrationWithDeviceId:(NSString *)deviceId subscribeToTopicGuids:(NSArray *)topicGuids completion:(SBBNotificationManagerPostDeviceIdCompletionBlock)completion;
+
+/*
  Should be called when the user signs out, will only send the request if notifications have been previously registered
  */
-- (NSURLSessionTask *)deleteNotificationRegistrationWithCompletion:(SBBNotificationManagerPostDeviceIdCompletionBlock)completion;
+- (NSURLSessionTask *)deleteNotificationRegistrationWithCompletion:(SBBNotificationManagerCompletionBlock)completion;
 
 @end
 

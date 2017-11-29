@@ -15,6 +15,7 @@
 #import "SBBImage.h"
 #import "SBBIntegerConstraints.h"
 #import "SBBMultiValueConstraints.h"
+#import "SBBGuidHolder.h"
 #import "SBBResourceList.h"
 #import "SBBSchedule.h"
 #import "SBBScheduledActivity.h"
