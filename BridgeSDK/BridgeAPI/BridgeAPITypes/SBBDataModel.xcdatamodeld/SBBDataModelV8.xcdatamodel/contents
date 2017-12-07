@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" optional="YES" attributeType="String" regularExpressionString="^(task|survey|compound)$" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
@@ -162,28 +162,6 @@
         <attribute name="allowMultiple" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="allowOther" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="enumeration" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyQuestionOption" inverseName="multiValueConstraints" inverseEntity="SurveyQuestionOption" syncable="YES"/>
-    </entity>
-    <entity name="OAuthAccessToken" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="accessToken" optional="YES" attributeType="String" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="YES"/>
-            </userInfo>
-        </attribute>
-        <attribute name="expiresOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="YES"/>
-            </userInfo>
-        </attribute>
-        <attribute name="providerUserID" optional="YES" attributeType="String" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="YES"/>
-            </userInfo>
-        </attribute>
-        <attribute name="vendorID" optional="YES" attributeType="String" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="YES"/>
-            </userInfo>
-        </attribute>
     </entity>
     <entity name="ResourceList" parentEntity="BridgeObject" syncable="YES">
         <attribute name="listID__" optional="YES" attributeType="String" defaultValueString="ScheduledActivity" syncable="YES">
@@ -510,6 +488,5 @@
         <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="OAuthAccessToken" positionX="18" positionY="153" width="128" height="105"/>
     </elements>
 </model>
