@@ -127,6 +127,9 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 
 - (void)insertURLIntoArchive:(NSURL*)url fileName:(NSString *)filename
 {
+#if DEBUG
+    SBBLog(@"Archiving %@: %@", filename, url);
+#endif
     NSDictionary *fileAttrs = [[NSFileManager defaultManager] attributesOfItemAtPath:url.path error:nil];
     NSDate *createdOn = [NSDate date]; // fallback in case there's a problem getting the file attributes
     if (fileAttrs) {
