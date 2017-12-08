@@ -30,9 +30,12 @@
 
 #import "SBBOAuthManager.h"
 #import "SBBAuthManager.h"
+#import "BridgeSDK+Internal.h"
 
 #define OAUTH_API V3_API_PREFIX @"/oauth"
 #define OAUTH_VENDOR_API_FORMAT OAUTH_API @"/%@"
+
+static NSString *kOAuthVendorAPIFormat = OAUTH_VENDOR_API_FORMAT;
 
 @implementation SBBOAuthManager
 
@@ -48,14 +51,14 @@
     return shared;
 }
 
-- (NSURLSessionTask *)getAccessTokenForVendor:(NSString *)vendorId authCode:(NSString *)authCode completion:(id)completion
+- (NSURLSessionTask *)getAccessTokenForVendor:(NSString *)vendorId authCode:(NSString *)authCode completion:(SBBOAuthManagerGetCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    NSString *endpoint = [NSString stringWithFormat:OAUTH_VENDOR_API_FORMAT, vendorId];
+    NSString *endpoint = [NSString stringWithFormat:kOAuthVendorAPIFormat, vendorId];
     NSDictionary *parameters = nil;
     if (authCode.length > 0) {
-        parameters = @{ "authToken": authCode };
+        parameters = @{ @"authToken": authCode };
     }
     return [self.networkManager post:endpoint headers:headers parameters:parameters completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {        
         id oauth = [self.objectManager objectFromBridgeJSON:responseObject];

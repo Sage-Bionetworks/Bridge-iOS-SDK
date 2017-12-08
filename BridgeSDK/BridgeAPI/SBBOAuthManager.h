@@ -64,7 +64,7 @@ typedef void (^SBBOAuthManagerGetCompletionBlock)(SBBOAuthAccessToken * _Nullabl
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (NSURLSessionTask *)getAccessTokenForVendor:(NSString *)vendorId authCode:(nullable NSString *)authCode completion:(nullable SBBOAuthManagerUpdateCompletionBlock)completion;
+- (NSURLSessionTask *)getAccessTokenForVendor:(NSString *)vendorId authCode:(nullable NSString *)authCode completion:(nullable SBBOAuthManagerGetCompletionBlock)completion;
 
 @end
 

@@ -411,7 +411,7 @@
 		80E568291FD9D7F400BB644E /* _SBBOAuthAccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E568271FD9D7F400BB644E /* _SBBOAuthAccessToken.m */; };
 		80E5682C1FD9D80800BB644E /* SBBOAuthAccessToken.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E5682A1FD9D80800BB644E /* SBBOAuthAccessToken.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80E5682D1FD9D80800BB644E /* SBBOAuthAccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E5682B1FD9D80800BB644E /* SBBOAuthAccessToken.m */; };
-		80E568321FD9D88600BB644E /* SBBOAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E568301FD9D88600BB644E /* SBBOAuthManager.h */; };
+		80E568321FD9D88600BB644E /* SBBOAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E568301FD9D88600BB644E /* SBBOAuthManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80E568331FD9D88600BB644E /* SBBOAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E568311FD9D88600BB644E /* SBBOAuthManager.m */; };
 		80E60D9F19FAD56C0053D166 /* _SBBSchedule.h in Headers */ = {isa = PBXBuildFile; fileRef = 80E60D9D19FAD56C0053D166 /* _SBBSchedule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80E60DA019FAD56C0053D166 /* _SBBSchedule.m in Sources */ = {isa = PBXBuildFile; fileRef = 80E60D9E19FAD56C0053D166 /* _SBBSchedule.m */; };
