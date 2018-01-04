@@ -45,25 +45,25 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBActivity : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* activityType;
+@property (nullable, nonatomic, strong) NSString* activityType;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, strong) NSString* guid;
 
-@property (nonatomic, strong) NSString* label;
+@property (nullable, nonatomic, strong) NSString* label;
 
-@property (nonatomic, strong) NSString* labelDetail;
+@property (nullable, nonatomic, strong) NSString* labelDetail;
 
-@property (nonatomic, strong, readwrite) SBBCompoundActivity *compoundActivity;
+@property (nullable, nonatomic, strong, readwrite) SBBCompoundActivity *compoundActivity;
 
-@property (nonatomic, strong, readwrite) SBBSurveyReference *survey;
+@property (nullable, nonatomic, strong, readwrite) SBBSurveyReference *survey;
 
-@property (nonatomic, strong, readwrite) SBBTaskReference *task;
+@property (nullable, nonatomic, strong, readwrite) SBBTaskReference *task;
 
-- (void) setCompoundActivity: (SBBCompoundActivity*) compoundActivity_ settingInverse: (BOOL) setInverse;
+- (void) setCompoundActivity: (SBBCompoundActivity* _Nullable) compoundActivity_ settingInverse: (BOOL) setInverse;
 
-- (void) setSurvey: (SBBSurveyReference*) survey_ settingInverse: (BOOL) setInverse;
+- (void) setSurvey: (SBBSurveyReference* _Nullable) survey_ settingInverse: (BOOL) setInverse;
 
-- (void) setTask: (SBBTaskReference*) task_ settingInverse: (BOOL) setInverse;
+- (void) setTask: (SBBTaskReference* _Nullable) task_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END

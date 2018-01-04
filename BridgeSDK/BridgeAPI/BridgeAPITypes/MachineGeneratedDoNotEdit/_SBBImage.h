@@ -41,13 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBImage : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* height;
+@property (nullable, nonatomic, strong) NSNumber* height;
 
 @property (nonatomic, assign) double heightValue;
 
-@property (nonatomic, strong) NSString* source;
+@property (nullable, nonatomic, strong) NSString* source;
 
-@property (nonatomic, strong) NSNumber* width;
+@property (nullable, nonatomic, strong) NSNumber* width;
 
 @property (nonatomic, assign) double widthValue;
 

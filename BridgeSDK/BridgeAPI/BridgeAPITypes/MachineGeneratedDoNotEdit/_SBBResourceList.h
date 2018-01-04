@@ -43,11 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBResourceList : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* total;
+@property (nullable, nonatomic, strong) NSNumber* total;
 
 @property (nonatomic, assign) int64_t totalValue;
 
-@property (nonatomic, strong, readonly) NSArray *items;
+@property (nullable, nonatomic, strong, readonly) NSArray *items;
 
 - (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
 - (void)addItemsObject:(SBBBridgeObject*)value_;

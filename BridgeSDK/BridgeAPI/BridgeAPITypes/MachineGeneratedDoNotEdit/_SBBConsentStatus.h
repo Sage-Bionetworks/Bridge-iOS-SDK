@@ -41,21 +41,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBConsentStatus : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* consented;
+@property (nullable, nonatomic, strong) NSNumber* consented;
 
 @property (nonatomic, assign) BOOL consentedValue;
 
-@property (nonatomic, strong) NSString* name;
+@property (nullable, nonatomic, strong) NSString* name;
 
-@property (nonatomic, strong) NSNumber* required;
+@property (nullable, nonatomic, strong) NSNumber* required;
 
 @property (nonatomic, assign) BOOL requiredValue;
 
-@property (nonatomic, strong) NSNumber* signedMostRecentConsent;
+@property (nullable, nonatomic, strong) NSNumber* signedMostRecentConsent;
 
 @property (nonatomic, assign) BOOL signedMostRecentConsentValue;
 
-@property (nonatomic, strong) NSString* subpopulationGuid;
+@property (nullable, nonatomic, strong) NSString* subpopulationGuid;
 
 @end
 NS_ASSUME_NONNULL_END

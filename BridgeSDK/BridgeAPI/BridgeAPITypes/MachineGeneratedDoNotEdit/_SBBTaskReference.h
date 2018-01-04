@@ -43,11 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBTaskReference : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, strong) NSString* identifier;
 
-@property (nonatomic, strong, readwrite) SBBSchemaReference *schema;
+@property (nullable, nonatomic, strong, readwrite) SBBSchemaReference *schema;
 
-- (void) setSchema: (SBBSchemaReference*) schema_ settingInverse: (BOOL) setInverse;
+- (void) setSchema: (SBBSchemaReference* _Nullable) schema_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END

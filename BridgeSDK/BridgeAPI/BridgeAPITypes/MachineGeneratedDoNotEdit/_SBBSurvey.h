@@ -43,37 +43,37 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSurvey : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* copyrightNotice;
+@property (nullable, nonatomic, strong) NSString* copyrightNotice;
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nullable, nonatomic, strong) NSDate* createdOn;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, strong) NSString* guid;
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, strong) NSString* identifier;
 
-@property (nonatomic, strong) NSDate* modifiedOn;
+@property (nullable, nonatomic, strong) NSDate* modifiedOn;
 
-@property (nonatomic, strong) NSString* moduleId;
+@property (nullable, nonatomic, strong) NSString* moduleId;
 
-@property (nonatomic, strong) NSNumber* moduleVersion;
+@property (nullable, nonatomic, strong) NSNumber* moduleVersion;
 
 @property (nonatomic, assign) int64_t moduleVersionValue;
 
-@property (nonatomic, strong) NSString* name;
+@property (nullable, nonatomic, strong) NSString* name;
 
-@property (nonatomic, strong) NSNumber* published;
+@property (nullable, nonatomic, strong) NSNumber* published;
 
 @property (nonatomic, assign) BOOL publishedValue;
 
-@property (nonatomic, strong) NSNumber* schemaRevision;
+@property (nullable, nonatomic, strong) NSNumber* schemaRevision;
 
 @property (nonatomic, assign) double schemaRevisionValue;
 
-@property (nonatomic, strong) NSNumber* version;
+@property (nullable, nonatomic, strong) NSNumber* version;
 
 @property (nonatomic, assign) double versionValue;
 
-@property (nonatomic, strong, readonly) NSArray *elements;
+@property (nullable, nonatomic, strong, readonly) NSArray *elements;
 
 - (void)addElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse;
 - (void)addElementsObject:(SBBSurveyElement*)value_;

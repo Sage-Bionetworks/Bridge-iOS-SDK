@@ -41,13 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSurveyReference : SBBBridgeObject
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nullable, nonatomic, strong) NSDate* createdOn;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, strong) NSString* guid;
 
-@property (nonatomic, strong) NSString* href;
+@property (nullable, nonatomic, strong) NSString* href;
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, strong) NSString* identifier;
 
 @end
 NS_ASSUME_NONNULL_END

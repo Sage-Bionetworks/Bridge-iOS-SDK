@@ -41,9 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBDateTimeRangeResourceList : SBBResourceList
 
-@property (nonatomic, strong) NSDate* endTime;
+@property (nullable, nonatomic, strong) NSDate* endTime;
 
-@property (nonatomic, strong) NSDate* startTime;
+@property (nullable, nonatomic, strong) NSDate* startTime;
 
 @end
 NS_ASSUME_NONNULL_END

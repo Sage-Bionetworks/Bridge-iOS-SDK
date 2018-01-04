@@ -41,15 +41,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSurveyRule : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* endSurvey;
+@property (nullable, nonatomic, strong) NSNumber* endSurvey;
 
 @property (nonatomic, assign) BOOL endSurveyValue;
 
-@property (nonatomic, strong) NSString* operator;
+@property (nullable, nonatomic, strong) NSString* operator;
 
-@property (nonatomic, strong) NSString* skipTo;
+@property (nullable, nonatomic, strong) NSString* skipTo;
 
-@property (nonatomic, strong) id value;
+@property (nullable, nonatomic, strong) id value;
 
 @end
 NS_ASSUME_NONNULL_END

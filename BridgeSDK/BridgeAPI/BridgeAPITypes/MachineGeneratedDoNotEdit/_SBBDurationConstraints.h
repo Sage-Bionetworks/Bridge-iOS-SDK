@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBDurationConstraints : SBBSurveyConstraints
 
-@property (nonatomic, strong) NSString* unit;
+@property (nullable, nonatomic, strong) NSString* unit;
 
 @end
 NS_ASSUME_NONNULL_END

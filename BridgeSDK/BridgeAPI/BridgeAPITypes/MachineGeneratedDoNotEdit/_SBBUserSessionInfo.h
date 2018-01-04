@@ -44,29 +44,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBUserSessionInfo : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* authenticated;
+@property (nullable, nonatomic, strong) NSNumber* authenticated;
 
 @property (nonatomic, assign) BOOL authenticatedValue;
 
-@property (nonatomic, strong) NSNumber* consented;
+@property (nullable, nonatomic, strong) NSNumber* consented;
 
 @property (nonatomic, assign) BOOL consentedValue;
 
-@property (nonatomic, strong) NSNumber* dataSharing;
+@property (nullable, nonatomic, strong) NSNumber* dataSharing;
 
 @property (nonatomic, assign) BOOL dataSharingValue;
 
-@property (nonatomic, strong) NSString* environment;
+@property (nullable, nonatomic, strong) NSString* environment;
 
-@property (nonatomic, strong) NSString* sessionToken;
+@property (nullable, nonatomic, strong) NSString* sessionToken;
 
-@property (nonatomic, strong) NSNumber* signedMostRecentConsent;
+@property (nullable, nonatomic, strong) NSNumber* signedMostRecentConsent;
 
 @property (nonatomic, assign) BOOL signedMostRecentConsentValue;
 
-@property (nonatomic, strong, readonly) NSDictionary *consentStatuses;
+@property (nullable, nonatomic, strong, readonly) NSDictionary *consentStatuses;
 
-@property (nonatomic, strong, readwrite) SBBStudyParticipant *studyParticipant;
+@property (nullable, nonatomic, strong, readwrite) SBBStudyParticipant *studyParticipant;
 
 - (void)addConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse;
 - (void)addConsentStatusesObject:(SBBConsentStatus*)value_;
@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse;
 - (void)removeConsentStatusesObject:(SBBConsentStatus*)value_;
 
-- (void) setStudyParticipant: (SBBStudyParticipant*) studyParticipant_ settingInverse: (BOOL) setInverse;
+- (void) setStudyParticipant: (SBBStudyParticipant* _Nullable) studyParticipant_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END

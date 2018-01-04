@@ -43,17 +43,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSurveyElement : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, strong) NSString* guid;
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, strong) NSString* identifier;
 
-@property (nonatomic, strong) NSString* prompt;
+@property (nullable, nonatomic, strong) NSString* prompt;
 
-@property (nonatomic, strong) NSString* promptDetail;
+@property (nullable, nonatomic, strong) NSString* promptDetail;
 
-@property (nonatomic, strong) NSString* title;
+@property (nullable, nonatomic, strong) NSString* title;
 
-@property (nonatomic, strong, readonly) NSArray *afterRules;
+@property (nullable, nonatomic, strong, readonly) NSArray *afterRules;
 
 - (void)addAfterRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
 - (void)addAfterRulesObject:(SBBSurveyRule*)value_;

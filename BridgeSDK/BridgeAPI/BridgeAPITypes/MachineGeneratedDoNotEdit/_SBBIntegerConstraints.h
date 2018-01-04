@@ -41,19 +41,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBIntegerConstraints : SBBSurveyConstraints
 
-@property (nonatomic, strong) NSNumber* maxValue;
+@property (nullable, nonatomic, strong) NSNumber* maxValue;
 
 @property (nonatomic, assign) int64_t maxValueValue;
 
-@property (nonatomic, strong) NSNumber* minValue;
+@property (nullable, nonatomic, strong) NSNumber* minValue;
 
 @property (nonatomic, assign) int64_t minValueValue;
 
-@property (nonatomic, strong) NSNumber* step;
+@property (nullable, nonatomic, strong) NSNumber* step;
 
 @property (nonatomic, assign) int64_t stepValue;
 
-@property (nonatomic, strong) NSString* unit;
+@property (nullable, nonatomic, strong) NSString* unit;
 
 @end
 NS_ASSUME_NONNULL_END

@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBIdentifierHolder : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* identifier;
+@property (nullable, nonatomic, strong) NSString* identifier;
 
 @end
 NS_ASSUME_NONNULL_END

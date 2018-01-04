@@ -43,15 +43,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBMultiValueConstraints : SBBSurveyConstraints
 
-@property (nonatomic, strong) NSNumber* allowMultiple;
+@property (nullable, nonatomic, strong) NSNumber* allowMultiple;
 
 @property (nonatomic, assign) BOOL allowMultipleValue;
 
-@property (nonatomic, strong) NSNumber* allowOther;
+@property (nullable, nonatomic, strong) NSNumber* allowOther;
 
 @property (nonatomic, assign) BOOL allowOtherValue;
 
-@property (nonatomic, strong, readonly) NSArray *enumeration;
+@property (nullable, nonatomic, strong, readonly) NSArray *enumeration;
 
 - (void)addEnumerationObject:(SBBSurveyQuestionOption*)value_ settingInverse: (BOOL) setInverse;
 - (void)addEnumerationObject:(SBBSurveyQuestionOption*)value_;

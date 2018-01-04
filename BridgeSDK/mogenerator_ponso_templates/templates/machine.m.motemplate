@@ -501,7 +501,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     <$if Attribute.hasScalarAttributeType$><$if Attribute.isUnsigned$>
         // ensure that unsigned-ness is preserved
-    <$if Attribute.isReadonly$>_<$Attribute.name$> = [NSNumber <$Attribute.scalarFactoryMethodName$>[managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>]];
+    <$if Attribute.isReadonly$>_<$Attribute.name$>Value = [NSNumber <$Attribute.scalarFactoryMethodName$>[managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>]];
     <$else$>
         self.<$Attribute.name$>Value = [managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>];
     <$endif$>

@@ -43,21 +43,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBForwardCursorPagedResourceList : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* hasNext;
+@property (nullable, nonatomic, strong) NSNumber* hasNext;
 
 @property (nonatomic, assign) BOOL hasNextValue;
 
-@property (nonatomic, strong) NSDate* offsetBy;
+@property (nullable, nonatomic, strong) NSDate* offsetBy;
 
-@property (nonatomic, strong) NSNumber* pageSize;
+@property (nullable, nonatomic, strong) NSNumber* pageSize;
 
 @property (nonatomic, assign) int16_t pageSizeValue;
 
-@property (nonatomic, strong) NSDate* scheduledOnEnd;
+@property (nullable, nonatomic, strong) NSDate* scheduledOnEnd;
 
-@property (nonatomic, strong) NSDate* scheduledOnStart;
+@property (nullable, nonatomic, strong) NSDate* scheduledOnStart;
 
-@property (nonatomic, strong, readonly) NSArray *items;
+@property (nullable, nonatomic, strong, readonly) NSArray *items;
 
 - (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
 - (void)addItemsObject:(SBBBridgeObject*)value_;

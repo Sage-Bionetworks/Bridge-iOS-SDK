@@ -41,15 +41,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBUploadRequest : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* contentLength;
+@property (nullable, nonatomic, strong) NSNumber* contentLength;
 
 @property (nonatomic, assign) int64_t contentLengthValue;
 
-@property (nonatomic, strong) NSString* contentMd5;
+@property (nullable, nonatomic, strong) NSString* contentMd5;
 
-@property (nonatomic, strong) NSString* contentType;
+@property (nullable, nonatomic, strong) NSString* contentType;
 
-@property (nonatomic, strong) NSString* name;
+@property (nullable, nonatomic, strong) NSString* name;
 
 @end
 NS_ASSUME_NONNULL_END

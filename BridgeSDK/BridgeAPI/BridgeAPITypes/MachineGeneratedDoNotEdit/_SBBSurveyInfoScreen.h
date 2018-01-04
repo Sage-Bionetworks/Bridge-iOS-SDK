@@ -43,9 +43,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSurveyInfoScreen : SBBSurveyElement
 
-@property (nonatomic, strong, readwrite) SBBImage *image;
+@property (nullable, nonatomic, strong, readwrite) SBBImage *image;
 
-- (void) setImage: (SBBImage*) image_ settingInverse: (BOOL) setInverse;
+- (void) setImage: (SBBImage* _Nullable) image_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END

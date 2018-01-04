@@ -43,33 +43,33 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBStudyParticipant : SBBBridgeObject
 
-@property (nonatomic, strong) SBBStudyParticipantCustomAttributes* attributes;
+@property (nullable, nonatomic, strong) SBBStudyParticipantCustomAttributes* attributes;
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nullable, nonatomic, strong) NSDate* createdOn;
 
-@property (nonatomic, strong) NSSet<NSString *>* dataGroups;
+@property (nullable, nonatomic, strong) NSSet<NSString *>* dataGroups;
 
-@property (nonatomic, strong) NSString* email;
+@property (nullable, nonatomic, strong) NSString* email;
 
-@property (nonatomic, strong) NSString* externalId;
+@property (nullable, nonatomic, strong) NSString* externalId;
 
-@property (nonatomic, strong) NSString* firstName;
+@property (nullable, nonatomic, strong) NSString* firstName;
 
-@property (nonatomic, strong) NSString* id;
+@property (nullable, nonatomic, strong) NSString* id;
 
-@property (nonatomic, strong) NSArray<NSString *>* languages;
+@property (nullable, nonatomic, strong) NSArray<NSString *>* languages;
 
-@property (nonatomic, strong) NSString* lastName;
+@property (nullable, nonatomic, strong) NSString* lastName;
 
-@property (nonatomic, strong) NSNumber* notifyByEmail;
+@property (nullable, nonatomic, strong) NSNumber* notifyByEmail;
 
 @property (nonatomic, assign) BOOL notifyByEmailValue;
 
-@property (nonatomic, strong) NSArray<NSString *>* roles;
+@property (nullable, nonatomic, strong) NSArray<NSString *>* roles;
 
-@property (nonatomic, strong) NSString* sharingScope;
+@property (nullable, nonatomic, strong) NSString* sharingScope;
 
-@property (nonatomic, strong) NSString* status;
+@property (nullable, nonatomic, strong) NSString* status;
 
 @end
 NS_ASSUME_NONNULL_END

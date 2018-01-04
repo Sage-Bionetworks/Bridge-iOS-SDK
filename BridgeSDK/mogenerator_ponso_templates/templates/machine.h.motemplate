@@ -54,10 +54,10 @@ NS_ASSUME_NONNULL_BEGIN
 <$foreach Attribute noninheritedAttributes do$>
 <$if ! Attribute.userInfo.notInPONSODictionary $>
 <$if Attribute.isReadonly$>
-<$if Attribute.hasDefinedAttributeType$>@property (nonatomic, strong, readonly) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
+<$if Attribute.hasDefinedAttributeType$>@property (<$if Attribute.optional$>nullable, <$endif$>nonatomic, strong, readonly) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
 <$if Attribute.hasScalarAttributeType$>@property (nonatomic, assign, readonly) <$Attribute.scalarAttributeType$> <$Attribute.name$>Value;<$endif$>
 <$else$>
-<$if Attribute.hasDefinedAttributeType$>@property (nonatomic, strong) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
+<$if Attribute.hasDefinedAttributeType$>@property (<$if Attribute.optional$>nullable, <$endif$>nonatomic, strong) <$Attribute.objectAttributeType$> <$Attribute.name$>;<$endif$>
 
 <$if Attribute.hasScalarAttributeType$>@property (nonatomic, assign) <$Attribute.scalarAttributeType$> <$Attribute.name$>Value;<$endif$>
 <$endif$>
@@ -67,15 +67,15 @@ NS_ASSUME_NONNULL_BEGIN
 <$if ! Relationship.userInfo.notInPONSODictionary $>
 <$if Relationship.isToMany$>
 <$if Relationship.userInfo.isDictionaryJSON$>
-@property (nonatomic, strong, readonly) NSDictionary *<$Relationship.name$>;
+@property (<$if Relationship.optional$>nullable, <$endif$>nonatomic, strong, readonly) NSDictionary *<$Relationship.name$>;
 <$else$>
-@property (nonatomic, strong, readonly) NSArray *<$Relationship.name$>;
+@property (<$if Relationship.optional$>nullable, <$endif$>nonatomic, strong, readonly) NSArray *<$Relationship.name$>;
 <$endif$>
 <$else$>
 <$if Relationship.isTransient $>
-@property (nonatomic, assign, readwrite) <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>;
+@property (<$if Relationship.optional$>nullable, <$endif$>nonatomic, assign, readwrite) <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>;
 <$else$>
-@property (nonatomic, strong, readwrite) <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>;
+@property (<$if Relationship.optional$>nullable, <$endif$>nonatomic, strong, readwrite) <$Relationship.destinationEntity.generatedObjectClassName$> *<$Relationship.name$>;
 <$endif$>
 <$endif$>
 <$endif$><$endforeach do$>
@@ -97,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 <$endif$>
 <$endif$><$endforeach do$>
 <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.isToMany$><$if ! Relationship.userInfo.notInPONSODictionary $>
-- (void) set<$Relationship.name.initialCapitalString$>: (<$Relationship.destinationEntity.generatedObjectClassName$>*) <$Relationship.name$>_ settingInverse: (BOOL) setInverse;
+- (void) set<$Relationship.name.initialCapitalString$>: (<$Relationship.destinationEntity.generatedObjectClassName$>*<$if Relationship.optional$> _Nullable<$endif$>) <$Relationship.name$>_ settingInverse: (BOOL) setInverse;
 <$endif$><$endif$><$endforeach do$>
 
 @end

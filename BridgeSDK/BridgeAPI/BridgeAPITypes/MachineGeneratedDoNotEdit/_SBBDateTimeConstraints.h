@@ -41,13 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBDateTimeConstraints : SBBSurveyConstraints
 
-@property (nonatomic, strong) NSNumber* allowFuture;
+@property (nullable, nonatomic, strong) NSNumber* allowFuture;
 
 @property (nonatomic, assign) BOOL allowFutureValue;
 
-@property (nonatomic, strong) NSDate* earliestValue;
+@property (nullable, nonatomic, strong) NSDate* earliestValue;
 
-@property (nonatomic, strong) NSDate* latestValue;
+@property (nullable, nonatomic, strong) NSDate* latestValue;
 
 @end
 NS_ASSUME_NONNULL_END

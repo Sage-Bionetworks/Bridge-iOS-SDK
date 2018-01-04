@@ -43,31 +43,31 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSchedule : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* cronTrigger;
+@property (nullable, nonatomic, strong) NSString* cronTrigger;
 
-@property (nonatomic, strong) NSString* delay;
+@property (nullable, nonatomic, strong) NSString* delay;
 
-@property (nonatomic, strong) NSDate* endsOn;
+@property (nullable, nonatomic, strong) NSDate* endsOn;
 
-@property (nonatomic, strong) NSString* eventId;
+@property (nullable, nonatomic, strong) NSString* eventId;
 
-@property (nonatomic, strong) NSString* expires;
+@property (nullable, nonatomic, strong) NSString* expires;
 
-@property (nonatomic, strong) NSString* interval;
+@property (nullable, nonatomic, strong) NSString* interval;
 
-@property (nonatomic, strong) NSString* label;
+@property (nullable, nonatomic, strong) NSString* label;
 
-@property (nonatomic, strong) NSNumber* persistent;
+@property (nullable, nonatomic, strong) NSNumber* persistent;
 
 @property (nonatomic, assign) BOOL persistentValue;
 
-@property (nonatomic, strong) NSString* scheduleType;
+@property (nullable, nonatomic, strong) NSString* scheduleType;
 
-@property (nonatomic, strong) NSDate* startsOn;
+@property (nullable, nonatomic, strong) NSDate* startsOn;
 
-@property (nonatomic, strong) NSArray* times;
+@property (nullable, nonatomic, strong) NSArray* times;
 
-@property (nonatomic, strong, readonly) NSArray *activities;
+@property (nullable, nonatomic, strong, readonly) NSArray *activities;
 
 - (void)addActivitiesObject:(SBBActivity*)value_ settingInverse: (BOOL) setInverse;
 - (void)addActivitiesObject:(SBBActivity*)value_;

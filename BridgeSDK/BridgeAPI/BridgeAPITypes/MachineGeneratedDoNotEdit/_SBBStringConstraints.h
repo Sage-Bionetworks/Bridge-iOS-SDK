@@ -41,19 +41,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBStringConstraints : SBBSurveyConstraints
 
-@property (nonatomic, strong) NSNumber* maxLength;
+@property (nullable, nonatomic, strong) NSNumber* maxLength;
 
 @property (nonatomic, assign) int64_t maxLengthValue;
 
-@property (nonatomic, strong) NSNumber* minLength;
+@property (nullable, nonatomic, strong) NSNumber* minLength;
 
 @property (nonatomic, assign) int64_t minLengthValue;
 
-@property (nonatomic, strong) NSString* pattern;
+@property (nullable, nonatomic, strong) NSString* pattern;
 
-@property (nonatomic, strong) NSString* patternErrorMessage;
+@property (nullable, nonatomic, strong) NSString* patternErrorMessage;
 
-@property (nonatomic, strong) NSString* patternPlaceholder;
+@property (nullable, nonatomic, strong) NSString* patternPlaceholder;
 
 @end
 NS_ASSUME_NONNULL_END
