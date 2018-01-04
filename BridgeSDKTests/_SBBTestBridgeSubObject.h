@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBTestBridgeSubObject : SBBBridgeObject_test
 
-@property (nonatomic, strong) NSString* stringField;
+@property (nullable, nonatomic, strong) NSString* stringField;
 
 @end
 NS_ASSUME_NONNULL_END

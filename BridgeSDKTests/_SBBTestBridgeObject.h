@@ -45,53 +45,53 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBTestBridgeObject : SBBBridgeObject_test
 
-@property (nonatomic, strong) NSDate* dateField;
+@property (nullable, nonatomic, strong) NSDate* dateField;
 
-@property (nonatomic, strong) NSNumber* doubleField;
+@property (nullable, nonatomic, strong) NSNumber* doubleField;
 
 @property (nonatomic, assign) double doubleFieldValue;
 
-@property (nonatomic, strong) NSNumber* floatField;
+@property (nullable, nonatomic, strong) NSNumber* floatField;
 
 @property (nonatomic, assign) float floatFieldValue;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, strong) NSString* guid;
 
-@property (nonatomic, strong) NSArray* jsonArrayField;
+@property (nullable, nonatomic, strong) NSArray* jsonArrayField;
 
-@property (nonatomic, strong) NSDictionary* jsonDictField;
+@property (nullable, nonatomic, strong) NSDictionary* jsonDictField;
 
-@property (nonatomic, strong) NSNumber* longField;
+@property (nullable, nonatomic, strong) NSNumber* longField;
 
 @property (nonatomic, assign) int32_t longFieldValue;
 
-@property (nonatomic, strong) NSNumber* longLongField;
+@property (nullable, nonatomic, strong) NSNumber* longLongField;
 
 @property (nonatomic, assign) int64_t longLongFieldValue;
 
-@property (nonatomic, strong) NSNumber* shortField;
+@property (nullable, nonatomic, strong) NSNumber* shortField;
 
 @property (nonatomic, assign) int16_t shortFieldValue;
 
-@property (nonatomic, strong) NSString* stringField;
+@property (nullable, nonatomic, strong) NSString* stringField;
 
-@property (nonatomic, strong) NSNumber* uLongField;
+@property (nullable, nonatomic, strong) NSNumber* uLongField;
 
 @property (nonatomic, assign) uint32_t uLongFieldValue;
 
-@property (nonatomic, strong) NSNumber* uLongLongField;
+@property (nullable, nonatomic, strong) NSNumber* uLongLongField;
 
 @property (nonatomic, assign) uint64_t uLongLongFieldValue;
 
-@property (nonatomic, strong) NSNumber* uShortField;
+@property (nullable, nonatomic, strong) NSNumber* uShortField;
 
 @property (nonatomic, assign) uint16_t uShortFieldValue;
 
-@property (nonatomic, strong, readonly) NSArray *bridgeObjectArrayField;
+@property (nullable, nonatomic, strong, readonly) NSArray *bridgeObjectArrayField;
 
-@property (nonatomic, strong, readonly) NSArray *bridgeObjectSetField;
+@property (nullable, nonatomic, strong, readonly) NSArray *bridgeObjectSetField;
 
-@property (nonatomic, strong, readwrite) SBBTestBridgeSubObject *bridgeSubObjectField;
+@property (nullable, nonatomic, strong, readwrite) SBBTestBridgeSubObject *bridgeSubObjectField;
 
 - (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_ settingInverse: (BOOL) setInverse;
 - (void)addBridgeObjectArrayFieldObject:(SBBBridgeObject_test*)value_;
@@ -112,7 +112,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_ settingInverse: (BOOL) setInverse;
 - (void)removeBridgeObjectSetFieldObject:(SBBTestBridgeSubObject*)value_;
 
-- (void) setBridgeSubObjectField: (SBBTestBridgeSubObject*) bridgeSubObjectField_ settingInverse: (BOOL) setInverse;
+- (void) setBridgeSubObjectField: (SBBTestBridgeSubObject* _Nullable) bridgeSubObjectField_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END
