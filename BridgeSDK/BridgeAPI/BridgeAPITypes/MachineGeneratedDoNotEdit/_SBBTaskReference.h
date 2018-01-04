@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBSchemaReference;
 
 @protocol _SBBTaskReference
@@ -48,3 +50,4 @@
 - (void) setSchema: (SBBSchemaReference*) schema_ settingInverse: (BOOL) setInverse;
 
 @end
+NS_ASSUME_NONNULL_END

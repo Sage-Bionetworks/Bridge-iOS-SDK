@@ -38,14 +38,14 @@
 <$endif$>
 <$foreach Attribute noninheritedAttributes do$><$if Attribute.hasTransformableAttributeType$><$if Attribute.userInfo.attributeValueClassName$><$if Attribute.userInfo.importHeaderForClass$>#import "<$Attribute.userInfo.attributeValueClassName$>.h"
 <$endif$><$endif$><$endif$><$endforeach do$>
-
+NS_ASSUME_NONNULL_BEGIN
 <$checkNonTransientRelationshipCycles $>
 <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>@class <$Relationship.destinationEntity.generatedObjectClassName$>;
 <$endif$><$endforeach do$>
 
 @protocol _<$generatedObjectClassName$>
 <$foreach Relationship noninheritedRelationshipsInIDKeyPathTopologicalOrder do$><$if ! Relationship.userInfo.notInPONSODictionary $><$if ! Relationship.isTransient$><$if Relationship.userInfo.destinationEntityIDKeyPath $>
-- (<$Relationship.destinationEntity.generatedObjectClassName$> *)fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:(id)objectID;
+- (<$Relationship.destinationEntity.generatedObjectClassName$> * _Nullable)fetch<$Relationship.destinationEntity.name$>ObjectWithIDFor<$Relationship.name.initialCapitalString$>Relationship:(id)objectID;
 <$endif$><$endif$><$endif$><$endforeach do$>
 @end
 
@@ -101,3 +101,4 @@
 <$endif$><$endif$><$endforeach do$>
 
 @end
+NS_ASSUME_NONNULL_END

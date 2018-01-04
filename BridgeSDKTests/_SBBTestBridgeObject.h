@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject_test.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBBridgeObject_test;
 @class SBBTestBridgeSubObject;
 @class SBBTestBridgeSubObject;
@@ -113,3 +115,4 @@
 - (void) setBridgeSubObjectField: (SBBTestBridgeSubObject*) bridgeSubObjectField_ settingInverse: (BOOL) setInverse;
 
 @end
+NS_ASSUME_NONNULL_END

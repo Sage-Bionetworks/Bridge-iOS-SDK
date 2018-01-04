@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyConstraints.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBTimeConstraints
 
 @end
@@ -40,3 +42,4 @@
 @interface _SBBTimeConstraints : SBBSurveyConstraints
 
 @end
+NS_ASSUME_NONNULL_END

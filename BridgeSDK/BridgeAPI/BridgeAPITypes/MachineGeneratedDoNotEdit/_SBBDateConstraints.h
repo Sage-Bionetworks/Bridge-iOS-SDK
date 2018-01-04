@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyConstraints.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBDateConstraints
 
 @end
@@ -48,3 +50,4 @@
 @property (nonatomic, strong) NSDate* latestValue;
 
 @end
+NS_ASSUME_NONNULL_END

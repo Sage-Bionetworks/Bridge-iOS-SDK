@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBActivity;
 
 @protocol _SBBSchedule
@@ -81,3 +83,4 @@
 - (void)replaceActivitiesAtIndexes:(NSIndexSet *)indexes withActivities:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

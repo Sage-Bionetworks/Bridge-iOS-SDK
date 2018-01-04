@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBBridgeObject;
 
 @protocol _SBBResourceList
@@ -61,3 +63,4 @@
 - (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

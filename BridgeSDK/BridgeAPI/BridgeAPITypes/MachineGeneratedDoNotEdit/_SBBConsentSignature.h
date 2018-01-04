@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBConsentSignature
 
 @end
@@ -50,3 +52,4 @@
 @property (nonatomic, strong) NSString* scope;
 
 @end
+NS_ASSUME_NONNULL_END

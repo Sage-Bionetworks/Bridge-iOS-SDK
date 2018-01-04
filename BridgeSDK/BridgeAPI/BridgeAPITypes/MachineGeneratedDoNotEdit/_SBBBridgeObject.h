@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "ModelObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBBridgeObject
 
 @end
@@ -42,3 +44,4 @@
 @property (nonatomic, strong, readonly) NSString* type;
 
 @end
+NS_ASSUME_NONNULL_END

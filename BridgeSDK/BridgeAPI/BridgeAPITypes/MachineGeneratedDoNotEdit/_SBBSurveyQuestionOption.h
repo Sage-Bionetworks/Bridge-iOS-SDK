@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBImage;
 
 @protocol _SBBSurveyQuestionOption
@@ -52,3 +54,4 @@
 - (void) setImage: (SBBImage*) image_ settingInverse: (BOOL) setInverse;
 
 @end
+NS_ASSUME_NONNULL_END

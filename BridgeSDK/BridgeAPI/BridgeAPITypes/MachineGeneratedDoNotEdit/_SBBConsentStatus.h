@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBConsentStatus
 
 @end
@@ -56,3 +58,4 @@
 @property (nonatomic, strong) NSString* subpopulationGuid;
 
 @end
+NS_ASSUME_NONNULL_END

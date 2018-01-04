@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject_test.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBTestBridgeSubObject
 
 @end
@@ -42,3 +44,4 @@
 @property (nonatomic, strong) NSString* stringField;
 
 @end
+NS_ASSUME_NONNULL_END

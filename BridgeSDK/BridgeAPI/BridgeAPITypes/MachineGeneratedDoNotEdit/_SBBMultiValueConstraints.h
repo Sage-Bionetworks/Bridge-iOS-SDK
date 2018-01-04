@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyConstraints.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBSurveyQuestionOption;
 
 @protocol _SBBMultiValueConstraints
@@ -65,3 +67,4 @@
 - (void)replaceEnumerationAtIndexes:(NSIndexSet *)indexes withEnumeration:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

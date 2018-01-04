@@ -35,6 +35,8 @@
 
 #import "SBBStudyParticipantCustomAttributes.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBStudyParticipant
 
 @end
@@ -70,3 +72,4 @@
 @property (nonatomic, strong) NSString* status;
 
 @end
+NS_ASSUME_NONNULL_END

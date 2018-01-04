@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBOAuthAccessToken
 
 @end
@@ -48,3 +50,4 @@
 @property (nonatomic, strong, readonly) NSString* vendorID;
 
 @end
+NS_ASSUME_NONNULL_END

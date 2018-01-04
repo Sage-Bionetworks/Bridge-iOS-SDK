@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBSchemaReference
 
 @end
@@ -46,3 +48,4 @@
 @property (nonatomic, assign) int64_t revisionValue;
 
 @end
+NS_ASSUME_NONNULL_END

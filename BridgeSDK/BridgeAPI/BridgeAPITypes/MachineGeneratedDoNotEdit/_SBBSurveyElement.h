@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBSurveyRule;
 
 @protocol _SBBSurveyElement
@@ -67,3 +69,4 @@
 - (void)replaceAfterRulesAtIndexes:(NSIndexSet *)indexes withAfterRules:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBSurveyElement;
 
 @protocol _SBBSurvey
@@ -87,3 +89,4 @@
 - (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

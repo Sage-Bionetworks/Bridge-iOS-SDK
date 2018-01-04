@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBSchemaReference;
 @class SBBSurveyReference;
 
@@ -61,3 +63,4 @@
 - (void)removeSurveyListObject:(SBBSurveyReference*)value_;
 
 @end
+NS_ASSUME_NONNULL_END

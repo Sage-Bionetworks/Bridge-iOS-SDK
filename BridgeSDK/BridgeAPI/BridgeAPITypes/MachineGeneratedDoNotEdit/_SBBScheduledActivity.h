@@ -35,6 +35,8 @@
 
 #import "SBBJSONValue.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBActivity;
 
 @protocol _SBBScheduledActivity
@@ -64,3 +66,4 @@
 - (void) setActivity: (SBBActivity*) activity_ settingInverse: (BOOL) setInverse;
 
 @end
+NS_ASSUME_NONNULL_END

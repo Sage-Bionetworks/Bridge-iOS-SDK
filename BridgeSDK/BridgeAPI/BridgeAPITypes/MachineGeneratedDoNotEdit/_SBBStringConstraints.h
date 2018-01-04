@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBSurveyConstraints.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBStringConstraints
 
 @end
@@ -54,3 +56,4 @@
 @property (nonatomic, strong) NSString* patternPlaceholder;
 
 @end
+NS_ASSUME_NONNULL_END

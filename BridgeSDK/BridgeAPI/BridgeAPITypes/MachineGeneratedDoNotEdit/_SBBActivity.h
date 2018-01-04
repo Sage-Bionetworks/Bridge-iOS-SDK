@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBCompoundActivity;
 @class SBBSurveyReference;
 @class SBBTaskReference;
@@ -64,3 +66,4 @@
 - (void) setTask: (SBBTaskReference*) task_ settingInverse: (BOOL) setInverse;
 
 @end
+NS_ASSUME_NONNULL_END
