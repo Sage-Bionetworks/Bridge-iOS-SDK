@@ -39,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SBBDataArchive : NSObject
 
+@property (nonatomic, readonly, getter=isCompleted) BOOL completed;
+
 @property (nonatomic, readonly) NSURL *unencryptedURL;
 
 @property (nonatomic, readonly, nullable) NSDictionary <NSString *, NSPredicate *> *jsonValidationMapping;
