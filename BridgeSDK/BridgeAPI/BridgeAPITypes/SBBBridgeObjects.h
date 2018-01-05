@@ -1,4 +1,5 @@
 #import "SBBActivity.h"
+#import "SBBBloodPressureConstraints.h"
 #import "SBBBooleanConstraints.h"
 #import "SBBBridgeObject.h"
 #import "SBBCompoundActivity.h"
@@ -11,6 +12,7 @@
 #import "SBBDecimalConstraints.h"
 #import "SBBDurationConstraints.h"
 #import "SBBForwardCursorPagedResourceList.h"
+#import "SBBHeightConstraints.h"
 #import "SBBIdentifierHolder.h"
 #import "SBBImage.h"
 #import "SBBIntegerConstraints.h"
@@ -36,3 +38,4 @@
 #import "SBBUploadSession.h"
 #import "SBBUserProfile.h"
 #import "SBBUserSessionInfo.h"
+#import "SBBWeightConstraints.h"

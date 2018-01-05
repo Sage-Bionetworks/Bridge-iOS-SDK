@@ -19,6 +19,9 @@
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="activity" inverseEntity="SurveyReference" syncable="YES"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TaskReference" inverseName="activity" inverseEntity="TaskReference" syncable="YES"/>
     </entity>
+    <entity name="BloodPressureConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="BooleanConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
     <entity name="BridgeObject" isAbstract="YES" syncable="YES">
         <attribute name="lastRetrieved" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
@@ -133,6 +136,10 @@
         <userInfo>
             <entry key="entityIDKeyPath" value="listID__"/>
         </userInfo>
+    </entity>
+    <entity name="HeightConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="isInfant" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="IdentifierHolder" parentEntity="BridgeObject" syncable="YES">
         <attribute name="identifier" optional="YES" attributeType="String" syncable="YES"/>
@@ -489,6 +496,10 @@
             <entry key="includesSubobject" value="StudyParticipant"/>
         </userInfo>
     </entity>
+    <entity name="WeightConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="isInfant" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Activity" positionX="0" positionY="0" width="128" height="180"/>
         <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
@@ -528,5 +539,8 @@
         <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="BloodPressureConstraints" positionX="18" positionY="153" width="128" height="60"/>
+        <element name="HeightConstraints" positionX="27" positionY="162" width="128" height="75"/>
+        <element name="WeightConstraints" positionX="36" positionY="171" width="128" height="75"/>
     </elements>
 </model>

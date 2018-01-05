@@ -275,6 +275,18 @@
 		805D4BF41ECBACDD002143F0 /* SBBSchemaReference.h in Headers */ = {isa = PBXBuildFile; fileRef = 805D4BF21ECBACDD002143F0 /* SBBSchemaReference.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		805D4BF51ECBACDD002143F0 /* SBBSchemaReference.m in Sources */ = {isa = PBXBuildFile; fileRef = 805D4BF31ECBACDD002143F0 /* SBBSchemaReference.m */; };
 		80643BE71DA6E4E900EB91C6 /* _SBBUserProfileInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */; };
+		806C42651FFF0D33007A51D8 /* _SBBBloodPressureConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 806C42541FFF0D32007A51D8 /* _SBBBloodPressureConstraints.m */; };
+		806C42661FFF0D33007A51D8 /* _SBBBloodPressureConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 806C42641FFF0D32007A51D8 /* _SBBBloodPressureConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		806C42691FFF0D46007A51D8 /* _SBBHeightConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 806C42671FFF0D45007A51D8 /* _SBBHeightConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		806C426A1FFF0D46007A51D8 /* _SBBHeightConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 806C42681FFF0D46007A51D8 /* _SBBHeightConstraints.m */; };
+		806C426D1FFF0D7E007A51D8 /* _SBBWeightConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 806C426B1FFF0D7E007A51D8 /* _SBBWeightConstraints.m */; };
+		806C426E1FFF0D7E007A51D8 /* _SBBWeightConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 806C426C1FFF0D7E007A51D8 /* _SBBWeightConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		806C42711FFF0D9C007A51D8 /* SBBBloodPressureConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 806C426F1FFF0D9B007A51D8 /* SBBBloodPressureConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		806C42721FFF0D9C007A51D8 /* SBBBloodPressureConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 806C42701FFF0D9C007A51D8 /* SBBBloodPressureConstraints.m */; };
+		806C42751FFF0DB2007A51D8 /* SBBHeightConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 806C42731FFF0DB1007A51D8 /* SBBHeightConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		806C42761FFF0DB2007A51D8 /* SBBHeightConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 806C42741FFF0DB2007A51D8 /* SBBHeightConstraints.m */; };
+		806C42791FFF0DC8007A51D8 /* SBBWeightConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = 806C42771FFF0DC8007A51D8 /* SBBWeightConstraints.m */; };
+		806C427A1FFF0DC8007A51D8 /* SBBWeightConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = 806C42781FFF0DC8007A51D8 /* SBBWeightConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		807747801E28289C000C13CD /* SBBBridgeAppDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		807AE28C1B603309002588BB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28B1B603309002588BB /* main.m */; };
 		807AE28F1B60330A002588BB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE28E1B60330A002588BB /* AppDelegate.m */; };
@@ -832,6 +844,18 @@
 		805D4BF31ECBACDD002143F0 /* SBBSchemaReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSchemaReference.m; sourceTree = "<group>"; };
 		80643BE61DA6E4E900EB91C6 /* _SBBUserProfileInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBUserProfileInternal.h; sourceTree = "<group>"; };
 		806C423E1FFF0ABD007A51D8 /* SBBDataModelV9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV9.xcdatamodel; sourceTree = "<group>"; };
+		806C42541FFF0D32007A51D8 /* _SBBBloodPressureConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBBloodPressureConstraints.m; sourceTree = "<group>"; };
+		806C42641FFF0D32007A51D8 /* _SBBBloodPressureConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBloodPressureConstraints.h; sourceTree = "<group>"; };
+		806C42671FFF0D45007A51D8 /* _SBBHeightConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBHeightConstraints.h; sourceTree = "<group>"; };
+		806C42681FFF0D46007A51D8 /* _SBBHeightConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBHeightConstraints.m; sourceTree = "<group>"; };
+		806C426B1FFF0D7E007A51D8 /* _SBBWeightConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBWeightConstraints.m; sourceTree = "<group>"; };
+		806C426C1FFF0D7E007A51D8 /* _SBBWeightConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBWeightConstraints.h; sourceTree = "<group>"; };
+		806C426F1FFF0D9B007A51D8 /* SBBBloodPressureConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBloodPressureConstraints.h; sourceTree = "<group>"; };
+		806C42701FFF0D9C007A51D8 /* SBBBloodPressureConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBBloodPressureConstraints.m; sourceTree = "<group>"; };
+		806C42731FFF0DB1007A51D8 /* SBBHeightConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBHeightConstraints.h; sourceTree = "<group>"; };
+		806C42741FFF0DB2007A51D8 /* SBBHeightConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBHeightConstraints.m; sourceTree = "<group>"; };
+		806C42771FFF0DC8007A51D8 /* SBBWeightConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBWeightConstraints.m; sourceTree = "<group>"; };
+		806C42781FFF0DC8007A51D8 /* SBBWeightConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBWeightConstraints.h; sourceTree = "<group>"; };
 		8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAppDelegate.h; sourceTree = "<group>"; };
 		807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdminAuthDelegate.h; path = ../BridgeSDKTests/TestAdminAuthDelegate.h; sourceTree = "<group>"; };
 		807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestAdminAuthDelegate.m; path = ../BridgeSDKTests/TestAdminAuthDelegate.m; sourceTree = "<group>"; };
@@ -1102,6 +1126,8 @@
 				80F7C32D19E5DC0D00574800 /* MachineGeneratedDoNotEdit */,
 				60F1E41D1A420EE4009B380E /* SBBActivity.h */,
 				60F1E41E1A420EE4009B380E /* SBBActivity.m */,
+				806C426F1FFF0D9B007A51D8 /* SBBBloodPressureConstraints.h */,
+				806C42701FFF0D9C007A51D8 /* SBBBloodPressureConstraints.m */,
 				800E794919ED748900EEE612 /* SBBBooleanConstraints.h */,
 				800E794A19ED748900EEE612 /* SBBBooleanConstraints.m */,
 				80104A5F19D4CDC4001F2573 /* SBBBridgeObject.h */,
@@ -1128,6 +1154,8 @@
 				808D03CF1E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h */,
 				808D03D11E96CDF30030F23E /* SBBForwardCursorPagedResourceListInternal.h */,
 				808D03D01E96CDF30030F23E /* SBBForwardCursorPagedResourceList.m */,
+				806C42731FFF0DB1007A51D8 /* SBBHeightConstraints.h */,
+				806C42741FFF0DB2007A51D8 /* SBBHeightConstraints.m */,
 				606FDE231A2F9E4300898466 /* SBBIdentifierHolder.h */,
 				606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */,
 				80E8196D1A83E8EB00513919 /* SBBImage.h */,
@@ -1184,6 +1212,8 @@
 				6056DE241CF61F6500C21E82 /* SBBUserProfileInternal.h */,
 				807AE2F61B62E98C002588BB /* SBBUserSessionInfo.h */,
 				807AE2F71B62E98C002588BB /* SBBUserSessionInfo.m */,
+				806C42781FFF0DC8007A51D8 /* SBBWeightConstraints.h */,
+				806C42771FFF0DC8007A51D8 /* SBBWeightConstraints.m */,
 			);
 			path = BridgeAPITypes;
 			sourceTree = "<group>";
@@ -1638,6 +1668,8 @@
 			children = (
 				60F1E4141A420E96009B380E /* _SBBActivity.h */,
 				60F1E4151A420E96009B380E /* _SBBActivity.m */,
+				806C42641FFF0D32007A51D8 /* _SBBBloodPressureConstraints.h */,
+				806C42541FFF0D32007A51D8 /* _SBBBloodPressureConstraints.m */,
 				800E792019ED73FD00EEE612 /* _SBBBooleanConstraints.h */,
 				800E792119ED73FD00EEE612 /* _SBBBooleanConstraints.m */,
 				80F7C32E19E5DC0D00574800 /* _SBBBridgeObject.h */,
@@ -1664,6 +1696,8 @@
 				808D03C91E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h */,
 				808D03CB1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceListInternal.h */,
 				808D03CA1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m */,
+				806C42671FFF0D45007A51D8 /* _SBBHeightConstraints.h */,
+				806C42681FFF0D46007A51D8 /* _SBBHeightConstraints.m */,
 				606FDE1F1A2F9DC800898466 /* _SBBIdentifierHolder.h */,
 				606FDE201A2F9DC800898466 /* _SBBIdentifierHolder.m */,
 				80E819601A83E89E00513919 /* _SBBImage.h */,
@@ -1718,6 +1752,8 @@
 				80F7C33719E5DC0D00574800 /* _SBBUserProfile.m */,
 				807AE2E61B62E8C3002588BB /* _SBBUserSessionInfo.h */,
 				807AE2E71B62E8C3002588BB /* _SBBUserSessionInfo.m */,
+				806C426C1FFF0D7E007A51D8 /* _SBBWeightConstraints.h */,
+				806C426B1FFF0D7E007A51D8 /* _SBBWeightConstraints.m */,
 			);
 			path = MachineGeneratedDoNotEdit;
 			sourceTree = "<group>";
@@ -1747,10 +1783,12 @@
 				80F88E4B1AF98DA70090D462 /* SBBActivityManager.h in Headers */,
 				80561DB71E6A0866005FBFA3 /* _SBBResourceListInternal.h in Headers */,
 				80B2C6421E3AD493001F9FEA /* ZZDataChannelOutput.h in Headers */,
+				806C426E1FFF0D7E007A51D8 /* _SBBWeightConstraints.h in Headers */,
 				805D4BEC1ECBAC57002143F0 /* _SBBSchemaReference.h in Headers */,
 				800E793119ED740F00EEE612 /* _SBBDecimalConstraints.h in Headers */,
 				8017AF7219DA0359001AF9BA /* UIDevice+Hardware.h in Headers */,
 				8026D69219E892B5008942B0 /* SBBUploadRequest.h in Headers */,
+				806C42691FFF0D46007A51D8 /* _SBBHeightConstraints.h in Headers */,
 				8045458D1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch in Headers */,
 				8026D67E19E857FC008942B0 /* SBBBridgeAPIManager.h in Headers */,
 				80E60D9F19FAD56C0053D166 /* _SBBSchedule.h in Headers */,
@@ -1799,6 +1837,8 @@
 				8026BD2619C8948E0077F3EB /* SBBComponent.h in Headers */,
 				60F1E41F1A420EE4009B380E /* SBBActivity.h in Headers */,
 				80104A6619D4CFE5001F2573 /* SBBObjectManager.h in Headers */,
+				806C42711FFF0D9C007A51D8 /* SBBBloodPressureConstraints.h in Headers */,
+				806C42751FFF0DB2007A51D8 /* SBBHeightConstraints.h in Headers */,
 				800E796519ED74B600EEE612 /* SBBMultiValueConstraints.h in Headers */,
 				80855F5619BE258C006601C7 /* BridgeSDK.h in Headers */,
 				80B2C6341E3AD493001F9FEA /* ZZArchive.h in Headers */,
@@ -1895,8 +1935,10 @@
 				807AE2FC1B62E98C002588BB /* SBBTaskReference.h in Headers */,
 				80B2C63C1E3AD493001F9FEA /* ZZArchiveEntryWriter.h in Headers */,
 				80104A6119D4CDC4001F2573 /* SBBBridgeObject.h in Headers */,
+				806C427A1FFF0DC8007A51D8 /* SBBWeightConstraints.h in Headers */,
 				6056DE251CF61F6500C21E82 /* SBBUserProfileInternal.h in Headers */,
 				80B2C64A1E3AD493001F9FEA /* ZZFileChannelOutput.h in Headers */,
+				806C42661FFF0D33007A51D8 /* _SBBBloodPressureConstraints.h in Headers */,
 				800E792F19ED740F00EEE612 /* _SBBDateTimeConstraints.h in Headers */,
 				8051DCE11A1E6FDB0068D06E /* RNEncryptor.h in Headers */,
 				8051DCDF1A1E6FDB0068D06E /* RNDecryptor.h in Headers */,
@@ -2391,6 +2433,7 @@
 				80E60DA919FAD64C0053D166 /* SBBScheduleManager.m in Sources */,
 				80F7C34219E5DC0D00574800 /* _SBBBridgeObject.m in Sources */,
 				800E794219ED744000EEE612 /* _SBBMultiValueConstraints.m in Sources */,
+				806C42651FFF0D33007A51D8 /* _SBBBloodPressureConstraints.m in Sources */,
 				80E568331FD9D88600BB644E /* SBBOAuthManager.m in Sources */,
 				800E797019ED74D000EEE612 /* SBBTimeConstraints.m in Sources */,
 				6056DE1E1CF61F4000C21E82 /* SBBStudyParticipant.m in Sources */,
@@ -2414,6 +2457,7 @@
 				80F7C34819E5DC0D00574800 /* _SBBSurveyQuestion.m in Sources */,
 				80E568291FD9D7F400BB644E /* _SBBOAuthAccessToken.m in Sources */,
 				800E794019ED744000EEE612 /* _SBBIntegerConstraints.m in Sources */,
+				806C426D1FFF0D7E007A51D8 /* _SBBWeightConstraints.m in Sources */,
 				80B2C6431E3AD493001F9FEA /* ZZDataChannelOutput.m in Sources */,
 				80BA3D9A1C3F19D400AA70FB /* SBBConsentStatus.m in Sources */,
 				800E795619ED74A600EEE612 /* SBBDateConstraints.m in Sources */,
@@ -2424,10 +2468,13 @@
 				805D4BED1ECBAC57002143F0 /* _SBBSchemaReference.m in Sources */,
 				8026BD1E19C883FC0077F3EB /* BridgeSDK.m in Sources */,
 				800E796819ED74B600EEE612 /* SBBStringConstraints.m in Sources */,
+				806C426A1FFF0D46007A51D8 /* _SBBHeightConstraints.m in Sources */,
 				80104A5D19D4CD9E001F2573 /* SBBUserProfile.m in Sources */,
 				80C87F0E1C18E61000FE8A63 /* SBBDataGroups.m in Sources */,
 				80104A3E19D1F61B001F2573 /* SBBUserManager.m in Sources */,
+				806C42721FFF0D9C007A51D8 /* SBBBloodPressureConstraints.m in Sources */,
 				800E792319ED73FD00EEE612 /* _SBBBooleanConstraints.m in Sources */,
+				806C42791FFF0DC8007A51D8 /* SBBWeightConstraints.m in Sources */,
 				8026D68F19E89149008942B0 /* _SBBUploadRequest.m in Sources */,
 				606FDE221A2F9DC800898466 /* _SBBIdentifierHolder.m in Sources */,
 				807AE2F91B62E98C002588BB /* SBBSurveyReference.m in Sources */,
@@ -2497,6 +2544,7 @@
 				8026D68B19E888DB008942B0 /* SBBUploadSession.m in Sources */,
 				80F88E501AF991950090D462 /* SBBScheduledActivity.m in Sources */,
 				800E794C19ED748900EEE612 /* SBBBooleanConstraints.m in Sources */,
+				806C42761FFF0DB2007A51D8 /* SBBHeightConstraints.m in Sources */,
 				80B2C65D1E3AD493001F9FEA /* ZZStoreOutputStream.m in Sources */,
 				80B2C6461E3AD493001F9FEA /* ZZDeflateOutputStream.m in Sources */,
 				80F7C34A19E5DC0D00574800 /* _SBBUserProfile.m in Sources */,
