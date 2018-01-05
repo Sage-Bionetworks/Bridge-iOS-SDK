@@ -35,6 +35,8 @@
 
 #import "SBBJSONValue.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBActivity;
 
 @protocol _SBBScheduledActivity
@@ -43,24 +45,25 @@
 
 @interface _SBBScheduledActivity : SBBBridgeObject
 
-@property (nonatomic, strong) id<SBBJSONValue> clientData;
+@property (nullable, nonatomic, strong) id<SBBJSONValue> clientData;
 
-@property (nonatomic, strong) NSDate* expiresOn;
+@property (nullable, nonatomic, strong) NSDate* expiresOn;
 
-@property (nonatomic, strong) NSDate* finishedOn;
+@property (nullable, nonatomic, strong) NSDate* finishedOn;
 
 @property (nonatomic, strong) NSString* guid;
 
-@property (nonatomic, strong) NSNumber* persistent;
+@property (nullable, nonatomic, strong) NSNumber* persistent;
 
 @property (nonatomic, assign) BOOL persistentValue;
 
 @property (nonatomic, strong) NSDate* scheduledOn;
 
-@property (nonatomic, strong) NSDate* startedOn;
+@property (nullable, nonatomic, strong) NSDate* startedOn;
 
-@property (nonatomic, strong, readwrite) SBBActivity *activity;
+@property (nullable, nonatomic, strong, readwrite) SBBActivity *activity;
 
-- (void) setActivity: (SBBActivity*) activity_ settingInverse: (BOOL) setInverse;
+- (void) setActivity: (SBBActivity* _Nullable) activity_ settingInverse: (BOOL) setInverse;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -220,11 +220,11 @@
 
     managedObject.finishedOn = ((id)self.finishedOn == [NSNull null]) ? nil : self.finishedOn;
 
-    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
+    if (self.guid) managedObject.guid = self.guid;
 
     managedObject.persistent = ((id)self.persistent == [NSNull null]) ? nil : self.persistent;
 
-    managedObject.scheduledOn = ((id)self.scheduledOn == [NSNull null]) ? nil : self.scheduledOn;
+    if (self.scheduledOn) managedObject.scheduledOn = self.scheduledOn;
 
     managedObject.startedOn = ((id)self.startedOn == [NSNull null]) ? nil : self.startedOn;
 

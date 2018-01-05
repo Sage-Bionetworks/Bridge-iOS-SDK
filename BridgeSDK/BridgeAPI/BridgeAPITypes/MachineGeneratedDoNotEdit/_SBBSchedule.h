@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBActivity;
 
 @protocol _SBBSchedule
@@ -41,17 +43,17 @@
 
 @interface _SBBSchedule : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* cronTrigger;
+@property (nullable, nonatomic, strong) NSString* cronTrigger;
 
-@property (nonatomic, strong) NSString* delay;
+@property (nullable, nonatomic, strong) NSString* delay;
 
-@property (nonatomic, strong) NSDate* endsOn;
+@property (nullable, nonatomic, strong) NSDate* endsOn;
 
-@property (nonatomic, strong) NSString* eventId;
+@property (nullable, nonatomic, strong) NSString* eventId;
 
-@property (nonatomic, strong) NSString* expires;
+@property (nullable, nonatomic, strong) NSString* expires;
 
-@property (nonatomic, strong) NSString* interval;
+@property (nullable, nonatomic, strong) NSString* interval;
 
 @property (nonatomic, strong) NSString* label;
 
@@ -61,7 +63,7 @@
 
 @property (nonatomic, strong) NSString* scheduleType;
 
-@property (nonatomic, strong) NSDate* startsOn;
+@property (nullable, nonatomic, strong) NSDate* startsOn;
 
 @property (nonatomic, strong) NSArray* times;
 
@@ -81,3 +83,4 @@
 - (void)replaceActivitiesAtIndexes:(NSIndexSet *)indexes withActivities:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

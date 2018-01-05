@@ -33,13 +33,15 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBSurveyReference
 
 @end
 
 @interface _SBBSurveyReference : SBBBridgeObject
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nullable, nonatomic, strong) NSDate* createdOn;
 
 @property (nonatomic, strong) NSString* guid;
 
@@ -48,3 +50,4 @@
 @property (nonatomic, strong) NSString* identifier;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -36,6 +36,7 @@
           @"activity": @{
                   @"activityType": @"survey",
                   @"label": @"This is a survey",
+                  @"guid":@"survey-activity-guid",
                   @"labelDetail": @"It will be long and boring and tedious to fill out",
                   @"survey": @{
                           @"identifier": @"this-is-a-survey",
@@ -56,6 +57,7 @@
           @"activity": @{
                   @"activityType": @"task",
                   @"label": @"This is a task",
+                  @"guid":@"task-activity-guid",
                   @"labelDetail": @"It will be tricky and frustrating to perform",
                   @"task": @{
                           @"identifier": @"this-is-a-task",
@@ -73,6 +75,7 @@
           @"activity": @{
                   @"activityType": @"compound",
                   @"label": @"This is a compound activity",
+                  @"guid":@"compound-activity-guid",
                   @"labelDetail": @"It will be tricky and frustrating to perform",
                   @"compoundActivity": @{
                           @"type": @"CompoundActivity",
@@ -208,6 +211,7 @@
       @"activity": @{
               @"activityType": @"survey",
               @"label": @"This is a survey",
+              @"guid":@"survey-activity-guid-task1",
               @"labelDetail": @"It will be long and boring and tedious to fill out",
               @"survey": @{
                       @"identifier": @"this-is-a-survey",
@@ -230,6 +234,7 @@
       @"activity": @{
               @"activityType": @"survey",
               @"label": @"This is a survey",
+              @"guid":@"survey-activity-guid-task2",
               @"labelDetail": @"It will be long and boring and tedious to fill out",
               @"survey": @{
                       @"identifier": @"this-is-a-survey",
@@ -337,6 +342,7 @@
       @"activity": @{
               @"activityType": @"survey",
               @"label": @"This is a survey",
+              @"guid":@"survey-activity-guid-task",
               @"labelDetail": @"It will be long and boring and tedious to fill out",
               @"survey": @{
                       @"identifier": @"this-is-a-survey",

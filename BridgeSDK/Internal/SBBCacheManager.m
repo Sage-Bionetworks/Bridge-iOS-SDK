@@ -200,7 +200,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
             } else if (create) {
                 fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
                 [fetched createInContext:context withObjectManager:om cacheManager:self];
-                [self saveCacheIOContext];
+                // caller's responsibility to save the cache context once all required fields have been set
                 objectCreated = YES;
             }
             

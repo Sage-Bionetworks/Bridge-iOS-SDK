@@ -154,7 +154,7 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.id = ((id)self.id == [NSNull null]) ? nil : self.id;
+    if (self.id) managedObject.id = self.id;
 
     managedObject.revision = ((id)self.revision == [NSNull null]) ? nil : self.revision;
 

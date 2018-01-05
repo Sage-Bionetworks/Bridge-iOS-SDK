@@ -174,7 +174,7 @@
 
     managedObject.height = ((id)self.height == [NSNull null]) ? nil : self.height;
 
-    managedObject.source = ((id)self.source == [NSNull null]) ? nil : self.source;
+    if (self.source) managedObject.source = self.source;
 
     managedObject.width = ((id)self.width == [NSNull null]) ? nil : self.width;
 

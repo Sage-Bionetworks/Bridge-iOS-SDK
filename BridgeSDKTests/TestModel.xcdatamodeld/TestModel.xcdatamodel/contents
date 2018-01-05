@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11232" systemVersion="16A323" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="BridgeObject_test" isAbstract="YES" syncable="YES">
-        <attribute name="type" optional="YES" attributeType="String" syncable="YES">
+        <attribute name="type" attributeType="String" syncable="YES">
             <userInfo>
                 <entry key="mogenerator.readonly" value="YES"/>
             </userInfo>

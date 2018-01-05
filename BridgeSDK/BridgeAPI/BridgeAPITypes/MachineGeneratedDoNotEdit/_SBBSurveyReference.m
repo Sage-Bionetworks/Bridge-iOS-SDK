@@ -162,11 +162,11 @@
 
     managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
 
-    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
+    if (self.guid) managedObject.guid = self.guid;
 
-    managedObject.href = ((id)self.href == [NSNull null]) ? nil : self.href;
+    if (self.href) managedObject.href = self.href;
 
-    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
+    if (self.identifier) managedObject.identifier = self.identifier;
 
     // Calling code will handle saving these changes to cacheContext.
 }

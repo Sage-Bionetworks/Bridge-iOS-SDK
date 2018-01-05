@@ -33,20 +33,35 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBSurveyRule
 
 @end
 
 @interface _SBBSurveyRule : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* endSurvey;
+@property (nullable, nonatomic, strong) NSString* assignDataGroup;
+
+@property (nullable, nonatomic, strong) NSSet<NSString *>* dataGroups;
+
+@property (nullable, nonatomic, strong) NSNumber* displayIf;
+
+@property (nonatomic, assign) BOOL displayIfValue;
+
+@property (nullable, nonatomic, strong) NSNumber* displayUnless;
+
+@property (nonatomic, assign) BOOL displayUnlessValue;
+
+@property (nullable, nonatomic, strong) NSNumber* endSurvey;
 
 @property (nonatomic, assign) BOOL endSurveyValue;
 
 @property (nonatomic, strong) NSString* operator;
 
-@property (nonatomic, strong) NSString* skipTo;
+@property (nullable, nonatomic, strong) NSString* skipTo;
 
-@property (nonatomic, strong) id value;
+@property (nullable, nonatomic, strong) id value;
 
 @end
+NS_ASSUME_NONNULL_END

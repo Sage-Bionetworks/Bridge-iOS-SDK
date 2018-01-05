@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBTestBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBTestBridgeExtendableObject
 
 @end
@@ -40,3 +42,4 @@
 @interface _SBBTestBridgeExtendableObject : SBBTestBridgeObject
 
 @end
+NS_ASSUME_NONNULL_END

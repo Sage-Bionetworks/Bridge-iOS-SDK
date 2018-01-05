@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBImage;
 
 @protocol _SBBSurveyQuestionOption
@@ -41,14 +43,15 @@
 
 @interface _SBBSurveyQuestionOption : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* detail;
+@property (nullable, nonatomic, strong) NSString* detail;
 
 @property (nonatomic, strong) NSString* label;
 
-@property (nonatomic, strong) id<NSCopying, NSCoding, NSObject> value;
+@property (nullable, nonatomic, strong) id<NSCopying, NSCoding, NSObject> value;
 
-@property (nonatomic, strong, readwrite) SBBImage *image;
+@property (nullable, nonatomic, strong, readwrite) SBBImage *image;
 
-- (void) setImage: (SBBImage*) image_ settingInverse: (BOOL) setInverse;
+- (void) setImage: (SBBImage* _Nullable) image_ settingInverse: (BOOL) setInverse;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBSurveyRule;
 
 @protocol _SBBSurveyConstraints
@@ -41,9 +43,9 @@
 
 @interface _SBBSurveyConstraints : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* dataType;
+@property (nullable, nonatomic, strong) NSString* dataType;
 
-@property (nonatomic, strong, readonly) NSArray *rules;
+@property (nullable, nonatomic, strong, readonly) NSArray *rules;
 
 - (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
 - (void)addRulesObject:(SBBSurveyRule*)value_;
@@ -59,3 +61,4 @@
 - (void)replaceRulesAtIndexes:(NSIndexSet *)indexes withRules:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

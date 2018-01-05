@@ -94,6 +94,7 @@
 {
 	if ((self = [super init]))
 	{
+		self.version = [NSNumber numberWithDouble:0];
 
 	}
 
@@ -333,11 +334,11 @@
 
     managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
 
-    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
+    if (self.guid) managedObject.guid = self.guid;
 
     managedObject.guidAndCreatedOn = ((id)self.guidAndCreatedOn == [NSNull null]) ? nil : self.guidAndCreatedOn;
 
-    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
+    if (self.identifier) managedObject.identifier = self.identifier;
 
     managedObject.modifiedOn = ((id)self.modifiedOn == [NSNull null]) ? nil : self.modifiedOn;
 
@@ -345,13 +346,13 @@
 
     managedObject.moduleVersion = ((id)self.moduleVersion == [NSNull null]) ? nil : self.moduleVersion;
 
-    managedObject.name = ((id)self.name == [NSNull null]) ? nil : self.name;
+    if (self.name) managedObject.name = self.name;
 
     managedObject.published = ((id)self.published == [NSNull null]) ? nil : self.published;
 
     managedObject.schemaRevision = ((id)self.schemaRevision == [NSNull null]) ? nil : self.schemaRevision;
 
-    managedObject.version = ((id)self.version == [NSNull null]) ? nil : self.version;
+    if (self.version) managedObject.version = self.version;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSOrderedSet *elementsCopy = [managedObject.elements copy];

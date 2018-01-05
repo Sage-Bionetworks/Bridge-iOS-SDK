@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBBridgeObject;
 
 @protocol _SBBResourceList
@@ -41,11 +43,11 @@
 
 @interface _SBBResourceList : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* total;
+@property (nullable, nonatomic, strong) NSNumber* total;
 
 @property (nonatomic, assign) int64_t totalValue;
 
-@property (nonatomic, strong, readonly) NSArray *items;
+@property (nullable, nonatomic, strong, readonly) NSArray *items;
 
 - (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
 - (void)addItemsObject:(SBBBridgeObject*)value_;
@@ -61,3 +63,4 @@
 - (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

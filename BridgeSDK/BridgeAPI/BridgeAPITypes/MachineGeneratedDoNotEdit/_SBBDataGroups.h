@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBDataGroups
 
 @end
@@ -42,3 +44,4 @@
 @property (nonatomic, strong) NSSet<NSString *>* dataGroups;
 
 @end
+NS_ASSUME_NONNULL_END

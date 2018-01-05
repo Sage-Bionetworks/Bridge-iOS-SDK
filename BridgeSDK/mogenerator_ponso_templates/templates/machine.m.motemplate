@@ -501,7 +501,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 		<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
     <$if Attribute.hasScalarAttributeType$><$if Attribute.isUnsigned$>
         // ensure that unsigned-ness is preserved
-    <$if Attribute.isReadonly$>_<$Attribute.name$> = [NSNumber <$Attribute.scalarFactoryMethodName$>[managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>]];
+    <$if Attribute.isReadonly$>_<$Attribute.name$>Value = [NSNumber <$Attribute.scalarFactoryMethodName$>[managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>]];
     <$else$>
         self.<$Attribute.name$>Value = [managedObject.<$Attribute.name$> <$Attribute.scalarAccessorMethodName$>];
     <$endif$>
@@ -588,7 +588,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
     <$else$>[super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     <$foreach Relationship noninheritedRelationships do$><$if ! Relationship.userInfo.notInPONSODictionary $>NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;<$break$><$endif$><$endforeach do$>
 	<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasDefinedAttributeType$>
-    managedObject.<$Attribute.name$> = ((id)self.<$Attribute.name$> == [NSNull null]) ? nil : self.<$Attribute.name$>;
+    <$if Attribute.optional$>managedObject.<$Attribute.name$> = ((id)self.<$Attribute.name$> == [NSNull null]) ? nil : self.<$Attribute.name$>;<$else$>if (self.<$Attribute.name$>) managedObject.<$Attribute.name$> = self.<$Attribute.name$>;<$endif$>
 	<$endif$><$endforeach do$>
     <$foreach Relationship noninheritedRelationships do$>
     <$if ! Relationship.userInfo.notInPONSODictionary $>

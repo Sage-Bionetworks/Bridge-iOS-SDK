@@ -33,14 +33,17 @@
 #import <Foundation/Foundation.h>
 #import "SBBResourceList.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBDateTimeRangeResourceList
 
 @end
 
 @interface _SBBDateTimeRangeResourceList : SBBResourceList
 
-@property (nonatomic, strong) NSDate* endTime;
+@property (nullable, nonatomic, strong) NSDate* endTime;
 
-@property (nonatomic, strong) NSDate* startTime;
+@property (nullable, nonatomic, strong) NSDate* startTime;
 
 @end
+NS_ASSUME_NONNULL_END

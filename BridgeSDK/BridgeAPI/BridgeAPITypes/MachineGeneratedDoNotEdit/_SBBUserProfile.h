@@ -33,16 +33,19 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBUserProfile
 
 @end
 
 @interface _SBBUserProfile : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* email;
+@property (nullable, nonatomic, strong) NSString* email;
 
-@property (nonatomic, strong) NSString* firstName;
+@property (nullable, nonatomic, strong) NSString* firstName;
 
-@property (nonatomic, strong) NSString* lastName;
+@property (nullable, nonatomic, strong) NSString* lastName;
 
 @end
+NS_ASSUME_NONNULL_END

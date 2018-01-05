@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBUploadSession
 
 @end
@@ -46,3 +48,4 @@
 @property (nonatomic, strong) NSString* url;
 
 @end
+NS_ASSUME_NONNULL_END

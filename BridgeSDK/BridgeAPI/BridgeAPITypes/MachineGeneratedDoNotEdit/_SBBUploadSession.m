@@ -148,11 +148,11 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.expires = ((id)self.expires == [NSNull null]) ? nil : self.expires;
+    if (self.expires) managedObject.expires = self.expires;
 
-    managedObject.id = ((id)self.id == [NSNull null]) ? nil : self.id;
+    if (self.id) managedObject.id = self.id;
 
-    managedObject.url = ((id)self.url == [NSNull null]) ? nil : self.url;
+    if (self.url) managedObject.url = self.url;
 
     // Calling code will handle saving these changes to cacheContext.
 }

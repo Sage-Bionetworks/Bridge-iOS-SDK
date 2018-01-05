@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBSurveyElement;
 
 @protocol _SBBSurvey
@@ -41,29 +43,29 @@
 
 @interface _SBBSurvey : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* copyrightNotice;
+@property (nullable, nonatomic, strong) NSString* copyrightNotice;
 
-@property (nonatomic, strong) NSDate* createdOn;
+@property (nullable, nonatomic, strong) NSDate* createdOn;
 
 @property (nonatomic, strong) NSString* guid;
 
 @property (nonatomic, strong) NSString* identifier;
 
-@property (nonatomic, strong) NSDate* modifiedOn;
+@property (nullable, nonatomic, strong) NSDate* modifiedOn;
 
-@property (nonatomic, strong) NSString* moduleId;
+@property (nullable, nonatomic, strong) NSString* moduleId;
 
-@property (nonatomic, strong) NSNumber* moduleVersion;
+@property (nullable, nonatomic, strong) NSNumber* moduleVersion;
 
 @property (nonatomic, assign) int64_t moduleVersionValue;
 
 @property (nonatomic, strong) NSString* name;
 
-@property (nonatomic, strong) NSNumber* published;
+@property (nullable, nonatomic, strong) NSNumber* published;
 
 @property (nonatomic, assign) BOOL publishedValue;
 
-@property (nonatomic, strong) NSNumber* schemaRevision;
+@property (nullable, nonatomic, strong) NSNumber* schemaRevision;
 
 @property (nonatomic, assign) double schemaRevisionValue;
 
@@ -87,3 +89,4 @@
 - (void)replaceElementsAtIndexes:(NSIndexSet *)indexes withElements:(NSArray *)values;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -176,7 +176,7 @@
 
     managedObject.detail = ((id)self.detail == [NSNull null]) ? nil : self.detail;
 
-    managedObject.label = ((id)self.label == [NSNull null]) ? nil : self.label;
+    if (self.label) managedObject.label = self.label;
 
     managedObject.value = ((id)self.value == [NSNull null]) ? nil : self.value;
 

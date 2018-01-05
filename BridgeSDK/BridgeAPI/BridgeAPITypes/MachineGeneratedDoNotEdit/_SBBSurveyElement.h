@@ -33,6 +33,9 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class SBBSurveyRule;
 @class SBBSurveyRule;
 
 @protocol _SBBSurveyElement
@@ -47,11 +50,13 @@
 
 @property (nonatomic, strong) NSString* prompt;
 
-@property (nonatomic, strong) NSString* promptDetail;
+@property (nullable, nonatomic, strong) NSString* promptDetail;
 
 @property (nonatomic, strong) NSString* title;
 
-@property (nonatomic, strong, readonly) NSArray *afterRules;
+@property (nullable, nonatomic, strong, readonly) NSArray *afterRules;
+
+@property (nullable, nonatomic, strong, readonly) NSArray *beforeRules;
 
 - (void)addAfterRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
 - (void)addAfterRulesObject:(SBBSurveyRule*)value_;
@@ -66,4 +71,18 @@
 - (void)replaceObjectInAfterRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
 - (void)replaceAfterRulesAtIndexes:(NSIndexSet *)indexes withAfterRules:(NSArray *)values;
 
+- (void)addBeforeRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
+- (void)addBeforeRulesObject:(SBBSurveyRule*)value_;
+- (void)removeBeforeRulesObjects;
+- (void)removeBeforeRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeBeforeRulesObject:(SBBSurveyRule*)value_;
+
+- (void)insertObject:(SBBSurveyRule*)value inBeforeRulesAtIndex:(NSUInteger)idx;
+- (void)removeObjectFromBeforeRulesAtIndex:(NSUInteger)idx;
+- (void)insertBeforeRules:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
+- (void)removeBeforeRulesAtIndexes:(NSIndexSet *)indexes;
+- (void)replaceObjectInBeforeRulesAtIndex:(NSUInteger)idx withObject:(SBBSurveyRule*)value;
+- (void)replaceBeforeRulesAtIndexes:(NSIndexSet *)indexes withBeforeRules:(NSArray *)values;
+
 @end
+NS_ASSUME_NONNULL_END

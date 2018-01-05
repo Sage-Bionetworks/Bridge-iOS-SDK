@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class SBBSchemaReference;
 @class SBBSurveyReference;
 
@@ -44,9 +46,9 @@
 
 @property (nonatomic, strong) NSString* taskIdentifier;
 
-@property (nonatomic, strong, readonly) NSArray *schemaList;
+@property (nullable, nonatomic, strong, readonly) NSArray *schemaList;
 
-@property (nonatomic, strong, readonly) NSArray *surveyList;
+@property (nullable, nonatomic, strong, readonly) NSArray *surveyList;
 
 - (void)addSchemaListObject:(SBBSchemaReference*)value_ settingInverse: (BOOL) setInverse;
 - (void)addSchemaListObject:(SBBSchemaReference*)value_;
@@ -61,3 +63,4 @@
 - (void)removeSurveyListObject:(SBBSurveyReference*)value_;
 
 @end
+NS_ASSUME_NONNULL_END

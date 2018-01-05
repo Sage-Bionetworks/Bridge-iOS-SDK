@@ -33,20 +33,23 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBImage
 
 @end
 
 @interface _SBBImage : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* height;
+@property (nullable, nonatomic, strong) NSNumber* height;
 
 @property (nonatomic, assign) double heightValue;
 
 @property (nonatomic, strong) NSString* source;
 
-@property (nonatomic, strong) NSNumber* width;
+@property (nullable, nonatomic, strong) NSNumber* width;
 
 @property (nonatomic, assign) double widthValue;
 
 @end
+NS_ASSUME_NONNULL_END
