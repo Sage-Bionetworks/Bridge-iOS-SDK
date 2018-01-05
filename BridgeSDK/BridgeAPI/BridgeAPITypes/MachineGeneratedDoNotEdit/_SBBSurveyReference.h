@@ -45,9 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString* guid;
 
-@property (nullable, nonatomic, strong) NSString* href;
+@property (nonatomic, strong) NSString* href;
 
-@property (nullable, nonatomic, strong) NSString* identifier;
+@property (nonatomic, strong) NSString* identifier;
 
 @end
 NS_ASSUME_NONNULL_END

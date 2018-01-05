@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBUserProfile : SBBBridgeObject
 
-@property (nonatomic, strong) NSString* email;
+@property (nullable, nonatomic, strong) NSString* email;
 
 @property (nullable, nonatomic, strong) NSString* firstName;
 
