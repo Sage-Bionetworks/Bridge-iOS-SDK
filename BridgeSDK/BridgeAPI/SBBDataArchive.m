@@ -223,6 +223,11 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 //Compiles the final info.json file and inserts it into the zip archive.
 - (BOOL)completeArchive:(NSError **)error
 {
+    // Exit early if this method has already been called.
+    if (self.isCompleted) {
+        return YES;
+    }
+    
     BOOL success = YES;
     NSError *internalError = nil;
     if (!self.isEmpty) {
@@ -256,12 +261,20 @@ static NSString * kJsonInfoFilename                 = @"info.json";
             }
         }
     }
+    _completed = success;
     
     return success;
 }
 
 - (void)encryptAndUploadArchive
 {
+    // Check that the archive has been closed.
+    if (!self.isCompleted) {
+        if (![self completeArchive:nil]) {
+            return;
+        }
+    }
+    
     SBBEncryptor *encryptor = [SBBEncryptor new];
     
     [encryptor encryptFileAtURL:_unencryptedURL withCompletion:^(NSURL *url, NSError *error) {
