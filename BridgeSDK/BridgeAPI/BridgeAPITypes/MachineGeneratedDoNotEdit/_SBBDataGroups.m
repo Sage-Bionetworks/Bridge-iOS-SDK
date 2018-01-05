@@ -133,7 +133,7 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.dataGroups = ((id)self.dataGroups == [NSNull null]) ? nil : self.dataGroups;
+    if (self.dataGroups) managedObject.dataGroups = self.dataGroups;
 
     // Calling code will handle saving these changes to cacheContext.
 }

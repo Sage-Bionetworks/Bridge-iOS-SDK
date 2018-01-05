@@ -293,15 +293,15 @@
 
     managedObject.interval = ((id)self.interval == [NSNull null]) ? nil : self.interval;
 
-    managedObject.label = ((id)self.label == [NSNull null]) ? nil : self.label;
+    if (self.label) managedObject.label = self.label;
 
-    managedObject.persistent = ((id)self.persistent == [NSNull null]) ? nil : self.persistent;
+    if (self.persistent) managedObject.persistent = self.persistent;
 
-    managedObject.scheduleType = ((id)self.scheduleType == [NSNull null]) ? nil : self.scheduleType;
+    if (self.scheduleType) managedObject.scheduleType = self.scheduleType;
 
     managedObject.startsOn = ((id)self.startsOn == [NSNull null]) ? nil : self.startsOn;
 
-    managedObject.times = ((id)self.times == [NSNull null]) ? nil : self.times;
+    if (self.times) managedObject.times = self.times;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSOrderedSet *activitiesCopy = [managedObject.activities copy];

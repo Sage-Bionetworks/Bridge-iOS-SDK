@@ -164,15 +164,15 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.birthdate = ((id)self.birthdate == [NSNull null]) ? nil : self.birthdate;
+    if (self.birthdate) managedObject.birthdate = self.birthdate;
 
     managedObject.imageData = ((id)self.imageData == [NSNull null]) ? nil : self.imageData;
 
     managedObject.imageMimeType = ((id)self.imageMimeType == [NSNull null]) ? nil : self.imageMimeType;
 
-    managedObject.name = ((id)self.name == [NSNull null]) ? nil : self.name;
+    if (self.name) managedObject.name = self.name;
 
-    managedObject.scope = ((id)self.scope == [NSNull null]) ? nil : self.scope;
+    if (self.scope) managedObject.scope = self.scope;
 
     // Calling code will handle saving these changes to cacheContext.
 }

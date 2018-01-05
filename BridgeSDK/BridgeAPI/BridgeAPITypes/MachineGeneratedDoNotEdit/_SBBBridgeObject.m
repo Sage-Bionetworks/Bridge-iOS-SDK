@@ -143,7 +143,7 @@
 
     managedObject.lastRetrieved = ((id)self.lastRetrieved == [NSNull null]) ? nil : self.lastRetrieved;
 
-    managedObject.type = ((id)self.type == [NSNull null]) ? nil : self.type;
+    if (self.type) managedObject.type = self.type;
 
     // Calling code will handle saving these changes to cacheContext.
 }

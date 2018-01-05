@@ -237,7 +237,7 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.taskIdentifier = ((id)self.taskIdentifier == [NSNull null]) ? nil : self.taskIdentifier;
+    if (self.taskIdentifier) managedObject.taskIdentifier = self.taskIdentifier;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSSet *schemaListCopy = [managedObject.schemaList copy];

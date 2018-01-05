@@ -158,7 +158,7 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
+    if (self.identifier) managedObject.identifier = self.identifier;
 
     // destination entity SchemaReference is not directly cacheable, so delete it and create the replacement
     if (managedObject.schema) {

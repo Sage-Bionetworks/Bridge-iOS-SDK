@@ -156,13 +156,13 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.accessToken = ((id)self.accessToken == [NSNull null]) ? nil : self.accessToken;
+    if (self.accessToken) managedObject.accessToken = self.accessToken;
 
-    managedObject.expiresOn = ((id)self.expiresOn == [NSNull null]) ? nil : self.expiresOn;
+    if (self.expiresOn) managedObject.expiresOn = self.expiresOn;
 
     managedObject.providerUserID = ((id)self.providerUserID == [NSNull null]) ? nil : self.providerUserID;
 
-    managedObject.vendorID = ((id)self.vendorID == [NSNull null]) ? nil : self.vendorID;
+    if (self.vendorID) managedObject.vendorID = self.vendorID;
 
     // Calling code will handle saving these changes to cacheContext.
 }

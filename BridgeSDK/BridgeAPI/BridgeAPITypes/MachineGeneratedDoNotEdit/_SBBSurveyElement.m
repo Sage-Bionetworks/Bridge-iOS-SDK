@@ -281,15 +281,15 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
+    if (self.guid) managedObject.guid = self.guid;
 
-    managedObject.identifier = ((id)self.identifier == [NSNull null]) ? nil : self.identifier;
+    if (self.identifier) managedObject.identifier = self.identifier;
 
-    managedObject.prompt = ((id)self.prompt == [NSNull null]) ? nil : self.prompt;
+    if (self.prompt) managedObject.prompt = self.prompt;
 
     managedObject.promptDetail = ((id)self.promptDetail == [NSNull null]) ? nil : self.promptDetail;
 
-    managedObject.title = ((id)self.title == [NSNull null]) ? nil : self.title;
+    if (self.title) managedObject.title = self.title;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSOrderedSet *afterRulesCopy = [managedObject.afterRules copy];

@@ -156,7 +156,7 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.uiHint = ((id)self.uiHint == [NSNull null]) ? nil : self.uiHint;
+    if (self.uiHint) managedObject.uiHint = self.uiHint;
 
     // destination entity SurveyConstraints is not directly cacheable, so delete it and create the replacement
     if (managedObject.constraints) {

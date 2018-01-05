@@ -235,7 +235,7 @@
 
     managedObject.endSurvey = ((id)self.endSurvey == [NSNull null]) ? nil : self.endSurvey;
 
-    managedObject.operator = ((id)self.operator == [NSNull null]) ? nil : self.operator;
+    if (self.operator) managedObject.operator = self.operator;
 
     managedObject.skipTo = ((id)self.skipTo == [NSNull null]) ? nil : self.skipTo;
 

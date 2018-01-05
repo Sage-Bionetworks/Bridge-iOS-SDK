@@ -226,11 +226,11 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
-    managedObject.activityType = ((id)self.activityType == [NSNull null]) ? nil : self.activityType;
+    if (self.activityType) managedObject.activityType = self.activityType;
 
-    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
+    if (self.guid) managedObject.guid = self.guid;
 
-    managedObject.label = ((id)self.label == [NSNull null]) ? nil : self.label;
+    if (self.label) managedObject.label = self.label;
 
     managedObject.labelDetail = ((id)self.labelDetail == [NSNull null]) ? nil : self.labelDetail;
 
