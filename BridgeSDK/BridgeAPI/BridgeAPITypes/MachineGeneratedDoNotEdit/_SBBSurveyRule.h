@@ -41,11 +41,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSurveyRule : SBBBridgeObject
 
+@property (nullable, nonatomic, strong) NSString* assignDataGroup;
+
+@property (nullable, nonatomic, strong) NSSet<NSString *>* dataGroups;
+
+@property (nullable, nonatomic, strong) NSNumber* displayIf;
+
+@property (nonatomic, assign) BOOL displayIfValue;
+
+@property (nullable, nonatomic, strong) NSNumber* displayUnless;
+
+@property (nonatomic, assign) BOOL displayUnlessValue;
+
 @property (nullable, nonatomic, strong) NSNumber* endSurvey;
 
 @property (nonatomic, assign) BOOL endSurveyValue;
 
-@property (nullable, nonatomic, strong) NSString* operator;
+@property (nonatomic, strong) NSString* operator;
 
 @property (nullable, nonatomic, strong) NSString* skipTo;
 

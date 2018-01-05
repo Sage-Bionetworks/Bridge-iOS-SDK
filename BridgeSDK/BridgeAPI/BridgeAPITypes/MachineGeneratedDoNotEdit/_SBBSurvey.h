@@ -47,9 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSDate* createdOn;
 
-@property (nullable, nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSString* guid;
 
-@property (nullable, nonatomic, strong) NSString* identifier;
+@property (nonatomic, strong) NSString* identifier;
 
 @property (nullable, nonatomic, strong) NSDate* modifiedOn;
 
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) int64_t moduleVersionValue;
 
-@property (nullable, nonatomic, strong) NSString* name;
+@property (nonatomic, strong) NSString* name;
 
 @property (nullable, nonatomic, strong) NSNumber* published;
 
@@ -69,11 +69,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) double schemaRevisionValue;
 
-@property (nullable, nonatomic, strong) NSNumber* version;
+@property (nonatomic, strong) NSNumber* version;
 
 @property (nonatomic, assign) double versionValue;
 
-@property (nullable, nonatomic, strong, readonly) NSArray *elements;
+@property (nonatomic, strong, readonly) NSArray *elements;
 
 - (void)addElementsObject:(SBBSurveyElement*)value_ settingInverse: (BOOL) setInverse;
 - (void)addElementsObject:(SBBSurveyElement*)value_;

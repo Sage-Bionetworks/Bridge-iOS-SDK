@@ -94,6 +94,7 @@
 {
 	if ((self = [super init]))
 	{
+		self.version = [NSNumber numberWithDouble:0];
 
 	}
 

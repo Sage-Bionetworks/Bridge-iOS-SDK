@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL allowOtherValue;
 
-@property (nullable, nonatomic, strong, readonly) NSArray *enumeration;
+@property (nonatomic, strong, readonly) NSArray *enumeration;
 
 - (void)addEnumerationObject:(SBBSurveyQuestionOption*)value_ settingInverse: (BOOL) setInverse;
 - (void)addEnumerationObject:(SBBSurveyQuestionOption*)value_;

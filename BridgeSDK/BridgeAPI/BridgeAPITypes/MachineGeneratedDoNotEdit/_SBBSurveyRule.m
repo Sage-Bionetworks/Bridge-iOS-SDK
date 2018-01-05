@@ -41,6 +41,14 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyRule)
 
+@property (nullable, nonatomic, retain) NSString* assignDataGroup;
+
+@property (nullable, nonatomic, retain) NSSet<NSString *>* dataGroups;
+
+@property (nullable, nonatomic, retain) NSNumber* displayIf;
+
+@property (nullable, nonatomic, retain) NSNumber* displayUnless;
+
 @property (nullable, nonatomic, retain) NSNumber* endSurvey;
 
 @property (nullable, nonatomic, retain) NSString* operator;
@@ -51,7 +59,9 @@
 
 @property (nullable, nonatomic, retain) NSManagedObject *surveyConstraints;
 
-@property (nullable, nonatomic, retain) NSManagedObject *surveyElement;
+@property (nullable, nonatomic, retain) NSManagedObject *surveyElementAfterRules;
+
+@property (nullable, nonatomic, retain) NSManagedObject *surveyElementBeforeRules;
 
 @end
 
@@ -69,6 +79,26 @@
 
 #pragma mark Scalar values
 
+- (BOOL)displayIfValue
+{
+	return [self.displayIf boolValue];
+}
+
+- (void)setDisplayIfValue:(BOOL)value_
+{
+	self.displayIf = [NSNumber numberWithBool:value_];
+}
+
+- (BOOL)displayUnlessValue
+{
+	return [self.displayUnless boolValue];
+}
+
+- (void)setDisplayUnlessValue:(BOOL)value_
+{
+	self.displayUnless = [NSNumber numberWithBool:value_];
+}
+
 - (BOOL)endSurveyValue
 {
 	return [self.endSurvey boolValue];
@@ -85,6 +115,14 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.assignDataGroup = [dictionary objectForKey:@"assignDataGroup"];
+
+    self.dataGroups = [NSSet setWithArray:[dictionary objectForKey:@"dataGroups"]];
+
+    self.displayIf = [dictionary objectForKey:@"displayIf"];
+
+    self.displayUnless = [dictionary objectForKey:@"displayUnless"];
+
     self.endSurvey = [dictionary objectForKey:@"endSurvey"];
 
     self.operator = [dictionary objectForKey:@"operator"];
@@ -98,6 +136,15 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+
+    [dict setObjectIfNotNil:self.assignDataGroup forKey:@"assignDataGroup"];
+
+    NSSortDescriptor *desc = [NSSortDescriptor sortDescriptorWithKey:@"" ascending:YES];
+    [dict setObjectIfNotNil:[self.dataGroups sortedArrayUsingDescriptors:@[desc]] forKey:@"dataGroups"];
+
+    [dict setObjectIfNotNil:self.displayIf forKey:@"displayIf"];
+
+    [dict setObjectIfNotNil:self.displayUnless forKey:@"displayUnless"];
 
     [dict setObjectIfNotNil:self.endSurvey forKey:@"endSurvey"];
 
@@ -129,6 +176,14 @@
 {
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        self.assignDataGroup = managedObject.assignDataGroup;
+
+        self.dataGroups = managedObject.dataGroups;
+
+        self.displayIf = managedObject.displayIf;
+
+        self.displayUnless = managedObject.displayUnless;
 
         self.endSurvey = managedObject.endSurvey;
 
@@ -169,6 +224,14 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
+
+    managedObject.assignDataGroup = ((id)self.assignDataGroup == [NSNull null]) ? nil : self.assignDataGroup;
+
+    managedObject.dataGroups = ((id)self.dataGroups == [NSNull null]) ? nil : self.dataGroups;
+
+    managedObject.displayIf = ((id)self.displayIf == [NSNull null]) ? nil : self.displayIf;
+
+    managedObject.displayUnless = ((id)self.displayUnless == [NSNull null]) ? nil : self.displayUnless;
 
     managedObject.endSurvey = ((id)self.endSurvey == [NSNull null]) ? nil : self.endSurvey;
 

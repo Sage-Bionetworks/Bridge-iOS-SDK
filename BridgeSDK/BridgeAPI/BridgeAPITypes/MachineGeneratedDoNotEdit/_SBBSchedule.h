@@ -55,19 +55,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSString* interval;
 
-@property (nullable, nonatomic, strong) NSString* label;
+@property (nonatomic, strong) NSString* label;
 
-@property (nullable, nonatomic, strong) NSNumber* persistent;
+@property (nonatomic, strong) NSNumber* persistent;
 
 @property (nonatomic, assign) BOOL persistentValue;
 
-@property (nullable, nonatomic, strong) NSString* scheduleType;
+@property (nonatomic, strong) NSString* scheduleType;
 
 @property (nullable, nonatomic, strong) NSDate* startsOn;
 
-@property (nullable, nonatomic, strong) NSArray* times;
+@property (nonatomic, strong) NSArray* times;
 
-@property (nullable, nonatomic, strong, readonly) NSArray *activities;
+@property (nonatomic, strong, readonly) NSArray *activities;
 
 - (void)addActivitiesObject:(SBBActivity*)value_ settingInverse: (BOOL) setInverse;
 - (void)addActivitiesObject:(SBBActivity*)value_;

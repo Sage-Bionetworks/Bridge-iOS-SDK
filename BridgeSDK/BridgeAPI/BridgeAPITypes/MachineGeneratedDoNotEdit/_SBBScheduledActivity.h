@@ -51,13 +51,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSDate* finishedOn;
 
-@property (nullable, nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSString* guid;
 
 @property (nullable, nonatomic, strong) NSNumber* persistent;
 
 @property (nonatomic, assign) BOOL persistentValue;
 
-@property (nullable, nonatomic, strong) NSDate* scheduledOn;
+@property (nonatomic, strong) NSDate* scheduledOn;
 
 @property (nullable, nonatomic, strong) NSDate* startedOn;
 

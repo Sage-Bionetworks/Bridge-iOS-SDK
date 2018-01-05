@@ -91,6 +91,7 @@
 {
 	if ((self = [super init]))
 	{
+		self.persistent = [NSNumber numberWithBool:0];
 
 	}
 

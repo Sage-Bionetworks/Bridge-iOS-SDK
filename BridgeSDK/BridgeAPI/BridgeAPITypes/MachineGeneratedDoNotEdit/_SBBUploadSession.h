@@ -41,11 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBUploadSession : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSDate* expires;
+@property (nonatomic, strong) NSDate* expires;
 
-@property (nullable, nonatomic, strong) NSString* id;
+@property (nonatomic, strong) NSString* id;
 
-@property (nullable, nonatomic, strong) NSString* url;
+@property (nonatomic, strong) NSString* url;
 
 @end
 NS_ASSUME_NONNULL_END

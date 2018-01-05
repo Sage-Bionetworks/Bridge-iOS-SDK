@@ -45,7 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) double heightValue;
 
-@property (nullable, nonatomic, strong) NSString* source;
+@property (nonatomic, strong) NSString* source;
 
 @property (nullable, nonatomic, strong) NSNumber* width;
 

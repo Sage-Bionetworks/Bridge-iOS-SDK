@@ -43,11 +43,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSurveyQuestion : SBBSurveyElement
 
-@property (nullable, nonatomic, strong) NSString* uiHint;
+@property (nonatomic, strong) NSString* uiHint;
 
-@property (nullable, nonatomic, strong, readwrite) SBBSurveyConstraints *constraints;
+@property (nonatomic, strong, readwrite) SBBSurveyConstraints *constraints;
 
-- (void) setConstraints: (SBBSurveyConstraints* _Nullable) constraints_ settingInverse: (BOOL) setInverse;
+- (void) setConstraints: (SBBSurveyConstraints*) constraints_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END

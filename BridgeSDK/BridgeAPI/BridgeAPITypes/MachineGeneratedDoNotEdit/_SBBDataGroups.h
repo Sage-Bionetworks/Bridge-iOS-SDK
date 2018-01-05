@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBDataGroups : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSSet<NSString *>* dataGroups;
+@property (nonatomic, strong) NSSet<NSString *>* dataGroups;
 
 @end
 NS_ASSUME_NONNULL_END

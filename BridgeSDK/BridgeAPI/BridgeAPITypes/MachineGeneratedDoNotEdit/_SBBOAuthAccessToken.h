@@ -41,13 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBOAuthAccessToken : SBBBridgeObject
 
-@property (nullable, nonatomic, strong, readonly) NSString* accessToken;
+@property (nonatomic, strong, readonly) NSString* accessToken;
 
-@property (nullable, nonatomic, strong, readonly) NSDate* expiresOn;
+@property (nonatomic, strong, readonly) NSDate* expiresOn;
 
 @property (nullable, nonatomic, strong, readonly) NSString* providerUserID;
 
-@property (nullable, nonatomic, strong, readonly) NSString* vendorID;
+@property (nonatomic, strong, readonly) NSString* vendorID;
 
 @end
 NS_ASSUME_NONNULL_END

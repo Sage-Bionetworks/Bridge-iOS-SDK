@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBCompoundActivity : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSString* taskIdentifier;
+@property (nonatomic, strong) NSString* taskIdentifier;
 
 @property (nullable, nonatomic, strong, readonly) NSArray *schemaList;
 

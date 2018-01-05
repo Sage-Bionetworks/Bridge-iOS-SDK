@@ -45,11 +45,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBActivity : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSString* activityType;
+@property (nonatomic, strong) NSString* activityType;
 
-@property (nullable, nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSString* guid;
 
-@property (nullable, nonatomic, strong) NSString* label;
+@property (nonatomic, strong) NSString* label;
 
 @property (nullable, nonatomic, strong) NSString* labelDetail;
 

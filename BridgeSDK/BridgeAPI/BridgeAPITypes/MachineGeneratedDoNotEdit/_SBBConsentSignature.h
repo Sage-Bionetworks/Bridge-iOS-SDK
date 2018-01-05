@@ -41,15 +41,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBConsentSignature : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSString* birthdate;
+@property (nonatomic, strong) NSString* birthdate;
 
 @property (nullable, nonatomic, strong) NSString* imageData;
 
 @property (nullable, nonatomic, strong) NSString* imageMimeType;
 
-@property (nullable, nonatomic, strong) NSString* name;
+@property (nonatomic, strong) NSString* name;
 
-@property (nullable, nonatomic, strong) NSString* scope;
+@property (nonatomic, strong) NSString* scope;
 
 @end
 NS_ASSUME_NONNULL_END

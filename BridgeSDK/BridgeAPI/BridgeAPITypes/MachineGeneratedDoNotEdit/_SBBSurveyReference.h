@@ -43,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSDate* createdOn;
 
-@property (nullable, nonatomic, strong) NSString* guid;
+@property (nonatomic, strong) NSString* guid;
 
 @property (nullable, nonatomic, strong) NSString* href;
 

@@ -41,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSchemaReference : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSString* id;
+@property (nonatomic, strong) NSString* id;
 
 @property (nullable, nonatomic, strong) NSNumber* revision;
 
