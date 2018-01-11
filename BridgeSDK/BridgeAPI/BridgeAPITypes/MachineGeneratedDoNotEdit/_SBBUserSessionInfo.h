@@ -66,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong, readonly) NSDictionary *consentStatuses;
 
-@property (nullable, nonatomic, strong, readwrite) SBBStudyParticipant *studyParticipant;
+@property (nonatomic, strong, readwrite) SBBStudyParticipant *studyParticipant;
 
 - (void)addConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse;
 - (void)addConsentStatusesObject:(SBBConsentStatus*)value_;
@@ -74,7 +74,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeConsentStatusesObject:(SBBConsentStatus*)value_ settingInverse: (BOOL) setInverse;
 - (void)removeConsentStatusesObject:(SBBConsentStatus*)value_;
 
-- (void) setStudyParticipant: (SBBStudyParticipant* _Nullable) studyParticipant_ settingInverse: (BOOL) setInverse;
+- (void) setStudyParticipant: (SBBStudyParticipant*) studyParticipant_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END
