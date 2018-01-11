@@ -45,16 +45,39 @@
     _mockBackgroundURLSession.mockDelegate = _savedBackgroundSession.delegate;
     
     [SBBComponentManager registerComponent:bridgeNetMan forClass:[SBBBridgeNetworkManager class]];
-    id<SBBAuthManagerProtocol> aMan = SBBComponent(SBBAuthManager);
+    
+    // on first run set up an in-memory cache and an object manager that uses it, and point the global auth manager at it
+    static SBBAuthManager *aMan = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        aMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
+        SBBCacheManager *cMan = [self testCacheManagerWithAuthManager:aMan andPersistentStoreName:@"test-store"];
+        aMan.objectManager = [self testObjectManagerWithCacheManager:cMan];
+    });
+    
     SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
     delegate.password = @"123456";
     aMan.authDelegate = delegate;
-    // use the "real" Bridge data model for cache managers for tests that access Bridge APIs...
-    _cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"SBBDataModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
-    // ...but make sure each test has a unique persistent store (by using the object instance ptr's hex representation as the store name)
+    
+    // make sure each test that accesses Bridge APIs has access to its own object manager pointed at
+    // a cache manager with a unique persistent store (by using the object instance ptr's hex representation as the store name)
     // so they can run concurrently without tripping over each other
-    _cacheManager.persistentStoreName = [NSString stringWithFormat:@"%p", self];
-    _objectManager = [SBBObjectManager objectManagerWithCacheManager:_cacheManager];
+    _cacheManager = [self testCacheManagerWithAuthManager:aMan andPersistentStoreName:[NSString stringWithFormat:@"%p", self]];
+    _objectManager = [self testObjectManagerWithCacheManager:_cacheManager];
+}
+
+- (SBBCacheManager *)testCacheManagerWithAuthManager:(id<SBBAuthManagerProtocol>)aMan andPersistentStoreName:(NSString *)name {
+    // use the "real" Bridge data model for cache managers for tests that access Bridge APIs, but use in-memory store
+    // so it doesn't persist across test runs on a given simulator
+    SBBCacheManager *cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"SBBDataModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
+    // also give each cache manager a different persistent store name
+    cacheManager.persistentStoreName = name;
+    
+    return cacheManager;
+}
+
+- (SBBObjectManager *)testObjectManagerWithCacheManager:(SBBCacheManager *)cacheManager {
+    return [SBBObjectManager objectManagerWithCacheManager:cacheManager];
 }
 
 - (void)tearDown {

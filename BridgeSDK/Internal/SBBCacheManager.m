@@ -721,12 +721,14 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
             _cacheIOContext= nil;
             _managedObjectModel = nil;
             
-            NSURL *storeDirURL = [self storeDirURL];
-            NSFileManager *fm = [NSFileManager defaultManager];
-            if ([fm fileExistsAtPath:storeDirURL.path]) {
-                if (![fm removeItemAtURL:storeDirURL error:&error]) {
-                    NSLog(@"Unable to delete SQLite db files directory at %@ : error %@, %@", storeDirURL, error, [error userInfo]);
-                    return;
+            if (![_persistentStoreType isEqualToString:NSInMemoryStoreType]) {
+                NSURL *storeDirURL = [self storeDirURL];
+                NSFileManager *fm = [NSFileManager defaultManager];
+                if ([fm fileExistsAtPath:storeDirURL.path]) {
+                    if (![fm removeItemAtURL:storeDirURL error:&error]) {
+                        NSLog(@"Unable to delete SQLite db files directory at %@ : error %@, %@", storeDirURL, error, [error userInfo]);
+                        return;
+                    }
                 }
             }
             
