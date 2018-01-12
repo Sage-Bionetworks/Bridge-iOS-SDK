@@ -114,7 +114,7 @@
         <attribute name="unit" optional="YES" attributeType="String" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years|inches|feet|yards|miles|ounces|pounds|pints|quarts|gallons|centimeters|meters|kilometers|grams|kilograms|milliliters|cubic_centimeters|liters|cubic_meters)$" syncable="YES"/>
     </entity>
     <entity name="DurationConstraints" parentEntity="SurveyConstraints" syncable="YES">
-        <attribute name="unit" attributeType="String" defaultValueString="seconds" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years)$" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" defaultValueString="seconds" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years)$" syncable="YES"/>
     </entity>
     <entity name="ForwardCursorPagedResourceList" parentEntity="BridgeObject" syncable="YES">
         <attribute name="hasNext" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
