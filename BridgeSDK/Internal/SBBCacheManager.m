@@ -154,10 +154,10 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
     return [self cachedObjectOfType:type withId:objectId createIfMissing:create created:nil];
 }
 
-- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create created:(BOOL *)created
+- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create created:(NSManagedObject **)created
 {
     if (created) {
-        *created = NO;
+        *created = nil;
     }
     
     if (!type.length || !objectId.length) {
@@ -177,7 +177,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
     }
     
     __block SBBBridgeObject *fetched = nil;
-    __block BOOL objectCreated = NO;
+    __block NSManagedObject *objectCreated = nil;
 
     [context performBlockAndWait:^{
         fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
@@ -199,9 +199,8 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
                 }
             } else if (create) {
                 fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
-                [fetched createInContext:context withObjectManager:om cacheManager:self];
+                objectCreated = [fetched createInContext:context withObjectManager:om cacheManager:self];
                 // caller's responsibility to save the cache context once all required fields have been set
-                objectCreated = YES;
             }
             
             NSString *key = [self inMemoryKeyForType:type andId:objectId];
@@ -239,7 +238,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
         return nil;
     }
     
-    NSEntityDescription *entity = [self.managedObjectModel.entitiesByName objectForKey:type];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:type inManagedObjectContext:self.cacheIOContext];
     if (!entity) {
 #if DEBUG
         NSLog(@"Unknown type '%@' attempting to fetch cached object from Bridge JSON:\n%@", type, json);
@@ -289,7 +288,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
     }
     
     // Get it from the cache by type & id
-    BOOL created;
+    NSManagedObject *created;
     SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:create created:&created];
     
     if (object) {
@@ -675,12 +674,19 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
                     NSLog(@"Corrupt SQLite db deleted and rebuilt");
                 }
             } else {
-                // If we get an error, the change wasn't saved anyway. This way, at least
-                // we don't leave the context in a bad state for future saves because of
-                // *this* error--which could block all future changes from being saved.
-                NSLog(@"Error saving cache manager's managed object context, rolling back context:\n%@",  error);
-                [context rollback];
+                // Now that we're setting some attributes and relationships as non-optional,
+                // we will get this error any time we add a new object to the cache that has
+                // directly-cacheable subobjects and a non-optional relationship, when those
+                // subobjects are recursively added and try to save the context before the
+                // new object's non-optional relationship has been set. So we have to just
+                // ignore this and assume at some point the context will get back into a
+                // savable state and be saved to persistent store.
+                NSLog(@"Error saving cache manager's managed object context. If this is a validation error and at some later time the context is successfully saved, you can ignore this error:\n%@",  error);
             }
+#if DEBUG
+        } else {
+            NSLog(@"Cache manager's managed object context has been saved");
+#endif
         }
     }];
 }

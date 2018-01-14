@@ -132,7 +132,7 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    if (self.unit) managedObject.unit = self.unit;
+    managedObject.unit = ((id)self.unit == [NSNull null]) ? nil : self.unit;
 
     // Calling code will handle saving these changes to cacheContext.
 }

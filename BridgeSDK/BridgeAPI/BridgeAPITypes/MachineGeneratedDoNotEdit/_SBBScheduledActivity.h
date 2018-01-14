@@ -61,9 +61,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSDate* startedOn;
 
-@property (nullable, nonatomic, strong, readwrite) SBBActivity *activity;
+@property (nonatomic, strong, readwrite) SBBActivity *activity;
 
-- (void) setActivity: (SBBActivity* _Nullable) activity_ settingInverse: (BOOL) setInverse;
+- (void) setActivity: (SBBActivity*) activity_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END
