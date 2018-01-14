@@ -157,7 +157,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
 - (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create created:(NSManagedObject **)created
 {
     if (created) {
-        *created = NO;
+        *created = nil;
     }
     
     if (!type.length || !objectId.length) {
@@ -674,12 +674,19 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
                     NSLog(@"Corrupt SQLite db deleted and rebuilt");
                 }
             } else {
-                // If we get an error, the change wasn't saved anyway. This way, at least
-                // we don't leave the context in a bad state for future saves because of
-                // *this* error--which could block all future changes from being saved.
-                NSLog(@"Error saving cache manager's managed object context, rolling back context:\n%@",  error);
-                [context rollback];
+                // Now that we're setting some attributes and relationships as non-optional,
+                // we will get this error any time we add a new object to the cache that has
+                // directly-cacheable subobjects and a non-optional relationship, when those
+                // subobjects are recursively added and try to save the context before the
+                // new object's non-optional relationship has been set. So we have to just
+                // ignore this and assume at some point the context will get back into a
+                // savable state and be saved to persistent store.
+                NSLog(@"Error saving cache manager's managed object context. If this is a validation error and at some later time the context is successfully saved, you can ignore this error:\n%@",  error);
             }
+#if DEBUG
+        } else {
+            NSLog(@"Cache manager's managed object context has been saved");
+#endif
         }
     }];
 }
