@@ -154,7 +154,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
     return [self cachedObjectOfType:type withId:objectId createIfMissing:create created:nil];
 }
 
-- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create created:(BOOL *)created
+- (SBBBridgeObject *)cachedObjectOfType:(NSString *)type withId:(NSString *)objectId createIfMissing:(BOOL)create created:(NSManagedObject **)created
 {
     if (created) {
         *created = NO;
@@ -177,7 +177,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
     }
     
     __block SBBBridgeObject *fetched = nil;
-    __block BOOL objectCreated = NO;
+    __block NSManagedObject *objectCreated = nil;
 
     [context performBlockAndWait:^{
         fetched = [self inMemoryBridgeObjectOfType:type andId:objectId];
@@ -199,9 +199,8 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
                 }
             } else if (create) {
                 fetched = [[fetchedClass alloc] initWithDictionaryRepresentation:@{@"type": type, keyPath: objectId} objectManager:om];
-                [fetched createInContext:context withObjectManager:om cacheManager:self];
+                objectCreated = [fetched createInContext:context withObjectManager:om cacheManager:self];
                 // caller's responsibility to save the cache context once all required fields have been set
-                objectCreated = YES;
             }
             
             NSString *key = [self inMemoryKeyForType:type andId:objectId];
@@ -239,7 +238,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
         return nil;
     }
     
-    NSEntityDescription *entity = [self.managedObjectModel.entitiesByName objectForKey:type];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:type inManagedObjectContext:self.cacheIOContext];
     if (!entity) {
 #if DEBUG
         NSLog(@"Unknown type '%@' attempting to fetch cached object from Bridge JSON:\n%@", type, json);
@@ -289,7 +288,7 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
     }
     
     // Get it from the cache by type & id
-    BOOL created;
+    NSManagedObject *created;
     SBBBridgeObject *object = [self cachedObjectOfType:type withId:key createIfMissing:create created:&created];
     
     if (object) {
