@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="16G1114" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" attributeType="String" defaultValueString="task" regularExpressionString="^(task|survey|compound)$" syncable="YES"/>
         <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
@@ -192,6 +192,45 @@
             </userInfo>
         </attribute>
     </entity>
+    <entity name="NotificationRegistration" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="deviceId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="osName" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="type"/>
+        </userInfo>
+    </entity>
+    <entity name="RequestParams" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="assignmentFilter" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="emailFilter" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="idFilter" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="offsetBy" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="offsetKey" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pageSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="reportType" optional="YES" attributeType="String" regularExpressionString="participant|study" syncable="YES"/>
+        <attribute name="scheduledOnEnd" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scheduledOnStart" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="total" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="requestParamsResourceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ResourceList" inverseName="requestParams" inverseEntity="ResourceList" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
     <entity name="ResourceList" parentEntity="BridgeObject" syncable="YES">
         <attribute name="listID__" optional="YES" attributeType="String" defaultValueString="ScheduledActivity" syncable="YES">
             <userInfo>
@@ -200,6 +239,7 @@
         </attribute>
         <attribute name="total" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="resourceList" inverseEntity="BridgeObject" syncable="YES"/>
+        <relationship name="requestParams" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="RequestParams" inverseName="requestParamsResourceList" inverseEntity="RequestParams" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="listID__"/>
             <entry key="entityIDRegex" value="^(Schedule)$"/>
@@ -312,6 +352,23 @@
             <entry key="entityIDKeyPath" value="type"/>
         </userInfo>
     </entity>
+    <entity name="SubscriptionStatus" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="subscribed" attributeType="Boolean" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="topicGuid" attributeType="String" syncable="YES"/>
+        <attribute name="topicName" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="1"/>
+            </userInfo>
+        </attribute>
+        <userInfo>
+            <entry key="mogenerator.readonly" value="1"/>
+        </userInfo>
+    </entity>
+    <entity name="SubscriptionStatusList" parentEntity="ResourceList" syncable="YES"/>
     <entity name="Survey" parentEntity="BridgeObject" syncable="YES">
         <attribute name="copyrightNotice" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -521,12 +578,16 @@
         <element name="IntegerConstraints" positionX="0" positionY="0" width="128" height="105"/>
         <element name="MultiValueConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="OAuthAccessToken" positionX="18" positionY="153" width="128" height="105"/>
-        <element name="ResourceList" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="NotificationRegistration" positionX="18" positionY="153" width="128" height="120"/>
+        <element name="RequestParams" positionX="36" positionY="171" width="128" height="270"/>
+        <element name="ResourceList" positionX="0" positionY="0" width="128" height="105"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
         <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="165"/>
         <element name="SchemaReference" positionX="9" positionY="153" width="128" height="105"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
         <element name="StudyParticipant" positionX="18" positionY="108" width="128" height="270"/>
+        <element name="SubscriptionStatus" positionX="18" positionY="153" width="128" height="90"/>
+        <element name="SubscriptionStatusList" positionX="27" positionY="162" width="128" height="45"/>
         <element name="Survey" positionX="0" positionY="0" width="128" height="240"/>
         <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="SurveyElement" positionX="0" positionY="0" width="128" height="165"/>

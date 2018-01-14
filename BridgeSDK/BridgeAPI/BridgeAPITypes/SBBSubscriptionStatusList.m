@@ -1,5 +1,5 @@
 //
-//  _SBBResourceList.h
+//  SBBSubscriptionStatusList.m
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -26,46 +26,13 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBResourceList.h instead.
-//
 
-#import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import "SBBSubscriptionStatusList.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation SBBSubscriptionStatusList
 
-@class SBBBridgeObject;
-@class SBBRequestParams;
+#pragma mark Abstract method overrides
 
-@protocol _SBBResourceList
+// Custom logic goes here.
 
 @end
-
-@interface _SBBResourceList : SBBBridgeObject
-
-@property (nullable, nonatomic, strong) NSNumber* total;
-
-@property (nonatomic, assign) int64_t totalValue;
-
-@property (nullable, nonatomic, strong, readonly) NSArray *items;
-
-@property (nonatomic, strong, readwrite) SBBRequestParams *requestParams;
-
-- (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)addItemsObject:(SBBBridgeObject*)value_;
-- (void)removeItemsObjects;
-- (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeItemsObject:(SBBBridgeObject*)value_;
-
-- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
-- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value;
-- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
-
-- (void) setRequestParams: (SBBRequestParams*) requestParams_ settingInverse: (BOOL) setInverse;
-
-@end
-NS_ASSUME_NONNULL_END

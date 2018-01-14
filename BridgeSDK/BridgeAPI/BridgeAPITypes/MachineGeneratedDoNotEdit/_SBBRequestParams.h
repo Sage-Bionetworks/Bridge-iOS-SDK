@@ -1,5 +1,5 @@
 //
-//  _SBBResourceList.h
+//  _SBBRequestParams.h
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,45 +27,52 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBResourceList.h instead.
+// Make changes to SBBRequestParams.h instead.
 //
 
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@class SBBBridgeObject;
-@class SBBRequestParams;
-
-@protocol _SBBResourceList
+@protocol _SBBRequestParams
 
 @end
 
-@interface _SBBResourceList : SBBBridgeObject
+@interface _SBBRequestParams : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSNumber* total;
+@property (nonatomic, strong) NSNumber* assignmentFilter;
+
+@property (nonatomic, assign) BOOL assignmentFilterValue;
+
+@property (nonatomic, strong) NSString* emailFilter;
+
+@property (nonatomic, strong) NSString* endDate;
+
+@property (nonatomic, strong) NSString* endTime;
+
+@property (nonatomic, strong) NSString* idFilter;
+
+@property (nonatomic, strong) NSNumber* offsetBy;
+
+@property (nonatomic, assign) int64_t offsetByValue;
+
+@property (nonatomic, strong) NSString* offsetKey;
+
+@property (nonatomic, strong) NSNumber* pageSize;
+
+@property (nonatomic, assign) int64_t pageSizeValue;
+
+@property (nonatomic, strong) NSString* reportType;
+
+@property (nonatomic, strong) NSDate* scheduledOnEnd;
+
+@property (nonatomic, strong) NSDate* scheduledOnStart;
+
+@property (nonatomic, strong) NSString* startDate;
+
+@property (nonatomic, strong) NSString* startTime;
+
+@property (nonatomic, strong) NSNumber* total;
 
 @property (nonatomic, assign) int64_t totalValue;
 
-@property (nullable, nonatomic, strong, readonly) NSArray *items;
-
-@property (nonatomic, strong, readwrite) SBBRequestParams *requestParams;
-
-- (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)addItemsObject:(SBBBridgeObject*)value_;
-- (void)removeItemsObjects;
-- (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeItemsObject:(SBBBridgeObject*)value_;
-
-- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
-- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value;
-- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
-
-- (void) setRequestParams: (SBBRequestParams*) requestParams_ settingInverse: (BOOL) setInverse;
-
 @end
-NS_ASSUME_NONNULL_END

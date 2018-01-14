@@ -1,5 +1,5 @@
 //
-//  _SBBResourceList.h
+//  _SBBNotificationRegistration.h
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -27,45 +27,26 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBResourceList.h instead.
+// Make changes to SBBNotificationRegistration.h instead.
 //
 
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@class SBBBridgeObject;
-@class SBBRequestParams;
-
-@protocol _SBBResourceList
+@protocol _SBBNotificationRegistration
 
 @end
 
-@interface _SBBResourceList : SBBBridgeObject
+@interface _SBBNotificationRegistration : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSNumber* total;
+@property (nonatomic, strong, readonly) NSDate* createdOn;
 
-@property (nonatomic, assign) int64_t totalValue;
+@property (nonatomic, strong) NSString* deviceId;
 
-@property (nullable, nonatomic, strong, readonly) NSArray *items;
+@property (nonatomic, strong) NSString* guid;
 
-@property (nonatomic, strong, readwrite) SBBRequestParams *requestParams;
+@property (nonatomic, strong, readonly) NSDate* modifiedOn;
 
-- (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)addItemsObject:(SBBBridgeObject*)value_;
-- (void)removeItemsObjects;
-- (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeItemsObject:(SBBBridgeObject*)value_;
-
-- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
-- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value;
-- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
-
-- (void) setRequestParams: (SBBRequestParams*) requestParams_ settingInverse: (BOOL) setInverse;
+@property (nonatomic, strong) NSString* osName;
 
 @end
-NS_ASSUME_NONNULL_END

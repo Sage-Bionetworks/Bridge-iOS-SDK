@@ -116,6 +116,16 @@
 		6056DE221CF61F4000C21E82 /* SBBStudyParticipantInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6056DE1B1CF61F4000C21E82 /* SBBStudyParticipantInternal.h */; };
 		6056DE231CF61F4000C21E82 /* SBBSurveyInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6056DE1C1CF61F4000C21E82 /* SBBSurveyInternal.h */; };
 		6056DE251CF61F6500C21E82 /* SBBUserProfileInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6056DE241CF61F6500C21E82 /* SBBUserProfileInternal.h */; };
+		605EDC2F1FD87BF800F43D69 /* _SBBRequestParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 605EDC291FD87BF600F43D69 /* _SBBRequestParams.m */; };
+		605EDC301FD87BF800F43D69 /* _SBBNotificationRegistration.h in Headers */ = {isa = PBXBuildFile; fileRef = 605EDC2A1FD87BF700F43D69 /* _SBBNotificationRegistration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		605EDC321FD87BF800F43D69 /* _SBBNotificationRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = 605EDC2C1FD87BF700F43D69 /* _SBBNotificationRegistration.m */; };
+		605EDC331FD87BF800F43D69 /* _SBBRequestParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 605EDC2D1FD87BF800F43D69 /* _SBBRequestParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		605EDC3B1FD87C1F00F43D69 /* SBBNotificationRegistration.h in Headers */ = {isa = PBXBuildFile; fileRef = 605EDC351FD87C1D00F43D69 /* SBBNotificationRegistration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		605EDC3D1FD87C1F00F43D69 /* SBBRequestParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 605EDC371FD87C1E00F43D69 /* SBBRequestParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		605EDC3E1FD87C1F00F43D69 /* SBBNotificationRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = 605EDC381FD87C1E00F43D69 /* SBBNotificationRegistration.m */; };
+		605EDC401FD87C1F00F43D69 /* SBBRequestParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 605EDC3A1FD87C1F00F43D69 /* SBBRequestParams.m */; };
+		605EDC431FD87CEC00F43D69 /* SBBNotificationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 605EDC411FD87CEC00F43D69 /* SBBNotificationManager.h */; };
+		605EDC441FD87CEC00F43D69 /* SBBNotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 605EDC421FD87CEC00F43D69 /* SBBNotificationManager.m */; };
 		60674D531DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60674D501DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m */; };
 		60674D541DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60674D521DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.m */; };
 		60674D5C1DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60674D591DBE8A8D00ADF4EE /* SBBTestBridgeExtendableObject.m */; };
@@ -408,6 +418,14 @@
 		80C87F0A1C18E55A00FE8A63 /* _SBBDataGroups.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */; };
 		80C87F0D1C18E61000FE8A63 /* SBBDataGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C87F0B1C18E61000FE8A63 /* SBBDataGroups.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80C87F0E1C18E61000FE8A63 /* SBBDataGroups.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C87F0C1C18E61000FE8A63 /* SBBDataGroups.m */; };
+		80C9CC671FD8E46E0088C77D /* _SBBSubscriptionStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C9CC551FD8E46C0088C77D /* _SBBSubscriptionStatus.m */; };
+		80C9CC681FD8E46E0088C77D /* _SBBSubscriptionStatusList.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C9CC641FD8E46D0088C77D /* _SBBSubscriptionStatusList.m */; };
+		80C9CC691FD8E46E0088C77D /* _SBBSubscriptionStatusList.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C9CC651FD8E46D0088C77D /* _SBBSubscriptionStatusList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80C9CC6A1FD8E46E0088C77D /* _SBBSubscriptionStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C9CC661FD8E46D0088C77D /* _SBBSubscriptionStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80C9CC6F1FD8E4C70088C77D /* SBBSubscriptionStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C9CC6B1FD8E4C50088C77D /* SBBSubscriptionStatus.m */; };
+		80C9CC701FD8E4C70088C77D /* SBBSubscriptionStatusList.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C9CC6C1FD8E4C50088C77D /* SBBSubscriptionStatusList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		80C9CC711FD8E4C70088C77D /* SBBSubscriptionStatusList.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C9CC6D1FD8E4C60088C77D /* SBBSubscriptionStatusList.m */; };
+		80C9CC721FD8E4C70088C77D /* SBBSubscriptionStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C9CC6E1FD8E4C70088C77D /* SBBSubscriptionStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80D517311CADCA08002D2C06 /* SBBParticipantManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D69C19EC4025008942B0 /* SBBParticipantManagerUnitTests.m */; };
 		80D517321CADCA16002D2C06 /* SBBAuthManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A219EC531F008942B0 /* SBBAuthManagerUnitTests.m */; };
 		80D517351CADD0A8002D2C06 /* NSObject+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 80D517331CADD0A8002D2C06 /* NSObject+SBBAdditions.h */; };
@@ -655,6 +673,16 @@
 		6056DE1B1CF61F4000C21E82 /* SBBStudyParticipantInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBStudyParticipantInternal.h; sourceTree = "<group>"; };
 		6056DE1C1CF61F4000C21E82 /* SBBSurveyInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSurveyInternal.h; sourceTree = "<group>"; };
 		6056DE241CF61F6500C21E82 /* SBBUserProfileInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBUserProfileInternal.h; sourceTree = "<group>"; };
+		605EDC291FD87BF600F43D69 /* _SBBRequestParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBRequestParams.m; sourceTree = "<group>"; };
+		605EDC2A1FD87BF700F43D69 /* _SBBNotificationRegistration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBNotificationRegistration.h; sourceTree = "<group>"; };
+		605EDC2C1FD87BF700F43D69 /* _SBBNotificationRegistration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBNotificationRegistration.m; sourceTree = "<group>"; };
+		605EDC2D1FD87BF800F43D69 /* _SBBRequestParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBRequestParams.h; sourceTree = "<group>"; };
+		605EDC351FD87C1D00F43D69 /* SBBNotificationRegistration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBNotificationRegistration.h; sourceTree = "<group>"; };
+		605EDC371FD87C1E00F43D69 /* SBBRequestParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBRequestParams.h; sourceTree = "<group>"; };
+		605EDC381FD87C1E00F43D69 /* SBBNotificationRegistration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBNotificationRegistration.m; sourceTree = "<group>"; };
+		605EDC3A1FD87C1F00F43D69 /* SBBRequestParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBRequestParams.m; sourceTree = "<group>"; };
+		605EDC411FD87CEC00F43D69 /* SBBNotificationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBNotificationManager.h; sourceTree = "<group>"; };
+		605EDC421FD87CEC00F43D69 /* SBBNotificationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBBNotificationManager.m; sourceTree = "<group>"; };
 		60674D4F1DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBTestBridgeExtendableObject.h; sourceTree = "<group>"; };
 		60674D501DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBTestBridgeExtendableObject.m; sourceTree = "<group>"; };
 		60674D511DBE8A7700ADF4EE /* _SBBTestBridgeWritableObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBTestBridgeWritableObject.h; sourceTree = "<group>"; };
@@ -990,6 +1018,14 @@
 		80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBDataGroups.m; sourceTree = "<group>"; };
 		80C87F0B1C18E61000FE8A63 /* SBBDataGroups.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDataGroups.h; sourceTree = "<group>"; };
 		80C87F0C1C18E61000FE8A63 /* SBBDataGroups.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBDataGroups.m; sourceTree = "<group>"; };
+		80C9CC551FD8E46C0088C77D /* _SBBSubscriptionStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBSubscriptionStatus.m; sourceTree = "<group>"; };
+		80C9CC641FD8E46D0088C77D /* _SBBSubscriptionStatusList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBSubscriptionStatusList.m; sourceTree = "<group>"; };
+		80C9CC651FD8E46D0088C77D /* _SBBSubscriptionStatusList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSubscriptionStatusList.h; sourceTree = "<group>"; };
+		80C9CC661FD8E46D0088C77D /* _SBBSubscriptionStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBSubscriptionStatus.h; sourceTree = "<group>"; };
+		80C9CC6B1FD8E4C50088C77D /* SBBSubscriptionStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSubscriptionStatus.m; sourceTree = "<group>"; };
+		80C9CC6C1FD8E4C50088C77D /* SBBSubscriptionStatusList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSubscriptionStatusList.h; sourceTree = "<group>"; };
+		80C9CC6D1FD8E4C60088C77D /* SBBSubscriptionStatusList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBSubscriptionStatusList.m; sourceTree = "<group>"; };
+		80C9CC6E1FD8E4C70088C77D /* SBBSubscriptionStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBSubscriptionStatus.h; sourceTree = "<group>"; };
 		80CE622C1E8DDBBC00CD154C /* SBBDataModelV4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV4.xcdatamodel; sourceTree = "<group>"; };
 		80D517331CADD0A8002D2C06 /* NSObject+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBBAdditions.h"; sourceTree = "<group>"; };
 		80D517341CADD0A8002D2C06 /* NSObject+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBBAdditions.m"; sourceTree = "<group>"; };
@@ -1167,6 +1203,10 @@
 				800E796019ED74B600EEE612 /* SBBMultiValueConstraints.m */,
 				80E5682A1FD9D80800BB644E /* SBBOAuthAccessToken.h */,
 				80E5682B1FD9D80800BB644E /* SBBOAuthAccessToken.m */,
+				605EDC351FD87C1D00F43D69 /* SBBNotificationRegistration.h */,
+				605EDC381FD87C1E00F43D69 /* SBBNotificationRegistration.m */,
+				605EDC371FD87C1E00F43D69 /* SBBRequestParams.h */,
+				605EDC3A1FD87C1F00F43D69 /* SBBRequestParams.m */,
 				8053B6311A00357400A2E6C4 /* SBBResourceList.h */,
 				80561DB81E6A0879005FBFA3 /* SBBResourceListInternal.h */,
 				8053B6321A00357400A2E6C4 /* SBBResourceList.m */,
@@ -1183,6 +1223,10 @@
 				6056DE171CF61F4000C21E82 /* SBBStudyParticipant.m */,
 				6056DE181CF61F4000C21E82 /* SBBStudyParticipantCustomAttributes.h */,
 				6056DE191CF61F4000C21E82 /* SBBStudyParticipantCustomAttributes.m */,
+				80C9CC6E1FD8E4C70088C77D /* SBBSubscriptionStatus.h */,
+				80C9CC6B1FD8E4C50088C77D /* SBBSubscriptionStatus.m */,
+				80C9CC6C1FD8E4C50088C77D /* SBBSubscriptionStatusList.h */,
+				80C9CC6D1FD8E4C60088C77D /* SBBSubscriptionStatusList.m */,
 				6056DE1C1CF61F4000C21E82 /* SBBSurveyInternal.h */,
 				80F7C33B19E5DC0D00574800 /* SBBSurvey.h */,
 				80F7C33C19E5DC0D00574800 /* SBBSurvey.m */,
@@ -1607,6 +1651,8 @@
 				80104A4119D1F817001F2573 /* SBBConsentManager.m */,
 				80B2C4431E3A5CED001F9FEA /* SBBDataArchive.h */,
 				80B2C4441E3A5CED001F9FEA /* SBBDataArchive.m */,
+				605EDC411FD87CEC00F43D69 /* SBBNotificationManager.h */,
+				605EDC421FD87CEC00F43D69 /* SBBNotificationManager.m */,
 				80E568301FD9D88600BB644E /* SBBOAuthManager.h */,
 				80E568311FD9D88600BB644E /* SBBOAuthManager.m */,
 				80104A6419D4CFE5001F2573 /* SBBObjectManager.h */,
@@ -1709,6 +1755,10 @@
 				800E793819ED744000EEE612 /* _SBBMultiValueConstraints.m */,
 				80E568261FD9D7F300BB644E /* _SBBOAuthAccessToken.h */,
 				80E568271FD9D7F400BB644E /* _SBBOAuthAccessToken.m */,
+				605EDC2A1FD87BF700F43D69 /* _SBBNotificationRegistration.h */,
+				605EDC2C1FD87BF700F43D69 /* _SBBNotificationRegistration.m */,
+				605EDC2D1FD87BF800F43D69 /* _SBBRequestParams.h */,
+				605EDC291FD87BF600F43D69 /* _SBBRequestParams.m */,
 				8053B62C1A00356000A2E6C4 /* _SBBResourceList.h */,
 				80561DB61E6A0865005FBFA3 /* _SBBResourceListInternal.h */,
 				8053B62D1A00356000A2E6C4 /* _SBBResourceList.m */,
@@ -1723,6 +1773,10 @@
 				6056DE051CF61ECD00C21E82 /* _SBBStudyParticipant.h */,
 				6056DE0A1CF61ECD00C21E82 /* _SBBStudyParticipantInternal.h */,
 				6056DE061CF61ECD00C21E82 /* _SBBStudyParticipant.m */,
+				80C9CC661FD8E46D0088C77D /* _SBBSubscriptionStatus.h */,
+				80C9CC551FD8E46C0088C77D /* _SBBSubscriptionStatus.m */,
+				80C9CC651FD8E46D0088C77D /* _SBBSubscriptionStatusList.h */,
+				80C9CC641FD8E46D0088C77D /* _SBBSubscriptionStatusList.m */,
 				80F7C33019E5DC0D00574800 /* _SBBSurvey.h */,
 				80D517491CAF4453002D2C06 /* _SBBSurveyInternal.h */,
 				80F7C33119E5DC0D00574800 /* _SBBSurvey.m */,
@@ -1795,6 +1849,7 @@
 				80E60D9F19FAD56C0053D166 /* _SBBSchedule.h in Headers */,
 				80F88E4F1AF991950090D462 /* SBBScheduledActivity.h in Headers */,
 				800E794119ED744000EEE612 /* _SBBMultiValueConstraints.h in Headers */,
+				80C9CC6A1FD8E46E0088C77D /* _SBBSubscriptionStatus.h in Headers */,
 				807747801E28289C000C13CD /* SBBBridgeAppDelegate.h in Headers */,
 				80B2C6381E3AD493001F9FEA /* ZZAESDecryptInputStream.h in Headers */,
 				80E568281FD9D7F400BB644E /* _SBBOAuthAccessToken.h in Headers */,
@@ -1818,12 +1873,14 @@
 				80D5174A1CAF4454002D2C06 /* _SBBSurveyInternal.h in Headers */,
 				8026D67A19E77518008942B0 /* SBBUploadManager.h in Headers */,
 				800E795719ED74A600EEE612 /* SBBDateTimeConstraints.h in Headers */,
+				80C9CC691FD8E46E0088C77D /* _SBBSubscriptionStatusList.h in Headers */,
 				808D03CC1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.h in Headers */,
 				6056DE111CF61ECD00C21E82 /* _SBBStudyParticipantInternal.h in Headers */,
 				807AE2DD1B62ADB1002588BB /* SBBSurveyManagerInternal.h in Headers */,
 				80E819731A83E8EB00513919 /* SBBImage.h in Headers */,
 				80E819661A83E89E00513919 /* _SBBImage.h in Headers */,
 				805D4BE81ECBAC2E002143F0 /* _SBBCompoundActivity.h in Headers */,
+				605EDC331FD87BF800F43D69 /* _SBBRequestParams.h in Headers */,
 				800E797719ED7BCB00EEE612 /* SBBSurveyRule.h in Headers */,
 				807AE2D51B61AE76002588BB /* SBBUserManagerInternal.h in Headers */,
 				80643BE71DA6E4E900EB91C6 /* _SBBUserProfileInternal.h in Headers */,
@@ -1841,6 +1898,7 @@
 				806C42711FFF0D9C007A51D8 /* SBBBloodPressureConstraints.h in Headers */,
 				806C42751FFF0DB2007A51D8 /* SBBHeightConstraints.h in Headers */,
 				800E796519ED74B600EEE612 /* SBBMultiValueConstraints.h in Headers */,
+				80C9CC701FD8E4C70088C77D /* SBBSubscriptionStatusList.h in Headers */,
 				80855F5619BE258C006601C7 /* BridgeSDK.h in Headers */,
 				80B2C6341E3AD493001F9FEA /* ZZArchive.h in Headers */,
 				800E794519ED744000EEE612 /* _SBBSurveyQuestionOption.h in Headers */,
@@ -1853,6 +1911,7 @@
 				804C10A11E2847FE004B68E6 /* SBBBridgeInfo.h in Headers */,
 				808D03D21E96CDF30030F23E /* SBBForwardCursorPagedResourceList.h in Headers */,
 				80104A5C19D4CD9E001F2573 /* SBBUserProfile.h in Headers */,
+				605EDC3D1FD87C1F00F43D69 /* SBBRequestParams.h in Headers */,
 				800E795519ED74A600EEE612 /* SBBDateConstraints.h in Headers */,
 				800E794319ED744000EEE612 /* _SBBStringConstraints.h in Headers */,
 				8026BD1119C7532D0077F3EB /* UICKeyChainStore.h in Headers */,
@@ -1884,8 +1943,10 @@
 				FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */,
 				8026D68A19E888DB008942B0 /* SBBUploadSession.h in Headers */,
 				6056DE231CF61F4000C21E82 /* SBBSurveyInternal.h in Headers */,
+				605EDC431FD87CEC00F43D69 /* SBBNotificationManager.h in Headers */,
 				80F7C35119E5DC0D00574800 /* SBBSurveyQuestion.h in Headers */,
 				808D03BA1E96BC810030F23E /* SBBJSONValue.h in Headers */,
+				605EDC3B1FD87C1F00F43D69 /* SBBNotificationRegistration.h in Headers */,
 				80855F7119BE27ED006601C7 /* SBBErrors.h in Headers */,
 				800E796B19ED74C500EEE612 /* SBBSurveyQuestionOption.h in Headers */,
 				80FA54DF1A25110E00EDE46E /* SBBCacheManager.h in Headers */,
@@ -1895,7 +1956,9 @@
 				80B2C65C1E3AD493001F9FEA /* ZZStoreOutputStream.h in Headers */,
 				8026D68619E888C3008942B0 /* _SBBUploadSession.h in Headers */,
 				80E60DA419FAD5860053D166 /* SBBSchedule.h in Headers */,
+				605EDC301FD87BF800F43D69 /* _SBBNotificationRegistration.h in Headers */,
 				80B2C6331E3AD493001F9FEA /* ZipZap.h in Headers */,
+				80C9CC721FD8E4C70088C77D /* SBBSubscriptionStatus.h in Headers */,
 				80B2C6571E3AD493001F9FEA /* ZZScopeGuard.h in Headers */,
 				6056DE221CF61F4000C21E82 /* SBBStudyParticipantInternal.h in Headers */,
 				80F7C34919E5DC0D00574800 /* _SBBUserProfile.h in Headers */,
@@ -2427,11 +2490,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80C9CC671FD8E46E0088C77D /* _SBBSubscriptionStatus.m in Sources */,
 				80E819691A83E89E00513919 /* _SBBSurveyElement.m in Sources */,
 				80E60DA019FAD56C0053D166 /* _SBBSchedule.m in Sources */,
 				800E795819ED74A600EEE612 /* SBBDateTimeConstraints.m in Sources */,
 				80B2C6521E3AD493001F9FEA /* ZZNewArchiveEntryWriter.mm in Sources */,
 				80E60DA919FAD64C0053D166 /* SBBScheduleManager.m in Sources */,
+				605EDC401FD87C1F00F43D69 /* SBBRequestParams.m in Sources */,
 				80F7C34219E5DC0D00574800 /* _SBBBridgeObject.m in Sources */,
 				800E794219ED744000EEE612 /* _SBBMultiValueConstraints.m in Sources */,
 				806C42651FFF0D33007A51D8 /* _SBBBloodPressureConstraints.m in Sources */,
@@ -2464,6 +2529,7 @@
 				800E795619ED74A600EEE612 /* SBBDateConstraints.m in Sources */,
 				80D517361CADD0A8002D2C06 /* NSObject+SBBAdditions.m in Sources */,
 				8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */,
+				605EDC441FD87CEC00F43D69 /* SBBNotificationManager.m in Sources */,
 				80B2C6501E3AD493001F9FEA /* ZZNewArchiveEntry.mm in Sources */,
 				FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */,
 				805D4BED1ECBAC57002143F0 /* _SBBSchemaReference.m in Sources */,
@@ -2483,9 +2549,12 @@
 				80B2C43F1E3A59D2001F9FEA /* SBBEncryptor.m in Sources */,
 				807AE2FF1B62E98C002588BB /* SBBUserSessionInfo.m in Sources */,
 				800E792E19ED740F00EEE612 /* _SBBDateConstraints.m in Sources */,
+				605EDC2F1FD87BF800F43D69 /* _SBBRequestParams.m in Sources */,
 				80B2C6591E3AD493001F9FEA /* ZZStandardCryptoEngine.cpp in Sources */,
 				80E5682D1FD9D80800BB644E /* SBBOAuthAccessToken.m in Sources */,
 				808D03CD1E96CDCC0030F23E /* _SBBForwardCursorPagedResourceList.m in Sources */,
+				80C9CC6F1FD8E4C70088C77D /* SBBSubscriptionStatus.m in Sources */,
+				605EDC321FD87BF800F43D69 /* _SBBNotificationRegistration.m in Sources */,
 				807AE2EF1B62E8C3002588BB /* _SBBUserSessionInfo.m in Sources */,
 				80B2C4461E3A5CED001F9FEA /* SBBDataArchive.m in Sources */,
 				80F88E541AF991B10090D462 /* _SBBScheduledActivity.m in Sources */,
@@ -2500,6 +2569,7 @@
 				8026D67F19E857FC008942B0 /* SBBBridgeAPIManager.m in Sources */,
 				805D4BE91ECBAC2E002143F0 /* _SBBCompoundActivity.m in Sources */,
 				8026D65F19E7527F008942B0 /* SBBSurveyManager.m in Sources */,
+				80C9CC681FD8E46E0088C77D /* _SBBSubscriptionStatusList.m in Sources */,
 				8051DCE01A1E6FDB0068D06E /* RNDecryptor.m in Sources */,
 				805D4BF51ECBACDD002143F0 /* SBBSchemaReference.m in Sources */,
 				80104A4319D1F817001F2573 /* SBBConsentManager.m in Sources */,
@@ -2542,6 +2612,7 @@
 				80E8196B1A83E89E00513919 /* _SBBSurveyInfoScreen.m in Sources */,
 				60B635411B14ED0500C4DA63 /* SBBBridgeNetworkManager.m in Sources */,
 				6056DE0D1CF61ECD00C21E82 /* _SBBStudyParticipant.m in Sources */,
+				80C9CC711FD8E4C70088C77D /* SBBSubscriptionStatusList.m in Sources */,
 				8026D68B19E888DB008942B0 /* SBBUploadSession.m in Sources */,
 				80F88E501AF991950090D462 /* SBBScheduledActivity.m in Sources */,
 				800E794C19ED748900EEE612 /* SBBBooleanConstraints.m in Sources */,
@@ -2553,6 +2624,7 @@
 				80FA54E01A25110E00EDE46E /* SBBCacheManager.m in Sources */,
 				80F7C35019E5DC0D00574800 /* SBBSurveyConstraints.m in Sources */,
 				800E796C19ED74C500EEE612 /* SBBSurveyQuestionOption.m in Sources */,
+				605EDC3E1FD87C1F00F43D69 /* SBBNotificationRegistration.m in Sources */,
 				80B2C63B1E3AD493001F9FEA /* ZZArchiveEntry.m in Sources */,
 				80E819671A83E89E00513919 /* _SBBImage.m in Sources */,
 				606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */,
