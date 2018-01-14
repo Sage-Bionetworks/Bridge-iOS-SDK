@@ -816,6 +816,7 @@
 		804C10A01E2847FE004B68E6 /* SBBBridgeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeInfo.m; sourceTree = "<group>"; };
 		804CD3FF1DCBEE0C001CD107 /* SBBParticipantManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBParticipantManager.h; sourceTree = "<group>"; };
 		804CD4001DCBEE0C001CD107 /* SBBParticipantManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBParticipantManager.m; sourceTree = "<group>"; };
+		804D2BDA200C07620068650F /* SBBDataModelV10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV10.xcdatamodel; sourceTree = "<group>"; };
 		8051DCCF1A1E6FDB0068D06E /* RNCryptor+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNCryptor+Private.h"; sourceTree = "<group>"; };
 		8051DCD11A1E6FDB0068D06E /* RNCryptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNCryptor.h; sourceTree = "<group>"; };
 		8051DCD21A1E6FDB0068D06E /* RNCryptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCryptor.m; sourceTree = "<group>"; };
@@ -3161,6 +3162,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				804D2BDA200C07620068650F /* SBBDataModelV10.xcdatamodel */,
 				806C423E1FFF0ABD007A51D8 /* SBBDataModelV9.xcdatamodel */,
 				80E568141FD9D0E300BB644E /* SBBDataModelV8.xcdatamodel */,
 				808B29561EFC61EC003390E1 /* SBBDataModelV7.xcdatamodel */,
