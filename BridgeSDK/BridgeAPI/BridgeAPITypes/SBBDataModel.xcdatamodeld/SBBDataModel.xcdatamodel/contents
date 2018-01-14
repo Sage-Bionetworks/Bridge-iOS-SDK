@@ -170,6 +170,24 @@
         <attribute name="allowOther" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="enumeration" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyQuestionOption" inverseName="multiValueConstraints" inverseEntity="SurveyQuestionOption" syncable="YES"/>
     </entity>
+    <entity name="NotificationRegistration" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="deviceId" attributeType="String" syncable="YES"/>
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="osName" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="type"/>
+        </userInfo>
+    </entity>
     <entity name="OAuthAccessToken" parentEntity="BridgeObject" syncable="YES">
         <attribute name="accessToken" attributeType="String" defaultValueString="-" syncable="YES">
             <userInfo>
@@ -191,24 +209,6 @@
                 <entry key="mogenerator.readonly" value="YES"/>
             </userInfo>
         </attribute>
-    </entity>
-    <entity name="NotificationRegistration" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="1"/>
-            </userInfo>
-        </attribute>
-        <attribute name="deviceId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="1"/>
-            </userInfo>
-        </attribute>
-        <attribute name="osName" optional="YES" attributeType="String" syncable="YES"/>
-        <userInfo>
-            <entry key="entityIDKeyPath" value="type"/>
-        </userInfo>
     </entity>
     <entity name="RequestParams" parentEntity="BridgeObject" syncable="YES">
         <attribute name="assignmentFilter" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>

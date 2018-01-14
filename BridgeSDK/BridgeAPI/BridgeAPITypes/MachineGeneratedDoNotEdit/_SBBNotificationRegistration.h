@@ -33,20 +33,23 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBNotificationRegistration
 
 @end
 
 @interface _SBBNotificationRegistration : SBBBridgeObject
 
-@property (nonatomic, strong, readonly) NSDate* createdOn;
+@property (nullable, nonatomic, strong, readonly) NSDate* createdOn;
 
 @property (nonatomic, strong) NSString* deviceId;
 
-@property (nonatomic, strong) NSString* guid;
+@property (nullable, nonatomic, strong) NSString* guid;
 
-@property (nonatomic, strong, readonly) NSDate* modifiedOn;
+@property (nullable, nonatomic, strong, readonly) NSDate* modifiedOn;
 
 @property (nonatomic, strong) NSString* osName;
 
 @end
+NS_ASSUME_NONNULL_END

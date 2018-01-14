@@ -159,11 +159,11 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.subscribed = ((id)self.subscribed == [NSNull null]) ? nil : self.subscribed;
+    if (self.subscribed) managedObject.subscribed = self.subscribed;
 
-    managedObject.topicGuid = ((id)self.topicGuid == [NSNull null]) ? nil : self.topicGuid;
+    if (self.topicGuid) managedObject.topicGuid = self.topicGuid;
 
-    managedObject.topicName = ((id)self.topicName == [NSNull null]) ? nil : self.topicName;
+    if (self.topicName) managedObject.topicName = self.topicName;
 
     // Calling code will handle saving these changes to cacheContext.
 }

@@ -33,46 +33,49 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBRequestParams
 
 @end
 
 @interface _SBBRequestParams : SBBBridgeObject
 
-@property (nonatomic, strong) NSNumber* assignmentFilter;
+@property (nullable, nonatomic, strong) NSNumber* assignmentFilter;
 
 @property (nonatomic, assign) BOOL assignmentFilterValue;
 
-@property (nonatomic, strong) NSString* emailFilter;
+@property (nullable, nonatomic, strong) NSString* emailFilter;
 
-@property (nonatomic, strong) NSString* endDate;
+@property (nullable, nonatomic, strong) NSString* endDate;
 
-@property (nonatomic, strong) NSString* endTime;
+@property (nullable, nonatomic, strong) NSString* endTime;
 
-@property (nonatomic, strong) NSString* idFilter;
+@property (nullable, nonatomic, strong) NSString* idFilter;
 
-@property (nonatomic, strong) NSNumber* offsetBy;
+@property (nullable, nonatomic, strong) NSNumber* offsetBy;
 
 @property (nonatomic, assign) int64_t offsetByValue;
 
-@property (nonatomic, strong) NSString* offsetKey;
+@property (nullable, nonatomic, strong) NSString* offsetKey;
 
-@property (nonatomic, strong) NSNumber* pageSize;
+@property (nullable, nonatomic, strong) NSNumber* pageSize;
 
 @property (nonatomic, assign) int64_t pageSizeValue;
 
-@property (nonatomic, strong) NSString* reportType;
+@property (nullable, nonatomic, strong) NSString* reportType;
 
-@property (nonatomic, strong) NSDate* scheduledOnEnd;
+@property (nullable, nonatomic, strong) NSDate* scheduledOnEnd;
 
-@property (nonatomic, strong) NSDate* scheduledOnStart;
+@property (nullable, nonatomic, strong) NSDate* scheduledOnStart;
 
-@property (nonatomic, strong) NSString* startDate;
+@property (nullable, nonatomic, strong) NSString* startDate;
 
-@property (nonatomic, strong) NSString* startTime;
+@property (nullable, nonatomic, strong) NSString* startTime;
 
-@property (nonatomic, strong) NSNumber* total;
+@property (nullable, nonatomic, strong) NSNumber* total;
 
 @property (nonatomic, assign) int64_t totalValue;
 
 @end
+NS_ASSUME_NONNULL_END

@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBResourceList.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBSubscriptionStatusList
 
 @end
@@ -40,3 +42,4 @@
 @interface _SBBSubscriptionStatusList : SBBResourceList
 
 @end
+NS_ASSUME_NONNULL_END

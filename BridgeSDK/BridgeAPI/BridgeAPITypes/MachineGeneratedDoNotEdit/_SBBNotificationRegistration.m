@@ -166,13 +166,13 @@
 
     managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
 
-    managedObject.deviceId = ((id)self.deviceId == [NSNull null]) ? nil : self.deviceId;
+    if (self.deviceId) managedObject.deviceId = self.deviceId;
 
     managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
 
     managedObject.modifiedOn = ((id)self.modifiedOn == [NSNull null]) ? nil : self.modifiedOn;
 
-    managedObject.osName = ((id)self.osName == [NSNull null]) ? nil : self.osName;
+    if (self.osName) managedObject.osName = self.osName;
 
     // Calling code will handle saving these changes to cacheContext.
 }

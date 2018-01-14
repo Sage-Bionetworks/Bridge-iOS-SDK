@@ -33,6 +33,8 @@
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol _SBBSubscriptionStatus
 
 @end
@@ -47,3 +49,4 @@
 @property (nonatomic, strong, readonly) NSString* topicName;
 
 @end
+NS_ASSUME_NONNULL_END
