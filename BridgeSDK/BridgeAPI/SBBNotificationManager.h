@@ -37,22 +37,73 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  Completion block called when registering/unregistering for notifications.
  
+ @param registration   When registering, by default, this will be an SBBNotificationRegistration object, unless the NotificationRegistration type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:. When unregistering, it will be nil.
  @param responseObject JSON response from the server.
  @param error          An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBNotificationManagerCompletionBlock)(_Nullable id responseObject, NSError * _Nullable error);
+typedef void (^SBBNotificationManagerCompletionBlock)(_Nullable id registration, _Nullable id responseObject, NSError * _Nullable error);
+
+/*!
+ Completion block called when getting the topic subscription status list or updating subscriptions.
+ 
+ @param statusList By default, an array of SBBSubscriptionStatus objects, unless the SubscriptionStatus type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:.
+ @param subscribedGuids As a convenience, the completion handler includes an array of just those topicGuids to which this account is now subscribed.
+ @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
+ */
+typedef void (^SBBNotificationManagerSubscriptionStatusCompletionBlock)( NSArray * _Nullable statusList,  NSArray<NSString *> * _Nullable subscribedGuids, NSError * _Nullable error);
 
 /*!
  This protocol defines the interface to the SBBNotificationManager's non-constructor, non-initializer methods. The interface is
  abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.
  */
 @protocol SBBNotificationManagerProtocol <SBBBridgeAPIManagerProtocol>
+
+/*!
+ Register the push notifications deviceId (provided by iOS when registering for push notifications) with Bridge.
+ 
+ You should call this method in the AppDelegate's application:didRegisterForRemoteNotificationsWithDeviceToken: method (or application(_:didRegisterForRemoteNotificationsWithDeviceToken:) in Swift). If this account is not already registered with Bridge for push notifications, it will be registered. If it is, the registration will be updated in case the deviceToken has changed.
+ 
+ @param deviceToken The device token passed in to the app delegate upon registering with iOS for push notifications via the AppDelegate's application:didRegisterForRemoteNotificationsWithDeviceToken: method (or application(_:didRegisterForRemoteNotificationsWithDeviceToken:) in Swift).
+ @param completion An SBBNotificationManagerCompletionBlock to be called upon completion.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nullable NSURLSessionTask *)registerWithDeviceToken:(NSData *)deviceToken completion:(nullable SBBNotificationManagerCompletionBlock)completion;
+
+/*!
+ Unregister for push notifications from Bridge.
+ 
+ You should call this method if the participant changes their notification permission settings to not allow push notifications.
+ 
+ @param completion An SBBNotificationManagerCompletionBlock to be called upon completion.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nullable NSURLSessionTask *)unregisterWithCompletion:(nullable SBBNotificationManagerCompletionBlock)completion;
+
+/*!
+ Get current notification topic subscription statuses from Bridge.
+ 
+ @param completion An SBBNotificationManagerSubscriptionStatusCompletionBlock to be called upon completion.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nullable NSURLSessionTask *)getSubscriptionStatuses:(nullable SBBNotificationManagerSubscriptionStatusCompletionBlock)completion;
+
+/*!
+ Update notification topic subscriptions to Bridge.
+ 
+ If the app is not currently registered for push notifications with Bridge, this will return nil and will call the completion handler with error code SBBErrorCodeNotRegisteredForPushNotifications.
+ 
+ @param topicGuids An array of topicGuid strings to which the account should be subscribed. Any topics whose guids are *not* in this array will be unsubscribed. Passing in an empty NSArray will unsubscribe the participant from all topics.
+ @param completion An SBBNotificationManagerSubscriptionStatusCompletionBlock to be called upon completion.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nullable NSURLSessionTask *)subscribeToTopicGuids:(NSArray<NSString *> *)topicGuids completion:(SBBNotificationManagerSubscriptionStatusCompletionBlock)completion;
+
 @end
 
 /*!
  This class handles communication with the Bridge Notifications API.
  */
-@interface SBBNotificationManager : SBBBridgeAPIManager
+@interface SBBNotificationManager : SBBBridgeAPIManager <SBBComponent, SBBNotificationManagerProtocol>
 
 @end
 

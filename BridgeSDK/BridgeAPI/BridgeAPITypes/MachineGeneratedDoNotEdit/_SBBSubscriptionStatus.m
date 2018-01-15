@@ -55,7 +55,7 @@
 {
 	if ((self = [super init]))
 	{
-		self.subscribed = [NSNumber numberWithBool:0];
+		_subscribed = [NSNumber numberWithBool:0];
 
 	}
 
@@ -67,11 +67,6 @@
 - (BOOL)subscribedValue
 {
 	return [self.subscribed boolValue];
-}
-
-- (void)setSubscribedValue:(BOOL)value_
-{
-	self.subscribed = [NSNumber numberWithBool:value_];
 }
 
 #pragma mark Dictionary representation
