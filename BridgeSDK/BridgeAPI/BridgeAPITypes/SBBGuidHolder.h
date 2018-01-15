@@ -1,7 +1,7 @@
 //
-//  SBBNotificationRegistration.m
+//  SBBGuidHolder.h
 //
-//	Copyright (c) 2014-2017 Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -27,12 +27,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBNotificationRegistration.h"
+#import "_SBBGuidHolder.h"
 
-@implementation SBBNotificationRegistration
-
-#pragma mark Abstract method overrides
-
+@interface SBBGuidHolder : _SBBGuidHolder <_SBBGuidHolder>
 // Custom logic goes here.
-
 @end

@@ -2,7 +2,7 @@
 //  SBBNotificationManager.m
 //  BridgeSDK
 //
-//    Copyright (c) 2017, Sage Bionetworks
+//    Copyright (c) 2018, Sage Bionetworks
 //    All rights reserved.
 //
 //    Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,7 @@
 #import "SBBBridgeAPIManagerInternal.h"
 #import "SBBAuthManagerInternal.h"
 #import "ModelObjectInternal.h"
-#import "SBBNotificationRegistration.h"
+#import "SBBGuidHolder.h"
 
 #define NOTIFICATIONS_API V3_API_PREFIX @"/notifications"
 #define NOTIFICATIONS_GUID_API NOTIFICATIONS_API @"/%@"
@@ -69,8 +69,8 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
 - (NSString *)registrationGuid
 {
     if (!_registrationGuid && gSBBUseCache) {
-        SBBNotificationRegistration *reg = (SBBNotificationRegistration *)[self.cacheManager cachedSingletonObjectOfType:[SBBNotificationRegistration entityName] createIfMissing:NO];
-        _registrationGuid = reg.guid;
+        SBBGuidHolder *guidHolder = (SBBGuidHolder *)[self.cacheManager cachedSingletonObjectOfType:[SBBGuidHolder entityName] createIfMissing:NO];
+        _registrationGuid = guidHolder.guid;
     }
     
     return _registrationGuid;
@@ -111,14 +111,16 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)task.response;
         NSLog(@"Register for push notifications HTTP response code: %ld", (long)httpResponse.statusCode);
 #endif
-        id registration = nil;
         if (!error) {
-            registration = [self.objectManager objectFromBridgeJSON:responseObject];
+            // get the GuidHolder singleton into cache
+            [self.objectManager objectFromBridgeJSON:responseObject];
+            
+            // update the local guid too
             _registrationGuid = ((NSDictionary *)responseObject)[NSStringFromSelector(@selector(guid))];
         }
         
         if (completion) {
-            completion(registration, responseObject, error);
+            completion(responseObject, error);
         }
     }];
 }
@@ -129,15 +131,15 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
     if (!guid.length) {
         // the account is not registered with Bridge for push notifications so do nothing
         if (completion) {
-            completion(nil, nil, [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeNotRegisteredForPushNotifications userInfo:nil]);
+            completion(nil, [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeNotRegisteredForPushNotifications userInfo:nil]);
         }
         return nil;
     }
     
     // remove the NotificationRegistration singleton from cache
     if (gSBBUseCache) {
-        NSString *NR = SBBNotificationRegistration.entityName;
-        [self.cacheManager removeFromCacheObjectOfType:NR withId:NR];
+        NSString *guidHolderType = SBBGuidHolder.entityName;
+        [self.cacheManager removeFromCacheObjectOfType:guidHolderType withId:guidHolderType];
     }
     
     // clear the local copy of the registration guid
@@ -155,7 +157,7 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
         NSLog(@"Unregister for push notifications HTTP response code: %ld", (long)httpResponse.statusCode);
 #endif
         if (completion) {
-            completion(nil, responseObject, error);
+            completion(responseObject, error);
         }
     }];
 }

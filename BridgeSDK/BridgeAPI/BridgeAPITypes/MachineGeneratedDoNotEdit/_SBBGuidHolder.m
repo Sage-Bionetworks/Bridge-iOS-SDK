@@ -1,7 +1,7 @@
 //
-//  _SBBNotificationRegistration.m
+//  _SBBGuidHolder.m
 //
-//	Copyright (c) 2014-2017 Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -27,33 +27,25 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBNotificationRegistration.m instead.
+// Make changes to SBBGuidHolder.m instead.
 //
 
-#import "_SBBNotificationRegistration.h"
+#import "_SBBGuidHolder.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBNotificationRegistration()
+@interface _SBBGuidHolder()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (NotificationRegistration)
-
-@property (nullable, nonatomic, retain) NSDate* createdOn;
-
-@property (nullable, nonatomic, retain) NSString* deviceId;
+@interface NSManagedObject (GuidHolder)
 
 @property (nullable, nonatomic, retain) NSString* guid;
 
-@property (nullable, nonatomic, retain) NSDate* modifiedOn;
-
-@property (nullable, nonatomic, retain) NSString* osName;
-
 @end
 
-@implementation _SBBNotificationRegistration
+@implementation _SBBGuidHolder
 
 - (instancetype)init
 {
@@ -73,15 +65,7 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    _createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
-
-    self.deviceId = [dictionary objectForKey:@"deviceId"];
-
     self.guid = [dictionary objectForKey:@"guid"];
-
-    _modifiedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"modifiedOn"]];
-
-    self.osName = [dictionary objectForKey:@"osName"];
 
 }
 
@@ -89,15 +73,7 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
-    [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
-
-    [dict setObjectIfNotNil:self.deviceId forKey:@"deviceId"];
-
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
-
-    [dict setObjectIfNotNil:[self.modifiedOn ISO8601String] forKey:@"modifiedOn"];
-
-    [dict setObjectIfNotNil:self.osName forKey:@"osName"];
 
 	return [dict copy];
 }
@@ -114,7 +90,7 @@
 
 + (NSString *)entityName
 {
-    return @"NotificationRegistration";
+    return @"GuidHolder";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
@@ -122,15 +98,7 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
-        _createdOn = managedObject.createdOn;
-
-        self.deviceId = managedObject.deviceId;
-
         self.guid = managedObject.guid;
-
-        _modifiedOn = managedObject.modifiedOn;
-
-        self.osName = managedObject.osName;
 
     }
 
@@ -140,7 +108,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"NotificationRegistration" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"GuidHolder" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -164,15 +132,7 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
-
-    if (self.deviceId) managedObject.deviceId = self.deviceId;
-
-    managedObject.guid = ((id)self.guid == [NSNull null]) ? nil : self.guid;
-
-    managedObject.modifiedOn = ((id)self.modifiedOn == [NSNull null]) ? nil : self.modifiedOn;
-
-    if (self.osName) managedObject.osName = self.osName;
+    if (self.guid) managedObject.guid = self.guid;
 
     // Calling code will handle saving these changes to cacheContext.
 }

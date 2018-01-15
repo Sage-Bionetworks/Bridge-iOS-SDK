@@ -1,7 +1,7 @@
 //
-//  _SBBNotificationRegistration.h
+//  SBBGuidHolder.m
 //
-//	Copyright (c) 2014-2017 Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -26,30 +26,13 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBNotificationRegistration.h instead.
-//
 
-#import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import "SBBGuidHolder.h"
 
-NS_ASSUME_NONNULL_BEGIN
+@implementation SBBGuidHolder
 
-@protocol _SBBNotificationRegistration
+#pragma mark Abstract method overrides
+
+// Custom logic goes here.
 
 @end
-
-@interface _SBBNotificationRegistration : SBBBridgeObject
-
-@property (nullable, nonatomic, strong, readonly) NSDate* createdOn;
-
-@property (nonatomic, strong) NSString* deviceId;
-
-@property (nullable, nonatomic, strong) NSString* guid;
-
-@property (nullable, nonatomic, strong, readonly) NSDate* modifiedOn;
-
-@property (nonatomic, strong) NSString* osName;
-
-@end
-NS_ASSUME_NONNULL_END

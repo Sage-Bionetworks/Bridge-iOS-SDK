@@ -1,5 +1,5 @@
 //
-//  SBBNotificationRegistration.h
+//  _SBBGuidHolder.h
 //
 //	Copyright (c) 2014-2017 Sage Bionetworks
 //	All rights reserved.
@@ -26,9 +26,22 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBGuidHolder.h instead.
+//
 
-#import "_SBBNotificationRegistration.h"
+#import <Foundation/Foundation.h>
+#import "SBBBridgeObject.h"
 
-@interface SBBNotificationRegistration : _SBBNotificationRegistration <_SBBNotificationRegistration>
-// Custom logic goes here.
+NS_ASSUME_NONNULL_BEGIN
+
+@protocol _SBBGuidHolder
+
 @end
+
+@interface _SBBGuidHolder : SBBBridgeObject
+
+@property (nonatomic, strong) NSString* guid;
+
+@end
+NS_ASSUME_NONNULL_END

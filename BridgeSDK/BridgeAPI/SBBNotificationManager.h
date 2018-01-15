@@ -2,7 +2,7 @@
 //  SBBNotificationManager.h
 //  BridgeSDK
 //
-//    Copyright (c) 2017, Sage Bionetworks
+//    Copyright (c) 2018, Sage Bionetworks
 //    All rights reserved.
 //
 //    Redistribution and use in source and binary forms, with or without
@@ -30,18 +30,16 @@
 //
 
 #import "SBBBridgeAPIManager.h"
-#import "SBBNotificationRegistration.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 /*!
  Completion block called when registering/unregistering for notifications.
  
- @param registration   When registering, by default, this will be an SBBNotificationRegistration object, unless the NotificationRegistration type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:. When unregistering, it will be nil.
  @param responseObject JSON response from the server.
  @param error          An error that occurred during execution of the method for which this is a completion block, or nil.
  */
-typedef void (^SBBNotificationManagerCompletionBlock)(_Nullable id registration, _Nullable id responseObject, NSError * _Nullable error);
+typedef void (^SBBNotificationManagerCompletionBlock)(_Nullable id responseObject, NSError * _Nullable error);
 
 /*!
  Completion block called when getting the topic subscription status list or updating subscriptions.

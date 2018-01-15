@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="16G1114" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" attributeType="String" defaultValueString="task" regularExpressionString="^(task|survey|compound)$" syncable="YES"/>
         <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
@@ -137,6 +137,12 @@
             <entry key="entityIDKeyPath" value="listID__"/>
         </userInfo>
     </entity>
+    <entity name="GuidHolder" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="guid" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="type"/>
+        </userInfo>
+    </entity>
     <entity name="HeightConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="isInfant" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
@@ -169,24 +175,6 @@
         <attribute name="allowMultiple" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="allowOther" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="enumeration" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyQuestionOption" inverseName="multiValueConstraints" inverseEntity="SurveyQuestionOption" syncable="YES"/>
-    </entity>
-    <entity name="NotificationRegistration" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="1"/>
-            </userInfo>
-        </attribute>
-        <attribute name="deviceId" attributeType="String" syncable="YES"/>
-        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="1"/>
-            </userInfo>
-        </attribute>
-        <attribute name="osName" attributeType="String" syncable="YES"/>
-        <userInfo>
-            <entry key="entityIDKeyPath" value="type"/>
-        </userInfo>
     </entity>
     <entity name="OAuthAccessToken" parentEntity="BridgeObject" syncable="YES">
         <attribute name="accessToken" attributeType="String" defaultValueString="-" syncable="YES">
@@ -577,8 +565,8 @@
         <element name="Image" positionX="0" positionY="0" width="128" height="120"/>
         <element name="IntegerConstraints" positionX="0" positionY="0" width="128" height="105"/>
         <element name="MultiValueConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="GuidHolder" positionX="18" positionY="153" width="128" height="60"/>
         <element name="OAuthAccessToken" positionX="18" positionY="153" width="128" height="105"/>
-        <element name="NotificationRegistration" positionX="18" positionY="153" width="128" height="120"/>
         <element name="RequestParams" positionX="36" positionY="171" width="128" height="270"/>
         <element name="ResourceList" positionX="0" positionY="0" width="128" height="105"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
