@@ -353,10 +353,15 @@
             </userInfo>
         </attribute>
         <userInfo>
+            <entry key="entityIDKeyPath" value="topicGuid"/>
             <entry key="mogenerator.readonly" value="1"/>
         </userInfo>
     </entity>
-    <entity name="SubscriptionStatusList" parentEntity="ResourceList" syncable="YES"/>
+    <entity name="SubscriptionStatusList" parentEntity="ResourceList" syncable="YES">
+        <userInfo>
+            <entry key="entityIDKeyPath" value="listID__"/>
+        </userInfo>
+    </entity>
     <entity name="Survey" parentEntity="BridgeObject" syncable="YES">
         <attribute name="copyrightNotice" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>

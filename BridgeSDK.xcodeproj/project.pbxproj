@@ -138,6 +138,7 @@
 		606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 606FDE241A2F9E4300898466 /* SBBIdentifierHolder.m */; };
 		6070B1DB1DDD02CA00886FB6 /* SBBParticipantManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6070B1DA1DDD02C300886FB6 /* SBBParticipantManagerInternal.h */; };
 		60737A211DA828D20078E13E /* SBBBridgeAPIManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60737A201DA828D20078E13E /* SBBBridgeAPIManagerInternal.h */; };
+		60AE9910200D50C80070C8B0 /* SBBNotificationManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 60AE990F200D50C80070C8B0 /* SBBNotificationManagerUnitTests.m */; };
 		60B635401B14ED0500C4DA63 /* SBBBridgeNetworkManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 60B6353E1B14ED0500C4DA63 /* SBBBridgeNetworkManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60B635411B14ED0500C4DA63 /* SBBBridgeNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B6353F1B14ED0500C4DA63 /* SBBBridgeNetworkManager.m */; };
 		60B635431B14F5C800C4DA63 /* SBBNetworkManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60B635421B14F5C800C4DA63 /* SBBNetworkManagerInternal.h */; };
@@ -703,6 +704,8 @@
 		60737A201DA828D20078E13E /* SBBBridgeAPIManagerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAPIManagerInternal.h; sourceTree = "<group>"; };
 		607B127A1E4BCE0B00237EA7 /* openssl */ = {isa = PBXFileReference; lastKnownFileType = folder; path = openssl; sourceTree = "<group>"; };
 		607B127C1E4BCF8A00237EA7 /* openssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = openssl.a; sourceTree = "<group>"; };
+		60AE990F200D50C80070C8B0 /* SBBNotificationManagerUnitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBBNotificationManagerUnitTests.m; sourceTree = "<group>"; };
+		60AE9954200D78DB0070C8B0 /* BridgeSDKIntegration.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BridgeSDKIntegration.entitlements; sourceTree = "<group>"; };
 		60B6353E1B14ED0500C4DA63 /* SBBBridgeNetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeNetworkManager.h; sourceTree = "<group>"; };
 		60B6353F1B14ED0500C4DA63 /* SBBBridgeNetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeNetworkManager.m; sourceTree = "<group>"; };
 		60B635421B14F5C800C4DA63 /* SBBNetworkManagerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBNetworkManagerInternal.h; sourceTree = "<group>"; };
@@ -1336,6 +1339,7 @@
 		807AE2881B603309002588BB /* BridgeSDKIntegration */ = {
 			isa = PBXGroup;
 			children = (
+				60AE9954200D78DB0070C8B0 /* BridgeSDKIntegration.entitlements */,
 				807AE28D1B60330A002588BB /* AppDelegate.h */,
 				807AE28E1B60330A002588BB /* AppDelegate.m */,
 				807AE2901B60330A002588BB /* ViewController.h */,
@@ -1467,6 +1471,7 @@
 				600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */,
 				60FD2AF31E04775F00BB725F /* SBBUserManagerUnitTests.m */,
 				8026D69C19EC4025008942B0 /* SBBParticipantManagerUnitTests.m */,
+				60AE990F200D50C80070C8B0 /* SBBNotificationManagerUnitTests.m */,
 				80C3D07719DDE94A00DEA044 /* SBBTestAuthManagerDelegate.h */,
 				80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */,
 				8017AF6219D9C3AF001AF9BA /* SBBTestBridgeObjects.h */,
@@ -2115,9 +2120,16 @@
 					};
 					807AE2861B603309002588BB = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 4B822CZK9N;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 					807AE29E1B60330C002588BB = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 4B822CZK9N;
 						TestTargetID = 807AE2861B603309002588BB;
 					};
 					80855F4F19BE258C006601C7 = {
@@ -2666,6 +2678,7 @@
 				60674D5D1DBE8A8D00ADF4EE /* SBBTestBridgeWritableObject.m in Sources */,
 				60FF57201A0AF87C00CE2373 /* TestModel.xcdatamodeld in Sources */,
 				60FF57371A0AFEA500CE2373 /* _SBBTestBridgeSubObject.m in Sources */,
+				60AE9910200D50C80070C8B0 /* SBBNotificationManagerUnitTests.m in Sources */,
 				60FF57361A0AFEA500CE2373 /* _SBBTestBridgeObject.m in Sources */,
 				60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */,
 				60674D531DBE8A7700ADF4EE /* _SBBTestBridgeExtendableObject.m in Sources */,
@@ -2771,9 +2784,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BridgeSDKIntegration/BridgeSDKIntegration.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4B822CZK9N;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BridgeSDKIntegration/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2786,10 +2801,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = BridgeSDKIntegration/BridgeSDKIntegration.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4B822CZK9N;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BridgeSDKIntegration/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2802,6 +2819,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4B822CZK9N;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -2821,6 +2839,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 4B822CZK9N;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
