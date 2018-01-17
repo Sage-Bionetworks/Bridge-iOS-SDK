@@ -30,6 +30,7 @@
 //
 
 #import "SBBNotificationManager.h"
+#import "SBBSubscriptionStatusList.h"
 #import "SBBBridgeAPIManagerInternal.h"
 #import "SBBAuthManagerInternal.h"
 #import "ModelObjectInternal.h"
@@ -179,6 +180,34 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
     return [subscribedGuids copy];
 }
 
+- (NSString *)listIdentifier
+{
+    return SBBSubscriptionStatusList.entityName;
+}
+
+- (SBBSubscriptionStatusList *)readSubscriptionStatusListIntoCache:(id)responseObject
+{
+    NSDictionary *objectJSON = responseObject;
+    if (gSBBUseCache) {
+        // Set an identifier in the JSON so we can find the cached object later--since
+        // the type of the list JSON is just "ResourceList" in spite of being documented as
+        // "SubscriptionStatusList".
+        NSMutableDictionary *objectWithListIdentifier = [responseObject mutableCopy];
+        
+        // -- get the identifier key path we need to set from the cache manager core data entity description
+        //    rather than hardcoding it with a string literal
+        NSEntityDescription *entityDescription = [SBBSubscriptionStatusList entityForContext:self.cacheManager.cacheIOContext];
+        NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
+        
+        // -- set it in the JSON to this Activity Manager's list identifier
+        [objectWithListIdentifier setValue:[self listIdentifier] forKeyPath:entityIDKeyPath];
+        objectJSON = [objectWithListIdentifier copy];
+    }
+    
+    SBBSubscriptionStatusList *subscriptionStatusList = [self.objectManager objectFromBridgeJSON:objectJSON];
+    return subscriptionStatusList;
+}
+
 - (NSURLSessionTask *)getSubscriptionStatuses:(SBBNotificationManagerSubscriptionStatusCompletionBlock)completion
 {
     NSString *guid = self.registrationGuid;
@@ -202,7 +231,7 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
         NSArray *subscriptions = nil;
         NSArray<NSString *> *topicGuids = nil;
         if (!error) {
-            SBBSubscriptionStatusList *subscriptionStatusList = [self.objectManager objectFromBridgeJSON:responseObject];
+            SBBSubscriptionStatusList *subscriptionStatusList = [self readSubscriptionStatusListIntoCache:responseObject];
             subscriptions = [subscriptionStatusList.items copy];
             topicGuids = [self topicGuidsFromBridgeJSON:responseObject];
         }
@@ -238,7 +267,7 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
         NSArray *subscriptions = nil;
         NSArray<NSString *> *topicGuids = nil;
         if (!error) {
-            SBBSubscriptionStatusList *subscriptionStatusList = [self.objectManager objectFromBridgeJSON:responseObject];
+            SBBSubscriptionStatusList *subscriptionStatusList = [self readSubscriptionStatusListIntoCache:responseObject];
             subscriptions = [subscriptionStatusList.items copy];
             topicGuids = [self topicGuidsFromBridgeJSON:responseObject];
         }
