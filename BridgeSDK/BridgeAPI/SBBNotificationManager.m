@@ -29,7 +29,7 @@
 //
 //
 
-#import "SBBNotificationManager.h"
+#import "SBBNotificationManagerInternal.h"
 #import "SBBSubscriptionStatusList.h"
 #import "SBBBridgeAPIManagerInternal.h"
 #import "SBBAuthManagerInternal.h"
@@ -39,17 +39,17 @@
 #define NOTIFICATIONS_API V3_API_PREFIX @"/notifications"
 #define NOTIFICATIONS_GUID_API NOTIFICATIONS_API @"/%@"
 
-static NSString *kSBBNotificationsAPI = NOTIFICATIONS_API;
-static NSString *kSBBNotificationsGuidAPIFormat = NOTIFICATIONS_GUID_API;
-static NSString *kSBBSubscriptionsAPIFormat = NOTIFICATIONS_GUID_API @"/subscriptions";
+NSString *kSBBNotificationsAPI = NOTIFICATIONS_API;
+NSString *kSBBNotificationsGuidAPIFormat = NOTIFICATIONS_GUID_API;
+NSString *kSBBSubscriptionsAPIFormat = NOTIFICATIONS_GUID_API @"/subscriptions";
 
+static NSString *kSBBNotificationsOSNameKey = @"osName";
 static NSString *kSBBNotificationsOSName = @"iOS";
+static NSString *kSBBNotificationsDeviceIdKey = @"deviceId";
 static NSString *kSBBNotificationTopicGuidsKey = @"topicGuids";
 static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
 
 @interface SBBNotificationManager()
-
-@property (nonatomic, strong) NSString *registrationGuid;
 
 @end
 
@@ -95,8 +95,8 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
     NSString *endpoint;
     NSString *deviceId = [self deviceIdFromDeviceToken:deviceToken];
     NSMutableDictionary *params = [@{
-                                     NSStringFromSelector(@selector(osName)): kSBBNotificationsOSName,
-                                     NSStringFromSelector(@selector(deviceId)): deviceId
+                                     kSBBNotificationsOSNameKey: kSBBNotificationsOSName,
+                                     kSBBNotificationsDeviceIdKey: deviceId
                                           } mutableCopy];
     if (guid.length) {
         // the account is already registered with Bridge for push notifications so use the update endpoint

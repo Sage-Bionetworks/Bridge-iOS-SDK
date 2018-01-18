@@ -8,7 +8,7 @@
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
 #import "SBBComponent.h"
-#import "SBBNotificationManager.h"
+#import "SBBNotificationManagerInternal.h"
 #import "SBBCacheManager.h"
 #import "ModelObjectInternal.h"
 
@@ -85,8 +85,24 @@
 }
 
 - (void)testRegisterUnregister {
+    // register unregistered account
     [self register];
-    [self unregister];
+    
+    // do the rest in a try-catch block so we can make sure to unregister at the end,
+    // to keep the test device token available for future tests
+    @try {
+        // re-register already-registered account
+        [self register];
+        
+        // clear Notification Manager's local copy of the registration guid and check that it gets the guid from cache when next referenced
+        SBBNotificationManager *notMan = (SBBNotificationManager *)SBBComponent(SBBNotificationManager);
+        notMan.registrationGuid = nil;
+        XCTAssertNotNil(notMan.registrationGuid, @"Expected Notification Manager to fetch guid from cache, but it didn't");
+    } @catch (NSException *exception) {
+        XCTAssert(NO, @"Exception caught in testRegisterUnregister:\n%@", exception);
+    } @finally {
+        [self unregister];
+    }
 }
 
 - (void)testGetSubscriptionStatuses {
