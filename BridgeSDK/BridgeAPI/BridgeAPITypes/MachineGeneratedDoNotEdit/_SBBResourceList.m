@@ -1,7 +1,7 @@
 //
 //  _SBBResourceList.m
 //
-//	Copyright (c) 2014-2017 Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -36,6 +36,7 @@
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBBridgeObject.h"
+#import "SBBRequestParams.h"
 
 @interface _SBBResourceList()
 
@@ -53,6 +54,8 @@
 @property (nullable, nonatomic, retain) NSNumber* total;
 
 @property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *items;
+
+@property (nullable, nonatomic, retain) NSManagedObject *requestParams;
 
 - (void)addItemsObject:(NSManagedObject *)value;
 - (void)removeItemsObject:(NSManagedObject *)value;
@@ -116,6 +119,14 @@
         [self addItemsObject:itemsObj];
     }
 
+    NSDictionary *requestParamsDict = [dictionary objectForKey:@"requestParams"];
+
+    if (requestParamsDict != nil)
+    {
+        SBBRequestParams *requestParamsObj = [objectManager objectFromBridgeJSON:requestParamsDict];
+        self.requestParams = requestParamsObj;
+    }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -137,6 +148,8 @@
 
 	}
 
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.requestParams] forKey:@"requestParams"];
+
 	return [dict copy];
 }
 
@@ -149,6 +162,7 @@
 	{
 		[itemsObj awakeFromDictionaryRepresentationInit];
 	}
+	[self.requestParams awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -178,6 +192,13 @@
                 [self addItemsObject:itemsObj];
             }
 		}
+            NSManagedObject *requestParamsManagedObj = managedObject.requestParams;
+        Class requestParamsClass = [SBBObjectManager bridgeClassFromType:requestParamsManagedObj.entity.name];
+        SBBRequestParams *requestParamsObj = [[requestParamsClass alloc] initWithManagedObject:requestParamsManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if (requestParamsObj != nil)
+        {
+          self.requestParams = requestParamsObj;
+        }
     }
 
     return self;
@@ -250,6 +271,14 @@
 
     // ...and let go of the collection copy
     itemsCopy = nil;
+
+    // destination entity RequestParams is not directly cacheable, so delete it and create the replacement
+    if (managedObject.requestParams) {
+        [cacheContext deleteObject:managedObject.requestParams];
+    }
+    NSManagedObject *relMoRequestParams = [self.requestParams createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
+    [managedObject setRequestParams:relMoRequestParams];
 
     // Calling code will handle saving these changes to cacheContext.
 }
@@ -347,5 +376,24 @@
 
     [(NSMutableArray *)self.items replaceObjectsAtIndexes:indexes withObjects:value];
 }
+
+- (void) setRequestParams: (SBBRequestParams*) requestParams_ settingInverse: (BOOL) setInverse
+{
+
+    _requestParams = requestParams_;
+
+}
+
+- (void) setRequestParams: (SBBRequestParams*) requestParams_
+{
+    [self setRequestParams: requestParams_ settingInverse: YES];
+}
+
+- (SBBRequestParams*) requestParams
+{
+    return _requestParams;
+}
+
+@synthesize requestParams = _requestParams;
 
 @end

@@ -36,6 +36,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class SBBBridgeObject;
+@class SBBRequestParams;
 
 @protocol _SBBResourceList
 
@@ -49,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong, readonly) NSArray *items;
 
+@property (nullable, nonatomic, strong, readwrite) SBBRequestParams *requestParams;
+
 - (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
 - (void)addItemsObject:(SBBBridgeObject*)value_;
 - (void)removeItemsObjects;
@@ -61,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
 - (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value;
 - (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
+
+- (void) setRequestParams: (SBBRequestParams* _Nullable) requestParams_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END

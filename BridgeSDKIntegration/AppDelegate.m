@@ -9,6 +9,11 @@
 #import "AppDelegate.h"
 @import BridgeSDK;
 
+// un-comment this and run on a device if you ever need to get a new base64encoded device token for
+// integration testing. Copy the base64token from the console log and paste it in over the existing
+// value for base64Token in the setUp method of SBBNotificationManagerIntegrationTests:
+// #define GET_NEW_TOKEN 1
+
 @interface AppDelegate ()
 
 @end
@@ -20,6 +25,11 @@
     // Override point for customization after application launch.
     // TODO: emm 2016-05-04 figure out how to do all tests both with and without caching in one run
     [BridgeSDK setup];
+    
+#if GET_NEW_TOKEN
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound) categories:nil];
+    [application registerUserNotificationSettings:settings];
+#endif
     return YES;
 }
 
@@ -28,6 +38,26 @@
         [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:identifier completionHandler:completionHandler];
     }
 }
+
+#if GET_NEW_TOKEN
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings {
+    [application registerForRemoteNotifications];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nonnull NSData *)deviceToken {
+    NSLog(@"Device token: %@", deviceToken);
+    NSString *base64Token = [deviceToken base64EncodedStringWithOptions:0];
+    NSLog(@"base64encoded device token: %@", base64Token);
+    NSString *deviceIdentifier = [[[deviceToken description]
+                                   stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]]
+                                  stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSLog(@"Device identifier: %@", deviceIdentifier);
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(nonnull NSError *)error {
+    NSLog(@"Failed to register for remote notifications: %@", error);
+}
+#endif
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
