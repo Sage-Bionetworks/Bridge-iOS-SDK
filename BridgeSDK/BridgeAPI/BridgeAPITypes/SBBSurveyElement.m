@@ -31,8 +31,13 @@
 
 @implementation SBBSurveyElement
 
-#pragma mark Abstract method overrides
+- (instancetype)copyWithIdentifier: (NSString *)identifier {
+    SBBSurveyElement *copy = [self copy];
+    copy.identifier = identifier;
+    return copy;
+}
 
-// Custom logic goes here.
+
+#pragma mark Abstract method overrides
 
 @end
