@@ -29,10 +29,43 @@
 
 #import "SBBSurveyRule.h"
 
+/// Used to denote that the rule applies when the user has *all* of the included `dataGroups`
+SBBOperatorType const SBBOperatorTypeAll = @"all";
+
+/// Used to denote that the rule applies when the user has *any* of the included `dataGroups`
+SBBOperatorType const SBBOperatorTypeAny = @"any";
+
+/// Used in direct navigation when the `skipTo` should always be applied.
+SBBOperatorType const SBBOperatorTypeAlways = @"always";
+
+/// Survey rule for checking if the skip identifier should apply if the answer was skipped
+/// in which case the result answer value will be `nil`
+SBBOperatorType const SBBOperatorTypeSkip = @"de";
+
+/// The answer value is equal to the `matchingAnswer`.
+SBBOperatorType const SBBOperatorTypeEqual = @"eq";
+
+/// The answer value is *not* equal to the `matchingAnswer`.
+SBBOperatorType const SBBOperatorTypeNotEqual = @"ne";
+
+/// The answer value is less than the `matchingAnswer`.
+SBBOperatorType const SBBOperatorTypeLessThan = @"lt";
+
+/// The answer value is greater than the `matchingAnswer`.
+SBBOperatorType const SBBOperatorTypeGreaterThan = @"gt";
+
+/// The answer value is less than or equal to the `matchingAnswer`.
+SBBOperatorType const SBBOperatorTypeLessThanEqual = @"le";
+
+/// The answer value is greater than or equal to the `matchingAnswer`.
+SBBOperatorType const SBBOperatorTypeGreaterThanEqual = @"ge";
+
 @implementation SBBSurveyRule
 
 #pragma mark Abstract method overrides
 
-// Custom logic goes here.
+- (SBBOperatorType) operatorType {
+    return self.operator;
+}
 
 @end
