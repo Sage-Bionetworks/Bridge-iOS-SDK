@@ -28,7 +28,33 @@
 //
 
 #import "_SBBSurveyQuestion.h"
+#import "SBBDefines.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NSString * SBBUIHintType NS_STRING_ENUM;
+
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeBloodPressure;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeCheckbox;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeCombobox;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeDatePicker;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeDateTimePicker;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeHeight;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeList;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeMultilineText;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeNumberfield;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeRadioButton;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeSelect;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeSlider;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeTextfield;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeTimePicker;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeToggle;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeWeight;
 
 @interface SBBSurveyQuestion : _SBBSurveyQuestion <_SBBSurveyQuestion>
-// Custom logic goes here.
+
+@property (nonatomic, nullable, readonly, strong) SBBUIHintType uiHintValue;
+
 @end
+
+NS_ASSUME_NONNULL_END

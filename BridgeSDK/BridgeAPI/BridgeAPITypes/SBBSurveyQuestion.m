@@ -29,10 +29,29 @@
 
 #import "SBBSurveyQuestion.h"
 
+SBBUIHintType const SBBUIHintTypeBloodPressure = @"bloodpressure";
+SBBUIHintType const SBBUIHintTypeCheckbox = @"checkbox";
+SBBUIHintType const SBBUIHintTypeCombobox = @"combobox";
+SBBUIHintType const SBBUIHintTypeDatePicker = @"datepicker";
+SBBUIHintType const SBBUIHintTypeDateTimePicker = @"datetimepicker";
+SBBUIHintType const SBBUIHintTypeHeight = @"height";
+SBBUIHintType const SBBUIHintTypeList = @"list";
+SBBUIHintType const SBBUIHintTypeMultilineText = @"multilinetext";
+SBBUIHintType const SBBUIHintTypeNumberfield = @"numberfield";
+SBBUIHintType const SBBUIHintTypeRadioButton = @"radiobutton";
+SBBUIHintType const SBBUIHintTypeSelect = @"select";
+SBBUIHintType const SBBUIHintTypeSlider = @"slider";
+SBBUIHintType const SBBUIHintTypeTextfield = @"textfield";
+SBBUIHintType const SBBUIHintTypeTimePicker = @"timepicker";
+SBBUIHintType const SBBUIHintTypeToggle = @"toggle";
+SBBUIHintType const SBBUIHintTypeWeight = @"weight";
+
 @implementation SBBSurveyQuestion
 
 #pragma mark Abstract method overrides
 
-// Custom logic goes here.
+- (nullable SBBUIHintType)uiHintValue {
+    return self.uiHint;
+}
 
 @end
