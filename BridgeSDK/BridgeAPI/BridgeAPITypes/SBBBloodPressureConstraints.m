@@ -31,6 +31,10 @@
 
 @implementation SBBBloodPressureConstraints
 
++ (SBBDataType)defaultDataType {
+    return SBBDataTypeBloodPressure;
+}
+
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.

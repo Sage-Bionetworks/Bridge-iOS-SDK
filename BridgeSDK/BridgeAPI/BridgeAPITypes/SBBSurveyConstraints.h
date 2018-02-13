@@ -28,7 +28,30 @@
 //
 
 #import "_SBBSurveyConstraints.h"
+#import "SBBDefines.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NSString * SBBDataType NS_STRING_ENUM;
+
+ENUM_EXTERN SBBDataType const SBBDataTypeBloodPressure;
+ENUM_EXTERN SBBDataType const SBBDataTypeBoolean;
+ENUM_EXTERN SBBDataType const SBBDataTypeDate;
+ENUM_EXTERN SBBDataType const SBBDataTypeDateTime;
+ENUM_EXTERN SBBDataType const SBBDataTypeDecimal;
+ENUM_EXTERN SBBDataType const SBBDataTypeDuration;
+ENUM_EXTERN SBBDataType const SBBDataTypeHeight;
+ENUM_EXTERN SBBDataType const SBBDataTypeInteger;
+ENUM_EXTERN SBBDataType const SBBDataTypeString;
+ENUM_EXTERN SBBDataType const SBBDataTypeTime;
+ENUM_EXTERN SBBDataType const SBBDataTypeWeight; 
 
 @interface SBBSurveyConstraints : _SBBSurveyConstraints <_SBBSurveyConstraints>
-// Custom logic goes here.
+
+@property (nonatomic, readonly, strong) SBBDataType dataTypeValue;
+
++ (SBBDataType)defaultDataType;
+
 @end
+
+NS_ASSUME_NONNULL_END

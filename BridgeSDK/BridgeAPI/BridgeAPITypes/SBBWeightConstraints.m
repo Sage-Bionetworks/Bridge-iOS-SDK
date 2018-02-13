@@ -31,6 +31,10 @@
 
 @implementation SBBWeightConstraints
 
++ (SBBDataType)defaultDataType {
+    return SBBDataTypeWeight;
+}
+
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.

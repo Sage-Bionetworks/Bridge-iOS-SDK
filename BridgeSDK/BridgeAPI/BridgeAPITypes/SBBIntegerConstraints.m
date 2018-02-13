@@ -31,6 +31,10 @@
 
 @implementation SBBIntegerConstraints
 
++ (SBBDataType)defaultDataType {
+    return SBBDataTypeInteger;
+}
+
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.
