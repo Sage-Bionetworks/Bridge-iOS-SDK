@@ -494,7 +494,7 @@
 		80FA54E01A25110E00EDE46E /* SBBCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80FA54DE1A25110E00EDE46E /* SBBCacheManager.m */; };
 		D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */; };
 		D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38021A2B144000E7CF1E /* sample-signature.png */; };
-		F852BAC32033F8A500C2803A /* SBBDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F852BAB32033F8A500C2803A /* SBBDefines.h */; };
+		F852BAC32033F8A500C2803A /* SBBDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F852BAB32033F8A500C2803A /* SBBDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */; };
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
