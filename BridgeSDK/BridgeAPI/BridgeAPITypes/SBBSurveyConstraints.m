@@ -29,10 +29,28 @@
 
 #import "SBBSurveyConstraints.h"
 
+SBBDataType const SBBDataTypeBloodPressure = @"bloodpressure";
+SBBDataType const SBBDataTypeBoolean = @"boolean";
+SBBDataType const SBBDataTypeDate = @"date";
+SBBDataType const SBBDataTypeDateTime = @"datetime";
+SBBDataType const SBBDataTypeDecimal = @"decimal";
+SBBDataType const SBBDataTypeDuration = @"duration";
+SBBDataType const SBBDataTypeHeight = @"height";
+SBBDataType const SBBDataTypeInteger = @"integer";
+SBBDataType const SBBDataTypeString = @"string";
+SBBDataType const SBBDataTypeTime = @"time";
+SBBDataType const SBBDataTypeWeight = @"weight";
+
 @implementation SBBSurveyConstraints
 
 #pragma mark Abstract method overrides
 
-// Custom logic goes here.
++ (SBBDataType)defaultDataType {
+    return SBBDataTypeString;
+}
+
+- (SBBDataType)dataTypeValue {
+    return [self.dataType lowercaseString] ? : [[self class] defaultDataType];
+}
 
 @end

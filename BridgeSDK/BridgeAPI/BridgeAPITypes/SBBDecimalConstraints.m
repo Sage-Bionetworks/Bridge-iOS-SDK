@@ -31,6 +31,10 @@
 
 @implementation SBBDecimalConstraints
 
++ (SBBDataType)defaultDataType {
+    return SBBDataTypeDecimal;
+}
+
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.

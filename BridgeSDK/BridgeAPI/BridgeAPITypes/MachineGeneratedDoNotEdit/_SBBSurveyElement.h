@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSString* promptDetail;
 
-@property (nonatomic, strong) NSString* title;
+@property (nullable, nonatomic, strong) NSString* title;
 
 @property (nullable, nonatomic, strong, readonly) NSArray *afterRules;
 

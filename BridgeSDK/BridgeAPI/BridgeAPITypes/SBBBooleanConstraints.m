@@ -31,6 +31,10 @@
 
 @implementation SBBBooleanConstraints
 
++ (SBBDataType)defaultDataType {
+    return SBBDataTypeBoolean;
+}
+
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.

@@ -28,7 +28,47 @@
 //
 
 #import "_SBBSurveyRule.h"
+#import "SBBDefines.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
+typedef NSString * SBBOperatorType NS_STRING_ENUM;
+
+/// Used to denote that the rule applies when the user has *all* of the included `dataGroups`
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeAll; // ALL
+
+/// Used to denote that the rule applies when the user has *any* of the included `dataGroups`
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeAny; // ANY
+
+/// Used in direct navigation when the `skipTo` should always be applied.
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeAlways; // ALWAYS
+
+/// Survey rule for checking if the skip identifier should apply if the answer was skipped
+/// in which case the result answer value will be `nil`
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeSkip; //DE
+
+/// The answer value is equal to the `matchingAnswer`.
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeEqual; //EQ
+
+/// The answer value is *not* equal to the `matchingAnswer`.
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeNotEqual; //NE
+
+/// The answer value is less than the `matchingAnswer`.
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeLessThan; //LT
+
+/// The answer value is greater than the `matchingAnswer`.
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeGreaterThan; //GT
+
+/// The answer value is less than or equal to the `matchingAnswer`.
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeLessThanEqual; //LE
+
+/// The answer value is greater than or equal to the `matchingAnswer`.
+ENUM_EXTERN SBBOperatorType const SBBOperatorTypeGreaterThanEqual; //GE
 
 @interface SBBSurveyRule : _SBBSurveyRule <_SBBSurveyRule>
-// Custom logic goes here.
+
+@property (nonatomic, readonly, strong) SBBOperatorType operatorType;
+
 @end
+
+NS_ASSUME_NONNULL_END

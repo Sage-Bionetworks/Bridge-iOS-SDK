@@ -31,6 +31,10 @@
 
 @implementation SBBDateTimeConstraints
 
++ (SBBDataType)defaultDataType {
+    return SBBDataTypeDateTime;
+}
+
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.

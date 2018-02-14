@@ -289,7 +289,7 @@
 
     managedObject.promptDetail = ((id)self.promptDetail == [NSNull null]) ? nil : self.promptDetail;
 
-    if (self.title) managedObject.title = self.title;
+    managedObject.title = ((id)self.title == [NSNull null]) ? nil : self.title;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSOrderedSet *afterRulesCopy = [managedObject.afterRules copy];

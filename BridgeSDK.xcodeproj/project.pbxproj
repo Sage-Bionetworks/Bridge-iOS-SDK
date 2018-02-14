@@ -494,6 +494,7 @@
 		80FA54E01A25110E00EDE46E /* SBBCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80FA54DE1A25110E00EDE46E /* SBBCacheManager.m */; };
 		D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */; };
 		D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38021A2B144000E7CF1E /* sample-signature.png */; };
+		F852BAC32033F8A500C2803A /* SBBDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F852BAB32033F8A500C2803A /* SBBDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */; };
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
@@ -1104,6 +1105,8 @@
 		D48FAA211A2E5C6C00D50D1C /* SBBConsentManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBConsentManagerInternal.h; sourceTree = "<group>"; };
 		D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentManagerUnitTests.m; sourceTree = "<group>"; };
 		D4FA38021A2B144000E7CF1E /* sample-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sample-signature.png"; sourceTree = "<group>"; };
+		F80FE3BC2033F5EF00B3EAA9 /* SBBDataModelV11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV11.xcdatamodel; sourceTree = "<group>"; };
+		F852BAB32033F8A500C2803A /* SBBDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDefines.h; sourceTree = "<group>"; };
 		FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SBBAdditions.h"; sourceTree = "<group>"; };
 		FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SBBAdditions.m"; sourceTree = "<group>"; };
 		FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundleSBBAdditionsTests.m; sourceTree = "<group>"; };
@@ -1436,6 +1439,7 @@
 				80855F5519BE258C006601C7 /* BridgeSDK.h */,
 				60D35CA11A5DFEA00019459B /* BridgeSDK+Internal.h */,
 				8026BD1D19C883FC0077F3EB /* BridgeSDK.m */,
+				F852BAB32033F8A500C2803A /* SBBDefines.h */,
 				804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */,
 				80B2C4901E3AA80D001F9FEA /* ZipZap+Namespace.h */,
 				80BB09F519C222CF00E419A1 /* BridgeAPI */,
@@ -1980,6 +1984,7 @@
 				80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */,
 				80B2C6551E3AD493001F9FEA /* ZZOldArchiveEntryWriter.h in Headers */,
 				80E819751A83E8EB00513919 /* SBBSurveyElement.h in Headers */,
+				F852BAC32033F8A500C2803A /* SBBDefines.h in Headers */,
 				800E796719ED74B600EEE612 /* SBBStringConstraints.h in Headers */,
 				807AE2DF1B62B76F002588BB /* SBBActivityManagerInternal.h in Headers */,
 				8026BD2819C8AE200077F3EB /* SBBAuthManagerInternal.h in Headers */,
@@ -2875,7 +2880,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 30;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2916,7 +2921,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 29;
+				CURRENT_PROJECT_VERSION = 30;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2946,7 +2951,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 29;
+				DYLIB_CURRENT_VERSION = 30;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2981,7 +2986,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 29;
+				DYLIB_CURRENT_VERSION = 30;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3257,6 +3262,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F80FE3BC2033F5EF00B3EAA9 /* SBBDataModelV11.xcdatamodel */,
 				804D2BDA200C07620068650F /* SBBDataModelV10.xcdatamodel */,
 				806C423E1FFF0ABD007A51D8 /* SBBDataModelV9.xcdatamodel */,
 				80E568141FD9D0E300BB644E /* SBBDataModelV8.xcdatamodel */,
