@@ -1104,6 +1104,7 @@
 		D48FAA211A2E5C6C00D50D1C /* SBBConsentManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBConsentManagerInternal.h; sourceTree = "<group>"; };
 		D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConsentManagerUnitTests.m; sourceTree = "<group>"; };
 		D4FA38021A2B144000E7CF1E /* sample-signature.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sample-signature.png"; sourceTree = "<group>"; };
+		F80FE3BC2033F5EF00B3EAA9 /* SBBDataModelV11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV11.xcdatamodel; sourceTree = "<group>"; };
 		FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SBBAdditions.h"; sourceTree = "<group>"; };
 		FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SBBAdditions.m"; sourceTree = "<group>"; };
 		FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundleSBBAdditionsTests.m; sourceTree = "<group>"; };
@@ -3257,6 +3258,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F80FE3BC2033F5EF00B3EAA9 /* SBBDataModelV11.xcdatamodel */,
 				804D2BDA200C07620068650F /* SBBDataModelV10.xcdatamodel */,
 				806C423E1FFF0ABD007A51D8 /* SBBDataModelV9.xcdatamodel */,
 				80E568141FD9D0E300BB644E /* SBBDataModelV8.xcdatamodel */,
