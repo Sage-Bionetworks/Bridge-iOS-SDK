@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17D47" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C205" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" attributeType="String" defaultValueString="task" regularExpressionString="^(task|survey|compound)$" syncable="YES"/>
         <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
@@ -265,7 +265,6 @@
         <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
         <attribute name="persistent" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="scheduledOn" attributeType="Date" defaultDateTimeInterval="536806980" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="schedulePlanGuid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="startedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="activity" maxCount="1" deletionRule="Cascade" destinationEntity="Activity" inverseName="scheduledActivity" inverseEntity="Activity" syncable="YES"/>
         <userInfo>
@@ -576,7 +575,7 @@
         <element name="RequestParams" positionX="36" positionY="171" width="128" height="270"/>
         <element name="ResourceList" positionX="0" positionY="0" width="128" height="105"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
-        <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="165"/>
         <element name="SchemaReference" positionX="9" positionY="153" width="128" height="105"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
         <element name="StudyParticipant" positionX="18" positionY="108" width="128" height="270"/>

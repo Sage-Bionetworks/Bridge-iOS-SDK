@@ -57,6 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL persistentValue;
 
+@property (nullable, nonatomic, strong) NSString* schedulePlanGuid;
+
 @property (nonatomic, strong) NSDate* scheduledOn;
 
 @property (nullable, nonatomic, strong) NSDate* startedOn;

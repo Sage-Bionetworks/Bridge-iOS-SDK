@@ -53,6 +53,8 @@
 
 @property (nullable, nonatomic, retain) NSNumber* persistent;
 
+@property (nullable, nonatomic, retain) NSString* schedulePlanGuid;
+
 @property (nullable, nonatomic, retain) NSDate* scheduledOn;
 
 @property (nullable, nonatomic, retain) NSDate* startedOn;
@@ -101,6 +103,8 @@
 
     self.persistent = [dictionary objectForKey:@"persistent"];
 
+    self.schedulePlanGuid = [dictionary objectForKey:@"schedulePlanGuid"];
+
     self.scheduledOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"scheduledOn"]];
 
     self.startedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"startedOn"]];
@@ -128,6 +132,8 @@
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.persistent forKey:@"persistent"];
+
+    [dict setObjectIfNotNil:self.schedulePlanGuid forKey:@"schedulePlanGuid"];
 
     [dict setObjectIfNotNil:[self.scheduledOn ISO8601String] forKey:@"scheduledOn"];
 
@@ -169,6 +175,8 @@
         self.guid = managedObject.guid;
 
         self.persistent = managedObject.persistent;
+
+        self.schedulePlanGuid = managedObject.schedulePlanGuid;
 
         self.scheduledOn = managedObject.scheduledOn;
 
@@ -223,6 +231,8 @@
     if (self.guid) managedObject.guid = self.guid;
 
     managedObject.persistent = ((id)self.persistent == [NSNull null]) ? nil : self.persistent;
+
+    managedObject.schedulePlanGuid = ((id)self.schedulePlanGuid == [NSNull null]) ? nil : self.schedulePlanGuid;
 
     if (self.scheduledOn) managedObject.scheduledOn = self.scheduledOn;
 
