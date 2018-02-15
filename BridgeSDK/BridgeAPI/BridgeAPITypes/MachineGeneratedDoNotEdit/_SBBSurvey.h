@@ -51,6 +51,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSString* identifier;
 
+@property (nullable, nonatomic, strong) NSNumber* minuteDuration;
+
+@property (nonatomic, assign) int32_t minuteDurationValue;
+
 @property (nullable, nonatomic, strong) NSDate* modifiedOn;
 
 @property (nullable, nonatomic, strong) NSString* moduleId;

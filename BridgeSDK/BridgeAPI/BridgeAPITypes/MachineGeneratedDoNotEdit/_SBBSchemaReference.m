@@ -41,7 +41,11 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SchemaReference)
 
+@property (nullable, nonatomic, retain) NSString* activityDescription;
+
 @property (nullable, nonatomic, retain) NSString* id;
+
+@property (nullable, nonatomic, retain) NSNumber* minuteDuration;
 
 @property (nullable, nonatomic, retain) NSNumber* revision;
 
@@ -65,6 +69,16 @@
 
 #pragma mark Scalar values
 
+- (int64_t)minuteDurationValue
+{
+	return [self.minuteDuration longLongValue];
+}
+
+- (void)setMinuteDurationValue:(int64_t)value_
+{
+	self.minuteDuration = [NSNumber numberWithLongLong:value_];
+}
+
 - (int64_t)revisionValue
 {
 	return [self.revision longLongValue];
@@ -81,7 +95,11 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.activityDescription = [dictionary objectForKey:@"activityDescription"];
+
     self.id = [dictionary objectForKey:@"id"];
+
+    self.minuteDuration = [dictionary objectForKey:@"minuteDuration"];
 
     self.revision = [dictionary objectForKey:@"revision"];
 
@@ -91,7 +109,11 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
+    [dict setObjectIfNotNil:self.activityDescription forKey:@"activityDescription"];
+
     [dict setObjectIfNotNil:self.id forKey:@"id"];
+
+    [dict setObjectIfNotNil:self.minuteDuration forKey:@"minuteDuration"];
 
     [dict setObjectIfNotNil:self.revision forKey:@"revision"];
 
@@ -118,7 +140,11 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
+        self.activityDescription = managedObject.activityDescription;
+
         self.id = managedObject.id;
+
+        self.minuteDuration = managedObject.minuteDuration;
 
         self.revision = managedObject.revision;
 
@@ -154,7 +180,11 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
+    managedObject.activityDescription = ((id)self.activityDescription == [NSNull null]) ? nil : self.activityDescription;
+
     if (self.id) managedObject.id = self.id;
+
+    managedObject.minuteDuration = ((id)self.minuteDuration == [NSNull null]) ? nil : self.minuteDuration;
 
     managedObject.revision = ((id)self.revision == [NSNull null]) ? nil : self.revision;
 

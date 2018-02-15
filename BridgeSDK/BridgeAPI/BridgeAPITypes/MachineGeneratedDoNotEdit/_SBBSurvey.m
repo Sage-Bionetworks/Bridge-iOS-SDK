@@ -58,6 +58,8 @@
 
 @property (nullable, nonatomic, retain) NSString* identifier;
 
+@property (nullable, nonatomic, retain) NSNumber* minuteDuration;
+
 @property (nullable, nonatomic, retain) NSDate* modifiedOn;
 
 @property (nullable, nonatomic, retain) NSString* moduleId;
@@ -102,6 +104,16 @@
 }
 
 #pragma mark Scalar values
+
+- (int32_t)minuteDurationValue
+{
+	return [self.minuteDuration intValue];
+}
+
+- (void)setMinuteDurationValue:(int32_t)value_
+{
+	self.minuteDuration = [NSNumber numberWithInt:value_];
+}
 
 - (int64_t)moduleVersionValue
 {
@@ -157,6 +169,8 @@
 
     self.identifier = [dictionary objectForKey:@"identifier"];
 
+    self.minuteDuration = [dictionary objectForKey:@"minuteDuration"];
+
     self.modifiedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"modifiedOn"]];
 
     self.moduleId = [dictionary objectForKey:@"moduleId"];
@@ -208,6 +222,8 @@
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
+
+    [dict setObjectIfNotNil:self.minuteDuration forKey:@"minuteDuration"];
 
     [dict setObjectIfNotNil:[self.modifiedOn ISO8601String] forKey:@"modifiedOn"];
 
@@ -274,6 +290,8 @@
 
         self.identifier = managedObject.identifier;
 
+        self.minuteDuration = managedObject.minuteDuration;
+
         self.modifiedOn = managedObject.modifiedOn;
 
         self.moduleId = managedObject.moduleId;
@@ -339,6 +357,8 @@
     managedObject.guidAndCreatedOn = ((id)self.guidAndCreatedOn == [NSNull null]) ? nil : self.guidAndCreatedOn;
 
     if (self.identifier) managedObject.identifier = self.identifier;
+
+    managedObject.minuteDuration = ((id)self.minuteDuration == [NSNull null]) ? nil : self.minuteDuration;
 
     managedObject.modifiedOn = ((id)self.modifiedOn == [NSNull null]) ? nil : self.modifiedOn;
 

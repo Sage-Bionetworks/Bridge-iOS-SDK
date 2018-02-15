@@ -47,6 +47,8 @@
 
 @property (nullable, nonatomic, retain) NSNumber* width;
 
+@property (nullable, nonatomic, retain) NSManagedObject *activity;
+
 @property (nullable, nonatomic, retain) NSManagedObject *surveyInfoScreen;
 
 @property (nullable, nonatomic, retain) NSManagedObject *surveyQuestionOption;

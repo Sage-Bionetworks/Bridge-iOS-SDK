@@ -35,6 +35,7 @@
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBCompoundActivity.h"
+#import "SBBImage.h"
 #import "SBBSurveyReference.h"
 #import "SBBTaskReference.h"
 
@@ -54,6 +55,8 @@
 @property (nullable, nonatomic, retain) NSString* labelDetail;
 
 @property (nullable, nonatomic, retain) NSManagedObject *compoundActivity;
+
+@property (nullable, nonatomic, retain) NSManagedObject *image;
 
 @property (nullable, nonatomic, retain) NSManagedObject *schedule;
 
@@ -101,6 +104,14 @@
         self.compoundActivity = compoundActivityObj;
     }
 
+    NSDictionary *imageDict = [dictionary objectForKey:@"image"];
+
+    if (imageDict != nil)
+    {
+        SBBImage *imageObj = [objectManager objectFromBridgeJSON:imageDict];
+        self.image = imageObj;
+    }
+
     NSDictionary *surveyDict = [dictionary objectForKey:@"survey"];
 
     if (surveyDict != nil)
@@ -133,6 +144,8 @@
 
     [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.compoundActivity] forKey:@"compoundActivity"];
 
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.image] forKey:@"image"];
+
     [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.survey] forKey:@"survey"];
 
     [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.task] forKey:@"task"];
@@ -146,6 +159,7 @@
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
 	[self.task awakeFromDictionaryRepresentationInit];
+	[self.image awakeFromDictionaryRepresentationInit];
 	[self.survey awakeFromDictionaryRepresentationInit];
 	[self.compoundActivity awakeFromDictionaryRepresentationInit];
 
@@ -178,6 +192,13 @@
         if (compoundActivityObj != nil)
         {
           self.compoundActivity = compoundActivityObj;
+        }
+            NSManagedObject *imageManagedObj = managedObject.image;
+        Class imageClass = [SBBObjectManager bridgeClassFromType:imageManagedObj.entity.name];
+        SBBImage *imageObj = [[imageClass alloc] initWithManagedObject:imageManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if (imageObj != nil)
+        {
+          self.image = imageObj;
         }
             NSManagedObject *surveyManagedObj = managedObject.survey;
         Class surveyClass = [SBBObjectManager bridgeClassFromType:surveyManagedObj.entity.name];
@@ -242,6 +263,14 @@
 
     [managedObject setCompoundActivity:relMoCompoundActivity];
 
+    // destination entity Image is not directly cacheable, so delete it and create the replacement
+    if (managedObject.image) {
+        [cacheContext deleteObject:managedObject.image];
+    }
+    NSManagedObject *relMoImage = [self.image createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
+    [managedObject setImage:relMoImage];
+
     // destination entity SurveyReference is not directly cacheable, so delete it and create the replacement
     if (managedObject.survey) {
         [cacheContext deleteObject:managedObject.survey];
@@ -280,6 +309,23 @@
     return _compoundActivity;
 }
 
+- (void) setImage: (SBBImage*) image_ settingInverse: (BOOL) setInverse
+{
+
+    _image = image_;
+
+}
+
+- (void) setImage: (SBBImage*) image_
+{
+    [self setImage: image_ settingInverse: YES];
+}
+
+- (SBBImage*) image
+{
+    return _image;
+}
+
 - (void) setSurvey: (SBBSurveyReference*) survey_ settingInverse: (BOOL) setInverse
 {
 
@@ -314,6 +360,6 @@
     return _task;
 }
 
-@synthesize compoundActivity = _compoundActivity;@synthesize survey = _survey;@synthesize task = _task;
+@synthesize compoundActivity = _compoundActivity;@synthesize image = _image;@synthesize survey = _survey;@synthesize task = _task;
 
 @end

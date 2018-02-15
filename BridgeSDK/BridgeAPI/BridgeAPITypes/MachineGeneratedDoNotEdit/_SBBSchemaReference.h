@@ -41,7 +41,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSchemaReference : SBBBridgeObject
 
+@property (nullable, nonatomic, strong) NSString* activityDescription;
+
 @property (nonatomic, strong) NSString* id;
+
+@property (nullable, nonatomic, strong) NSNumber* minuteDuration;
+
+@property (nonatomic, assign) int64_t minuteDurationValue;
 
 @property (nullable, nonatomic, strong) NSNumber* revision;
 
