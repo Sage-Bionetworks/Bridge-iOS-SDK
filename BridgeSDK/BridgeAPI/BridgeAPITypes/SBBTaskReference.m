@@ -33,6 +33,10 @@
 
 #pragma mark Abstract method overrides
 
-// Custom logic goes here.
+- (instancetype)copyWithIdentifier: (NSString *)identifier {
+    SBBTaskReference *copy = [self copy];
+    copy.identifier = identifier;
+    return copy;
+}
 
 @end

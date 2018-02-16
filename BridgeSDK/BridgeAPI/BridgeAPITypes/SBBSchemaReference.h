@@ -29,6 +29,14 @@
 
 #import "_SBBSchemaReference.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SBBSchemaReference : _SBBSchemaReference <_SBBSchemaReference>
-// Custom logic goes here.
+
+@property (nonatomic, nonnull, readonly) NSString * identifier;
+
+- (instancetype)copyWithIdentifier: (NSString *)identifier NS_SWIFT_NAME(copy(with:));
+
 @end
+
+NS_ASSUME_NONNULL_END
