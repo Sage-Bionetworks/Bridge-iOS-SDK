@@ -171,9 +171,6 @@
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-        <userInfo>
-            <entry key="notInPONSODictionary" value="1"/>
-        </userInfo>
     </entity>
     <entity name="IntegerConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxValue" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
