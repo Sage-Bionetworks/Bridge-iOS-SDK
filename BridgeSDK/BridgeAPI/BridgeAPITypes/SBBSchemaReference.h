@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SBBSchemaReference : _SBBSchemaReference <_SBBSchemaReference>
 
+@property (nonatomic, nullable, strong) id transformer;
+
 @property (nonatomic, nonnull, readonly) NSString * identifier;
 
 - (instancetype)copyWithIdentifier: (NSString *)identifier NS_SWIFT_NAME(copy(with:));

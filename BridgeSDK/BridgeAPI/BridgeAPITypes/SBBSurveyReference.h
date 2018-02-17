@@ -33,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SBBSurveyReference : _SBBSurveyReference <_SBBSurveyReference>
 
+@property (nonatomic, nullable, strong) id transformer;
+
 - (instancetype)copyWithIdentifier: (NSString *)identifier NS_SWIFT_NAME(copy(with:));
 
 @end
