@@ -41,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBSurveyReference : SBBBridgeObject
 
+@property (nullable, nonatomic, strong) NSString* activityDescription;
+
 @property (nullable, nonatomic, strong) NSDate* createdOn;
 
 @property (nonatomic, strong) NSString* guid;
@@ -48,6 +50,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSString* href;
 
 @property (nonatomic, strong) NSString* identifier;
+
+@property (nullable, nonatomic, strong) NSNumber* minuteDuration;
+
+@property (nonatomic, assign) int64_t minuteDurationValue;
 
 @end
 NS_ASSUME_NONNULL_END

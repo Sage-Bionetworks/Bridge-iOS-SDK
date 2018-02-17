@@ -33,6 +33,14 @@
 
 #pragma mark Abstract method overrides
 
-// Custom logic goes here.
+- (NSString *)identifier {
+    return self.id;
+}
+
+- (instancetype)copyWithIdentifier: (NSString *)identifier {
+    SBBSchemaReference *copy = [self copy];
+    copy.id = identifier;
+    return copy;
+}
 
 @end

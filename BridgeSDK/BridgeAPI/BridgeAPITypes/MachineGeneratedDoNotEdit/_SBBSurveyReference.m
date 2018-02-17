@@ -41,6 +41,8 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (SurveyReference)
 
+@property (nullable, nonatomic, retain) NSString* activityDescription;
+
 @property (nullable, nonatomic, retain) NSDate* createdOn;
 
 @property (nullable, nonatomic, retain) NSString* guid;
@@ -48,6 +50,8 @@
 @property (nullable, nonatomic, retain) NSString* href;
 
 @property (nullable, nonatomic, retain) NSString* identifier;
+
+@property (nullable, nonatomic, retain) NSNumber* minuteDuration;
 
 @property (nullable, nonatomic, retain) NSManagedObject *activity;
 
@@ -69,11 +73,23 @@
 
 #pragma mark Scalar values
 
+- (int64_t)minuteDurationValue
+{
+	return [self.minuteDuration longLongValue];
+}
+
+- (void)setMinuteDurationValue:(int64_t)value_
+{
+	self.minuteDuration = [NSNumber numberWithLongLong:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
+
+    self.activityDescription = [dictionary objectForKey:@"activityDescription"];
 
     self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
 
@@ -83,11 +99,15 @@
 
     self.identifier = [dictionary objectForKey:@"identifier"];
 
+    self.minuteDuration = [dictionary objectForKey:@"minuteDuration"];
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+
+    [dict setObjectIfNotNil:self.activityDescription forKey:@"activityDescription"];
 
     [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 
@@ -96,6 +116,8 @@
     [dict setObjectIfNotNil:self.href forKey:@"href"];
 
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
+
+    [dict setObjectIfNotNil:self.minuteDuration forKey:@"minuteDuration"];
 
 	return [dict copy];
 }
@@ -120,6 +142,8 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
+        self.activityDescription = managedObject.activityDescription;
+
         self.createdOn = managedObject.createdOn;
 
         self.guid = managedObject.guid;
@@ -127,6 +151,8 @@
         self.href = managedObject.href;
 
         self.identifier = managedObject.identifier;
+
+        self.minuteDuration = managedObject.minuteDuration;
 
     }
 
@@ -160,6 +186,8 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
+    managedObject.activityDescription = ((id)self.activityDescription == [NSNull null]) ? nil : self.activityDescription;
+
     managedObject.createdOn = ((id)self.createdOn == [NSNull null]) ? nil : self.createdOn;
 
     if (self.guid) managedObject.guid = self.guid;
@@ -167,6 +195,8 @@
     if (self.href) managedObject.href = self.href;
 
     if (self.identifier) managedObject.identifier = self.identifier;
+
+    managedObject.minuteDuration = ((id)self.minuteDuration == [NSNull null]) ? nil : self.minuteDuration;
 
     // Calling code will handle saving these changes to cacheContext.
 }

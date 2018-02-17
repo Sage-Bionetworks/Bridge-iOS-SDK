@@ -29,6 +29,14 @@
 
 #import "_SBBSurveyReference.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SBBSurveyReference : _SBBSurveyReference <_SBBSurveyReference>
-// Custom logic goes here.
+
+@property (nonatomic, nullable, strong) id transformer;
+
+- (instancetype)copyWithIdentifier: (NSString *)identifier NS_SWIFT_NAME(copy(with:));
+
 @end
+
+NS_ASSUME_NONNULL_END

@@ -36,6 +36,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class SBBCompoundActivity;
+@class SBBImage;
 @class SBBSurveyReference;
 @class SBBTaskReference;
 
@@ -55,11 +56,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong, readwrite) SBBCompoundActivity *compoundActivity;
 
+@property (nullable, nonatomic, strong, readwrite) SBBImage *image;
+
 @property (nullable, nonatomic, strong, readwrite) SBBSurveyReference *survey;
 
 @property (nullable, nonatomic, strong, readwrite) SBBTaskReference *task;
 
 - (void) setCompoundActivity: (SBBCompoundActivity* _Nullable) compoundActivity_ settingInverse: (BOOL) setInverse;
+
+- (void) setImage: (SBBImage* _Nullable) image_ settingInverse: (BOOL) setInverse;
 
 - (void) setSurvey: (SBBSurveyReference* _Nullable) survey_ settingInverse: (BOOL) setInverse;
 

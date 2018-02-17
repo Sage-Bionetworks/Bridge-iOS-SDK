@@ -52,6 +52,8 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (CompoundActivity)
 
+@property (nullable, nonatomic, retain) NSString* activityDescription;
+
 @property (nullable, nonatomic, retain) NSString* taskIdentifier;
 
 @property (nullable, nonatomic, retain) NSManagedObject *activity;
@@ -94,6 +96,8 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.activityDescription = [dictionary objectForKey:@"activityDescription"];
+
     self.taskIdentifier = [dictionary objectForKey:@"taskIdentifier"];
 
     // overwrite the old schemaList relationship entirely rather than adding to it
@@ -121,6 +125,8 @@
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+
+    [dict setObjectIfNotNil:self.activityDescription forKey:@"activityDescription"];
 
     [dict setObjectIfNotNil:self.taskIdentifier forKey:@"taskIdentifier"];
 
@@ -183,6 +189,8 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
+        self.activityDescription = managedObject.activityDescription;
+
         self.taskIdentifier = managedObject.taskIdentifier;
 
 		for (NSManagedObject *schemaListManagedObj in managedObject.schemaList)
@@ -236,6 +244,8 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
+
+    managedObject.activityDescription = ((id)self.activityDescription == [NSNull null]) ? nil : self.activityDescription;
 
     if (self.taskIdentifier) managedObject.taskIdentifier = self.taskIdentifier;
 

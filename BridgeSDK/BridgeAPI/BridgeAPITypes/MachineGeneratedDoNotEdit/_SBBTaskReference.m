@@ -43,7 +43,11 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (TaskReference)
 
+@property (nullable, nonatomic, retain) NSString* activityDescription;
+
 @property (nullable, nonatomic, retain) NSString* identifier;
+
+@property (nullable, nonatomic, retain) NSNumber* minuteDuration;
 
 @property (nullable, nonatomic, retain) NSManagedObject *activity;
 
@@ -65,13 +69,27 @@
 
 #pragma mark Scalar values
 
+- (int64_t)minuteDurationValue
+{
+	return [self.minuteDuration longLongValue];
+}
+
+- (void)setMinuteDurationValue:(int64_t)value_
+{
+	self.minuteDuration = [NSNumber numberWithLongLong:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
+    self.activityDescription = [dictionary objectForKey:@"activityDescription"];
+
     self.identifier = [dictionary objectForKey:@"identifier"];
+
+    self.minuteDuration = [dictionary objectForKey:@"minuteDuration"];
 
     NSDictionary *schemaDict = [dictionary objectForKey:@"schema"];
 
@@ -87,7 +105,11 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
+    [dict setObjectIfNotNil:self.activityDescription forKey:@"activityDescription"];
+
     [dict setObjectIfNotNil:self.identifier forKey:@"identifier"];
+
+    [dict setObjectIfNotNil:self.minuteDuration forKey:@"minuteDuration"];
 
     [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.schema] forKey:@"schema"];
 
@@ -116,7 +138,11 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
+        self.activityDescription = managedObject.activityDescription;
+
         self.identifier = managedObject.identifier;
+
+        self.minuteDuration = managedObject.minuteDuration;
 
             NSManagedObject *schemaManagedObj = managedObject.schema;
         Class schemaClass = [SBBObjectManager bridgeClassFromType:schemaManagedObj.entity.name];
@@ -158,7 +184,11 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
+    managedObject.activityDescription = ((id)self.activityDescription == [NSNull null]) ? nil : self.activityDescription;
+
     if (self.identifier) managedObject.identifier = self.identifier;
+
+    managedObject.minuteDuration = ((id)self.minuteDuration == [NSNull null]) ? nil : self.minuteDuration;
 
     // destination entity SchemaReference is not directly cacheable, so delete it and create the replacement
     if (managedObject.schema) {

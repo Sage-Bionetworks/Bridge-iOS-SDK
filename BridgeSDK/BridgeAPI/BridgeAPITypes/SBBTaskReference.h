@@ -29,6 +29,14 @@
 
 #import "_SBBTaskReference.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SBBTaskReference : _SBBTaskReference <_SBBTaskReference>
-// Custom logic goes here.
+
+@property (nonatomic, nullable, strong) id transformer;
+
+- (instancetype)copyWithIdentifier: (NSString *)identifier NS_SWIFT_NAME(copy(with:));
+
 @end
+
+NS_ASSUME_NONNULL_END
