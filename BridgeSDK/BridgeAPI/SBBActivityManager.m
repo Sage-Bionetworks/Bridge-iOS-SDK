@@ -410,6 +410,9 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
     }
     
     return [self fetchHistoricalActivitiesFrom:scheduledFrom to:scheduledTo accumulatedItems:accumulatedItems objectManager:objectManager completion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+        if (error && policy == SBBCachingPolicyFallBackToCached) {
+            activitiesList = [self cachedDateTimeRangeList].items;
+        }
         if (completion) {
             NSArray *requestedTasks = [self filterAndMapTasks:activitiesList scheduledFrom:scheduledFrom to:scheduledTo];
             completion(requestedTasks, error);
