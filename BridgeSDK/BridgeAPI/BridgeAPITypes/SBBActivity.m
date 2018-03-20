@@ -28,11 +28,20 @@
 //
 
 #import "SBBActivity.h"
+#import "SBBCompoundActivity.h"
+#import "SBBSurveyReference.h"
+#import "SBBTaskReference.h"
 
 @implementation SBBActivity
 
 #pragma mark Abstract method overrides
 
-// Custom logic goes here.
+- (instancetype)copyWithIdentifier: (NSString *)identifier {
+    SBBActivity *copy = [self copy];
+    copy.compoundActivity = [self.compoundActivity copyWithIdentifier:identifier];
+    copy.survey = [self.survey copyWithIdentifier:identifier];
+    copy.task = [self.task copyWithIdentifier:identifier];
+    return copy;
+}
 
 @end

@@ -29,6 +29,12 @@
 
 #import "_SBBActivity.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface SBBActivity : _SBBActivity <_SBBActivity>
-// Custom logic goes here.
+
+- (instancetype)copyWithIdentifier: (NSString *)identifier NS_SWIFT_NAME(copy(with:));
+
 @end
+
+NS_ASSUME_NONNULL_END
