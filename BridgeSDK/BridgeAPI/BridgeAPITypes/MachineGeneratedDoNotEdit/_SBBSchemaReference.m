@@ -49,6 +49,8 @@
 
 @property (nullable, nonatomic, retain) NSNumber* revision;
 
+@property (nullable, nonatomic, retain) NSManagedObject *appConfig;
+
 @property (nullable, nonatomic, retain) NSManagedObject *compoundActivity;
 
 @property (nullable, nonatomic, retain) NSManagedObject *taskReference;

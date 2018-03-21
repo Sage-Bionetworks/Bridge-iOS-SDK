@@ -2,9 +2,7 @@
 //  BridgeSDK.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/8/14.
-//
-//	Copyright (c) 2014-2015, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -61,6 +59,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBObjectManager.h>
 #import <BridgeSDK/SBBNetworkManager.h>
 #import <BridgeSDK/SBBScheduleManager.h>
+#import <BridgeSDK/SBBStudyManager.h>
 #import <BridgeSDK/SBBSurveyManager.h>
 #import <BridgeSDK/SBBUploadManager.h>
 #import <BridgeSDK/SBBErrors.h>
@@ -146,6 +145,16 @@ extern const NSString * _Nullable SBBDefaultUserDefaultsSuiteName;
  *  @param delegate An object that conforms to SBBAuthManagerDelegateProtocol to serve as the auth delegate for the default or currently-registered auth manager.
  */
 + (void)setAuthDelegate:(nullable id<SBBAuthManagerDelegateProtocol>)delegate;
+
+/*!
+ * Get the AppConfig for this app/platform/version/etc. as retrieved from the Bridge study.
+ *
+ * When the Bridge study has been set up by calling setup or setupWithBridgeInfo:, the appropriate AppConfig will be retrieved
+ * from Bridge. Until that request has succeeded for the first time, this value will be nil. Once retrieved, it will be cached
+ * (in User Defaults if BridgeSDK is configured not to use caching) and the cached value will be used until the current value
+ * is retrieved from Bridge.
+ */
++ (nullable SBBAppConfig *)appConfig;
 
 /*!
  * Set a delegate to handle presenting appropriate UI to the study participant in case of "not consented" (412) and "app version not supported" (409) error responses from Bridge.
