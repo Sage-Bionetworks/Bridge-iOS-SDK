@@ -1,4 +1,5 @@
 #import "SBBActivity.h"
+#import "SBBAppConfig.h"
 #import "SBBBloodPressureConstraints.h"
 #import "SBBBooleanConstraints.h"
 #import "SBBBridgeObject.h"

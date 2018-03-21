@@ -2,9 +2,7 @@
 //  BridgeSDK.m
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/16/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -41,8 +39,10 @@ const NSInteger SBBDefaultCacheDaysAhead = 4;
 const NSInteger SBBDefaultCacheDaysBehind = 7;
 
 const NSString *SBBDefaultUserDefaultsSuiteName = @"org.sagebase.Bridge";
+const NSString *SBBAppConfigDefaultsKey = @"SBBAppConfig";
 
 id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
+SBBAppConfig *gSBBAppConfig = nil;
 
 @implementation BridgeSDK
 
@@ -61,6 +61,9 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
     
     // make sure the Bridge network manager is set up as the delegate for the background session
     [SBBComponent(SBBBridgeNetworkManager) restoreBackgroundSession:kBackgroundSessionIdentifier completionHandler:nil];
+    
+    // (re-)load the AppConfig for the specified study for this client version/platform/etc.
+    [self loadAppConfig];
 
     // now kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
     // manager instance so its notification handlers get set up in time)
@@ -182,6 +185,36 @@ id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
     NSDictionary *infoDict = NSBundle.mainBundle.infoDictionary;
     return (![infoDict[@"CFBundlePackageType"] isEqualToString:@"APPL"] &&
             infoDict[@"NSExtension"] != nil);
+}
+
++ (void)loadAppConfig
+{
+    [SBBComponent(SBBStudyManager) getAppConfigWithCompletion:^(id appConfig, NSError *error) {
+        if (!error) {
+            gSBBAppConfig = appConfig;
+            
+            if (!gSBBUseCache) {
+                id appConfigJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:appConfig];
+                [[self sharedUserDefaults] setObject:appConfigJSON forKey:SBBAppConfigDefaultsKey];
+            }
+        }
+    }];
+}
+
++ (SBBAppConfig *)appConfig
+{
+    if (!gSBBAppConfig) {
+        if (gSBBUseCache) {
+            gSBBAppConfig = (SBBAppConfig *)[SBBComponent(SBBCacheManager) cachedSingletonObjectOfType:@"AppConfig" createIfMissing:NO];
+        } else {
+            id appConfigJSON = [[self sharedUserDefaults] objectForKey:SBBAppConfigDefaultsKey];
+            if (appConfigJSON) {
+                gSBBAppConfig = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:appConfigJSON];
+            }
+        }
+    }
+    
+    return gSBBAppConfig;
 }
 
 @end

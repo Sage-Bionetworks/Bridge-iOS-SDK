@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="16G1212" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17D47" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" attributeType="String" defaultValueString="task" regularExpressionString="^(task|survey|compound)$" syncable="YES"/>
         <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
@@ -19,24 +19,6 @@
         </relationship>
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="activity" inverseEntity="SurveyReference" syncable="YES"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TaskReference" inverseName="activity" inverseEntity="TaskReference" syncable="YES"/>
-    </entity>
-    <entity name="AppConfig" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="clientData" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="id&lt;SBBJSONValue&gt;"/>
-            </userInfo>
-        </attribute>
-        <attribute name="createdOn" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="guid" attributeType="String" syncable="YES"/>
-        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="modifiedOn" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="schemaReferences" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SchemaReference" inverseName="appConfig" inverseEntity="SchemaReference" syncable="YES"/>
-        <relationship name="surveyReferences" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="appConfig" inverseEntity="SurveyReference" syncable="YES"/>
-        <userInfo>
-            <entry key="additionalHeaderFileName" value="SBBJSONValue.h"/>
-            <entry key="entityIDKeyPath" value="type"/>
-        </userInfo>
     </entity>
     <entity name="BloodPressureConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
@@ -304,11 +286,6 @@
         <attribute name="id" attributeType="String" defaultValueString="-" syncable="YES"/>
         <attribute name="minuteDuration" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="revision" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
-        <relationship name="appConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppConfig" inverseName="schemaReferences" inverseEntity="AppConfig" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
         <relationship name="compoundActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompoundActivity" inverseName="schemaList" inverseEntity="CompoundActivity" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
@@ -488,11 +465,6 @@
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-        <relationship name="appConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppConfig" inverseName="surveyReferences" inverseEntity="AppConfig" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
         <relationship name="compoundActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompoundActivity" inverseName="surveyList" inverseEntity="CompoundActivity" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
@@ -595,7 +567,6 @@
     </entity>
     <elements>
         <element name="Activity" positionX="0" positionY="0" width="128" height="195"/>
-        <element name="AppConfig" positionX="36" positionY="171" width="128" height="165"/>
         <element name="BloodPressureConstraints" positionX="18" positionY="153" width="128" height="60"/>
         <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
         <element name="BridgeObject" positionX="0" positionY="0" width="128" height="105"/>
@@ -620,7 +591,7 @@
         <element name="ResourceList" positionX="0" positionY="0" width="128" height="105"/>
         <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
         <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="180"/>
-        <element name="SchemaReference" positionX="9" positionY="153" width="128" height="150"/>
+        <element name="SchemaReference" positionX="9" positionY="153" width="128" height="135"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
         <element name="StudyParticipant" positionX="18" positionY="108" width="128" height="270"/>
         <element name="SubscriptionStatus" positionX="18" positionY="153" width="128" height="90"/>
@@ -631,7 +602,7 @@
         <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="60"/>
         <element name="SurveyQuestion" positionX="0" positionY="0" width="128" height="75"/>
         <element name="SurveyQuestionOption" positionX="0" positionY="0" width="128" height="120"/>
-        <element name="SurveyReference" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="SurveyReference" positionX="0" positionY="0" width="128" height="165"/>
         <element name="SurveyRule" positionX="0" positionY="0" width="128" height="210"/>
         <element name="TaskReference" positionX="0" positionY="0" width="128" height="120"/>
         <element name="TimeConstraints" positionX="0" positionY="0" width="128" height="45"/>

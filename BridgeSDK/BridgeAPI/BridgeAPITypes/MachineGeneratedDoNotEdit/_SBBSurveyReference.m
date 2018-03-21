@@ -55,6 +55,8 @@
 
 @property (nullable, nonatomic, retain) NSManagedObject *activity;
 
+@property (nullable, nonatomic, retain) NSManagedObject *appConfig;
+
 @property (nullable, nonatomic, retain) NSManagedObject *compoundActivity;
 
 @end
