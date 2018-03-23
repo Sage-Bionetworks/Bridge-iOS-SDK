@@ -1,55 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="16G1212" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
-    <entity name="AbstractStudyParticipant" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="attributes" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="SBBStudyParticipantCustomAttributes"/>
-            </userInfo>
-        </attribute>
-        <attribute name="clientData" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="id&lt;SBBJSONValue&gt;"/>
-            </userInfo>
-        </attribute>
-        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="YES"/>
-            </userInfo>
-        </attribute>
-        <attribute name="dataGroups" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="NSSet&lt;NSString *&gt;"/>
-            </userInfo>
-        </attribute>
-        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="emailVerified" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="externalId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="String" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="YES"/>
-            </userInfo>
-        </attribute>
-        <attribute name="languages" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;"/>
-            </userInfo>
-        </attribute>
-        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notifyByEmail" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="phoneVerified" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="roles" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;"/>
-            </userInfo>
-        </attribute>
-        <attribute name="sharingScope" optional="YES" attributeType="String" regularExpressionString="no_sharing|sponsors_and_partners|all_qualified_researchers" syncable="YES"/>
-        <attribute name="status" optional="YES" attributeType="String" regularExpressionString="disabled|enabled|unverified" syncable="YES"/>
-        <relationship name="phone" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Phone" inverseName="studyParticipant" inverseEntity="Phone" syncable="YES"/>
-        <userInfo>
-            <entry key="additionalHeaderFileName" value="SBBStudyParticipantCustomAttributes.h"/>
-        </userInfo>
-    </entity>
     <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
         <attribute name="activityType" attributeType="String" defaultValueString="task" regularExpressionString="^(task|survey|compound)$" syncable="YES"/>
         <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
@@ -273,20 +223,6 @@
             </userInfo>
         </attribute>
     </entity>
-    <entity name="Phone" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="nationalFormat" optional="YES" attributeType="String" syncable="YES">
-            <userInfo>
-                <entry key="mogenerator.readonly" value="YES"/>
-            </userInfo>
-        </attribute>
-        <attribute name="number" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="regionCode" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="studyParticipant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AbstractStudyParticipant" inverseName="phone" inverseEntity="AbstractStudyParticipant" syncable="YES">
-            <userInfo>
-                <entry key="notInPONSODictionary" value="1"/>
-            </userInfo>
-        </relationship>
-    </entity>
     <entity name="RequestParams" parentEntity="BridgeObject" syncable="YES">
         <attribute name="assignmentFilter" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="emailFilter" optional="YES" attributeType="String" syncable="YES"/>
@@ -384,11 +320,6 @@
             </userInfo>
         </relationship>
     </entity>
-    <entity name="SignUp" parentEntity="AbstractStudyParticipant" syncable="YES">
-        <attribute name="checkForConsent" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="study" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
     <entity name="StringConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="maxLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="minLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
@@ -396,23 +327,48 @@
         <attribute name="patternErrorMessage" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="patternPlaceholder" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="StudyParticipant" parentEntity="AbstractStudyParticipant" syncable="YES">
+    <entity name="StudyParticipant" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="attributes" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="SBBStudyParticipantCustomAttributes"/>
+            </userInfo>
+        </attribute>
         <attribute name="ciphertext" optional="YES" attributeType="Binary" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </attribute>
-        <attribute name="healthCode" optional="YES" attributeType="String" syncable="YES">
+        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="dataGroups" optional="YES" attributeType="Transformable" syncable="YES">
             <userInfo>
-                <entry key="mogenerator.readonly" value="YES"/>
+                <entry key="attributeValueClassName" value="NSSet&lt;NSString *&gt;"/>
             </userInfo>
         </attribute>
-        <relationship name="userSessionInfo" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="UserSessionInfo" inverseName="studyParticipant" inverseEntity="UserSessionInfo" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="externalId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="languages" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notifyByEmail" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="roles" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="sharingScope" optional="YES" attributeType="String" regularExpressionString="no_sharing|sponsors_and_partners|all_qualified_researchers" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" regularExpressionString="disabled|enabled|unverified" syncable="YES"/>
+        <relationship name="userSessionInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserSessionInfo" inverseName="studyParticipant" inverseEntity="UserSessionInfo" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
         <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBStudyParticipantCustomAttributes.h"/>
             <entry key="encrypted" value="ciphertext"/>
             <entry key="entityIDKeyPath" value="type"/>
         </userInfo>
@@ -616,7 +572,6 @@
         <attribute name="consented" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="dataSharing" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="environment" optional="YES" attributeType="String" regularExpressionString="^(local|develop|staging|production)$" syncable="YES"/>
-        <attribute name="reauthToken" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sessionToken" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="signedMostRecentConsent" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="consentStatuses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConsentStatus" inverseName="userSessionInfo" inverseEntity="ConsentStatus" syncable="YES">
@@ -667,7 +622,7 @@
         <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="180"/>
         <element name="SchemaReference" positionX="9" positionY="153" width="128" height="150"/>
         <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
-        <element name="AbstractStudyParticipant" positionX="18" positionY="108" width="128" height="300"/>
+        <element name="StudyParticipant" positionX="18" positionY="108" width="128" height="270"/>
         <element name="SubscriptionStatus" positionX="18" positionY="153" width="128" height="90"/>
         <element name="SubscriptionStatusList" positionX="27" positionY="162" width="128" height="45"/>
         <element name="Survey" positionX="0" positionY="0" width="128" height="255"/>
@@ -683,10 +638,7 @@
         <element name="UploadRequest" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
-        <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="165"/>
         <element name="WeightConstraints" positionX="36" positionY="171" width="128" height="75"/>
-        <element name="StudyParticipant" positionX="18" positionY="153" width="128" height="90"/>
-        <element name="SignUp" positionX="27" positionY="162" width="128" height="90"/>
-        <element name="Phone" positionX="36" positionY="171" width="128" height="105"/>
     </elements>
 </model>

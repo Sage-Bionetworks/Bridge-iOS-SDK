@@ -1,5 +1,5 @@
 //
-//  _SBBStudyParticipant.m
+//  _SBBPhone.m
 //
 //	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
@@ -27,33 +27,31 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBStudyParticipant.m instead.
+// Make changes to SBBPhone.m instead.
 //
 
-#import "_SBBStudyParticipant.h"
-#import "_SBBStudyParticipantInternal.h"
+#import "_SBBPhone.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-#import "RNEncryptor.h"
-#import "RNDecryptor.h"
-
-@interface _SBBStudyParticipant()
+@interface _SBBPhone()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (StudyParticipant)
+@interface NSManagedObject (Phone)
 
-@property (nullable, nonatomic, retain) NSData* ciphertext;
+@property (nullable, nonatomic, retain) NSString* nationalFormat;
 
-@property (nullable, nonatomic, retain) NSString* healthCode;
+@property (nullable, nonatomic, retain) NSString* number;
 
-@property (nullable, nonatomic, retain) NSManagedObject *userSessionInfo;
+@property (nullable, nonatomic, retain) NSString* regionCode;
+
+@property (nullable, nonatomic, retain) NSManagedObject *studyParticipant;
 
 @end
 
-@implementation _SBBStudyParticipant
+@implementation _SBBPhone
 
 - (instancetype)init
 {
@@ -73,7 +71,11 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    _healthCode = [dictionary objectForKey:@"healthCode"];
+    _nationalFormat = [dictionary objectForKey:@"nationalFormat"];
+
+    self.number = [dictionary objectForKey:@"number"];
+
+    self.regionCode = [dictionary objectForKey:@"regionCode"];
 
 }
 
@@ -81,7 +83,11 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
-    [dict setObjectIfNotNil:self.healthCode forKey:@"healthCode"];
+    [dict setObjectIfNotNil:self.nationalFormat forKey:@"nationalFormat"];
+
+    [dict setObjectIfNotNil:self.number forKey:@"number"];
+
+    [dict setObjectIfNotNil:self.regionCode forKey:@"regionCode"];
 
 	return [dict copy];
 }
@@ -98,19 +104,20 @@
 
 + (NSString *)entityName
 {
-    return @"StudyParticipant";
+    return @"Phone";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
 
-    NSString *password = cacheManager.encryptionKey;
-    if (password) {
-        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
-        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
-        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
-    } else {
-        self = nil;
+    if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
+
+        _nationalFormat = managedObject.nationalFormat;
+
+        self.number = managedObject.number;
+
+        self.regionCode = managedObject.regionCode;
+
     }
 
     return self;
@@ -119,7 +126,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"StudyParticipant" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"Phone" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.
@@ -141,21 +148,13 @@
 
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
-    NSError *error;
-    NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
-    NSString *password = cacheManager.encryptionKey;
-    if (password && !error) {
-        NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:&error];
-        if (!error) {
-            managedObject.ciphertext = ciphertext;
-        }
-    }
+    [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    // fill in the key used for caching this object type so we can still use the usual
-    // fetch requests with predicates to find it in CoreData in spite of being encrypted.
-    id keyValue = ((id)self.type == [NSNull null]) ? nil : self.type;
-    [managedObject setValue:keyValue forKey:@"type"];
+    managedObject.nationalFormat = ((id)self.nationalFormat == [NSNull null]) ? nil : self.nationalFormat;
+
+    managedObject.number = ((id)self.number == [NSNull null]) ? nil : self.number;
+
+    managedObject.regionCode = ((id)self.regionCode == [NSNull null]) ? nil : self.regionCode;
 
     // Calling code will handle saving these changes to cacheContext.
 }

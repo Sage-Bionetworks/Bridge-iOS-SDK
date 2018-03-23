@@ -1,5 +1,5 @@
 //
-//  _SBBSurveyQuestionOption.h
+//  SBBSignUp.h
 //
 //	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
@@ -26,32 +26,9 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
-// DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyQuestionOption.h instead.
-//
 
-#import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import "_SBBSignUp.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@class SBBImage;
-
-@protocol _SBBSurveyQuestionOption
-
+@interface SBBSignUp : _SBBSignUp <_SBBSignUp>
+// Custom logic goes here.
 @end
-
-@interface _SBBSurveyQuestionOption : SBBBridgeObject
-
-@property (nullable, nonatomic, strong) NSString* detail;
-
-@property (nonatomic, strong) NSString* label;
-
-@property (nullable, nonatomic, strong) id<NSCopying, NSCoding, NSObject> value;
-
-@property (nullable, nonatomic, strong, readwrite) SBBImage *image;
-
-- (void) setImage: (SBBImage* _Nullable) image_ settingInverse: (BOOL) setInverse;
-
-@end
-NS_ASSUME_NONNULL_END

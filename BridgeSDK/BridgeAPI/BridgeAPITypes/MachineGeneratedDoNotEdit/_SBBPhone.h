@@ -1,5 +1,5 @@
 //
-//  _SBBSurveyQuestionOption.h
+//  _SBBPhone.h
 //
 //	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyQuestionOption.h instead.
+// Make changes to SBBPhone.h instead.
 //
 
 #import <Foundation/Foundation.h>
@@ -35,23 +35,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class SBBImage;
-
-@protocol _SBBSurveyQuestionOption
+@protocol _SBBPhone
 
 @end
 
-@interface _SBBSurveyQuestionOption : SBBBridgeObject
+@interface _SBBPhone : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSString* detail;
+@property (nullable, nonatomic, strong, readonly) NSString* nationalFormat;
 
-@property (nonatomic, strong) NSString* label;
+@property (nullable, nonatomic, strong) NSString* number;
 
-@property (nullable, nonatomic, strong) id<NSCopying, NSCoding, NSObject> value;
-
-@property (nullable, nonatomic, strong, readwrite) SBBImage *image;
-
-- (void) setImage: (SBBImage* _Nullable) image_ settingInverse: (BOOL) setInverse;
+@property (nullable, nonatomic, strong) NSString* regionCode;
 
 @end
 NS_ASSUME_NONNULL_END

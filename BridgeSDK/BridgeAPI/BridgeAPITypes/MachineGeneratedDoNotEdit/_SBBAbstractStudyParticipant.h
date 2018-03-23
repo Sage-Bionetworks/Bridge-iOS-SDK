@@ -1,5 +1,5 @@
 //
-//  _SBBSurveyQuestionOption.h
+//  _SBBAbstractStudyParticipant.h
 //
 //	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
@@ -27,31 +27,65 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBSurveyQuestionOption.h instead.
+// Make changes to SBBAbstractStudyParticipant.h instead.
 //
 
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+#import "SBBStudyParticipantCustomAttributes.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@class SBBImage;
+@class SBBPhone;
 
-@protocol _SBBSurveyQuestionOption
+@protocol _SBBAbstractStudyParticipant
 
 @end
 
-@interface _SBBSurveyQuestionOption : SBBBridgeObject
+@interface _SBBAbstractStudyParticipant : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSString* detail;
+@property (nullable, nonatomic, strong) SBBStudyParticipantCustomAttributes* attributes;
 
-@property (nonatomic, strong) NSString* label;
+@property (nullable, nonatomic, strong) id<SBBJSONValue> clientData;
 
-@property (nullable, nonatomic, strong) id<NSCopying, NSCoding, NSObject> value;
+@property (nullable, nonatomic, strong, readonly) NSDate* createdOn;
 
-@property (nullable, nonatomic, strong, readwrite) SBBImage *image;
+@property (nullable, nonatomic, strong) NSSet<NSString *>* dataGroups;
 
-- (void) setImage: (SBBImage* _Nullable) image_ settingInverse: (BOOL) setInverse;
+@property (nullable, nonatomic, strong) NSString* email;
+
+@property (nullable, nonatomic, strong) NSNumber* emailVerified;
+
+@property (nonatomic, assign) BOOL emailVerifiedValue;
+
+@property (nullable, nonatomic, strong) NSString* externalId;
+
+@property (nullable, nonatomic, strong) NSString* firstName;
+
+@property (nullable, nonatomic, strong, readonly) NSString* id;
+
+@property (nullable, nonatomic, strong) NSArray<NSString *>* languages;
+
+@property (nullable, nonatomic, strong) NSString* lastName;
+
+@property (nullable, nonatomic, strong) NSNumber* notifyByEmail;
+
+@property (nonatomic, assign) BOOL notifyByEmailValue;
+
+@property (nullable, nonatomic, strong) NSNumber* phoneVerified;
+
+@property (nonatomic, assign) BOOL phoneVerifiedValue;
+
+@property (nullable, nonatomic, strong) NSArray<NSString *>* roles;
+
+@property (nullable, nonatomic, strong) NSString* sharingScope;
+
+@property (nullable, nonatomic, strong) NSString* status;
+
+@property (nullable, nonatomic, strong, readwrite) SBBPhone *phone;
+
+- (void) setPhone: (SBBPhone* _Nullable) phone_ settingInverse: (BOOL) setInverse;
 
 @end
 NS_ASSUME_NONNULL_END

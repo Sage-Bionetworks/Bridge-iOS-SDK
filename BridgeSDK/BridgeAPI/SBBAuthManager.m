@@ -114,25 +114,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 }
 
 
-@implementation SBBSignUp
-
-- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // stub this out to prevent attempting to save non-cacheable object to CoreData cache
-    return;
-}
-
-- (NSDictionary *)dictionaryRepresentation
-{
-    NSMutableDictionary *dict = [[super dictionaryRepresentation] mutableCopy];
-    [dict setObjectIfNotNil:self.password forKey:@"password"];
-    
-    return dict;
-}
-
-@end
-
-
 @interface SBBAuthManager()
 
 @end

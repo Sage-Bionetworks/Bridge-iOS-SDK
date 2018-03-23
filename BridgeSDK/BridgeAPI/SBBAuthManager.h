@@ -34,13 +34,7 @@
 #import "SBBComponent.h"
 #import "SBBNetworkManager.h"
 #import "SBBStudyParticipant.h"
-
-/// A class derived from SBBStudyParticipant which includes a password field. Use this object when signing up to set any StudyParticipant fields or custom attributes at that time.
-@interface SBBSignUp : SBBStudyParticipant
-
-@property (nonatomic, strong) NSString * _Nullable password;
-
-@end
+#import "SBBSignUp.h"
 
 @protocol SBBAuthManagerProtocol;
 
