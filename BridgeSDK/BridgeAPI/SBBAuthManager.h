@@ -223,6 +223,67 @@
 - (nonnull NSURLSessionTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
+ * Reauthenticate the user to their Bridge using the reauthToken.
+ *
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nonnull NSURLSessionTask *)reauthWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Send the user a link via email that they can use to sign in to their Bridge account.
+ *
+ * The app will need to be set up to intercept the link and parse out the sign-in token, which it will then use to call
+ * signInWithEmail:token:completion: to complete the sign-in process.
+ *
+ * @param email The email address to which to send the sign-in link. This must be the address associated with the user's Bridge account.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ * @seealso signInWithEmail:token:completion:
+ */
+- (nonnull NSURLSessionTask *)emailSignInLinkTo:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Sign in to an existing email-based account with the user's email and a sign-in token parsed from a link received as a result of a call to emailSignInLinkTo:completion:.
+ *
+ * @param email The email address of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
+ * @param token The sign-in token as parsed from the link.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ * @seealso emailSignInLinkTo:completion:
+ */
+- (nonnull NSURLSessionTask *)signInWithEmail:(nonnull NSString *)email token:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Send the user a token (or a link containing a token) via SMS that they can use to sign in to their Bridge account.
+ *
+ * If a link is sent, the app will need to be set up to intercept the link and parse out the sign-in token, which it will then use to call
+ * signInWithPhone:regionCode:token:completion: to complete the sign-in process.
+ *
+ * If just a token is sent, the app will need to provide a UI for the user to manually enter the token (à la 2-factor authentication)
+ * and use that in the signIn call.
+ *
+ * @param phone The phone number to which to send the sign-in token or link. This must be the number associated with the user's Bridge account.
+ * @param regionCode The CLDR two-letter region code describing the region in which the phone number was issued.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ * @seealso signInWithPhone:regionCode:token:completion:
+ */
+- (nonnull NSURLSessionTask *)textSignInTokenTo:(nonnull NSString *)phone regionCode:(nonnull NSString *)regionCode completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Sign in to an existing phone-based account with the user's phone number and a sign-in token either received directly, or parsed from a link received, as a result of a call to textSignInLinkTo:regionCode:completion:.
+ *
+ * @param phone The phone number of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
+ * @param regionCode The CLDR two-letter region code describing the region in which the phone number was issued.
+ * @param token The sign-in token as received directly or as parsed from the link.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ * @seealso textSignInLinkTo:regionCode:completion:
+ */
+- (nonnull NSURLSessionTask *)signInWithPhone:(nonnull NSString *)phone regionCode:(nonnull NSString *)regionCode token:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
  * Sign out of the user's Bridge account.
  *
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
