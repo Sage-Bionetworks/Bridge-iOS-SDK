@@ -37,6 +37,11 @@
 extern NSString * const kSBBAuthSignUpAPI;
 extern NSString * const kSBBAuthResendAPI;
 extern NSString * const kSBBAuthSignInAPI;
+extern NSString * const kSBBAuthReauthAPI;
+extern NSString * const kSBBAuthEmailAPI;
+extern NSString * const kSBBAuthEmailSignInAPI;
+extern NSString * const kSBBAuthPhoneAPI;
+extern NSString * const kSBBAuthPhoneSignInAPI;
 extern NSString * const kSBBAuthSignOutAPI;
 extern NSString * const kSBBAuthRequestResetAPI;
 extern NSString * const kSBBAuthResetAPI;

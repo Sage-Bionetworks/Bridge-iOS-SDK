@@ -38,8 +38,11 @@
 + (NSError *)generateSBBErrorForNSURLError:(NSError *)urlError isInternetConnected:(BOOL)internetConnected isServerReachable:(BOOL)isServerReachable;
 + (NSError *)generateSBBErrorForStatusCode:(NSInteger)statusCode data: (id) data;
 + (NSError *)generateSBBErrorForStatusCode:(NSInteger)statusCode;
++ (NSError *)SBBNotSetUpError;
 + (NSError *)SBBNoCredentialsError;
 + (NSError *)SBBNotAuthenticatedError;
++ (NSError *)SBBNotAuthorizedError;
++ (NSError *)SBBAccountDisabledError;
 + (NSError *)SBBUnsupportedAppVersionError;
 + (NSError *)generateSBBNotAFileURLErrorForURL:(NSURL *)url;
 + (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass;

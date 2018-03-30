@@ -37,6 +37,7 @@
 typedef NS_ENUM(NSInteger, SBBErrorCode)
 {
     SBBErrorCodeUnknownError = -1,
+    SBBErrorCodeNotSetUpError = -2,
     SBBErrorCodeInternetNotConnected = -1000,
     SBBErrorCodeServerNotReachable = -1001,
     SBBErrorCodeServerUnderMaintenance = -1002,
@@ -44,6 +45,8 @@ typedef NS_ENUM(NSInteger, SBBErrorCode)
     SBBErrorCodeServerPreconditionNotMet = -1004,
     SBBErrorCodeNoCredentialsAvailable = -1005,
     SBBErrorCodeUnsupportedAppVersion = -1006,
+    SBBErrorCodeServerNotAuthorized = -1007,
+    SBBErrorCodeServerAccountDisabled = -1008,
     
     SBBErrorCodeS3UploadErrorResponse = -1020,
     
