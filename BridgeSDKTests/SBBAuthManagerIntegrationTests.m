@@ -164,7 +164,6 @@
             NSLog(@"Error signing out from account %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
         }
         XCTAssert(!aMan.isAuthenticated && [responseObject[@"message"] isEqualToString:@"Signed out."], @"Successfully signed out");
-        XCTAssertNil(delegate.sessionInfo, @"Expected the delegate to have been told to clear the sessionInfo, but it still has this:\n%@", delegate.sessionInfo);
         [expectSignedOut fulfill];
     }];
     

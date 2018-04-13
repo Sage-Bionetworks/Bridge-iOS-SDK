@@ -160,6 +160,7 @@
 		609E82D5203E047B00E8AD49 /* _SBBAppConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 609E82D3203E047B00E8AD49 /* _SBBAppConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		609E82D8203E049700E8AD49 /* SBBAppConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 609E82D6203E049600E8AD49 /* SBBAppConfig.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		609E82D9203E049700E8AD49 /* SBBAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 609E82D7203E049700E8AD49 /* SBBAppConfig.m */; };
+		609FF7B4208134E2009132C9 /* SBBDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */; };
 		60B635401B14ED0500C4DA63 /* SBBBridgeNetworkManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 60B6353E1B14ED0500C4DA63 /* SBBBridgeNetworkManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60B635411B14ED0500C4DA63 /* SBBBridgeNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 60B6353F1B14ED0500C4DA63 /* SBBBridgeNetworkManager.m */; };
 		60B635431B14F5C800C4DA63 /* SBBNetworkManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60B635421B14F5C800C4DA63 /* SBBNetworkManagerInternal.h */; };
@@ -329,7 +330,6 @@
 		807AE2AD1B603472002588BB /* SBBTestAuthKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthKeychainManager.m */; };
 		807AE2AE1B603498002588BB /* SBBBridgeAPIIntegrationTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */; };
 		807AE2AF1B60349D002588BB /* SBBAuthManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */; };
-		807AE2B61B6034AD002588BB /* TestAdminAuthDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */; };
 		807AE2B71B6034B5002588BB /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38021A2B144000E7CF1E /* sample-signature.png */; };
 		807AE2BB1B6035F8002588BB /* SBBConsentManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786811B5AB1DC0029EAE6 /* SBBConsentManagerIntegrationTests.m */; };
 		807AE2BC1B6035FD002588BB /* SBBUserManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80B786831B5BF71D0029EAE6 /* SBBUserManagerIntegrationTests.m */; };
@@ -936,8 +936,6 @@
 		806C42771FFF0DC8007A51D8 /* SBBWeightConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBWeightConstraints.m; sourceTree = "<group>"; };
 		806C42781FFF0DC8007A51D8 /* SBBWeightConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBWeightConstraints.h; sourceTree = "<group>"; };
 		8077477F1E28289C000C13CD /* SBBBridgeAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeAppDelegate.h; sourceTree = "<group>"; };
-		807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdminAuthDelegate.h; path = ../BridgeSDKTests/TestAdminAuthDelegate.h; sourceTree = "<group>"; };
-		807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestAdminAuthDelegate.m; path = ../BridgeSDKTests/TestAdminAuthDelegate.m; sourceTree = "<group>"; };
 		807AE2811B5F090E002588BB /* cat.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = cat.jpg; path = ../BridgeSDKSample/cat.jpg; sourceTree = "<group>"; };
 		807AE2871B603309002588BB /* BridgeSDKIntegration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BridgeSDKIntegration.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		807AE28A1B603309002588BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1439,8 +1437,6 @@
 				80B786831B5BF71D0029EAE6 /* SBBUserManagerIntegrationTests.m */,
 				8034F6691E05BCE10002BD42 /* SBBParticipantManagerIntegrationTests.m */,
 				80D6E33A200EB557000E4603 /* SBBNotificationManagerIntegrationTests.m */,
-				807AE27E1B5ED921002588BB /* TestAdminAuthDelegate.h */,
-				807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */,
 				807AE2811B5F090E002588BB /* cat.jpg */,
 				80B7867F1B59CE3E0029EAE6 /* BridgeAdminCredentials.plist */,
 				807AE2A31B60330C002588BB /* Supporting Files */,
@@ -2574,11 +2570,11 @@
 				80D6E33B200EB557000E4603 /* SBBNotificationManagerIntegrationTests.m in Sources */,
 				807AE2BC1B6035FD002588BB /* SBBUserManagerIntegrationTests.m in Sources */,
 				807AE2BB1B6035F8002588BB /* SBBConsentManagerIntegrationTests.m in Sources */,
+				609FF7B4208134E2009132C9 /* SBBDataModel.xcdatamodeld in Sources */,
 				8034F66A1E05BCE10002BD42 /* SBBParticipantManagerIntegrationTests.m in Sources */,
 				8031DB031DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m in Sources */,
 				807AE2BD1B603601002588BB /* SBBScheduleManagerIntegrationTests.m in Sources */,
 				807AE2C01B60360D002588BB /* SBBUploadManagerIntegrationTests.m in Sources */,
-				807AE2B61B6034AD002588BB /* TestAdminAuthDelegate.m in Sources */,
 				807AE2BE1B603605002588BB /* SBBSurveyManagerIntegrationTests.m in Sources */,
 				807AE2BF1B603609002588BB /* SBBActivityManagerIntegrationTests.m in Sources */,
 				807AE2AE1B603498002588BB /* SBBBridgeAPIIntegrationTestCase.m in Sources */,
@@ -2923,6 +2919,10 @@
 					"$(inherited)",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${inherited}",
+					"SBBBUNDLEID=\"org.sagebase.${PRODUCT_NAME:rfc1034identifier}\"",
+				);
 				INFOPLIST_FILE = BridgeSDKIntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
@@ -2943,6 +2943,10 @@
 					"$(inherited)",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"${inherited}",
+					"SBBBUNDLEID=\"org.sagebase.${PRODUCT_NAME:rfc1034identifier}\"",
+				);
 				INFOPLIST_FILE = BridgeSDKIntegrationTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -10,13 +10,10 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
 #import "SBBNetworkManagerInternal.h"
-#import "TestAdminAuthDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 
 static SBBAuthManager *gAdminAuthManager;
-static TestAdminAuthDelegate *gAdminAuthDelegate;
-
 static SBBAuthManager *gDevAuthManager;
-static TestAdminAuthDelegate *gDevAuthDelegate;
 
 NSString * const kUserSessionInfoIdKey = @"id";
 
@@ -28,18 +25,28 @@ NSString * const kUserSessionInfoIdKey = @"id";
 
 @implementation SBBBridgeAPIIntegrationTestCase
 
+- (SBBCacheManager *)cacheManagerWithAuthManager:(id<SBBAuthManagerProtocol>)aMan andPersistentStoreName:(NSString *)name {
+    // Admin and Dev auth managers each need their own separate cache, since we keep the login credential there
+    SBBCacheManager *cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"SBBDataModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
+    cacheManager.persistentStoreName = name;
+    
+    return cacheManager;
+}
+
 - (void)setUp {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         // set up a separate auth manager for admin, and just use the default base network manager, not the Bridge one
         gAdminAuthManager = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
-        gAdminAuthDelegate = [TestAdminAuthDelegate new];
-        gAdminAuthManager.authDelegate = gAdminAuthDelegate;
+        gAdminAuthManager.keychainManager = [SBBTestAuthKeychainManager new];
+        SBBCacheManager *adminCMan = [self cacheManagerWithAuthManager:gAdminAuthManager andPersistentStoreName:@"int-test-admin"];
+        gAdminAuthManager.objectManager = [SBBObjectManager objectManagerWithCacheManager:adminCMan];
         
         // ditto for dev
         gDevAuthManager = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
-        gDevAuthDelegate = [TestAdminAuthDelegate new];
-        gDevAuthManager.authDelegate = gDevAuthDelegate;
+        gDevAuthManager.keychainManager = [SBBTestAuthKeychainManager new];
+        SBBCacheManager *devCMan = [self cacheManagerWithAuthManager:gDevAuthManager andPersistentStoreName:@"int-test-dev"];
+        gDevAuthManager.objectManager = [SBBObjectManager objectManagerWithCacheManager:devCMan];
     });
 
     [super setUp];
