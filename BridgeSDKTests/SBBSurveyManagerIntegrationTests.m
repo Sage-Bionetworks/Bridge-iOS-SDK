@@ -8,7 +8,7 @@
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
 #import "SBBAuthManagerInternal.h"
-#import "SBBTestAuthManagerDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 
 @interface SBBSurveyManagerIntegrationTests : SBBBridgeAPIIntegrationTestCase
 
@@ -28,8 +28,7 @@
     // 1. Create a user with admin, researcher, and developer roles so we can do all the things.
     // we need our own auth manager instance (with its own delegate) so we don't eff with the global test user
     _aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    _aMan.authDelegate = delegate;
+    _aMan.keychainManager = [SBBTestAuthKeychainManager new];
     XCTestExpectation *expectARDUser = [self expectationWithDescription:@"Created user with all roles"];
     [self createTestUserConsented:NO roles:@[@"admin", @"researcher", @"developer"] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (error) {

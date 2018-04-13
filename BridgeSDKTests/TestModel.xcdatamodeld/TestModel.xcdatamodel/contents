@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17C88" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14133" systemVersion="17E199" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="BridgeObject_test" isAbstract="YES" syncable="YES">
         <attribute name="type" attributeType="String" syncable="YES">
             <userInfo>
@@ -59,7 +59,7 @@
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-        <relationship name="testBridgeObjectSet" optional="YES" maxCount="1" deletionRule="No Action" destinationEntity="TestBridgeObject" inverseName="bridgeObjectSetField" inverseEntity="TestBridgeObject" syncable="YES">
+        <relationship name="testBridgeObjectSet" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TestBridgeObject" inverseName="bridgeObjectSetField" inverseEntity="TestBridgeObject" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>

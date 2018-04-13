@@ -201,7 +201,7 @@ SBBAppConfig *gSBBAppConfig = nil;
             
             if (!gSBBUseCache) {
                 id appConfigJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:appConfig];
-                [[self sharedUserDefaults] setObject:appConfigJSON forKey:SBBAppConfigDefaultsKey];
+                [[self sharedUserDefaults] setObject:appConfigJSON forKey:(NSString *)SBBAppConfigDefaultsKey];
             }
         }
     }];
@@ -213,7 +213,7 @@ SBBAppConfig *gSBBAppConfig = nil;
         if (gSBBUseCache) {
             gSBBAppConfig = (SBBAppConfig *)[SBBComponent(SBBCacheManager) cachedSingletonObjectOfType:@"AppConfig" createIfMissing:NO];
         } else {
-            id appConfigJSON = [[self sharedUserDefaults] objectForKey:SBBAppConfigDefaultsKey];
+            id appConfigJSON = [[self sharedUserDefaults] objectForKey:(NSString *)SBBAppConfigDefaultsKey];
             if (appConfigJSON) {
                 gSBBAppConfig = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:appConfigJSON];
             }

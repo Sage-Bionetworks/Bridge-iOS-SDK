@@ -365,7 +365,7 @@ static id dynamicGetterIMP(id self, SEL _cmd)
         NSString *setterName = [NSString stringWithFormat:@"set%@:", camelizedProp];
         SEL setter = NSSelectorFromString(setterName);
         if ([self respondsToSelector:setter]) {
-            [self performSelector:setter withObject:value];
+            [self setValue:value forKey:propertyName];
         }
     }
     <$endif$>

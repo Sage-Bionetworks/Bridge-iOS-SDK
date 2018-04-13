@@ -28,7 +28,6 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBAuthManager.h"
 #import "SBBAuthManagerInternal.h"
 #import "UICKeyChainStore.h"
 #import "NSError+SBBAdditions.h"
@@ -68,6 +67,13 @@ static NSString *envReauthTokenKeyFormat[] = {
     @"SBBReauthTokenStaging-%@",
     @"SBBReauthTokenDev-%@",
     @"SBBReauthTokenCustom-%@"
+};
+
+static NSString *envSessionTokenKeyFormat[] = {
+    @"SBBSessionToken-%@",
+    @"SBBSessionTokenStaging-%@",
+    @"SBBSessionTokenDev-%@",
+    @"SBBSessionTokenCustom-%@"
 };
 
 static NSString *envPasswordKeyFormat[] = {
@@ -115,62 +121,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     dispatch_sync(KeychainQueue(), dispatchBlock);
 }
 
-
-@interface SBBAuthManager()
+// standard auth keychain manager implementation -- only intended to be replaced for testing purposes
+@interface _SBBAuthKeychainManager : NSObject <SBBAuthKeychainManagerProtocol>
 
 @end
 
-@implementation SBBAuthManager
-@synthesize authDelegate = _authDelegate;
-@synthesize sessionToken = _sessionToken;
-
-+ (instancetype)defaultComponent
-{
-    static SBBAuthManager *shared;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        id<SBBNetworkManagerProtocol> networkManager = SBBComponent(SBBNetworkManager);
-        shared = [[self alloc] initWithNetworkManager:networkManager];
-        [shared setupForEnvironment];
-    });
-    
-    return shared;
-}
-
-+ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
-{
-    SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment study:study
-                                                                            baseURLPath:baseURLPath];
-    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
-    return authManager;
-}
-
-+ (instancetype)authManagerWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager
-{
-    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
-    return authManager;
-}
-
-+ (instancetype)authManagerWithBaseURL:(NSString *)baseURL
-{
-    id<SBBNetworkManagerProtocol> networkManager = [[SBBNetworkManager alloc] initWithBaseURL:baseURL];
-    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
-    return authManager;
-}
-
-// reset the auth keychain--should be called on first access after first launch; also can be used to clear credentials for testing
-+ (void)resetAuthKeychain
-{
-    dispatchSyncToKeychainQueue(^{
-        UICKeyChainStore *store = [self sdkKeychainStore];
-        [store removeAllItems];
-        [store synchronize];
-    });
-}
+@implementation _SBBAuthKeychainManager
 
 // Find the bundle seed ID of the app that's using our SDK.
 // Adapted from this StackOverflow answer: http://stackoverflow.com/a/11841898/931658
@@ -227,10 +183,101 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:accessGroup];
 }
 
+- (void)clearKeychainStore
+{
+    dispatchSyncToKeychainQueue(^{
+        UICKeyChainStore *store = [self.class sdkKeychainStore];
+        [store removeAllItems];
+        [store synchronize];
+    });
+}
+
+- (void)setKeysAndValues:(NSDictionary<NSString *,NSString *> *)keysAndValues
+{
+    dispatchSyncToKeychainQueue(^{
+        UICKeyChainStore *store = [self.class sdkKeychainStore];
+        NSArray *keys = keysAndValues.allKeys;
+        for (NSString *key in keys) {
+            NSString *value = keysAndValues[key];
+            [store setString:value forKey:key];
+        }
+        [store synchronize];
+    });
+}
+
+- (NSString *)valueForKey:(NSString *)key
+{
+    __block NSString *value;
+    dispatchSyncToKeychainQueue(^{
+        UICKeyChainStore *store = [self.class sdkKeychainStore];
+        value = [store stringForKey:key];
+    });
+    return value;
+}
+
+- (void)removeValuesForKeys:(NSArray<NSString *> *)keys
+{
+    dispatchSyncToKeychainQueue(^{
+        UICKeyChainStore *store = [self.class sdkKeychainStore];
+        for (NSString *key in keys) {
+            [store removeItemForKey:key];
+        }
+        [store synchronize];
+    });
+}
+
+@end
+
+@interface SBBAuthManager()
+
+@end
+
+@implementation SBBAuthManager
+@synthesize authDelegate = _authDelegate;
+@synthesize sessionToken = _sessionToken;
+
++ (instancetype)defaultComponent
+{
+    static SBBAuthManager *shared;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        id<SBBNetworkManagerProtocol> networkManager = SBBComponent(SBBNetworkManager);
+        shared = [[self alloc] initWithNetworkManager:networkManager];
+        [shared setupForEnvironment];
+    });
+    
+    return shared;
+}
+
++ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
+{
+    SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment study:study
+                                                                            baseURLPath:baseURLPath];
+    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
+    [authManager setupForEnvironment];
+    return authManager;
+}
+
++ (instancetype)authManagerWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager
+{
+    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
+    [authManager setupForEnvironment];
+    return authManager;
+}
+
++ (instancetype)authManagerWithBaseURL:(NSString *)baseURL
+{
+    id<SBBNetworkManagerProtocol> networkManager = [[SBBNetworkManager alloc] initWithBaseURL:baseURL];
+    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
+    [authManager setupForEnvironment];
+    return authManager;
+}
+
 - (void)setupForEnvironment
 {
     dispatchSyncToAuthQueue(^{
-        _sessionToken = self.cachedSessionInfo.sessionToken;
+        _sessionToken = self.savedSessionToken;
     });
 }
 
@@ -238,12 +285,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     if (self = [super init]) {
         _networkManager = networkManager;
+        _keychainManager = [_SBBAuthKeychainManager new];
         
-        //Clear keychain on first run in case of reinstallation
+        // Clear keychain on first run in case of reinstallation
         NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         BOOL firstRunDone = [defaults boolForKey:kBridgeAuthManagerFirstRunKey];
         if (!firstRunDone) {
-            [self.class resetAuthKeychain];
+            [self.keychainManager clearKeychainStore];
             [defaults setBool:YES forKey:kBridgeAuthManagerFirstRunKey];
             [defaults synchronize];
         }
@@ -415,6 +463,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (void)resetUserSessionInfo
 {
+    // clear the UserSessionInfo object (and the StudyParticipant, which hangs off it) from core data cache
+    [self.cacheManager removeFromCacheObjectOfType:SBBUserSessionInfo.entityName withId:SBBUserSessionInfo.entityName];
+    
     // clear the placeholder session info so it will be recreated fresh
     _placeholderSessionInfo = nil;
     
@@ -427,7 +478,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [self signInWithEmail:username password:password completion:completion];
 }
 
-- (void)handleSignInWithCredential:(NSString *)credentialKey value:(NSString *)credentialValue password:(NSString *)password task:(NSURLSessionTask *)task response:(id)responseObject error:(NSError *)error completion:(SBBNetworkManagerCompletionBlock)completion
+- (void)handleSignInWithCredential:(NSString *)credentialKey value:(id<SBBJSONValue>)credentialValue password:(NSString *)password task:(NSURLSessionTask *)task response:(id)responseObject error:(NSError *)error completion:(SBBNetworkManagerCompletionBlock)completion
 {
     // check for and handle app version out of date error (n.b.: our networkManager instance is a vanilla one, and we need
     // a Bridge network manager for this)
@@ -438,21 +489,26 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return;
     }
     
-    // Save reauth token and password in the keychain
+    // Save session token, reauth token, and password in the keychain
     // ??? Save credentials in the keychain?
+    NSString *sessionToken = responseObject[NSStringFromSelector(@selector(sessionToken))];
     NSString *reauthToken = responseObject[NSStringFromSelector(@selector(reauthToken))];
-    if (reauthToken.length) {
+    if (sessionToken.length) {
         // Sign-in was successful.
         dispatchSyncToAuthQueue(^{
-            _sessionToken = responseObject[NSStringFromSelector(@selector(sessionToken))];
+            _sessionToken = sessionToken;
         });
-        dispatchSyncToKeychainQueue(^{
-            UICKeyChainStore *store = [self.class sdkKeychainStore];
-            [store setString:reauthToken forKey:self.reauthTokenKey];
-            [store setString:password forKey:self.passwordKey];
-            
-            [store synchronize];
-        });
+        
+        // UserSessionInfo will always include a sessionToken and a reauthToken.
+        NSMutableDictionary *keysAndValues = [@{
+                                                self.reauthTokenKey: reauthToken,
+                                                self.sessionTokenKey: sessionToken
+                                                } mutableCopy];
+        if (password) {
+            keysAndValues[self.passwordKey] = password;
+        }
+        
+        [self.keychainManager setKeysAndValues:keysAndValues];
     
         // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated.
         // Since client-writable objects are not updated from the server once first cached, we need to clear this
@@ -529,6 +585,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (BOOL)accountIdentifyingCredential:(NSString **)credentialKey value:(id<SBBJSONValue> *)credentialValue errorMessage:(NSString *)message earlyCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
     SBBStudyParticipant *participant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:SBBStudyParticipant.entityName createIfMissing:NO];
+    if (!participant) {
+        participant = _placeholderSessionInfo.studyParticipant;
+    }
     
     NSString *email = participant.email;
     BOOL emailVerified = participant.emailVerifiedValue;
@@ -551,7 +610,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (!(email.length && emailVerified)) {
         if (phone.number.length && phone.regionCode.length && phoneVerified) {
             *credentialKey = NSStringFromSelector(@selector(phone));
-            *credentialValue = phone;
+            *credentialValue = [self.objectManager bridgeJSONFromObject:phone];
         } else {
             *credentialKey = NSStringFromSelector(@selector(externalId));
             *credentialValue = externalId;
@@ -725,15 +784,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self addAuthHeaderToHeaders:headers];
     return [_networkManager post:kSBBAuthSignOutAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        // Remove the session token and credentials from the keychain
+        // Remove the session tokens and credentials from the keychain
         // ??? Do we want to not do this in case of error?
-        dispatchSyncToKeychainQueue(^{
-            UICKeyChainStore *store = [self.class sdkKeychainStore];
-            [store removeItemForKey:self.reauthTokenKey];
-            [store removeItemForKey:self.passwordKey];
-            [store synchronize];
-        });
-        
+        [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey, self.sessionTokenKey, self.passwordKey ]];
+
         // clear the in-memory copy of the session token, too
         dispatchSyncToAuthQueue(^{
             _sessionToken = nil;
@@ -762,6 +816,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (NSString *)savedReauthToken
 {
     return self.reauthTokenFromKeychain;
+}
+
+- (NSString *)savedSessionToken
+{
+    return self.sessionTokenFromKeychain;
 }
 
 - (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion
@@ -794,9 +853,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             completion(nil, nil, nil);
         }
     } else {
-        SBBUserSessionInfo *info = self.cachedSessionInfo;
-        NSString *reauthToken = info.reauthToken;
-        if (reauthToken) {
+        if (self.reauthTokenFromKeychain.length) {
             [self reauthWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 // if the response was a 401, try again the other way
                 if (error.code == SBBErrorCodeServerNotAuthenticated) {
@@ -871,12 +928,21 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
-    __block NSString *token = nil;
-    dispatchSyncToKeychainQueue(^{
-        token = [[self.class sdkKeychainStore] stringForKey:self.reauthTokenKey];
-    });
+    return [self.keychainManager valueForKey:self.reauthTokenKey];
+}
+
+- (NSString *)sessionTokenKey
+{
+    return [NSString stringWithFormat:envSessionTokenKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
+}
+
+- (NSString *)sessionTokenFromKeychain
+{
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        return nil;
+    }
     
-    return token;
+    return [self.keychainManager valueForKey:self.sessionTokenKey];
 }
 
 - (NSString *)passwordKey
@@ -890,25 +956,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
-    __block NSString *token = nil;
-    dispatchSyncToKeychainQueue(^{
-        token = [[self.class sdkKeychainStore] stringForKey:[self passwordKey]];
-    });
-    
-    return token;
+    return [self.keychainManager valueForKey:self.passwordKey];
 }
 
 #pragma mark SDK-private methods
-
-// used internally for unit testing
-- (void)clearKeychainStore
-{
-    dispatchSyncToKeychainQueue(^{
-        UICKeyChainStore *store = [self.class sdkKeychainStore];
-        [store removeAllItems];
-        [store synchronize];
-    });
-}
 
 // used internally for unit testing
 - (void)setSessionToken:(NSString *)sessionToken
@@ -916,6 +967,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     dispatchSyncToAuthQueue(^{
         _sessionToken = sessionToken;
     });
+    
+    if (sessionToken) {
+        [self.keychainManager setKeysAndValues:@{ self.sessionTokenKey: sessionToken }];
+    } else {
+        [self.keychainManager removeValuesForKeys:@[ self.sessionTokenKey ]];
+    }
 }
 
 // used by SBBBridgeNetworkManager to auto-reauth when session tokens expire
@@ -925,3 +982,4 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 }
 
 @end
+

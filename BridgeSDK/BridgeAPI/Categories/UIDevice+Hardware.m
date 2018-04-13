@@ -281,7 +281,7 @@
         case UIDevice8iPhone: return IPHONE_8_NAMESTRING;
         case UIDevice8PlusiPhone: return IPHONE_8PLUS_NAMESTRING;
         case UIDeviceXiPhone: return IPHONE_X_NAMESTRING;
-        case UIDeviceUnknowniPhone: return [NSString stringWithFormat:@"$@ (%@)", IPHONE_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceUnknowniPhone: return [NSString stringWithFormat:@"%@ (%@)", IPHONE_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDevice1GiPod: return IPOD_1G_NAMESTRING;
         case UIDevice2GiPod: return IPOD_2G_NAMESTRING;
@@ -289,7 +289,7 @@
         case UIDevice4GiPod: return IPOD_4G_NAMESTRING;
         case UIDevice5GiPod: return IPOD_5G_NAMESTRING;
         case UIDevice6GiPod: return IPOD_6G_NAMESTRING;
-        case UIDeviceUnknowniPod: return [NSString stringWithFormat:@"$@ (%@)", IPOD_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceUnknowniPod: return [NSString stringWithFormat:@"%@ (%@)", IPOD_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDevice1GiPad : return IPAD_1G_NAMESTRING;
         case UIDevice2GiPad : return IPAD_2G_NAMESTRING;
@@ -306,19 +306,19 @@
         case UIDevice5GiPad : return IPAD_5G_NAMESTRING;
         case UIDevicePro12_9_2GiPad: return IPAD_PRO_12_9_2G_NAMESTRING;
         case UIDevicePro10_5iPad: return IPAD_PRO_10_5_NAMESTRING;
-        case UIDeviceUnknowniPad : return [NSString stringWithFormat:@"$@ (%@)", IPAD_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceUnknowniPad : return [NSString stringWithFormat:@"%@ (%@)", IPAD_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDeviceAppleTV2 : return APPLETV_2G_NAMESTRING;
         case UIDeviceAppleTV3 : return APPLETV_3G_NAMESTRING;
         case UIDeviceAppleTV4 : return APPLETV_4G_NAMESTRING;
         case UIDeviceAppleTV4K : return APPLETV_4K_NAMESTRING;
-        case UIDeviceUnknownAppleTV: return [NSString stringWithFormat:@"$@ (%@)", APPLETV_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceUnknownAppleTV: return [NSString stringWithFormat:@"%@ (%@)", APPLETV_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDeviceWatch : return WATCH_NAMESTRING;
         case UIDeviceWatchSeries1 : return WATCH_S1_NAMESTRING;
         case UIDeviceWatchSeries2 : return WATCH_S2_NAMESTRING;
         case UIDeviceWatchSeries3 : return WATCH_S3_NAMESTRING;
-        case UIDeviceUnknownWatch : return [NSString stringWithFormat:@"$@ (%@)", WATCH_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceUnknownWatch : return [NSString stringWithFormat:@"%@ (%@)", WATCH_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDeviceSimulator: return SIMULATOR_NAMESTRING;
         case UIDeviceSimulatoriPhone: return SIMULATOR_IPHONE_NAMESTRING;
@@ -328,7 +328,7 @@
 
         case UIDeviceIFPGA: return IFPGA_NAMESTRING;
             
-        default: return [NSString stringWithFormat:@"$@ (%@)", IOS_FAMILY_UNKNOWN_DEVICE, [self platform]];
+        default: return [NSString stringWithFormat:@"%@ (%@)", IOS_FAMILY_UNKNOWN_DEVICE, [self platform]];
     }
 }
 

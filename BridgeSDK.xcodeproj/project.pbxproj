@@ -326,7 +326,7 @@
 		807AE2951B60330A002588BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 807AE2931B60330A002588BB /* Main.storyboard */; };
 		807AE2971B60330A002588BB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 807AE2961B60330A002588BB /* Images.xcassets */; };
 		807AE29A1B60330B002588BB /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 807AE2981B60330B002588BB /* LaunchScreen.xib */; };
-		807AE2AD1B603472002588BB /* SBBTestAuthManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */; };
+		807AE2AD1B603472002588BB /* SBBTestAuthKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthKeychainManager.m */; };
 		807AE2AE1B603498002588BB /* SBBBridgeAPIIntegrationTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8B1B56FE7900D029D3 /* SBBBridgeAPIIntegrationTestCase.m */; };
 		807AE2AF1B60349D002588BB /* SBBAuthManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80314E8E1B57162100D029D3 /* SBBAuthManagerIntegrationTests.m */; };
 		807AE2B61B6034AD002588BB /* TestAdminAuthDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 807AE27F1B5ED921002588BB /* TestAdminAuthDelegate.m */; };
@@ -433,7 +433,7 @@
 		80BAFD621EFCA4600000FC59 /* SBBDateTimeRangeResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BAFD601EFCA4600000FC59 /* SBBDateTimeRangeResourceList.m */; };
 		80BB09F819C2234100E419A1 /* SBBAuthManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80BB09F619C2234100E419A1 /* SBBAuthManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80BB09F919C2234100E419A1 /* SBBAuthManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80BB09F719C2234100E419A1 /* SBBAuthManager.m */; };
-		80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */; };
+		80C3D07919DDE94A00DEA044 /* SBBTestAuthKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthKeychainManager.m */; };
 		80C565501E3C010900D83A72 /* BridgeInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 80C5654F1E3C010900D83A72 /* BridgeInfo.plist */; };
 		80C565601E3C07F700D83A72 /* ios-sdk-int-tests.pem in Resources */ = {isa = PBXBuildFile; fileRef = 80C5655F1E3C07F700D83A72 /* ios-sdk-int-tests.pem */; };
 		80C87F091C18E55A00FE8A63 /* _SBBDataGroups.h in Headers */ = {isa = PBXBuildFile; fileRef = 80C87F071C18E55A00FE8A63 /* _SBBDataGroups.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1059,8 +1059,8 @@
 		80BB09F719C2234100E419A1 /* SBBAuthManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBAuthManager.m; sourceTree = "<group>"; };
 		80C3D07419DCA03C00DEA044 /* BridgeSDK.hdoc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = BridgeSDK.hdoc; path = BridgeSDK/BridgeSDK.hdoc; sourceTree = "<group>"; };
 		80C3D07519DCA03C00DEA044 /* TemplateIcon2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = TemplateIcon2x.png; path = BridgeSDK/TemplateIcon2x.png; sourceTree = "<group>"; };
-		80C3D07719DDE94A00DEA044 /* SBBTestAuthManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestAuthManagerDelegate.h; sourceTree = "<group>"; };
-		80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestAuthManagerDelegate.m; sourceTree = "<group>"; };
+		80C3D07719DDE94A00DEA044 /* SBBTestAuthKeychainManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBTestAuthKeychainManager.h; sourceTree = "<group>"; };
+		80C3D07819DDE94A00DEA044 /* SBBTestAuthKeychainManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBTestAuthKeychainManager.m; sourceTree = "<group>"; };
 		80C5654F1E3C010900D83A72 /* BridgeInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = BridgeInfo.plist; sourceTree = "<group>"; };
 		80C5655F1E3C07F700D83A72 /* ios-sdk-int-tests.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "ios-sdk-int-tests.pem"; sourceTree = "<group>"; };
 		80C565751E40FC4000D83A72 /* SBBDataModelV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV2.xcdatamodel; sourceTree = "<group>"; };
@@ -1534,8 +1534,8 @@
 				600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */,
 				60FD2AF31E04775F00BB725F /* SBBUserManagerUnitTests.m */,
 				8026D69C19EC4025008942B0 /* SBBParticipantManagerUnitTests.m */,
-				80C3D07719DDE94A00DEA044 /* SBBTestAuthManagerDelegate.h */,
-				80C3D07819DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m */,
+				80C3D07719DDE94A00DEA044 /* SBBTestAuthKeychainManager.h */,
+				80C3D07819DDE94A00DEA044 /* SBBTestAuthKeychainManager.m */,
 				8017AF6219D9C3AF001AF9BA /* SBBTestBridgeObjects.h */,
 				8017AF6319D9C3AF001AF9BA /* SBBTestBridgeObjects.m */,
 				80104A4819D3631E001F2573 /* MockNetworkManager.h */,
@@ -2582,7 +2582,7 @@
 				807AE2BE1B603605002588BB /* SBBSurveyManagerIntegrationTests.m in Sources */,
 				807AE2BF1B603609002588BB /* SBBActivityManagerIntegrationTests.m in Sources */,
 				807AE2AE1B603498002588BB /* SBBBridgeAPIIntegrationTestCase.m in Sources */,
-				807AE2AD1B603472002588BB /* SBBTestAuthManagerDelegate.m in Sources */,
+				807AE2AD1B603472002588BB /* SBBTestAuthKeychainManager.m in Sources */,
 				6079A5CA2062F1D10075D081 /* SBBStudyManagerIntegrationTests.m in Sources */,
 				807AE2AF1B60349D002588BB /* SBBAuthManagerIntegrationTests.m in Sources */,
 			);
@@ -2755,7 +2755,7 @@
 			files = (
 				80D517311CADCA08002D2C06 /* SBBParticipantManagerUnitTests.m in Sources */,
 				80D517321CADCA16002D2C06 /* SBBAuthManagerUnitTests.m in Sources */,
-				80C3D07919DDE94A00DEA044 /* SBBTestAuthManagerDelegate.m in Sources */,
+				80C3D07919DDE94A00DEA044 /* SBBTestAuthKeychainManager.m in Sources */,
 				80D5176B1CB5BFC2002D2C06 /* SBBTestBridgeCacheableSubObject.m in Sources */,
 				602EEE631A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m in Sources */,
 				80104A4A19D3631E001F2573 /* MockNetworkManager.m in Sources */,
