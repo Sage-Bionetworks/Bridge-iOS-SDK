@@ -2,7 +2,7 @@
 //  SBBCacheManager.m
 //  BridgeSDK
 //
-//	Copyright (c) 2014-2016, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -371,7 +371,15 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
 - (NSString *)encryptionKey
 {
     NSString *encryptionKey = nil;
-    if ([self.authManager respondsToSelector:@selector(savedPassword)]) {
+    
+    // encrypt/decrypt with reauth token
+    if ([self.authManager respondsToSelector:@selector(savedReauthToken)]) {
+        encryptionKey = [(id)self.authManager savedReauthToken];
+    }
+    
+    // if no reauthToken, fall back to password -- will only happen on old app installations before first re-authentication
+    // after updating to this BridgeSDK version
+    if (!encryptionKey && [self.authManager respondsToSelector:@selector(savedPassword)]) {
         encryptionKey = [(id)self.authManager savedPassword];
     }
     

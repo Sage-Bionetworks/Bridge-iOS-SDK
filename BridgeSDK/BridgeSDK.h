@@ -142,9 +142,11 @@ extern const NSString * _Nullable SBBDefaultUserDefaultsSuiteName;
 /*!
  * This is a convenience method for setting the auth delegate on the default or currently-registered auth manager.
  *
+ *  @unavailable The authDelegate is no longer available.  Subscribe to kSBBUserSessionUpdatedNotification notification instead.
+ *
  *  @param delegate An object that conforms to SBBAuthManagerDelegateProtocol to serve as the auth delegate for the default or currently-registered auth manager.
  */
-+ (void)setAuthDelegate:(nullable id<SBBAuthManagerDelegateProtocol>)delegate;
++ (void)setAuthDelegate:(nullable id<SBBAuthManagerDelegateProtocol>)delegate __attribute__((unavailable("The authDelegate is no longer available.  Subscribe to kSBBUserSessionUpdatedNotification notification instead.")));
 
 /*!
  * Get the AppConfig for this app/platform/version/etc. as retrieved from the Bridge study.

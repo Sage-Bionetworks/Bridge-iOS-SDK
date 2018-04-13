@@ -2,9 +2,7 @@
 //  SBBAuthManager.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/11/14.
-//
-//	Copyright (c) 2014-2017, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -36,12 +34,17 @@
 #import "SBBStudyParticipant.h"
 #import "SBBSignUp.h"
 
+extern NSString * const _Nonnull kSBBUserSessionUpdatedNotification;
+extern NSString * const _Nonnull kSBBUserSessionInfoKey;
+
 @protocol SBBAuthManagerProtocol;
 
 #pragma mark SBBAuthManagerDelegateProtocol
 
 /*!
  *  This protocol defines the interfaces for the Auth Manager delegate.
+ *
+ *  @deprecated AuthDelegate is no longer supported and its methods will not be called. Subscribe to kSBBUserSessionUpdatedNotification notification instead.
  *
  *  Without an Auth Manager delegate, the default SBBAuthManager implementation will keep track of the login
  *  credentials (username and password) and the current session token in the keychain. Implement an Auth Manager
@@ -53,6 +56,7 @@
  *  refreshing the session token whenever an API call indicates that it has expired (by returning a 401 HTTP
  *  status code). See the individual method documentation below for details.
  */
+__attribute__((deprecated("AuthDelegate is no longer supported and its methods will not be called. Subscribe to kSBBUserSessionUpdatedNotification notification instead.")))
 @protocol SBBAuthManagerDelegateProtocol <NSObject>
 @required
 
@@ -147,7 +151,7 @@
  */
 @protocol SBBAuthManagerProtocol <NSObject>
 
-@property (nonatomic, weak) id<SBBAuthManagerDelegateProtocol> _Nullable authDelegate;
+@property (nonatomic, weak) id<SBBAuthManagerDelegateProtocol> _Nullable authDelegate __attribute__((unavailable("The authDelegate is no longer available.")));
 
 /*!
  Sign up for an account using a SignUp record, which is basically a StudyParticipant object with a password field.

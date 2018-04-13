@@ -64,6 +64,12 @@ SBBAppConfig *gSBBAppConfig = nil;
     
     // (re-)load the AppConfig for the specified study for this client version/platform/etc.
     [self loadAppConfig];
+    
+    // post the user session updated notification so subscribers get it without having to wait for the next sign-in/reauth
+    id authMan = SBBComponent(SBBAuthManager);
+    if ([authMan respondsToSelector:@selector(postUserSessionUpdatedNotification)]) {
+        [authMan postUserSessionUpdatedNotification];
+    }
 
     // now kickstart any potentially "orphaned" file uploads from a background thread (but first create the upload
     // manager instance so its notification handlers get set up in time)

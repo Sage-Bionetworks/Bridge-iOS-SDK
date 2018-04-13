@@ -2,9 +2,7 @@
 //  SBBUploadManager.m
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 10/9/14.
-//
-//	Copyright (c) 2014-2016 Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -519,7 +517,15 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
                 [_uploadDelegate uploadManager:self uploadOfFile:uploadTask.taskDescription completedWithVerificationURL:url];
             }
         }
-        NSLog(@"Successfully called upload complete for upload ID %@, check status with curl -H \"Bridge-Session:%@\" %@", uploadSession.id, [self.authManager.authDelegate sessionTokenForAuthManager:self.authManager], uploadStatusUrlString);
+        NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+        [self.authManager addAuthHeaderToHeaders:headers];
+        NSMutableArray *headersStringArray = [@[] mutableCopy];
+        [headers enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+            NSString *header = [NSString stringWithFormat:@"%@:%@", key, obj];
+            [headersStringArray addObject:header];
+        }];
+        NSString *headersString = [headersStringArray componentsJoinedByString:@","];
+        NSLog(@"Successfully called upload complete for upload ID %@, check status with curl -H \"%@\" %@", uploadSession.id, headersString, uploadStatusUrlString);
     }
 #endif
     [self completeUploadOfFile:uploadTask.taskDescription withError:error];

@@ -2,9 +2,7 @@
 //  SBBAuthManagerInternal.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/16/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -51,7 +49,7 @@ extern NSString * const kSBBAuthResetAPI;
 - (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
 - (void)setSessionToken:(NSString *)sessionToken;
 - (void)clearSessionToken;
-- (void)notifyDelegateOfNewSessionInfo:(id)sessionInfo;
+- (void)postNewSessionInfo:(id)sessionInfo;
 
 @end
 
@@ -68,10 +66,12 @@ extern NSString * const kSBBAuthResetAPI;
 - (instancetype)initWithBaseURL:(NSString *)baseURL;
 - (instancetype)initWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager;
 
+- (void)postUserSessionUpdatedNotification;
 
 - (void)clearKeychainStore;
 
 - (NSString *)savedEmail;
 - (NSString *)savedPassword;
+- (NSString *)savedReauthToken;
 
 @end
