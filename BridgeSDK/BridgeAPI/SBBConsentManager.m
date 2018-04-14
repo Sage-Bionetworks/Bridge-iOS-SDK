@@ -120,9 +120,9 @@ NSString * const kSBBMimeTypePng = @"image/png";
                                       // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
                                       // (which UserSessionInfo now extends). So we can't return the values from here, but we do
                                       // want to update them in the cache, which calling objectFromBridgeJSON: will do; and we do want to notify
-                                      // the auth delegate (if any).
+                                      // any subscribers.
                                       id sessionInfo = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject];
-                                      [(id<SBBAuthManagerInternalProtocol>)(self.authManager) notifyDelegateOfNewSessionInfo:sessionInfo];
+                                      [(id<SBBAuthManagerInternalProtocol>)(self.authManager) postNewSessionInfo:sessionInfo];
                                   }
                               }
                               if (completion) {

@@ -45,33 +45,9 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (StudyParticipant)
 
-@property (nullable, nonatomic, retain) SBBStudyParticipantCustomAttributes* attributes;
-
 @property (nullable, nonatomic, retain) NSData* ciphertext;
 
-@property (nullable, nonatomic, retain) NSDate* createdOn;
-
-@property (nullable, nonatomic, retain) NSSet<NSString *>* dataGroups;
-
-@property (nullable, nonatomic, retain) NSString* email;
-
-@property (nullable, nonatomic, retain) NSString* externalId;
-
-@property (nullable, nonatomic, retain) NSString* firstName;
-
-@property (nullable, nonatomic, retain) NSString* id;
-
-@property (nullable, nonatomic, retain) NSArray<NSString *>* languages;
-
-@property (nullable, nonatomic, retain) NSString* lastName;
-
-@property (nullable, nonatomic, retain) NSNumber* notifyByEmail;
-
-@property (nullable, nonatomic, retain) NSArray<NSString *>* roles;
-
-@property (nullable, nonatomic, retain) NSString* sharingScope;
-
-@property (nullable, nonatomic, retain) NSString* status;
+@property (nullable, nonatomic, retain) NSString* healthCode;
 
 @property (nullable, nonatomic, retain) NSManagedObject *userSessionInfo;
 
@@ -91,49 +67,13 @@
 
 #pragma mark Scalar values
 
-- (BOOL)notifyByEmailValue
-{
-	return [self.notifyByEmail boolValue];
-}
-
-- (void)setNotifyByEmailValue:(BOOL)value_
-{
-	self.notifyByEmail = [NSNumber numberWithBool:value_];
-}
-
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    if ([SBBStudyParticipantCustomAttributes instancesRespondToSelector:@selector(initWithDictionaryRepresentation:)]) {
-        self.attributes = [[SBBStudyParticipantCustomAttributes alloc] initWithDictionaryRepresentation:[dictionary objectForKey:@"attributes"]];
-    }
-
-    self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
-
-    self.dataGroups = [NSSet setWithArray:[dictionary objectForKey:@"dataGroups"]];
-
-    self.email = [dictionary objectForKey:@"email"];
-
-    self.externalId = [dictionary objectForKey:@"externalId"];
-
-    self.firstName = [dictionary objectForKey:@"firstName"];
-
-    self.id = [dictionary objectForKey:@"id"];
-
-    self.languages = [dictionary objectForKey:@"languages"];
-
-    self.lastName = [dictionary objectForKey:@"lastName"];
-
-    self.notifyByEmail = [dictionary objectForKey:@"notifyByEmail"];
-
-    self.roles = [dictionary objectForKey:@"roles"];
-
-    self.sharingScope = [dictionary objectForKey:@"sharingScope"];
-
-    self.status = [dictionary objectForKey:@"status"];
+    _healthCode = [dictionary objectForKey:@"healthCode"];
 
 }
 
@@ -141,34 +81,7 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
-    if ([SBBStudyParticipantCustomAttributes instancesRespondToSelector:@selector(dictionaryRepresentation)]) {
-        [dict setObjectIfNotNil:[self.attributes dictionaryRepresentation] forKey:@"attributes"];
-    }
-
-    [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
-
-    NSSortDescriptor *desc = [NSSortDescriptor sortDescriptorWithKey:@"" ascending:YES];
-    [dict setObjectIfNotNil:[self.dataGroups sortedArrayUsingDescriptors:@[desc]] forKey:@"dataGroups"];
-
-    [dict setObjectIfNotNil:self.email forKey:@"email"];
-
-    [dict setObjectIfNotNil:self.externalId forKey:@"externalId"];
-
-    [dict setObjectIfNotNil:self.firstName forKey:@"firstName"];
-
-    [dict setObjectIfNotNil:self.id forKey:@"id"];
-
-    [dict setObjectIfNotNil:self.languages forKey:@"languages"];
-
-    [dict setObjectIfNotNil:self.lastName forKey:@"lastName"];
-
-    [dict setObjectIfNotNil:self.notifyByEmail forKey:@"notifyByEmail"];
-
-    [dict setObjectIfNotNil:self.roles forKey:@"roles"];
-
-    [dict setObjectIfNotNil:self.sharingScope forKey:@"sharingScope"];
-
-    [dict setObjectIfNotNil:self.status forKey:@"status"];
+    [dict setObjectIfNotNil:self.healthCode forKey:@"healthCode"];
 
 	return [dict copy];
 }

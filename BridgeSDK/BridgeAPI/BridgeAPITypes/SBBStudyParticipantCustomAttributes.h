@@ -29,6 +29,8 @@
 
 @import Foundation;
 
+#import <BridgeSDK/SBBJSONValue.h>
+
 @interface SBBStudyParticipantCustomAttributes : NSObject
 
 - (instancetype)initWithDictionaryRepresentation:(NSDictionary *)dictionary;

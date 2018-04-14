@@ -1,7 +1,7 @@
 //
 //  _SBBStudyParticipant.h
 //
-//	Copyright (c) 2014-2017 Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -31,9 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
-
-#import "SBBStudyParticipantCustomAttributes.h"
+#import "SBBAbstractStudyParticipant.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -41,35 +39,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface _SBBStudyParticipant : SBBBridgeObject
+@interface _SBBStudyParticipant : SBBAbstractStudyParticipant
 
-@property (nullable, nonatomic, strong) SBBStudyParticipantCustomAttributes* attributes;
-
-@property (nullable, nonatomic, strong) NSDate* createdOn;
-
-@property (nullable, nonatomic, strong) NSSet<NSString *>* dataGroups;
-
-@property (nullable, nonatomic, strong) NSString* email;
-
-@property (nullable, nonatomic, strong) NSString* externalId;
-
-@property (nullable, nonatomic, strong) NSString* firstName;
-
-@property (nullable, nonatomic, strong) NSString* id;
-
-@property (nullable, nonatomic, strong) NSArray<NSString *>* languages;
-
-@property (nullable, nonatomic, strong) NSString* lastName;
-
-@property (nullable, nonatomic, strong) NSNumber* notifyByEmail;
-
-@property (nonatomic, assign) BOOL notifyByEmailValue;
-
-@property (nullable, nonatomic, strong) NSArray<NSString *>* roles;
-
-@property (nullable, nonatomic, strong) NSString* sharingScope;
-
-@property (nullable, nonatomic, strong) NSString* status;
+@property (nullable, nonatomic, strong, readonly) NSString* healthCode;
 
 @end
 NS_ASSUME_NONNULL_END

@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
+#import "SBBAuthManager.h"
+#import "SBBAuthManagerInternal.h"
 @import BridgeSDK;
 #import "SBBTestBridgeObjects.h"
 #import "SBBCacheManager.h"
-#import "SBBTestAuthManagerDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 #import "SBBObjectManagerInternal.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
@@ -101,10 +103,9 @@
         [[SBBBridgeInfo shared] setStudyIdentifier:@"ios-sdk-int-tests"];
         gSBBUseCache = YES;
     }
-    id<SBBAuthManagerProtocol> aMan = SBBComponent(SBBAuthManager);
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    delegate.password = @"123456";
-    aMan.authDelegate = delegate;
+    SBBAuthManager *aMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
+    [aMan.keychainManager setKeysAndValues:@{ aMan.passwordKey: @"123456" }];
     _cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
     _objectManager = [SBBObjectManager objectManagerWithCacheManager:_cacheManager];
 

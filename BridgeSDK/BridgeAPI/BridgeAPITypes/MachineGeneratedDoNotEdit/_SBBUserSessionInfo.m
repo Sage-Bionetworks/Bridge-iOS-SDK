@@ -56,6 +56,8 @@
 
 @property (nullable, nonatomic, retain) NSString* environment;
 
+@property (nullable, nonatomic, retain) NSString* reauthToken;
+
 @property (nullable, nonatomic, retain) NSString* sessionToken;
 
 @property (nullable, nonatomic, retain) NSNumber* signedMostRecentConsent;
@@ -133,7 +135,7 @@
     static NSArray *props;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSMutableArray *localProps = [@[@"authenticated", @"consented", @"dataSharing", @"environment", @"sessionToken", @"signedMostRecentConsent", @"type", @"consentStatuses", @"studyParticipant", @"__end_of_properties__"] mutableCopy];
+        NSMutableArray *localProps = [@[@"authenticated", @"consented", @"dataSharing", @"environment", @"reauthToken", @"sessionToken", @"signedMostRecentConsent", @"type", @"consentStatuses", @"studyParticipant", @"__end_of_properties__"] mutableCopy];
         [localProps removeLastObject];
         props = [localProps copy];
     });
@@ -152,6 +154,8 @@
     self.dataSharing = [dictionary objectForKey:@"dataSharing"];
 
     self.environment = [dictionary objectForKey:@"environment"];
+
+    self.reauthToken = [dictionary objectForKey:@"reauthToken"];
 
     self.sessionToken = [dictionary objectForKey:@"sessionToken"];
 
@@ -203,6 +207,8 @@
     [dict setObjectIfNotNil:self.dataSharing forKey:@"dataSharing"];
 
     [dict setObjectIfNotNil:self.environment forKey:@"environment"];
+
+    [dict setObjectIfNotNil:self.reauthToken forKey:@"reauthToken"];
 
     [dict setObjectIfNotNil:self.sessionToken forKey:@"sessionToken"];
 
@@ -265,6 +271,8 @@
 
         self.environment = managedObject.environment;
 
+        self.reauthToken = managedObject.reauthToken;
+
         self.sessionToken = managedObject.sessionToken;
 
         self.signedMostRecentConsent = managedObject.signedMostRecentConsent;
@@ -325,6 +333,8 @@
     managedObject.dataSharing = ((id)self.dataSharing == [NSNull null]) ? nil : self.dataSharing;
 
     managedObject.environment = ((id)self.environment == [NSNull null]) ? nil : self.environment;
+
+    managedObject.reauthToken = ((id)self.reauthToken == [NSNull null]) ? nil : self.reauthToken;
 
     managedObject.sessionToken = ((id)self.sessionToken == [NSNull null]) ? nil : self.sessionToken;
 

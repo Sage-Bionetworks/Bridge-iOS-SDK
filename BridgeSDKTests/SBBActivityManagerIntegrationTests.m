@@ -8,7 +8,7 @@
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
 #import "SBBAuthManagerInternal.h"
-#import "SBBTestAuthManagerDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 #import "SBBComponentManager.h"
 #import "SBBActivityManager.h"
 #import "SBBScheduledActivity.h"
@@ -24,7 +24,6 @@
 @property (nonatomic, strong) NSString *ardUserPassword;
 @property (nonatomic, strong) NSString *ardUserId;
 @property (nonatomic, strong) SBBAuthManager *aMan;
-@property (nonatomic, strong) SBBTestAuthManagerDelegate *aManDelegate;
 
 @property (nonatomic, strong) NSDictionary *schedule;
 @property (nonatomic, strong) NSString *scheduleJSON;
@@ -45,8 +44,7 @@
     // 1. Create a user with admin, researcher, and developer roles so we can do all the things.
     // we need our own auth manager instance (with its own delegate) so we don't eff with the global test user
     _aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
-    _aManDelegate = [SBBTestAuthManagerDelegate new];
-    _aMan.authDelegate = _aManDelegate;
+    _aMan.keychainManager = [SBBTestAuthKeychainManager new];
     XCTestExpectation *expectARDUser = [self expectationWithDescription:@"Created user with all roles"];
     [self createTestUserConsented:NO roles:@[@"admin", @"researcher", @"developer"] completionHandler:^(NSString *emailAddress, NSString *password, id responseObject, NSError *error) {
         if (error) {

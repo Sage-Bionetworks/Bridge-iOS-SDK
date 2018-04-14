@@ -1,7 +1,7 @@
 //
 //  _SBBUserSessionInfo.h
 //
-//	Copyright (c) 2014-2017 Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL dataSharingValue;
 
 @property (nullable, nonatomic, strong) NSString* environment;
+
+@property (nullable, nonatomic, strong) NSString* reauthToken;
 
 @property (nullable, nonatomic, strong) NSString* sessionToken;
 

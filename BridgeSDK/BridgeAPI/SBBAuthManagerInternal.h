@@ -2,9 +2,7 @@
 //  SBBAuthManagerInternal.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/16/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -37,16 +35,31 @@
 extern NSString * const kSBBAuthSignUpAPI;
 extern NSString * const kSBBAuthResendAPI;
 extern NSString * const kSBBAuthSignInAPI;
+extern NSString * const kSBBAuthReauthAPI;
+extern NSString * const kSBBAuthEmailAPI;
+extern NSString * const kSBBAuthEmailSignInAPI;
+extern NSString * const kSBBAuthPhoneAPI;
+extern NSString * const kSBBAuthPhoneSignInAPI;
 extern NSString * const kSBBAuthSignOutAPI;
 extern NSString * const kSBBAuthRequestResetAPI;
 extern NSString * const kSBBAuthResetAPI;
+
+@protocol SBBAuthKeychainManagerProtocol
+
+- (void)clearKeychainStore;
+
+- (void)setKeysAndValues:(NSDictionary<NSString *, NSString *> *)keysAndValues;
+- (NSString *)valueForKey:(NSString *)key;
+- (void)removeValuesForKeys:(NSArray<NSString *> *)keys;
+
+@end
 
 @protocol SBBAuthManagerInternalProtocol <SBBAuthManagerProtocol>
 
 - (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
 - (void)setSessionToken:(NSString *)sessionToken;
 - (void)clearSessionToken;
-- (void)notifyDelegateOfNewSessionInfo:(id)sessionInfo;
+- (void)postNewSessionInfo:(id)sessionInfo;
 
 @end
 
@@ -58,15 +71,21 @@ extern NSString * const kSBBAuthResetAPI;
 @property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
 @property (nonatomic, strong) SBBUserSessionInfo *placeholderSessionInfo;
 
-+ (void)resetAuthKeychain;
+// so we can override the "keychain" for testing purposes
+@property (nonatomic, strong) id<SBBAuthKeychainManagerProtocol> keychainManager;
 
 - (instancetype)initWithBaseURL:(NSString *)baseURL;
 - (instancetype)initWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager;
 
-
-- (void)clearKeychainStore;
+- (void)postUserSessionUpdatedNotification;
 
 - (NSString *)savedEmail;
 - (NSString *)savedPassword;
+- (NSString *)savedReauthToken;
+- (NSString *)savedSessionToken;
+
+- (NSString *)passwordKey;
+- (NSString *)reauthTokenKey;
+- (NSString *)sessionTokenKey;
 
 @end

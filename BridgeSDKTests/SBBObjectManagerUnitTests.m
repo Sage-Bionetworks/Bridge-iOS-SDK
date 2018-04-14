@@ -13,7 +13,7 @@
 #import "SBBTestBridgeObjects.h"
 #import "NSDate+SBBAdditions.h"
 #import "SBBCacheManager.h"
-#import "SBBTestAuthManagerDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 #import "SBBObjectManagerInternal.h"
 #import "ModelObjectInternal.h"
 #import "SBBBridgeInfo+Internal.h"
@@ -88,10 +88,9 @@
     _mappingForObject = objectMapping;
     _mappingForSubObject = subObjectMapping;
     
-    id<SBBAuthManagerProtocol> aMan = SBBComponent(SBBAuthManager);
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    delegate.password = @"123456";
-    aMan.authDelegate = delegate;
+    SBBAuthManager *aMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
+    [aMan.keychainManager setKeysAndValues:@{ aMan.passwordKey: @"123456" }];
     _cacheManager = [SBBCacheManager cacheManagerWithDataModelName:@"TestModel" bundleId:SBBBUNDLEIDSTRING storeType:NSInMemoryStoreType authManager:aMan];
     // make sure each test has a unique persistent store (by using the object instance ptr's hex representation as the store name)
     // so they can run concurrently without tripping over each other

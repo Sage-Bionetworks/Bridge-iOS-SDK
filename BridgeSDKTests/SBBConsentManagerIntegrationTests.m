@@ -8,7 +8,7 @@
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
 #import "SBBConsentManagerInternal.h"
-#import "SBBTestAuthManagerDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 #import "SBBParticipantManagerInternal.h"
 #import "SBBCacheManager.h"
 #import "ModelObjectInternal.h"
@@ -42,8 +42,7 @@
 - (void)testConsentSignature {
     // we need our own auth manager instance (with its own delegate) so we don't eff with the global test user
     SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    aMan.authDelegate = delegate;
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
     SBBConsentManager *cMan = [SBBConsentManager managerWithAuthManager:aMan networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
     UIImage *signatureImage = [UIImage imageNamed:@"sample-signature" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
     XCTestExpectation *expectSigned = [self expectationWithDescription:@"consent signature recorded"];
@@ -97,8 +96,7 @@
 - (void)testConsentAndGetSignatureForSubpop {
     // we need our own auth manager instance (with its own delegate) so we don't eff with the global test user
     SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    aMan.authDelegate = delegate;
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
     SBBParticipantManager *pMan = [SBBParticipantManager managerWithAuthManager:aMan networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
     SBBConsentManager *cMan = [SBBConsentManager managerWithAuthManager:aMan networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
     UIImage *signatureImage = [UIImage imageNamed:@"sample-signature" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil];
@@ -236,8 +234,7 @@
 - (void)testWithdrawConsent {
     // we need our own auth manager instance (with its own delegate) so we don't eff with the global test user
     SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    aMan.authDelegate = delegate;
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
     SBBConsentManager *cMan = [SBBConsentManager managerWithAuthManager:aMan networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
     XCTestExpectation *expectWithdrew = [self expectationWithDescription:@"consent withdrawn"];
     

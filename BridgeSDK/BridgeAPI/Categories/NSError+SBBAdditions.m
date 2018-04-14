@@ -119,18 +119,39 @@
     return retError;
 }
 
++ (NSError *)SBBNotSetUpError
+{
+    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeNotSetUpError
+                           userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NOT_SET_UP", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Code error: BridgeSDK must be set up before use.",
+                                                                                                   @"Error Description: Attempting to use BridgeSDK before it has been set up")}];
+}
+
 + (NSError *)SBBNoCredentialsError
 {
-  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeNoCredentialsAvailable
-                         userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NO_CREDENTIALS", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"No user login credentials available. Please sign in.",
-                                                                                 @"Error Description: missing login credentials")}];
+    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeNoCredentialsAvailable
+                           userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NO_CREDENTIALS", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"No user login credentials available. Please sign in.",
+                                                                                                   @"Error Description: missing login credentials")}];
 }
 
 + (NSError *)SBBNotAuthenticatedError
 {
-  return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeServerNotAuthenticated
-                         userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NOT_AUTHENTICATED", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Server says: not authenticated. Please authenticate.",
-                                                                                 @"Error Description: not authenticated")}];
+    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeServerNotAuthenticated
+                           userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NOT_AUTHENTICATED", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Server says: not authenticated. Please authenticate.",
+                                                                                                   @"Error Description: not authenticated")}];
+}
+
++ (NSError *)SBBNotAuthorizedError
+{
+    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeServerNotAuthorized
+                           userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NOT_VERIFIED", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Please verify your account email.",
+                                                                                                   @"Error Description: account email not verified")}];
+}
+
++ (NSError *)SBBAccountDisabledError
+{
+    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeServerAccountDisabled
+                           userInfo:@{NSLocalizedDescriptionKey: NSLocalizedStringWithDefaultValue(@"SBB_ERROR_ACCOUNT_DISABLED", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"This account has been disabled. Please contact the study administrator.",
+                                                                                                   @"Error Description: account disabled")}];
 }
 
 + (NSError *)SBBUnsupportedAppVersionError

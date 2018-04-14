@@ -2,9 +2,7 @@
 //  SBBAuthManager.h
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/11/14.
-//
-//	Copyright (c) 2014-2017, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -34,13 +32,10 @@
 #import "SBBComponent.h"
 #import "SBBNetworkManager.h"
 #import "SBBStudyParticipant.h"
+#import "SBBSignUp.h"
 
-/// A class derived from SBBStudyParticipant which includes a password field. Use this object when signing up to set any StudyParticipant fields or custom attributes at that time.
-@interface SBBSignUp : SBBStudyParticipant
-
-@property (nonatomic, strong) NSString * _Nullable password;
-
-@end
+extern NSString * const _Nonnull kSBBUserSessionUpdatedNotification;
+extern NSString * const _Nonnull kSBBUserSessionInfoKey;
 
 @protocol SBBAuthManagerProtocol;
 
@@ -48,6 +43,8 @@
 
 /*!
  *  This protocol defines the interfaces for the Auth Manager delegate.
+ *
+ *  @deprecated AuthDelegate is no longer supported and its methods will not be called. Subscribe to kSBBUserSessionUpdatedNotification notification instead.
  *
  *  Without an Auth Manager delegate, the default SBBAuthManager implementation will keep track of the login
  *  credentials (username and password) and the current session token in the keychain. Implement an Auth Manager
@@ -59,6 +56,7 @@
  *  refreshing the session token whenever an API call indicates that it has expired (by returning a 401 HTTP
  *  status code). See the individual method documentation below for details.
  */
+__attribute__((deprecated("AuthDelegate is no longer supported and its methods will not be called. Subscribe to kSBBUserSessionUpdatedNotification notification instead.")))
 @protocol SBBAuthManagerDelegateProtocol <NSObject>
 @required
 
@@ -153,20 +151,22 @@
  */
 @protocol SBBAuthManagerProtocol <NSObject>
 
-@property (nonatomic, weak) id<SBBAuthManagerDelegateProtocol> _Nullable authDelegate;
+@property (nonatomic, weak) id<SBBAuthManagerDelegateProtocol> _Nullable authDelegate __attribute__((unavailable("The authDelegate is no longer available.")));
 
 /*!
  Sign up for an account using a SignUp record, which is basically a StudyParticipant object with a password field.
- At minimum, the email and password fields must be filled in; in general, you would also want to fill in any of the following
- information available at sign-up time: firstName, lastName, sharingScope, externalId (if used), dataGroups, notifyByEmail,
- and any custom attributes you've defined for the attributes field.
+ At minimum, at least one of the account identifying fields (`email`, `phone`, `externalId`) must be filled in;
+ if the `password` field is not included, the only way to sign in will be via a link sent by email or via a token
+ or link sent by SMS, so either `email` or `phone` would need to be filled in. In general, you would also want to
+ fill in any of the following information available at sign-up time: `firstName`, `lastName`, `sharingScope`,
+ `dataGroups`, `notifyByEmail`, and any custom attributes you've defined for the `attributes` field.
  
  @param signUp A SBBSignUp object representing the participant signing up.
  @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
  
- @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
  */
-- (nonnull NSURLSessionTask *)signUpStudyParticipant:(nonnull SBBSignUp *)signUp completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nullable NSURLSessionTask *)signUpStudyParticipant:(nonnull SBBSignUp *)signUp completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Sign up for an account with an email address, userName, password, and an optional list of data group tags. 
@@ -180,9 +180,9 @@
  * @param password The password to use for the account.
  * @param dataGroups An array of dataGroup tags to assign to the user at signup. Optional.
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
- * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
  */
-- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signUpStudyParticipant:completion: instead")));
+- (nullable NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password dataGroups:(nullable NSArray<NSString *> *)dataGroups completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signUpStudyParticipant:completion: instead")));
 
 /*!
  * Sign up for an account with an email address, userName, and password. This is a convenience method
@@ -194,9 +194,9 @@
  * @param username The username to use for the account.
  * @param password The password to use for the account.
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
- * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
  */
-- (nonnull NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signUpStudyParticipant:withPassword:completion: instead")));
+- (nullable NSURLSessionTask *)signUpWithEmail:(nonnull NSString *)email username:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signUpStudyParticipant:withPassword:completion: instead")));
 
 /*!
  Request Bridge to re-send the email verification link to the specified email address.
@@ -207,9 +207,9 @@
  @param email      The email address for which to re-send the verification link.
  @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
  */
-- (nonnull NSURLSessionTask *)resendEmailVerification:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nullable NSURLSessionTask *)resendEmailVerification:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  Reset UserSessionInfo and StudyParticipant to a pristine state and notify the auth delegate.
@@ -219,22 +219,135 @@
 - (void)resetUserSessionInfo;
 
 /*!
+ * Sign in to an existing account with an account-identifying credential (email, phone, or externalId) and password.
+ *
+ * @param credentialKey The account-identifying credential (`@"email"`, `@"phone"`, or `@"externalId"`) to use for signing in.
+ * @param credentialValue The value of the specified credential for the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
+ * @param password The password of the account.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="https://developer.sagebridge.org/model-browser.html#UserSessionInfo"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. If you've set up an auth delegate and implemented the authManager:didReceiveUserSessionInfo: method, the response object will also be converted to a SBBUserSessionInfo object and passed along to that method.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
+ */
+
+- (nullable NSURLSessionTask *)signInWithCredential:(nonnull NSString *)credentialKey value:(nonnull id<SBBJSONValue>)credentialValue password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+
+/*!
  * Sign in to an existing account with an email and password.
+ *
+ * This is a convenience method that calls through to signInWithCredential:value:password:completion.
  *
  * @param email The email address of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
  * @param password The password of the account.
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you've mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of id<SBBObjectManagerProtocol> if you've set one up).
- * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
  */
-- (nonnull NSURLSessionTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nullable NSURLSessionTask *)signInWithEmail:(nonnull NSString *)email password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Sign in to an existing account with an SBBPhone and password.
+ *
+ * This is a convenience method that calls through to signInWithCredential:value:password:completion.
+ *
+ * @param phone A SBBPhone object containing the phone number and region code for the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
+ * @param password The password of the account.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you've mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of id<SBBObjectManagerProtocol> if you've set one up).
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
+ */
+- (nullable NSURLSessionTask *)signInWithPhone:(nonnull SBBPhone *)phone password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Sign in to an existing account with a phone number, region code, and password.
+ *
+ * This is a convenience method that calls through to signInWithCredential:value:password:completion.
+ *
+ * @param phoneNumber The phone number of the account being signed into (can be formatted in any way that’s useful for end users). This is used by Bridge as a unique identifier for a participant within a study.
+ * @param regionCode The CLDR two-letter region code describing the region in which the phone number was issued.
+ * @param password The password of the account.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you've mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of id<SBBObjectManagerProtocol> if you've set one up).
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
+ */
+- (nullable NSURLSessionTask *)signInWithPhoneNumber:(nonnull NSString *)phoneNumber regionCode:(nonnull NSString *)regionCode password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Sign in to an existing account with an externalId and password.
+ *
+ * This is a convenience method that calls through to signInWithCredential:value:password:completion.
+ *
+ * @param externalId The externalId of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
+ * @param password The password of the account.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. The responseObject will be an NSDictionary containing a Bridge API <a href="https://sagebionetworks.jira.com/wiki/display/BRIDGE/UserSessionInfo"> UserSessionInfo</a> object in case you need to refer to it, but the SBBAuthManager handles the session token for all Bridge API access via this SDK, so you can generally ignore it if you prefer. You can convert the responseObject to an SBBUserSessionInfo object (or whatever you've mapped it to) in your completion handler by calling [SBBComponent(SBBObjectManager) objectFromBridgeJSON:responseObject] (or substituting another instance of id<SBBObjectManagerProtocol> if you've set one up).
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
+ */
+- (nullable NSURLSessionTask *)signInWithExternalId:(nonnull NSString *)externalId password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Reauthenticate the user to their Bridge using the reauthToken.
+ *
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not been set up or if required reauth info is missing.
+ */
+- (nullable NSURLSessionTask *)reauthWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Send the user a link via email that they can use to sign in to their Bridge account.
+ *
+ * The app will need to be set up to intercept the link and parse out the sign-in token, which it will then use to call
+ * signInWithEmail:token:completion: to complete the sign-in process.
+ *
+ * @param email The email address to which to send the sign-in link. This must be the address associated with the user's Bridge account.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if the study is not yet set up or the email parameter is an empty string.
+ * @seealso signInWithEmail:token:completion:
+ */
+- (nullable NSURLSessionTask *)emailSignInLinkTo:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Sign in to an existing email-based account with the user's email and a sign-in token parsed from a link received as a result of a call to emailSignInLinkTo:completion:.
+ *
+ * @param email The email address of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
+ * @param token The sign-in token as parsed from the link.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
+ * @seealso emailSignInLinkTo:completion:
+ */
+- (nullable NSURLSessionTask *)signInWithEmail:(nonnull NSString *)email token:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Send the user a token (or a link containing a token) via SMS that they can use to sign in to their Bridge account.
+ *
+ * If a link is sent, the app will need to be set up to intercept the link and parse out the sign-in token, which it will then use to call
+ * signInWithPhone:regionCode:token:completion: to complete the sign-in process.
+ *
+ * If just a token is sent, the app will need to provide a UI for the user to manually enter the token (à la 2-factor authentication)
+ * and use that in the signIn call.
+ *
+ * @param phoneNumber The phone number to which to send the sign-in token or link. This must be the number associated with the user's Bridge account.
+ * @param regionCode The CLDR two-letter region code describing the region in which the phone number was issued.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if the study is not yet set up or either phoneNumber or regionCode is an empty string.
+ * @seealso signInWithPhone:regionCode:token:completion:
+ */
+- (nullable NSURLSessionTask *)textSignInTokenTo:(nonnull NSString *)phoneNumber regionCode:(nonnull NSString *)regionCode completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+
+/*!
+ * Sign in to an existing phone-based account with the user's phone number and a sign-in token either received directly, or parsed from a link received, as a result of a call to textSignInLinkTo:regionCode:completion:.
+ *
+ * @param phoneNumber The phone number of the account being signed into. This is used by Bridge as a unique identifier for a participant within a study.
+ * @param regionCode The CLDR two-letter region code describing the region in which the phone number was issued.
+ * @param token The sign-in token as received directly or as parsed from the link.
+ * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion. Optional.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
+ * @seealso textSignInLinkTo:regionCode:completion:
+ */
+- (nullable NSURLSessionTask *)signInWithPhoneNumber:(nonnull NSString *)phoneNumber regionCode:(nonnull NSString *)regionCode token:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Sign out of the user's Bridge account.
  *
  * @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
- * @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ * @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
  */
-- (nonnull NSURLSessionTask *)signOutWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nullable NSURLSessionTask *)signOutWithCompletion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  * Call this at app launch to ensure the user is logged in to their account (if any).
@@ -252,9 +365,9 @@
  @param email The email address associated with the account whose password is to be reset.
  @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
  */
-- (nonnull NSURLSessionTask *)requestPasswordResetForEmail:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nullable NSURLSessionTask *)requestPasswordResetForEmail:(nonnull NSString *)email completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  Reset the password for this user's account.
@@ -263,9 +376,9 @@
  @param token    The sptoken sent to the user's email address in response to a requestPasswordResetForEmail: call.
  @param completion A SBBNetworkManagerCompletionBlock to be called upon completion.
  
- @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request, or nil if BridgeSDK has not yet been set up.
  */
-- (nonnull NSURLSessionTask *)resetPasswordToNewPassword:(nonnull NSString *)password resetToken:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
+- (nullable NSURLSessionTask *)resetPasswordToNewPassword:(nonnull NSString *)password resetToken:(nonnull NSString *)token completion:(nullable SBBNetworkManagerCompletionBlock)completion;
 
 /*!
  *  This method is used by other API manager components to inject the session token header for authentication.
@@ -287,7 +400,7 @@
 /*!
  * For backward compatibility only. Use signInWithEmail:password:completion instead (which this method now calls).
  */
-- (nonnull NSURLSessionTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signInWithEmail:password:completion instead")));
+- (nullable NSURLSessionTask *)signInWithUsername:(nonnull NSString *)username password:(nonnull NSString *)password completion:(nullable SBBNetworkManagerCompletionBlock)completion __attribute__((deprecated("use signInWithEmail:password:completion instead")));
 
 @end
 

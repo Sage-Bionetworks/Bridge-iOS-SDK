@@ -10,8 +10,7 @@
 #import "SBBAuthManagerInternal.h"
 #import "SBBBridgeNetworkManager.h"
 #import "SBBNetworkManagerInternal.h"
-#import "TestAdminAuthDelegate.h"
-#import "SBBTestAuthManagerDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 #import "SBBCacheManager.h"
 #import "SBBObjectManagerInternal.h"
 #import "SBBCacheManager.h"
@@ -55,9 +54,8 @@
         aMan.objectManager = [self testObjectManagerWithCacheManager:cMan];
     });
     
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    delegate.password = @"123456";
-    aMan.authDelegate = delegate;
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
+    [aMan.keychainManager setKeysAndValues:@{ aMan.passwordKey: @"123456" }];
     
     // make sure each test that accesses Bridge APIs has access to its own object manager pointed at
     // a cache manager with a unique persistent store (by using the object instance ptr's hex representation as the store name)
@@ -65,6 +63,29 @@
     _cacheManager = [self testCacheManagerWithAuthManager:aMan andPersistentStoreName:[NSString stringWithFormat:@"%p", self]];
     _objectManager = [self testObjectManagerWithCacheManager:_cacheManager];
 }
+
+- (void)resetStateOfAuthManager:(SBBAuthManager *)aMan {
+    // always use a test auth keychain manager so we don't pollute the real keychain for integration tests
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
+    
+    XCTestExpectation *expectSessionUpdate = [self expectationWithDescription:@"got session updated notification after reset"];
+    id<NSObject> observer = [[NSNotificationCenter defaultCenter] addObserverForName:kSBBUserSessionUpdatedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        [[NSNotificationCenter defaultCenter] removeObserver:observer];
+        [expectSessionUpdate fulfill];
+    }];
+    
+    [aMan resetUserSessionInfo];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error waiting for session info update notification after reset:\n%@", error);
+        }
+    }];
+    
+    [aMan clearSessionToken];
+}
+
+
 
 - (SBBCacheManager *)testCacheManagerWithAuthManager:(id<SBBAuthManagerProtocol>)aMan andPersistentStoreName:(NSString *)name {
     // use the "real" Bridge data model for cache managers for tests that access Bridge APIs, but use in-memory store

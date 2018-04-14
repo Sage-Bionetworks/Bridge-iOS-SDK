@@ -19,6 +19,7 @@
 @implementation MockNetworkManager
 @synthesize environment = _environment;
 @synthesize backgroundTransferDelegate = _backgroundTransferDelegate;
+@synthesize sendCookies = _sendCookies;
 
 - (id)init
 {

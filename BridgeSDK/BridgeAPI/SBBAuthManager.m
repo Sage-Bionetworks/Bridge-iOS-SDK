@@ -2,9 +2,7 @@
 //  SBBAuthManager.m
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 9/11/14.
-//
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -30,7 +28,6 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBAuthManager.h"
 #import "SBBAuthManagerInternal.h"
 #import "UICKeyChainStore.h"
 #import "NSError+SBBAdditions.h"
@@ -40,32 +37,43 @@
 #import "SBBBridgeNetworkManager.h"
 #import "SBBParticipantManagerInternal.h"
 #import "ModelObjectInternal.h"
+#import "SBBJSONValue.h"
 #import <objc/runtime.h>
 
 #define AUTH_API V3_API_PREFIX @"/auth"
+#define V4_AUTH_API V4_API_PREFIX @"/auth"
 
 NSString * const kSBBAuthSignUpAPI =       AUTH_API @"/signUp";
 NSString * const kSBBAuthResendAPI =       AUTH_API @"/resendEmailVerification";
-NSString * const kSBBAuthSignInAPI =       AUTH_API @"/signIn";
+NSString * const kSBBAuthSignInAPI =       V4_AUTH_API @"/signIn";
+NSString * const kSBBAuthReauthAPI =       AUTH_API @"/reauth";
+NSString * const kSBBAuthEmailAPI =        AUTH_API @"/email";
+NSString * const kSBBAuthEmailSignInAPI =  AUTH_API @"/email/signIn";
+NSString * const kSBBAuthPhoneAPI =        AUTH_API @"/phone";
+NSString * const kSBBAuthPhoneSignInAPI =  AUTH_API @"/phone/signIn";
 NSString * const kSBBAuthSignOutAPI =      AUTH_API @"/signOut";
 NSString * const kSBBAuthRequestResetAPI = AUTH_API @"/requestResetPassword";
 NSString * const kSBBAuthResetAPI =        AUTH_API @"/resetPassword";
 
 NSString *kBridgeKeychainService = @"SageBridge";
 NSString *kBridgeAuthManagerFirstRunKey = @"SBBAuthManagerFirstRunCompleted";
+NSString *kSignInType = @"SignIn";
+
+NSString * const kSBBUserSessionUpdatedNotification = @"SBBUserSessionUpdatedNotification";
+NSString * const kSBBUserSessionInfoKey = @"SBBUserSessionInfoKey";
+
+static NSString *envReauthTokenKeyFormat[] = {
+    @"SBBReauthToken-%@",
+    @"SBBReauthTokenStaging-%@",
+    @"SBBReauthTokenDev-%@",
+    @"SBBReauthTokenCustom-%@"
+};
 
 static NSString *envSessionTokenKeyFormat[] = {
     @"SBBSessionToken-%@",
     @"SBBSessionTokenStaging-%@",
     @"SBBSessionTokenDev-%@",
     @"SBBSessionTokenCustom-%@"
-};
-
-static NSString *envEmailKeyFormat[] = {
-    @"SBBUsername-%@",
-    @"SBBUsernameStaging-%@",
-    @"SBBusernameDev-%@",
-    @"SBBusernameCustom-%@"
 };
 
 static NSString *envPasswordKeyFormat[] = {
@@ -113,81 +121,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     dispatch_sync(KeychainQueue(), dispatchBlock);
 }
 
-
-@implementation SBBSignUp
-
-- (void)saveToCoreDataCacheWithObjectManager:(id<SBBObjectManagerProtocol>)objectManager
-{
-    // stub this out to prevent attempting to save non-cacheable object to CoreData cache
-    return;
-}
-
-- (NSDictionary *)dictionaryRepresentation
-{
-    NSMutableDictionary *dict = [[super dictionaryRepresentation] mutableCopy];
-    [dict setObjectIfNotNil:self.password forKey:@"password"];
-    
-    return dict;
-}
+// standard auth keychain manager implementation -- only intended to be replaced for testing purposes
+@interface _SBBAuthKeychainManager : NSObject <SBBAuthKeychainManagerProtocol>
 
 @end
 
-
-@interface SBBAuthManager()
-
-@end
-
-@implementation SBBAuthManager
-@synthesize authDelegate = _authDelegate;
-@synthesize sessionToken = _sessionToken;
-
-+ (instancetype)defaultComponent
-{
-    static SBBAuthManager *shared;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        id<SBBNetworkManagerProtocol> networkManager = SBBComponent(SBBNetworkManager);
-        shared = [[self alloc] initWithNetworkManager:networkManager];
-        [shared setupForEnvironment];
-    });
-    
-    return shared;
-}
-
-+ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
-{
-    SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment study:study
-                                                                            baseURLPath:baseURLPath];
-    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
-    return authManager;
-}
-
-+ (instancetype)authManagerWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager
-{
-    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
-    return authManager;
-}
-
-+ (instancetype)authManagerWithBaseURL:(NSString *)baseURL
-{
-    id<SBBNetworkManagerProtocol> networkManager = [[SBBNetworkManager alloc] initWithBaseURL:baseURL];
-    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
-    return authManager;
-}
-
-// reset the auth keychain--should be called on first access after first launch; also can be used to clear credentials for testing
-+ (void)resetAuthKeychain
-{
-    dispatchSyncToKeychainQueue(^{
-        UICKeyChainStore *store = [self sdkKeychainStore];
-        [store removeAllItems];
-        [store synchronize];
-    });
-}
+@implementation _SBBAuthKeychainManager
 
 // Find the bundle seed ID of the app that's using our SDK.
 // Adapted from this StackOverflow answer: http://stackoverflow.com/a/11841898/931658
@@ -244,25 +183,115 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:accessGroup];
 }
 
+- (void)clearKeychainStore
+{
+    dispatchSyncToKeychainQueue(^{
+        UICKeyChainStore *store = [self.class sdkKeychainStore];
+        [store removeAllItems];
+        [store synchronize];
+    });
+}
+
+- (void)setKeysAndValues:(NSDictionary<NSString *,NSString *> *)keysAndValues
+{
+    dispatchSyncToKeychainQueue(^{
+        UICKeyChainStore *store = [self.class sdkKeychainStore];
+        NSArray *keys = keysAndValues.allKeys;
+        for (NSString *key in keys) {
+            NSString *value = keysAndValues[key];
+            [store setString:value forKey:key];
+        }
+        [store synchronize];
+    });
+}
+
+- (NSString *)valueForKey:(NSString *)key
+{
+    __block NSString *value;
+    dispatchSyncToKeychainQueue(^{
+        UICKeyChainStore *store = [self.class sdkKeychainStore];
+        value = [store stringForKey:key];
+    });
+    return value;
+}
+
+- (void)removeValuesForKeys:(NSArray<NSString *> *)keys
+{
+    dispatchSyncToKeychainQueue(^{
+        UICKeyChainStore *store = [self.class sdkKeychainStore];
+        for (NSString *key in keys) {
+            [store removeItemForKey:key];
+        }
+        [store synchronize];
+    });
+}
+
+@end
+
+@interface SBBAuthManager()
+
+@end
+
+@implementation SBBAuthManager
+@synthesize authDelegate = _authDelegate;
+@synthesize sessionToken = _sessionToken;
+
++ (instancetype)defaultComponent
+{
+    static SBBAuthManager *shared;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        id<SBBNetworkManagerProtocol> networkManager = SBBComponent(SBBNetworkManager);
+        shared = [[self alloc] initWithNetworkManager:networkManager];
+        [shared setupForEnvironment];
+    });
+    
+    return shared;
+}
+
++ (instancetype)authManagerForEnvironment:(SBBEnvironment)environment study:(NSString *)study baseURLPath:(NSString *)baseURLPath
+{
+    SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment study:study
+                                                                            baseURLPath:baseURLPath];
+    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
+    [authManager setupForEnvironment];
+    return authManager;
+}
+
++ (instancetype)authManagerWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager
+{
+    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
+    [authManager setupForEnvironment];
+    return authManager;
+}
+
++ (instancetype)authManagerWithBaseURL:(NSString *)baseURL
+{
+    id<SBBNetworkManagerProtocol> networkManager = [[SBBNetworkManager alloc] initWithBaseURL:baseURL];
+    SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
+    [authManager setupForEnvironment];
+    return authManager;
+}
+
 - (void)setupForEnvironment
 {
-    if (!_authDelegate) {
-        dispatchSyncToAuthQueue(^{
-            _sessionToken = [self sessionTokenFromKeychain];
-        });
-    }
+    dispatchSyncToAuthQueue(^{
+        _sessionToken = self.savedSessionToken;
+    });
 }
 
 - (instancetype)initWithNetworkManager:(SBBNetworkManager *)networkManager
 {
     if (self = [super init]) {
         _networkManager = networkManager;
+        _keychainManager = [_SBBAuthKeychainManager new];
         
-        //Clear keychain on first run in case of reinstallation
+        // Clear keychain on first run in case of reinstallation
         NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
         BOOL firstRunDone = [defaults boolForKey:kBridgeAuthManagerFirstRunKey];
         if (!firstRunDone) {
-            [self.class resetAuthKeychain];
+            [self.keychainManager clearKeychainStore];
             [defaults setBool:YES forKey:kBridgeAuthManagerFirstRunKey];
             [defaults synchronize];
         }
@@ -281,23 +310,27 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return self;
 }
 
-- (void)setAuthDelegate:(id<SBBAuthManagerDelegateProtocol>)delegate
+- (void)postNewSessionInfo:(id)info
 {
-    _authDelegate = delegate;
-    
-    // give it the current UserSessionInfo on startup (creating one as a placeholder for onboarding if the participant is not already signed in)
-    if ([delegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)] && gSBBUseCache) {
-        NSString *userSessionInfoType = SBBUserSessionInfo.entityName;
-        SBBUserSessionInfo *info = (SBBUserSessionInfo *)[self.cacheManager cachedSingletonObjectOfType:userSessionInfoType createIfMissing:NO];
-        if (info) {
-            
-            self.placeholderSessionInfo = nil;
-        } else {
-            info = self.placeholderSessionInfo;
-        }
-        
-        [delegate authManager:nil didReceiveUserSessionInfo:info];
+    NSDictionary *userInfo = @{ kSBBUserSessionInfoKey : info };
+    [[NSNotificationCenter defaultCenter] postNotificationName:kSBBUserSessionUpdatedNotification object:self userInfo:userInfo];
+}
+
+- (SBBUserSessionInfo *)cachedSessionInfo
+{
+    NSString *userSessionInfoType = SBBUserSessionInfo.entityName;
+    return (SBBUserSessionInfo *)[self.cacheManager cachedSingletonObjectOfType:userSessionInfoType createIfMissing:NO];
+}
+
+- (void)postUserSessionUpdatedNotification
+{
+    SBBUserSessionInfo *info = self.cachedSessionInfo;
+    if (info) {
+        self.placeholderSessionInfo = nil;
+    } else {
+        info = self.placeholderSessionInfo;
     }
+    [self postNewSessionInfo:info];
 }
 
 - (id<SBBCacheManagerProtocol>)cacheManager {
@@ -347,15 +380,21 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)sessionToken
 {
-    if (_authDelegate) {
-        return [_authDelegate sessionTokenForAuthManager:self];
-    } else {
-        return _sessionToken;
-    }
+    return _sessionToken;
 }
 
 - (NSURLSessionTask *)signUpStudyParticipant:(SBBSignUp *)signUp completion:(SBBNetworkManagerCompletionBlock)completion
 {
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet, so do nothing
+        NSAssert(false, @"Coding error: Attempting to sign up study participant before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
     // If there's a placeholder StudyParticipant object, it may be partially filled-in, so let's start with that
     SBBStudyParticipant *studyParticipant = self.placeholderSessionInfo.studyParticipant;
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
@@ -382,7 +421,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     NSArray *dataGroupsArray = [dataGroups allObjects];
     [json setValue:dataGroupsArray forKey:dataGroupsKey];
     
-    json[@"study"] = [SBBBridgeInfo shared].studyIdentifier;
+    json[NSStringFromSelector(@selector(study))] = SBBBridgeInfo.shared.studyIdentifier;
     return [_networkManager post:kSBBAuthSignUpAPI headers:nil parameters:json completion:completion];
 }
 
@@ -406,21 +445,32 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSURLSessionTask *)resendEmailVerification:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthResendAPI headers:nil parameters:@{@"study":[SBBBridgeInfo shared].studyIdentifier, @"email":email} completion:completion];
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet, so do nothing
+        NSAssert(false, @"Coding error: Attempting to request resending email verification before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
+    NSDictionary *params = @{ NSStringFromSelector(@selector(study)):SBBBridgeInfo.shared.studyIdentifier,
+                              NSStringFromSelector(@selector(email)):email
+                              };
+    return [_networkManager post:kSBBAuthResendAPI headers:nil parameters:params completion:completion];
 }
 
 - (void)resetUserSessionInfo
 {
+    // clear the UserSessionInfo object (and the StudyParticipant, which hangs off it) from core data cache
+    [self.cacheManager removeFromCacheObjectOfType:SBBUserSessionInfo.entityName withId:SBBUserSessionInfo.entityName];
+    
     // clear the placeholder session info so it will be recreated fresh
     _placeholderSessionInfo = nil;
     
-    // now, if there's an auth delegate and it expects UserSessionInfo updates, set it again
-    // so it will get a fresh set of placeholders.
-    id<SBBAuthManagerDelegateProtocol> delegate = self.authDelegate;
-    if (gSBBUseCache && !self.isAuthenticated && [delegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)]) {
-        [self setAuthDelegate:delegate];
-
-    }
+    // now, post the session info updated notification again so any subscribers will get a fresh set of placeholders.
+    [self postUserSessionUpdatedNotification];
 }
 
 - (NSURLSessionTask *)signInWithUsername:(NSString *)username password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
@@ -428,106 +478,324 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [self signInWithEmail:username password:password completion:completion];
 }
 
+- (void)handleSignInWithCredential:(NSString *)credentialKey value:(id<SBBJSONValue>)credentialValue password:(NSString *)password task:(NSURLSessionTask *)task response:(id)responseObject error:(NSError *)error completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    // check for and handle app version out of date error (n.b.: our networkManager instance is a vanilla one, and we need
+    // a Bridge network manager for this)
+    id<SBBBridgeNetworkManagerProtocol> bridgeNetworkManager = (id<SBBBridgeNetworkManagerProtocol>)SBBComponent(SBBBridgeNetworkManager);
+    BOOL handledUnsupportedAppVersionError = [bridgeNetworkManager checkForAndHandleUnsupportedAppVersionHTTPError:error];
+    if (handledUnsupportedAppVersionError) {
+        // don't call the completion handler, just bail
+        return;
+    }
+    
+    // Save session token, reauth token, and password in the keychain
+    // ??? Save credentials in the keychain?
+    NSString *sessionToken = responseObject[NSStringFromSelector(@selector(sessionToken))];
+    NSString *reauthToken = responseObject[NSStringFromSelector(@selector(reauthToken))];
+    if (sessionToken.length) {
+        // Sign-in was successful.
+        dispatchSyncToAuthQueue(^{
+            _sessionToken = sessionToken;
+        });
+        
+        // UserSessionInfo will always include a sessionToken and a reauthToken.
+        NSMutableDictionary *keysAndValues = [@{
+                                                self.reauthTokenKey: reauthToken,
+                                                self.sessionTokenKey: sessionToken
+                                                } mutableCopy];
+        if (password) {
+            keysAndValues[self.passwordKey] = password;
+        }
+        
+        [self.keychainManager setKeysAndValues:keysAndValues];
+    
+        // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated.
+        // Since client-writable objects are not updated from the server once first cached, we need to clear this
+        // out of our cache before reading the response object into the cache so we will get the server-side changes.
+        // We wait until now to do it because until sign-in succeeds, to the best of our knowledge what's in
+        // the cache is still valid; and if the user's email is retrievable (if auth delegate exists, it implements
+        // emailForAuthManager:) then that is used in generating the persistent store path so we need to do this
+        // here, were we know it will be available.
+        
+        [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
+        [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
+        
+        // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
+        // (which UserSessionInfo now extends), so we can't return the values directly from here. But we do
+        // want to update them in the cache, which calling objectFromBridgeJSON: will do.
+        
+        // Since the StudyParticipant is stored encrypted and uses the reauthToken as the encryption key,
+        // we need to do this *after* storing the reauthToken to the keychain.
+        id sessionInfo = [self.objectManager objectFromBridgeJSON:responseObject];
+        [self postNewSessionInfo:sessionInfo];
+    }
+    
+    if (completion) {
+        completion(task, responseObject, error);
+    }
+}
+
 - (NSURLSessionTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:@{@"study":[SBBBridgeInfo shared].studyIdentifier, @"email":email, @"password":password, @"type":@"SignIn"} completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        // check for and handle app version out of date error (n.b.: our networkManager instance is a vanilla one, and we need
-        // a Bridge network manager for this)
-        id<SBBBridgeNetworkManagerProtocol> bridgeNetworkManager = (id<SBBBridgeNetworkManagerProtocol>)SBBComponent(SBBBridgeNetworkManager);
-        BOOL handledUnsupportedAppVersionError = [bridgeNetworkManager checkForAndHandleUnsupportedAppVersionHTTPError:error];
-        if (handledUnsupportedAppVersionError) {
-            // don't call the completion handler, just bail
-            return;
-        }
-        
-        // Save session token in the keychain
-        // ??? Save credentials in the keychain?
-        NSString *sessionToken = responseObject[@"sessionToken"];
-        if (sessionToken.length) {
-            // Sign-in was successful.
-            
-            if (_authDelegate) {
-                [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
-            } else {
-                dispatchSyncToAuthQueue(^{
-                    _sessionToken = sessionToken;
-                });
-                dispatchSyncToKeychainQueue(^{
-                    UICKeyChainStore *store = [self.class sdkKeychainStore];
-                    [store setString:_sessionToken forKey:self.sessionTokenKey];
-                    [store setString:email forKey:self.emailKey];
-                    [store setString:password forKey:self.passwordKey];
-                    
-                    [store synchronize];
-                });
-            }
-            
-            // If a user's StudyParticipant object is edited in the researcher UI, the session will be invalidated.
-            // Since client-writable objects are not updated from the server once first cached, we need to clear this
-            // out of our cache before reading the response object into the cache so we will get the server-side changes.
-            // We wait until now to do it because until sign-in succeeds, to the best of our knowledge what's in
-            // the cache is still valid; and if the user's email is retrievable (if auth delegate exists, it implements
-            // emailForAuthManager:) then that is used in generating the persistent store path so we need to do this
-            // here, were we know it will be available.
-            
-            [(id <SBBUserManagerInternalProtocol>)SBBComponent(SBBUserManager) clearUserInfoFromCache];
-            [(id <SBBParticipantManagerInternalProtocol>)SBBComponent(SBBParticipantManager) clearUserInfoFromCache];
-            
-            // This method's signature was set in stone before UserSessionInfo existed, let alone StudyParticipant
-            // (which UserSessionInfo now extends), so we can't return the values directly from here. But we do
-            // want to update them in the cache, which calling objectFromBridgeJSON: will do.
-            
-            // ETA since the StudyParticipant is stored encrypted and uses the login password
-            // as the encryption key, we need to do this after checking/calling the auth delegate
-            // and/or storing the password to the keychain ourselves. emm2017-01-19
-            
-            // As a result, we also have to wait until here to tell the auth delegate about the new UserSessionInfo,
-            // rather than just passing it to the delegate in the above call in place of the sessionToken. emm2017-06-01
-            id sessionInfo = [self.objectManager objectFromBridgeJSON:responseObject];
-            [self notifyDelegateOfNewSessionInfo:sessionInfo];
-        }
-        
+    return [self signInWithCredential:NSStringFromSelector(@selector(email)) value:email password:password completion:completion];
+}
+
+- (NSURLSessionTask *)signInWithPhoneNumber:(NSString *)phoneNumber regionCode:(NSString *)regionCode password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSDictionary *phone = @{ NSStringFromSelector(@selector(type)): SBBPhone.entityName,
+                             NSStringFromSelector(@selector(number)): phoneNumber,
+                             NSStringFromSelector(@selector(regionCode)): regionCode
+                             };
+    return [self signInWithCredential:NSStringFromSelector(@selector(phone)) value:phone password:password completion:completion];
+}
+
+- (NSURLSessionTask *)signInWithPhone:(SBBPhone *)phone password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    id<SBBJSONValue> phoneJSON = [self.objectManager bridgeJSONFromObject:phone];
+    return [self signInWithCredential:NSStringFromSelector(@selector(phone)) value:phoneJSON password:password completion:completion];
+}
+
+- (NSURLSessionTask *)signInWithExternalId:(NSString *)externalId password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    return [self signInWithCredential:NSStringFromSelector(@selector(externalId)) value:externalId password:password completion:completion];
+}
+
+- (NSURLSessionTask *)signInWithCredential:(NSString *)credentialKey value:(id<SBBJSONValue>)credentialValue password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet, so do nothing
+        NSAssert(false, @"Coding error: Attempting to sign in with %@/password before BridgeSDK has been set up!", credentialKey);
         if (completion) {
-            completion(task, responseObject, error);
+            completion(nil, nil, NSError.SBBNotSetUpError);
         }
+        return nil;
+    }
+    
+    NSDictionary *params = @{ NSStringFromSelector(@selector(study)):SBBBridgeInfo.shared.studyIdentifier,
+                              credentialKey:credentialValue,
+                              NSStringFromSelector(@selector(password)):password,
+                              NSStringFromSelector(@selector(type)):kSignInType};
+    return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        [self handleSignInWithCredential:credentialKey value:credentialValue password:password task:task response:responseObject error:error completion:completion];
     }];
 }
 
-- (void)notifyDelegateOfNewSessionInfo:(id)sessionInfo
+- (BOOL)accountIdentifyingCredential:(NSString **)credentialKey value:(id<SBBJSONValue> *)credentialValue errorMessage:(NSString *)message earlyCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
-    if ([_authDelegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)]) {
-        [_authDelegate authManager:self didReceiveUserSessionInfo:sessionInfo];
+    SBBStudyParticipant *participant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:SBBStudyParticipant.entityName createIfMissing:NO];
+    if (!participant) {
+        participant = _placeholderSessionInfo.studyParticipant;
     }
+    
+    NSString *email = participant.email;
+    BOOL emailVerified = participant.emailVerifiedValue;
+    SBBPhone *phone = participant.phone;
+    BOOL phoneVerified = participant.phoneVerifiedValue;
+    NSString *externalId = participant.externalId;
+    
+    // early exit if no account-identifying credential is available
+    if (!(email.length && emailVerified) && !(phone.number.length && phone.regionCode.length && phoneVerified) && !externalId.length) {
+        NSAssert(false, @"%@", message);
+        if (completion) {
+            completion(nil, nil, [NSError SBBNoCredentialsError]);
+        }
+        return NO;
+    }
+    
+    // try email first, then phone, then externalId
+    *credentialKey = NSStringFromSelector(@selector(email));
+    *credentialValue = email;
+    if (!(email.length && emailVerified)) {
+        if (phone.number.length && phone.regionCode.length && phoneVerified) {
+            *credentialKey = NSStringFromSelector(@selector(phone));
+            *credentialValue = [self.objectManager bridgeJSONFromObject:phone];
+        } else {
+            *credentialKey = NSStringFromSelector(@selector(externalId));
+            *credentialValue = externalId;
+        }
+    }
+    return YES;
+}
+
+- (NSURLSessionTask *)reauthWithCompletion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet
+        NSAssert(false, @"Coding error: Attempting to reauth before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
+    NSString *reauthToken = self.reauthTokenFromKeychain;
+    if (!reauthToken.length) {
+        // we don't have a reauth token, so do nothing
+        if (completion) {
+            completion(nil, nil, NSError.SBBNoCredentialsError);
+        }
+        return nil;
+    }
+    NSMutableDictionary *params = [@{ NSStringFromSelector(@selector(study)): study,
+                                      NSStringFromSelector(@selector(reauthToken)): reauthToken
+                                      } mutableCopy];
+    
+    // get a suitable account-identifying credential key/value pair, again exiting early if none found
+    NSString *credentialKey;
+    id<SBBJSONValue> credentialValue;
+    if (![self accountIdentifyingCredential:&credentialKey value:&credentialValue errorMessage:@"Attempting to reauth an account with a reauth token but with no email, phone, or externalId--something is seriously wrong here" earlyCompletion:completion]) {
+        return nil;
+    }
+
+    params[credentialKey] = credentialValue;
+
+    return [_networkManager post:kSBBAuthReauthAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        [self handleSignInWithCredential:credentialKey value:credentialValue password:nil task:task response:responseObject error:error completion:completion];
+    }];
+}
+
+- (NSURLSessionTask *)emailSignInLinkTo:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet, so do nothing
+        NSAssert(false, @"Coding error: Attempting to request sign in link before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
+    if (!email.length) {
+        // no email address given, so do nothing
+        if (completion) {
+            completion(nil, nil, NSError.SBBNoCredentialsError);
+        }
+        return nil;
+    }
+    NSDictionary *params = @{ NSStringFromSelector(@selector(study)): study,
+                              NSStringFromSelector(@selector(email)): email };
+    return [_networkManager post:kSBBAuthEmailAPI headers:nil parameters:params completion:completion];
+}
+
+- (NSURLSessionTask *)signInWithEmail:(NSString *)email token:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet
+        NSAssert(false, @"Coding error: Attempting to sign in with email and token before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
+    if (!email.length || !token.length) {
+        // no email address and/or no token given, so do nothing
+        if (completion) {
+            completion(nil, nil, NSError.SBBNoCredentialsError);
+        }
+        return nil;
+    }
+    
+    NSDictionary *params = @{ NSStringFromSelector(@selector(study)): study,
+                              NSStringFromSelector(@selector(email)): email,
+                              NSStringFromSelector(@selector(token)): token
+                              };
+    return [_networkManager post:kSBBAuthEmailSignInAPI headers:nil parameters:params completion:completion];
+}
+
+- (NSURLSessionTask *)textSignInTokenTo:(NSString *)phoneNumber regionCode:(NSString *)regionCode completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet
+        NSAssert(false, @"Coding error: Attempting to request sign in token via SMS before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
+    if (!phoneNumber.length || !regionCode.length) {
+        // no phone and/or no region given, so do nothing
+        if (completion) {
+            completion(nil, nil, NSError.SBBNoCredentialsError);
+        }
+        return nil;
+    }
+    
+    NSDictionary *phone = @{ NSStringFromSelector(@selector(type)): SBBPhone.entityName,
+                             NSStringFromSelector(@selector(number)): phoneNumber,
+                             NSStringFromSelector(@selector(regionCode)): regionCode
+                             };
+    NSDictionary *params = @{ NSStringFromSelector(@selector(study)): study,
+                              NSStringFromSelector(@selector(phone)): phone
+                              };
+    return [_networkManager post:kSBBAuthEmailAPI headers:nil parameters:params completion:completion];
+}
+
+- (NSURLSessionTask *)signInWithPhoneNumber:(NSString *)phoneNumber regionCode:(NSString *)regionCode token:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
+{
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet
+        NSAssert(false, @"Coding error: Attempting to sign in with phone and token before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
+    if (!phoneNumber.length || !regionCode.length || !token.length) {
+        // no phone number and/or no regionCode and/or no token given, so do nothing
+        if (completion) {
+            completion(nil, nil, NSError.SBBNoCredentialsError);
+        }
+        return nil;
+    }
+    
+    NSDictionary *phone = @{ NSStringFromSelector(@selector(type)): SBBPhone.entityName,
+                             NSStringFromSelector(@selector(number)): phoneNumber,
+                             NSStringFromSelector(@selector(regionCode)): regionCode
+                             };
+    NSDictionary *params = @{ NSStringFromSelector(@selector(study)): study,
+                              NSStringFromSelector(@selector(phone)): phone,
+                              NSStringFromSelector(@selector(token)): token
+                              };
+    return [_networkManager post:kSBBAuthPhoneSignInAPI headers:nil parameters:params completion:completion];
 }
 
 - (NSURLSessionTask *)signOutWithCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet, so do nothing
+        NSAssert(false, @"Coding error: Attempting to sign out before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self addAuthHeaderToHeaders:headers];
     return [_networkManager post:kSBBAuthSignOutAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        // Remove the session token and credentials from the keychain
+        // Remove the session tokens and credentials from the keychain
         // ??? Do we want to not do this in case of error?
-        if (_authDelegate) {
-            [_authDelegate authManager:self didGetSessionToken:nil forEmail:nil andPassword:nil];
-        } else {
-            dispatchSyncToKeychainQueue(^{
-                UICKeyChainStore *store = [self.class sdkKeychainStore];
-                [store removeItemForKey:self.sessionTokenKey];
-                [store removeItemForKey:self.emailKey];
-                [store removeItemForKey:self.passwordKey];
-                [store synchronize];
-            });
-            // clear the in-memory copy of the session token, too
-            dispatchSyncToAuthQueue(^{
-                _sessionToken = nil;
-            });
-        }
-        
+        [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey, self.sessionTokenKey, self.passwordKey ]];
+
+        // clear the in-memory copy of the session token, too
+        dispatchSyncToAuthQueue(^{
+            _sessionToken = nil;
+        });
+    
         [self.cacheManager resetCache];
 
-        if ([_authDelegate respondsToSelector:@selector(authManager:didReceiveUserSessionInfo:)]) {
-            [_authDelegate authManager:self didReceiveUserSessionInfo:nil];
-        }
+        [self resetUserSessionInfo];
 
         if (completion) {
             completion(task, responseObject, error);
@@ -537,52 +805,45 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)savedEmail
 {
-    NSString *email = nil;
-    if (_authDelegate) {
-        if ([_authDelegate respondsToSelector:@selector(emailForAuthManager:)]) {
-            email = [_authDelegate emailForAuthManager:self];
-        } else if ([_authDelegate respondsToSelector:@selector(usernameForAuthManager:)]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            email = [_authDelegate usernameForAuthManager:self];
-#pragma clang diagnostic pop
-        }
-    } else {
-        email = [self emailFromKeychain];
-    }
-    
-    return email;
+    return self.cachedSessionInfo.studyParticipant.email;
 }
 
 - (NSString *)savedPassword
 {
-    NSString *password = nil;
-    if (_authDelegate) {
-        if ([_authDelegate respondsToSelector:@selector(passwordForAuthManager:)]) {
-            password = [_authDelegate passwordForAuthManager:self];
-        }
-    } else {
-        password = [self passwordFromKeychain];
-    }
-    
-    return password;
+    return self.passwordFromKeychain;
+}
+
+- (NSString *)savedReauthToken
+{
+    return self.reauthTokenFromKeychain;
+}
+
+- (NSString *)savedSessionToken
+{
+    return self.sessionTokenFromKeychain;
 }
 
 - (NSURLSessionTask *)attemptSignInWithStoredCredentialsWithCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
-    NSString *email = [self savedEmail];
-    NSString *password = [self savedPassword];
+    // sign (back) in with stored account identifying credential + password
+    NSString *password = [self passwordFromKeychain];
     
-    if (!email.length || !password.length) {
+    // early exit if no stored password is available
+    if (!password.length) {
         if (completion) {
             completion(nil, nil, [NSError SBBNoCredentialsError]);
         }
         return nil;
     }
-    else
-    {
-        return [self signInWithEmail:email password:password completion:completion];
+    
+    // get a suitable account-identifying credential key/value pair, again exiting early if none found
+    NSString *credentialKey;
+    id<SBBJSONValue> credentialValue;
+    if (![self accountIdentifyingCredential:&credentialKey value:&credentialValue errorMessage:@"Attempting to reauth an account with a password but with no email, phone, or externalId--something is seriously wrong here" earlyCompletion:completion]) {
+        return nil;
     }
+
+    return [self signInWithCredential:credentialKey value:credentialValue password:password completion:completion];
 }
 
 - (void)ensureSignedInWithCompletion:(SBBNetworkManagerCompletionBlock)completion
@@ -591,21 +852,53 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         if (completion) {
             completion(nil, nil, nil);
         }
-    }
-    else
-    {
-        [self attemptSignInWithStoredCredentialsWithCompletion:completion];
+    } else {
+        if (self.reauthTokenFromKeychain.length) {
+            [self reauthWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+                // if the response was a 401, try again the other way
+                if (error.code == SBBErrorCodeServerNotAuthenticated) {
+                    [self attemptSignInWithStoredCredentialsWithCompletion:completion];
+                    return;
+                }
+                
+                if (completion) {
+                    completion(task, responseObject, error);
+                }
+            }];
+        } else {
+            [self attemptSignInWithStoredCredentialsWithCompletion:completion];
+        }
     }
 }
 
 - (NSURLSessionTask *)requestPasswordResetForEmail:(NSString *)email completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthRequestResetAPI headers:nil parameters:@{@"study":[SBBBridgeInfo shared].studyIdentifier, @"email":email} completion:completion];
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet, so do nothing
+        NSAssert(false, @"Coding error: Attempting to request password reset before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
+    return [_networkManager post:kSBBAuthRequestResetAPI headers:nil parameters:@{@"study":SBBBridgeInfo.shared.studyIdentifier, @"email":email} completion:completion];
 }
 
 - (NSURLSessionTask *)resetPasswordToNewPassword:(NSString *)password resetToken:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
 {
-    return [_networkManager post:kSBBAuthResetAPI headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
+    NSString *study = SBBBridgeInfo.shared.studyIdentifier;
+    if (!study.length) {
+        // BridgeSDK hasn't been set up yet, so do nothing
+        NSAssert(false, @"Coding error: Attempting to reset password before BridgeSDK has been set up!");
+        if (completion) {
+            completion(nil, nil, NSError.SBBNotSetUpError);
+        }
+        return nil;
+    }
+    
+   return [_networkManager post:kSBBAuthResetAPI headers:nil parameters:@{@"password":password, @"sptoken":token, @"type":@"PasswordReset"} completion:completion];
 }
 
 #pragma mark Internal helper methods
@@ -624,6 +917,20 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 #pragma mark Internal keychain-related methods
 
+- (NSString *)reauthTokenKey
+{
+    return [NSString stringWithFormat:envReauthTokenKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
+}
+
+- (NSString *)reauthTokenFromKeychain
+{
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        return nil;
+    }
+    
+    return [self.keychainManager valueForKey:self.reauthTokenKey];
+}
+
 - (NSString *)sessionTokenKey
 {
     return [NSString stringWithFormat:envSessionTokenKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
@@ -635,31 +942,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
-    __block NSString *token = nil;
-    dispatchSyncToKeychainQueue(^{
-        token = [[self.class sdkKeychainStore] stringForKey:[self sessionTokenKey]];
-    });
-    
-    return token;
-}
-
-- (NSString *)emailKey
-{
-    return [NSString stringWithFormat:envEmailKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
-}
-
-- (NSString *)emailFromKeychain
-{
-    if (![SBBBridgeInfo shared].studyIdentifier) {
-        return nil;
-    }
-    
-    __block NSString *token = nil;
-    dispatchSyncToKeychainQueue(^{
-        token = [[self.class sdkKeychainStore] stringForKey:[self emailKey]];
-    });
-    
-    return token;
+    return [self.keychainManager valueForKey:self.sessionTokenKey];
 }
 
 - (NSString *)passwordKey
@@ -673,43 +956,22 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
-    __block NSString *token = nil;
-    dispatchSyncToKeychainQueue(^{
-        token = [[self.class sdkKeychainStore] stringForKey:[self passwordKey]];
-    });
-    
-    return token;
+    return [self.keychainManager valueForKey:self.passwordKey];
 }
 
 #pragma mark SDK-private methods
 
 // used internally for unit testing
-- (void)clearKeychainStore
-{
-    dispatchSyncToKeychainQueue(^{
-        UICKeyChainStore *store = [self.class sdkKeychainStore];
-        [store removeAllItems];
-        [store synchronize];
-    });
-}
-
-// used internally for unit testing
 - (void)setSessionToken:(NSString *)sessionToken
 {
-    if (_authDelegate) {
-        NSString *email = [_authDelegate emailForAuthManager:self];
-        NSString *password = [_authDelegate passwordForAuthManager:self];
-        [_authDelegate authManager:self didGetSessionToken:sessionToken forEmail:email andPassword:password];
+    dispatchSyncToAuthQueue(^{
+        _sessionToken = sessionToken;
+    });
+    
+    if (sessionToken) {
+        [self.keychainManager setKeysAndValues:@{ self.sessionTokenKey: sessionToken }];
     } else {
-        dispatchSyncToAuthQueue(^{
-            _sessionToken = sessionToken;
-        });
-        dispatchSyncToKeychainQueue(^{
-            UICKeyChainStore *store = [self.class sdkKeychainStore];
-            [store setString:_sessionToken forKey:self.sessionTokenKey];
-            
-            [store synchronize];
-        });
+        [self.keychainManager removeValuesForKeys:@[ self.sessionTokenKey ]];
     }
 }
 
@@ -720,3 +982,4 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 }
 
 @end
+

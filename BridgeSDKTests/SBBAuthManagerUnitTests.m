@@ -2,17 +2,17 @@
 //  SBBAuthManagerUnitTests.m
 //  BridgeSDK
 //
-//  Created by Erin Mounts on 10/13/14.
-//  Copyright (c) 2014 Sage Bionetworks. All rights reserved.
+//  Copyright (c) 2014-2018 Sage Bionetworks. All rights reserved.
 //
 
 #import "SBBBridgeAPIUnitTestCase.h"
 #import "SBBAuthManagerInternal.h"
-#import "SBBTestAuthManagerDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 #import "SBBNetworkManagerInternal.h"
 #import "MockNetworkManager.h"
 #import "MockURLSession.h"
-#import "SBBUserManagerInternal.h"
+#import "SBBStudyManagerInternal.h"
+#import "ModelObjectInternal.h"
 
 @interface SBBAuthManagerUnitTests : SBBBridgeAPIUnitTestCase
 
@@ -34,63 +34,146 @@
     [super tearDown];
 }
 
+- (void)resetStateOfAuthManager:(SBBAuthManager *)aMan {
+    // always use a test auth keychain manager so we don't pollute the real keychain for integration tests
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
+    
+    XCTestExpectation *expectSessionUpdate = [self expectationWithDescription:@"got session updated notification after reset"];
+    __block id<NSObject> observer = [[NSNotificationCenter defaultCenter] addObserverForName:kSBBUserSessionUpdatedNotification object:aMan queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        [[NSNotificationCenter defaultCenter] removeObserver:observer name:kSBBUserSessionUpdatedNotification object:aMan];
+        [expectSessionUpdate fulfill];
+    }];
+    
+    [aMan resetUserSessionInfo];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error waiting for session info update notification after reset:\n%@", error);
+        }
+    }];
+    
+    [aMan clearSessionToken];
+}
+
 - (void)testSignIn {
     [self.mockNetworkManager setJson:nil andResponseCode:404 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
     SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
-    // always use an auth delegate so we don't pollute the keychain for integration tests
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    aMan.authDelegate = delegate;
+    [self resetStateOfAuthManager:aMan];
     [aMan signInWithEmail:@"notSignedUp" password:@"" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == 404, @"Invalid credentials test");
     }];
     
-    NSString *uuid = [[NSProcessInfo processInfo] globallyUniqueString];
+    NSString *sessionUuid = [[NSProcessInfo processInfo] globallyUniqueString];
+    NSString *reauthUuid = [[NSProcessInfo processInfo] globallyUniqueString];
     NSString *email = @"signedUpUser";
-    NSDictionary *sessionInfoJson = @{@"email": email,
-                                      @"sessionToken": uuid,
-                                      @"type": @"UserSessionInfo",
-                                      @"consented": @NO,
-                                      @"authenticated":@YES};
+    NSString *password = @"123456";
+    NSDictionary *sessionInfoJson = @{NSStringFromSelector(@selector(email)): email,
+                                      NSStringFromSelector(@selector(sessionToken)): sessionUuid,
+                                      NSStringFromSelector(@selector(reauthToken)): reauthUuid,
+                                      NSStringFromSelector(@selector(type)): SBBUserSessionInfo.entityName,
+                                      NSStringFromSelector(@selector(consented)): @NO,
+                                      NSStringFromSelector(@selector(authenticated)):@YES};
     
     SBBUserSessionInfo *sessionInfo = [SBBComponent(SBBObjectManager) objectFromBridgeJSON:sessionInfoJson];
     [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
-    [aMan signInWithEmail:@"signedUpUser" password:@"123456" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet && responseObject == sessionInfoJson, @"Valid credentials, no consent test");
-        XCTAssert([delegate.sessionToken isEqualToString:uuid], @"Delegate received sessionToken");
-        XCTAssertEqualObjects(delegate.sessionInfo, sessionInfo, @"Expected sessionInfo to be:\n%@ but got:\n%@", sessionInfo, delegate.sessionInfo);
-        XCTAssertEqualObjects(sessionInfo.studyParticipant.email, email, @"Expected sessionInfo.studyParticipant.email to be %@ but got %@", email, sessionInfo.studyParticipant.email);
+    [self resetStateOfAuthManager:aMan];
+    XCTestExpectation *expectSessionUpdate = [self expectationWithDescription:@"got session updated notification"];
+    __block SBBUserSessionInfo *newSessionInfo = nil;
+    __block id<NSObject> observer = [[NSNotificationCenter defaultCenter] addObserverForName:kSBBUserSessionUpdatedNotification object:aMan queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        newSessionInfo = note.userInfo[kSBBUserSessionInfoKey];
+        [[NSNotificationCenter defaultCenter] removeObserver:observer name:kSBBUserSessionUpdatedNotification object:aMan];
+        [expectSessionUpdate fulfill];
     }];
+    
+    XCTestExpectation *expectSignedIn = [self expectationWithDescription:@"signed in"];
+    __block NSError *signInError = nil;
+    __block id signInResponse = nil;
+    [aMan signInWithEmail:email password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        signInError = error;
+        signInResponse = responseObject;
+        [expectSignedIn fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to sign in to test account or waiting for session info update notification:\n%@", error);
+        }
+    }];
+
+    XCTAssert([signInError.domain isEqualToString:SBB_ERROR_DOMAIN] && signInError.code == SBBErrorCodeServerPreconditionNotMet && signInResponse == sessionInfoJson, @"Valid credentials, no consent test");
+    XCTAssert([newSessionInfo.sessionToken isEqualToString:sessionUuid], @"Expected updated sessionToken from notificaiont to be %@ but it's %@", sessionUuid, newSessionInfo.sessionToken);
+    XCTAssert(aMan.savedReauthToken == reauthUuid, @"Expected auth manager's saved reauth token to be %@ but it's %@", reauthUuid, aMan.savedReauthToken);
+    XCTAssert(aMan.savedPassword == password, @"Expected auth manager's saved password to be %@ but it's %@", password, aMan.savedPassword);
+    XCTAssertEqualObjects(newSessionInfo.dictionaryRepresentation, sessionInfo.dictionaryRepresentation, @"Expected sessionInfo to be:\n%@ but got:\n%@", sessionInfo, newSessionInfo);
+    XCTAssertEqualObjects(newSessionInfo.studyParticipant.email, email, @"Expected sessionInfo.studyParticipant.email to be %@ but got %@", email, sessionInfo.studyParticipant.email);
+
 }
 
 - (void)testEnsureSignedIn
 {
     NSString *sessionToken = [[NSProcessInfo processInfo] globallyUniqueString];
+    NSString *reauthToken = [[NSProcessInfo processInfo] globallyUniqueString];
     NSString *email = @"signedUpUser";
     NSString *password = @"123456";
-    NSDictionary *sessionInfoJson = @{@"email": email,
-                                      @"sessionToken": sessionToken,
-                                      @"type": @"UserSessionInfo",
-                                      @"consented": @NO,
-                                      @"authenticated":@YES};
+    NSDictionary *sessionInfoJson = @{NSStringFromSelector(@selector(email)): email,
+                                      NSStringFromSelector(@selector(emailVerified)): @YES,
+                                      NSStringFromSelector(@selector(sessionToken)): sessionToken,
+                                      NSStringFromSelector(@selector(reauthToken)): reauthToken,
+                                      NSStringFromSelector(@selector(type)): SBBUserSessionInfo.entityName,
+                                      NSStringFromSelector(@selector(consented)): @NO,
+                                      NSStringFromSelector(@selector(authenticated)):@YES};
     [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
     SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
-    
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    aMan.authDelegate = delegate;
-    
+    [self resetStateOfAuthManager:aMan];
+
     // first try it with no saved credentials
+    XCTestExpectation *expectNotSignedIn = [self expectationWithDescription:@"not signed in (no saved credentials)"];
+    __block NSError *signInError = nil;
+    __block id signInResponse = nil;
     [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        XCTAssert(error.code == SBBErrorCodeNoCredentialsAvailable, @"Correct error when no credentials available");
-        XCTAssert(delegate.sessionToken == nil, @"Did not attempt to call signIn endpoint without credentials");
+        signInError = error;
+        signInResponse = responseObject;
+        [expectNotSignedIn fulfill];
+    }];
+
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to ensure not signed in to test account (no saved credentials):\n%@", error);
+        }
+    }];
+
+    XCTAssert(signInError.code == SBBErrorCodeNoCredentialsAvailable, @"Expected error code to be %ld but got %ld instead", (long)SBBErrorCodeNoCredentialsAvailable, (long)signInError.code);
+    XCTAssert(signInResponse == nil, @"Did not attempt to call signIn endpoint without credentials");
+
+    // now try it with saved email/password
+    [self resetStateOfAuthManager:aMan];
+    [aMan.keychainManager setKeysAndValues:@{ aMan.passwordKey: password }];
+    aMan.placeholderSessionInfo.studyParticipant.email = email;
+    aMan.placeholderSessionInfo.studyParticipant.emailVerifiedValue = YES;
+    XCTestExpectation *expectSessionUpdate = [self expectationWithDescription:@"got session updated notification"];
+    __block SBBUserSessionInfo *newSessionInfo = nil;
+    __block id<NSObject> observer = [[NSNotificationCenter defaultCenter] addObserverForName:kSBBUserSessionUpdatedNotification object:aMan queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+        newSessionInfo = note.userInfo[kSBBUserSessionInfoKey];
+        [[NSNotificationCenter defaultCenter] removeObserver:observer name:kSBBUserSessionUpdatedNotification object:aMan];
+        [expectSessionUpdate fulfill];
     }];
     
-    // now try it with saved username/password
-    delegate.email = email;
-    delegate.password = password;
+    XCTestExpectation *expectSignedIn = [self expectationWithDescription:@"signed in"];
     [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
+        signInError = error;
+        signInResponse = responseObject;
+        [expectSignedIn fulfill];
     }];
     
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to ensure signed in to test account (saved credentials) or waiting for session info update notification:\n%@", error);
+        }
+    }];
+
+    XCTAssert([newSessionInfo.sessionToken isEqualToString:sessionToken], @"Expected updated info from notification to have sessionToken %@, but got %@ instead", sessionToken, newSessionInfo.sessionToken);
+    XCTAssert([aMan.savedReauthToken isEqualToString:reauthToken], @"Expected auth manager to have reauthToken %@, but got %@ instead", reauthToken, aMan.savedReauthToken);
+
     // now try it with already-saved sessionToken
     [aMan ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
         XCTAssert(!task && !responseObject && !error, @"Seen as already signed in, did not attempt to sign in again");
@@ -101,25 +184,28 @@
 {
     // set up mock credentials for the auth manager to auto-renew with
     NSString *sessionToken = [[NSProcessInfo processInfo] globallyUniqueString];
+    NSString *reauthToken = [[NSProcessInfo processInfo] globallyUniqueString];
     NSString *email = @"signedUpUser";
-    NSString *password = @"123456";
-    NSDictionary *sessionInfoJson = @{@"email": email,
-                                      @"sessionToken": sessionToken,
-                                      @"type": @"UserSessionInfo",
-                                      @"consented": @NO,
-                                      @"authenticated":@YES};
-    [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthSignInAPI andMethod:@"POST"];
+    NSDictionary *sessionInfoJson = @{NSStringFromSelector(@selector(email)): email,
+                                      NSStringFromSelector(@selector(sessionToken)): sessionToken,
+                                      NSStringFromSelector(@selector(reauthToken)): reauthToken,
+                                      NSStringFromSelector(@selector(type)): SBBUserSessionInfo.entityName,
+                                      NSStringFromSelector(@selector(consented)): @NO,
+                                      NSStringFromSelector(@selector(authenticated)):@YES};
+    [self.mockNetworkManager setJson:sessionInfoJson andResponseCode:412 forEndpoint:kSBBAuthReauthAPI andMethod:@"POST"];
     SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:self.mockNetworkManager];
-    
-    // set up the auth delegate with the mock credentials
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    delegate.email = email;
-    delegate.password = password;
-    aMan.authDelegate = delegate;
+    [self resetStateOfAuthManager:aMan];
+
+    // set up the auth manager with mock credentials
+    NSString *initialReauthToken = [[NSProcessInfo processInfo] globallyUniqueString];
+    aMan.placeholderSessionInfo.studyParticipant.email = email;
+    aMan.placeholderSessionInfo.studyParticipant.emailVerifiedValue = YES;
+    [aMan.keychainManager setKeysAndValues:@{ aMan.reauthTokenKey: initialReauthToken }];
     
     // this tells the mock URL session created below to return a 401 status code, which will trigger the auto-renew logic in SBBBridgeNetworkManager;
     // once the renewed session token is received (as set up above), the original Bridge call will be retried and should now complete as specified
     NSString *expiredToken = @"expired";
+    aMan.placeholderSessionInfo.sessionToken = expiredToken;
     [aMan setSessionToken:expiredToken];
     
     // now hit an arbitrary Bridge endpoint, and ensure that it auto-renews the session token and successfully retries
@@ -127,21 +213,35 @@
     SBBBridgeNetworkManager *bridgeNetMan = [[SBBBridgeNetworkManager alloc] initWithAuthManager:aMan];
     bridgeNetMan.mainSession = mockURLSession;
     
-    // ("arbitrary" in this case being the user profile endpoint)
-    NSDictionary *userProfile =
+    // ("arbitrary" in this case being the study manager app config endpoint)
+    NSDictionary *appConfig =
     @{
-      @"type": @"UserProfile",
-      @"firstName": @"First",
-      @"lastName": @"Last",
-      @"email": @"email@fake.tld"
+      NSStringFromSelector(@selector(type)): SBBAppConfig.entityName,
+      NSStringFromSelector(@selector(clientData)): @"Client data",
       };
-    [mockURLSession setJson:userProfile andResponseCode:200 forEndpoint:kSBBUserProfileAPI andMethod:@"GET"];
-    SBBUserManager *uMan = [SBBUserManager managerWithAuthManager:aMan networkManager:bridgeNetMan objectManager:self.objectManager];
-    [self.objectManager setupMappingForType:@"UserProfile" toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"email": @"stringField"}];
-    [uMan getUserProfileWithCompletion:^(id userProfile, NSError *error) {
-        XCTAssert([delegate.sessionToken isEqualToString:sessionToken], @"Delegate received sessionToken");
-        XCTAssert([userProfile isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
+    
+    NSString *studyId = SBBBridgeInfo.shared.studyIdentifier;
+    NSString *endpoint = [NSString stringWithFormat:kSBBStudyAPIFormat, studyId];
+    [mockURLSession setJson:appConfig andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    SBBStudyManager *sMan = [SBBStudyManager managerWithAuthManager:aMan networkManager:bridgeNetMan objectManager:self.objectManager];
+    [self.objectManager setupMappingForType:SBBAppConfig.entityName toClass:[SBBTestBridgeObject class] fieldToPropertyMappings:@{@"clientData": @"stringField"}];
+    XCTestExpectation *expectGotAppConfig = [self expectationWithDescription:@"Got appConfig"];
+    __block id gotAppConfig;
+    __block NSError *gotError;
+    [sMan getAppConfigWithCompletion:^(id appConfig, NSError *error) {
+        gotAppConfig = appConfig;
+        gotError = error;
+        [expectGotAppConfig fulfill];
     }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to auto-renew with reauthToken and load appConfig:\n%@", error);
+        }
+    }];
+    
+    XCTAssert([aMan.sessionToken isEqualToString:sessionToken], @"Expected authManager's sessionToken to be %@, but instead it's %@", sessionToken, aMan.sessionToken);
+    XCTAssert([gotAppConfig isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
 }
 
 @end

@@ -8,7 +8,7 @@
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
 #import "SBBAuthManagerInternal.h"
-#import "SBBTestAuthManagerDelegate.h"
+#import "SBBTestAuthKeychainManager.h"
 
 @interface SBBAuthManagerIntegrationTests : SBBBridgeAPIIntegrationTestCase
 
@@ -81,8 +81,7 @@
 - (void)testSignInSignOut {
     // we need our own auth manager instance (with its own delegate) so we don't eff with the global test user
     SBBAuthManager *aMan = [SBBAuthManager authManagerWithNetworkManager:SBBComponent(SBBNetworkManager)];
-    SBBTestAuthManagerDelegate *delegate = [SBBTestAuthManagerDelegate new];
-    aMan.authDelegate = delegate;
+    aMan.keychainManager = [SBBTestAuthKeychainManager new];
     XCTestExpectation *expectBadUserFails = [self expectationWithDescription:@"signIn failed for nonexistent user"];
 
     [aMan signInWithEmail:@"notSignedUp" password:@"notAPassword" completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
@@ -108,7 +107,7 @@
             unconsentedEmail = emailAddress;
             [aMan signInWithEmail:emailAddress password:password completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
                 XCTAssert([error.domain isEqualToString:SBB_ERROR_DOMAIN] && error.code == SBBErrorCodeServerPreconditionNotMet, @"Valid credentials, no consent test");
-                [aMan clearKeychainStore];
+                [aMan.keychainManager clearKeychainStore];
                 unconsentedId = responseObject[kUserSessionInfoIdKey];
                 [expect412Unconsented fulfill];
             }];
@@ -165,7 +164,6 @@
             NSLog(@"Error signing out from account %@:\n%@\nResponse: %@", consentedEmail, error, responseObject);
         }
         XCTAssert(!aMan.isAuthenticated && [responseObject[@"message"] isEqualToString:@"Signed out."], @"Successfully signed out");
-        XCTAssertNil(delegate.sessionInfo, @"Expected the delegate to have been told to clear the sessionInfo, but it still has this:\n%@", delegate.sessionInfo);
         [expectSignedOut fulfill];
     }];
     

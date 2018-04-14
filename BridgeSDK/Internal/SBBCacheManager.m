@@ -2,7 +2,7 @@
 //  SBBCacheManager.m
 //  BridgeSDK
 //
-//	Copyright (c) 2014-2016, Sage Bionetworks
+//	Copyright (c) 2014-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -371,7 +371,15 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
 - (NSString *)encryptionKey
 {
     NSString *encryptionKey = nil;
-    if ([self.authManager respondsToSelector:@selector(savedPassword)]) {
+    
+    // encrypt/decrypt with reauth token
+    if ([self.authManager respondsToSelector:@selector(savedReauthToken)]) {
+        encryptionKey = [(id)self.authManager savedReauthToken];
+    }
+    
+    // if no reauthToken, fall back to password -- will only happen on old app installations before first re-authentication
+    // after updating to this BridgeSDK version
+    if (!encryptionKey && [self.authManager respondsToSelector:@selector(savedPassword)]) {
         encryptionKey = [(id)self.authManager savedPassword];
     }
     
@@ -607,24 +615,6 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     
     // put the persistent store in a subdirectory so it's easy to manage
     NSURL *storeDirURL = [storeOrigin URLByAppendingPathComponent:gPersistentStoreSubdirectory];
-    
-    // for backward compatibility, check for a persistent store at the old email-hash-based path,
-    // and if it exists, move it to the new path.
-    SBBAuthManager *authMan = (SBBAuthManager *)SBBComponent(SBBAuthManager);
-    if ([authMan respondsToSelector:@selector(savedEmail)]) {
-        NSString *emailHash = [[authMan.savedEmail dataUsingEncoding:NSUTF8StringEncoding] hexMD5];
-        if (emailHash) {
-            NSURL *oldStoreURL = [storeOrigin URLByAppendingPathComponent:emailHash];
-            NSFileManager *fm = [NSFileManager defaultManager];
-            if ([fm fileExistsAtPath:oldStoreURL.path]) {
-                NSError *error;
-                [fm moveItemAtURL:oldStoreURL toURL:storeDirURL error:&error];
-                if (error) {
-                    NSLog(@"Error attempting to move legacy cache at %@ to new location %@", oldStoreURL, storeDirURL);
-                }
-            }
-        }
-    }
     
     return storeDirURL;
 }
