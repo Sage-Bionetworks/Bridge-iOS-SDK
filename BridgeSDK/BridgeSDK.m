@@ -223,4 +223,109 @@ SBBAppConfig *gSBBAppConfig = nil;
     return gSBBAppConfig;
 }
 
++ (id<SBBActivityManagerProtocol>)activityManager
+{
+    return SBBComponent(SBBActivityManager);
+}
+
++ (void)setActivityManager:(id<SBBActivityManagerProtocol>)activityManager
+{
+    [SBBComponentManager registerComponent:activityManager forClass:SBBActivityManager.class];
+}
+
++ (id<SBBAuthManagerProtocol>)authManager
+{
+    return SBBComponent(SBBAuthManager);
+}
+
++ (void)setAuthManager:(id<SBBAuthManagerProtocol>)authManager
+{
+    [SBBComponentManager registerComponent:authManager forClass:SBBAuthManager.class];
+}
+
++ (id<SBBBridgeInfoProtocol>)bridgeInfo
+{
+    return SBBBridgeInfo.shared;
+}
+
++ (id<SBBConsentManagerProtocol>)consentManager
+{
+    return SBBComponent(SBBConsentManager);
+}
+
++ (void)setConsentManager:(id<SBBConsentManagerProtocol>)consentManager
+{
+    [SBBComponentManager registerComponent:consentManager forClass:SBBConsentManager.class];
+}
+
++ (id<SBBNotificationManagerProtocol>)notificationManager
+{
+    return SBBComponent(SBBNotificationManager);
+}
+
++ (void)setNotificationManager:(id<SBBNotificationManagerProtocol>)notificationManager
+{
+    [SBBComponentManager registerComponent:notificationManager forClass:SBBNotificationManager.class];
+}
+
++ (id<SBBOAuthManagerProtocol>)OAuthManager
+{
+    return SBBComponent(SBBOAuthManager);
+}
+
++ (void)setOAuthManager:(id<SBBOAuthManagerProtocol>)OAuthManager
+{
+    [SBBComponentManager registerComponent:OAuthManager forClass:SBBOAuthManager.class];
+}
+
++ (id<SBBObjectManagerProtocol>)objectManager
+{
+    return SBBComponent(SBBObjectManager);
+}
+
++ (void)setObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    [SBBComponentManager registerComponent:objectManager forClass:SBBObjectManager.class];
+}
+
++ (id<SBBParticipantManagerProtocol>)participantManager
+{
+    return SBBComponent(SBBParticipantManager);
+}
+
++ (void)setParticipantManager:(id<SBBParticipantManagerProtocol>)participantManager
+{
+    [SBBComponentManager registerComponent:participantManager forClass:SBBParticipantManager.class];
+}
+
++ (id<SBBSurveyManagerProtocol>)surveyManager
+{
+    return SBBComponent(SBBSurveyManager);
+}
+
++ (void)setSurveyManager:(id<SBBSurveyManagerProtocol>)surveyManager
+{
+    [SBBComponentManager registerComponent:surveyManager forClass:SBBSurveyManager.class];
+}
+
++ (id<SBBStudyManagerProtocol>)studyManager
+{
+    return SBBComponent(SBBStudyManager);
+}
+
++ (void)setStudyManager:(id<SBBStudyManagerProtocol>)studyManager
+{
+    [SBBComponentManager registerComponent:studyManager forClass:SBBStudyManager.class];
+}
+
++ (id<SBBUploadManagerProtocol>)uploadManager
+{
+    return SBBComponent(SBBUploadManager);
+}
+
++ (void)setUploadManager:(id<SBBUploadManagerProtocol>)uploadManager
+{
+    [SBBComponentManager registerComponent:uploadManager forClass:SBBUploadManager.class];
+}
+
 @end
