@@ -54,14 +54,13 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBComponentManager.h>
 #import <BridgeSDK/SBBConsentManager.h>
 #import <BridgeSDK/SBBDefines.h>
-#import <BridgeSDK/SBBUserManager.h>
+#import <BridgeSDK/SBBNotificationManager.h>
 #import <BridgeSDK/SBBOAuthManager.h>
 #import <BridgeSDK/SBBObjectManager.h>
-#import <BridgeSDK/SBBNetworkManager.h>
-#import <BridgeSDK/SBBScheduleManager.h>
 #import <BridgeSDK/SBBStudyManager.h>
 #import <BridgeSDK/SBBSurveyManager.h>
 #import <BridgeSDK/SBBUploadManager.h>
+#import <BridgeSDK/SBBNetworkManager.h>
 #import <BridgeSDK/SBBErrors.h>
 #import <BridgeSDK/SBBDataArchive.h>
 #import <BridgeSDK/SBBBridgeObjects.h>
@@ -140,15 +139,6 @@ extern const NSString * _Nullable SBBDefaultUserDefaultsSuiteName;
 + (BOOL)restoreBackgroundSession:(nonnull NSString *)identifier completionHandler:(nonnull void (^)())completionHandler;
 
 /*!
- * This is a convenience method for setting the auth delegate on the default or currently-registered auth manager.
- *
- *  @unavailable The authDelegate is no longer available.  Subscribe to kSBBUserSessionUpdatedNotification notification instead.
- *
- *  @param delegate An object that conforms to SBBAuthManagerDelegateProtocol to serve as the auth delegate for the default or currently-registered auth manager.
- */
-+ (void)setAuthDelegate:(nullable id<SBBAuthManagerDelegateProtocol>)delegate __attribute__((unavailable("The authDelegate is no longer available.  Subscribe to kSBBUserSessionUpdatedNotification notification instead.")));
-
-/*!
  * Get the AppConfig for this app/platform/version/etc. as retrieved from the Bridge study.
  *
  * When the Bridge study has been set up by calling setup or setupWithBridgeInfo:, the appropriate AppConfig will be retrieved
@@ -164,6 +154,114 @@ extern const NSString * _Nullable SBBDefaultUserDefaultsSuiteName;
  *  @param delegate An object that conforms to the SBBBridgeErrorUIDelegate protocol to handle UI for Bridge "not consented" (412) and "app version not supported" (409) error responses.
  */
 + (void)setErrorUIDelegate:(nullable id<SBBBridgeErrorUIDelegate>)delegate;
+
+/*!
+ * Get the currently-registered activityManager.
+ *
+ * If no activityManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBActivityManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBActivityManagerProtocol> activityManager;
+
+/*!
+ * Get the currently-registered authManager.
+ *
+ * If no authManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBAuthManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBAuthManagerProtocol> authManager;
+
+/*!
+ * Get the shared BridgeInfo object.
+ *
+ * If BridgeSDK has not yet been set up, all the fields will be blank.
+ *
+ * @see SBBBridgeInfoProtocol
+ */
+@property (class, nonnull, nonatomic, readonly) id<SBBBridgeInfoProtocol> bridgeInfo;
+
+/*!
+ * Get the currently-registered consentManager.
+ *
+ * If no consentManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBConsentManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBConsentManagerProtocol> consentManager;
+
+/*!
+ * Get the currently-registered notificationManager.
+ *
+ * If no notificationManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBNotificationManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBNotificationManagerProtocol> notificationManager;
+
+/*!
+ * Get the currently-registered OAuthManager.
+ *
+ * If no OAuthManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBOAuthManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBOAuthManagerProtocol> OAuthManager;
+
+/*!
+ * Get the currently-registered objectManager.
+ *
+ * If no objectManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBObjectManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBObjectManagerProtocol> objectManager;
+
+/*!
+ * Get the currently-registered participantManager.
+ *
+ * If no participantManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBParticipantManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBParticipantManagerProtocol> participantManager;
+
+/*!
+ * Get the currently-registered surveyManager.
+ *
+ * If no surveyManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBSurveyManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBSurveyManagerProtocol> surveyManager;
+
+/*!
+ * Get the currently-registered studyManager.
+ *
+ * If no studyManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBStudyManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBStudyManagerProtocol> studyManager;
+
+/*!
+ * Get the currently-registered uploadManager.
+ *
+ * If no uploadManager has been registered, this will register a default manager and return that.
+ *
+ * @see SBBUploadManagerProtocol
+ */
+@property (class, nonnull, nonatomic) id<SBBUploadManagerProtocol> uploadManager;
+
+/*!
+ * This is a convenience method for setting the auth delegate on the default or currently-registered auth manager.
+ *
+ *  @unavailable The authDelegate is no longer available.  Subscribe to kSBBUserSessionUpdatedNotification notification instead.
+ *
+ *  @param delegate An object that conforms to SBBAuthManagerDelegateProtocol to serve as the auth delegate for the default or currently-registered auth manager.
+ */
++ (void)setAuthDelegate:(nullable id<SBBAuthManagerDelegateProtocol>)delegate __attribute__((unavailable("The authDelegate is no longer available.  Subscribe to kSBBUserSessionUpdatedNotification notification instead.")));
 
 /*!
  * Set up the Bridge SDK for the given study and pointing at the production environment.

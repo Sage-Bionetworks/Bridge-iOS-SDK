@@ -28,7 +28,7 @@
 //    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <BridgeSDK/BridgeSDK.h>
+#import "SBBBridgeAPIManager.h"
 
 /*!
  Completion block called when retrieving an AppConfig from the API.
