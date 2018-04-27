@@ -735,7 +735,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     NSDictionary *params = @{ NSStringFromSelector(@selector(study)): study,
                               NSStringFromSelector(@selector(phone)): phone
                               };
-    return [_networkManager post:kSBBAuthEmailAPI headers:nil parameters:params completion:completion];
+    return [_networkManager post:kSBBAuthPhoneAPI headers:nil parameters:params completion:completion];
 }
 
 - (NSURLSessionTask *)signInWithPhoneNumber:(NSString *)phoneNumber regionCode:(NSString *)regionCode token:(NSString *)token completion:(SBBNetworkManagerCompletionBlock)completion
