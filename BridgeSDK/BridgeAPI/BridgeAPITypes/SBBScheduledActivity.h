@@ -53,6 +53,38 @@ extern NSString * const SBBScheduledActivityStatusStringDeleted;
 @property (nonatomic, readonly) NSString *status;
 @property (nonatomic, readonly) SBBScheduledActivityStatus statusEnum;
 
+/**
+ Is the scheduled activity completed?
+ */
+@property (nonatomic, readonly) BOOL isCompleted;
+
+/**
+ Is the scheduled activity expired?
+ */
+@property (nonatomic, readonly) BOOL isExpired;
+
+/**
+ Is the scheduled activity available now? This is different from whether or not the activity is
+ available *today*. Instead, the activity is available now if the scheduled window of time is
+ currently active.
+
+ For example, if the local time is 5:00pm, then a schedule with a window of 1:00pm - 2:00pm will
+ return `false` and a schedule with a window of 4:00pm - 6:00pm will return `true`.
+ */
+@property (nonatomic, readonly) BOOL isAvailableNow;
+
+/**
+ Returns either `SBBTaskReference`, `SBBSurveyReference`, or `SBBCompoundActivity` identifier.
+ The model currently supports an either/or case where the schedule includes a one-to-one
+ mapping to whichever of these is the appropriate identifier.
+ */
+@property (nonatomic, readonly, nullable) NSString * activityIdentifier;
+
+/**
+ The UUID string from the scheduled activity `guid`.
+ */
+@property (nonatomic, readonly, nullable) NSString * scheduleIdentifier;
+
 @end
 
 NS_ASSUME_NONNULL_END

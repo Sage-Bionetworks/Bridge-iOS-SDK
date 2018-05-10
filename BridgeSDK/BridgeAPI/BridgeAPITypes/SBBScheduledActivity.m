@@ -115,4 +115,39 @@ NSString * const SBBScheduledActivityStatusStringDeleted = @"deleted";
     }
 }
 
+#pragma mark - Used in predicates
+
+- (BOOL) isCompleted
+{
+    return self.finishedOn != nil;
+}
+
+- (BOOL) isExpired
+{
+    return (self.expiresOn != nil) && ([[NSDate date] earlierDate:self.expiresOn] == self.expiresOn);
+}
+
+- (BOOL) isAvailableNow
+{
+    return (self.scheduledOn.timeIntervalSinceNow < 0) && !self.isExpired;
+}
+
+- (NSString *) activityIdentifier
+{
+    return self.activity.task.identifier ?: self.activity.survey.identifier ?: self.activity.compoundActivity.identifier;
+}
+
+- (NSString *) scheduleIdentifier
+{
+    NSRange range = [self.guid rangeOfString:@":"];
+    if (range.location != NSNotFound)
+    {
+        return [self.guid substringToIndex:range.location];
+    }
+    else
+    {
+        return self.guid;
+    }
+}
+
 @end
