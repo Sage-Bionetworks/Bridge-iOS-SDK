@@ -76,7 +76,7 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *  @deprecated use consentSignature:forSubpopulationGuid:birthdate:signatureImage:dataSharing:completion: instead.
  *
  *  @param name       The user's name.
- *  @param date       The user's birthday in the format "YYYY-MM-DD".
+ *  @param date       The user's birthday in the format "YYYY-MM-DD". Must be nonnull if the study has a minimum age set.
  *  @param signatureImage  Image file of the user's signature. Should be less than 10kb. Optional, can be nil.
  *  @param scope      The scope of data sharing to which the user has consented.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
@@ -84,7 +84,7 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
 - (nonnull NSURLSessionTask *)consentSignature:(nonnull NSString *)name
-                                     birthdate:(nonnull NSDate *)date
+                                     birthdate:(nullable NSDate *)date
                                 signatureImage:(nullable UIImage*)signatureImage
                                    dataSharing:(SBBParticipantDataSharingScope)scope
                                     completion:(nullable SBBConsentManagerCompletionBlock)completion __attribute__((deprecated("use consentSignature:forSubpopulationGuid:birthdate:signatureImage:dataSharing:completion: instead")));
@@ -94,7 +94,7 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  *
  *  @param name       The user's name.
  *  @param subpopGuid The GUID of the subpopulation for which the consent is being signed.
- *  @param date       The user's birthday in the format "YYYY-MM-DD".
+ *  @param date       The user's birthday in the format "YYYY-MM-DD". Must be nonnull if the study has a minimum age set.
  *  @param signatureImage  Image file of the user's signature. Should be less than 10kb. Optional, can be nil.
  *  @param scope      The scope of data sharing to which the user has consented.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
@@ -103,7 +103,7 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
  */
 - (nonnull NSURLSessionTask *)consentSignature:(nonnull NSString *)name
                           forSubpopulationGuid:(nonnull NSString *)subpopGuid
-                                     birthdate:(nonnull NSDate *)date
+                                     birthdate:(nullable NSDate *)date
                                 signatureImage:(nullable UIImage*)signatureImage
                                    dataSharing:(SBBParticipantDataSharingScope)scope
                                     completion:(nullable SBBConsentManagerCompletionBlock)completion;

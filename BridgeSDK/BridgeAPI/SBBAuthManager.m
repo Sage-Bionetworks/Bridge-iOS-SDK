@@ -705,7 +705,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                               NSStringFromSelector(@selector(email)): email,
                               NSStringFromSelector(@selector(token)): token
                               };
-    return [_networkManager post:kSBBAuthEmailSignInAPI headers:nil parameters:params completion:completion];
+    return [_networkManager post:kSBBAuthEmailSignInAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        [self handleSignInWithCredential:NSStringFromSelector(@selector(email)) value:email password:nil task:task response:responseObject error:error completion:completion];
+    }];
 }
 
 - (NSURLSessionTask *)textSignInTokenTo:(NSString *)phoneNumber regionCode:(NSString *)regionCode completion:(SBBNetworkManagerCompletionBlock)completion
@@ -766,7 +768,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                               NSStringFromSelector(@selector(phone)): phone,
                               NSStringFromSelector(@selector(token)): token
                               };
-    return [_networkManager post:kSBBAuthPhoneSignInAPI headers:nil parameters:params completion:completion];
+    return [_networkManager post:kSBBAuthPhoneSignInAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        [self handleSignInWithCredential:NSStringFromSelector(@selector(phone)) value:phone password:nil task:task response:responseObject error:error completion:completion];
+    }];
 }
 
 - (NSURLSessionTask *)signOutWithCompletion:(SBBNetworkManagerCompletionBlock)completion
