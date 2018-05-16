@@ -36,6 +36,7 @@
 #import "SBBObjectManagerInternal.h"
 #import "ModelObjectInternal.h"
 #import "NSData+SBBAdditions.h"
+#import "NSError+SBBAdditions.h"
 @import UIKit;
 
 BOOL gSBBUseCache = NO;
@@ -384,6 +385,53 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
     }
     
     return encryptionKey;
+}
+
+- (NSArray <SBBBridgeObject *> *)fetchCachedObjectsOfType:(NSString *)type predicate:(NSPredicate *)predicate sortDescriptors:(nullable NSArray <NSSortDescriptor *> *)sortDescriptors fetchLimit:(NSUInteger)fetchLimit error:(NSError **)error {
+    
+    __block NSArray <SBBBridgeObject *> *bridgeObjects = nil;
+    __block NSError *requestError = nil;
+    NSManagedObjectContext *context = self.cacheIOContext;
+    [context performBlockAndWait:^{
+        
+        NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:type];
+        request.predicate = predicate;
+        request.sortDescriptors = sortDescriptors;
+        if (fetchLimit > 0) {
+            request.fetchLimit = fetchLimit;
+        }
+
+        NSArray *objects = [context executeFetchRequest:request error:&requestError];
+        if (objects) {
+            SBBObjectManager *om = [SBBObjectManager objectManagerWithCacheManager:self];
+            Class fetchedClass = [SBBObjectManager bridgeClassFromType:type];
+            
+            if ([fetchedClass instancesRespondToSelector:@selector(initWithManagedObject:objectManager:cacheManager:)]) {
+                __block NSMutableArray *results = [NSMutableArray new];
+                [objects enumerateObjectsUsingBlock:^(id  _Nonnull fetchedMO, NSUInteger idx, BOOL * _Nonnull stop) {
+                    id fetched = [[fetchedClass alloc] initWithManagedObject:fetchedMO objectManager:om cacheManager:self];
+                    if (fetched) {
+                        [results addObject:fetched];
+                    }
+                    else {
+                        NSLog(@"Failed to create %@ instance from %@ managed object--probably trying to access encrypted data without login credentials", NSStringFromClass(fetchedClass), type);
+                        requestError = [NSError generateSBBObjectNotFoundForType:type];
+                        results = nil;
+                        *stop = true;
+                    }
+                }];
+                bridgeObjects = [results copy];
+            } else {
+                requestError = [NSError generateSBBObjectNotFoundForType:type];
+            }
+        }
+    }];
+    
+    if ((requestError != nil) && (error != nil)) {
+        *error = requestError;
+    }
+    
+    return bridgeObjects;
 }
 
 #pragma mark - In-memory cache

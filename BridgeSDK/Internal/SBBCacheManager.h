@@ -50,6 +50,8 @@ extern  BOOL gSBBUseCache;
 
 - (SBBBridgeObject *)cachedObjectFromBridgeJSON:(id)json createIfMissing:(BOOL)create;
 
+- (NSArray <SBBBridgeObject *> *)fetchCachedObjectsOfType:(NSString *)type predicate:(NSPredicate *)predicate sortDescriptors:(NSArray <NSSortDescriptor *> *)sortDescriptors fetchLimit:(NSUInteger)fetchLimit error:(NSError **)error;
+
 // use ModelObject as the parameter type because test case classes don't derive from SBBBridgeObject
 // (because they're generated from a separate test data model)
 - (NSManagedObject *)cachedObjectForBridgeObject:(ModelObject *)bridgeObject inContext:(NSManagedObjectContext *)context;

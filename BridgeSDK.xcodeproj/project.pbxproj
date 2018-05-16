@@ -2206,7 +2206,7 @@
 					};
 					80855F4F19BE258C006601C7 = {
 						CreatedOnToolsVersion = 6.0;
-						LastSwiftMigration = 0920;
+						LastSwiftMigration = 0930;
 					};
 					80855F5A19BE258C006601C7 = {
 						CreatedOnToolsVersion = 6.0;
