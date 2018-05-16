@@ -30,7 +30,13 @@ platform :ios do
       project_company: "Sage Bionetworks",
       input: "#{scheme}",
       output: "./Documentation",
-      options: "--keep-intermediate-files --search-undocumented-doc",
+      options: '--keep-intermediate-files --search-undocumented-doc --ignore “mogenerator_ponso_templates” \
+--ignore “Internal” \
+--ignore “Reachability.h” --create-html \
+--no-create-docset \
+--no-install-docset \
+--no-publish-docset --clean-output --no-repeat-first-par \
+--no-warn-invalid-crossref',
       warnings: "--warn-missing-output-path --warn-missing-company-id"
     )
   end
