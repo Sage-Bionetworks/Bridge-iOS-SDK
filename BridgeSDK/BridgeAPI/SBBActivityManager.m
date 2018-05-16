@@ -452,7 +452,7 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
 - (NSArray <SBBScheduledActivity *> *)getCachedSchedulesUsingPredicate:(NSPredicate *)predicate sortDescriptors:(nullable NSArray <NSSortDescriptor *> *)sortDescriptors fetchLimit:(NSUInteger) fetchLimit error:(NSError **)error {
     
     BOOL canQueryCache = gSBBUseCache && [self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)];
-    NSAssert(canQueryCache, @"Attempting to get cached schedules with a non-conformat set up.");
+    NSAssert(canQueryCache, @"Attempting to get cached schedules with a non-conformant set up.");
 
     NSError *requestError = nil;
     NSArray *results = [self.cacheManager fetchCachedObjectsOfType:[SBBScheduledActivity entityName]
