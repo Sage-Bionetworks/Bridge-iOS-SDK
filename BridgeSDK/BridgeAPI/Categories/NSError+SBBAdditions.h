@@ -48,6 +48,7 @@
 + (NSError *)generateSBBObjectNotExpectedClassErrorForObject:(id)object expectedClass:(Class)expectedClass;
 + (NSError *)generateSBBTempFileErrorForURL:(NSURL *)url;
 + (NSError *)generateSBBTempFileReadErrorForURL:(NSURL *)url;
++ (NSError *)generateSBBObjectNotFoundForType:(NSString *)type;
 
 /*********************************************************************************/
 #pragma mark - Error handlers

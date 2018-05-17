@@ -171,6 +171,20 @@ typedef void (^SBBActivityManagerUpdateCompletionBlock)(_Nullable id responseObj
  */
 - (NSURLSessionTask *)updateScheduledActivities:(NSArray *)scheduledActivities withCompletion:(nullable SBBActivityManagerUpdateCompletionBlock)completion;
 
+/*!
+ Fetch the cached schedules using the given predicate, sort descriptors, and fetch limit.
+ 
+ Note: This request is performed synchronously and will block the calling thread until completed. Additionally, the results bypass the in-memory caching and are fetched directly from Core Data and converted to new instances of `SBBScheduledActivity` objects. Therefore, these objects will be equal but **not** the same instance.
+ 
+ @param predicate The predicate to use with the fetch request. This must be a SQL-supported predicate and does not support blocks.
+ @param sortDescriptors The sort descriptors to use in sorting the fetched schedules. Optional.
+ @param fetchLimit The number of results to return. If `fetchLimit == 0` then it is ignored.
+ @param error The error returned by the request if it fails.
+ 
+ @return An ordered list of the `SBBScheduledActivity` objects for this request.
+ */
+- (nullable NSArray <SBBScheduledActivity *> *)getCachedSchedulesUsingPredicate:(NSPredicate *)predicate sortDescriptors:(nullable NSArray <NSSortDescriptor *> *)sortDescriptors fetchLimit:(NSUInteger)fetchLimit error:(NSError **)error;
+
 @end
 
 /*!

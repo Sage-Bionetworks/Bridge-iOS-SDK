@@ -211,6 +211,14 @@
   return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeObjectNotExpectedClass userInfo:@{NSLocalizedDescriptionKey: desc}];
 }
 
++ (NSError *)generateSBBObjectNotFoundForType:(NSString *)type
+{
+    NSString *localizedFormat = NSLocalizedStringWithDefaultValue(@"SBB_ERROR_NOT_FOUND", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Object of type '%1$@' not found",
+                                                                  @"Error Description: Object of the given type is not found. type=$1");
+    NSString *desc = [NSString stringWithFormat:localizedFormat, type];
+    return [NSError errorWithDomain:SBB_ERROR_DOMAIN code:SBBErrorCodeObjectNotFound userInfo:@{NSLocalizedDescriptionKey: desc}];
+}
+
 
 /*********************************************************************************/
 #pragma mark - Error handlers

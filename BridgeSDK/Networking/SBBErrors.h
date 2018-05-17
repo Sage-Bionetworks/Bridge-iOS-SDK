@@ -54,6 +54,7 @@ typedef NS_ENUM(NSInteger, SBBErrorCode)
     SBBErrorCodeObjectNotExpectedClass = -1101,
     SBBErrorCodeTempFileError = -1102,
     SBBErrorCodeTempFileReadError = -1103,
+    SBBErrorCodeObjectNotFound = -1104,
     
     SBBErrorCodeNotAValidSurveyRef = -1200,
     SBBErrorCodeNotAValidJSONObject = -1201,

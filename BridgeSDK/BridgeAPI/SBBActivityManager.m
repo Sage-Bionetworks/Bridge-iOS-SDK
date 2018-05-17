@@ -2,7 +2,7 @@
 //  SBBActivityManager.m
 //  BridgeSDK
 //
-//	Copyright (c) 2015-2017, Sage Bionetworks
+//	Copyright (c) 2015-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -447,6 +447,24 @@ NSInteger const kMaxDateRange =     14; // server supports requesting a span of 
             }];
         }
     }
+}
+
+- (NSArray <SBBScheduledActivity *> *)getCachedSchedulesUsingPredicate:(NSPredicate *)predicate sortDescriptors:(nullable NSArray <NSSortDescriptor *> *)sortDescriptors fetchLimit:(NSUInteger) fetchLimit error:(NSError **)error {
+    
+    BOOL canQueryCache = gSBBUseCache && [self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)];
+    NSAssert(canQueryCache, @"Attempting to get cached schedules with a non-conformant set up.");
+
+    NSError *requestError = nil;
+    NSArray *results = [self.cacheManager fetchCachedObjectsOfType:[SBBScheduledActivity entityName]
+                                                         predicate:predicate
+                                                   sortDescriptors:sortDescriptors
+                                                        fetchLimit:fetchLimit
+                                                             error:&requestError];
+    if ((requestError != nil) && (error != nil)) {
+        *error = requestError;
+    }
+    
+    return results ?: @[];
 }
 
 @end
