@@ -84,14 +84,14 @@
 {
     [_session.delegateQueue addOperationWithBlock:^{
         MockHTTPURLResponse *response;
-        __unused NSData *data = [_session dataAndResponse:&response forRequest:_request];
-        _mockResponse = response;
+        __unused NSData *data = [self->_session dataAndResponse:&response forRequest:self->_request];
+        self->_mockResponse = response;
         
-        id<NSURLSessionTaskDelegate> delegate = (id<NSURLSessionTaskDelegate>)_session.delegate;
+        id<NSURLSessionTaskDelegate> delegate = (id<NSURLSessionTaskDelegate>)self->_session.delegate;
         if (delegate && [delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
-            [delegate URLSession:_session task:self didCompleteWithError:nil];
+            [delegate URLSession:self->_session task:self didCompleteWithError:nil];
         }
-        [_session removeMockTask:self];
+        [self->_session removeMockTask:self];
     }];
 }
 
@@ -121,22 +121,22 @@
 {
     [_session.delegateQueue addOperationWithBlock:^{
         MockHTTPURLResponse *response;
-        __unused NSData *data = [_session dataAndResponse:&response forRequest:_request];
-        _mockResponse = response;
+        __unused NSData *data = [self->_session dataAndResponse:&response forRequest:self->_request];
+        self->_mockResponse = response;
         NSError *error;
-        NSURL *fileURL = [_session downloadFileURLAndError:&error forRequest:_request];
+        NSURL *fileURL = [self->_session downloadFileURLAndError:&error forRequest:self->_request];
         
-        id<NSURLSessionDownloadDelegate> delegate = (id<NSURLSessionDownloadDelegate>)_session.delegate;
+        id<NSURLSessionDownloadDelegate> delegate = (id<NSURLSessionDownloadDelegate>)self->_session.delegate;
         if (delegate) {
             if ([delegate respondsToSelector:@selector(URLSession:downloadTask:didFinishDownloadingToURL:)]) {
-                [delegate URLSession:_session downloadTask:self didFinishDownloadingToURL:fileURL];
+                [delegate URLSession:self->_session downloadTask:self didFinishDownloadingToURL:fileURL];
             }
 
             if ([delegate respondsToSelector:@selector(URLSession:task:didCompleteWithError:)]) {
-                [delegate URLSession:_session task:self didCompleteWithError:nil];
+                [delegate URLSession:self->_session task:self didCompleteWithError:nil];
             }
         }
-        [_session removeMockTask:self];
+        [self->_session removeMockTask:self];
     }];
 }
 
@@ -348,14 +348,14 @@
 - (void)addMockTask:(NSURLSessionTask *)task
 {
     [self doSyncInDelegateQueue:^{
-        [_mockTasks addObject:task];
+        [self->_mockTasks addObject:task];
     }];
 }
 
 - (void)removeMockTask:(NSURLSessionTask *)task
 {
     [self doSyncInDelegateQueue:^{
-        [_mockTasks removeObject:task];
+        [self->_mockTasks removeObject:task];
     }];
 }
 
@@ -390,7 +390,7 @@
 - (void)getAllTasksWithCompletionHandler:(void (^)(NSArray<__kindof NSURLSessionTask *> * _Nonnull))completionHandler
 {
     [self.delegateQueue addOperationWithBlock:^{
-        completionHandler(_mockTasks);
+        completionHandler(self->_mockTasks);
     }];
 }
 
