@@ -83,7 +83,12 @@ extern NSString * const SBBScheduledActivityStatusStringDeleted;
 /**
  The UUID string from the scheduled activity `guid`.
  */
-@property (nonatomic, readonly, nullable) NSString * scheduleIdentifier;
+@property (nonatomic, readonly, nullable) NSString * scheduleIdentifier __attribute__((unavailable("use `activity.guid` instead")));
+
+/**
+ The UUID string from the scheduled activity `guid`. This should be the same as the activity guid.
+ */
++ (NSString *)activityGuidFrom:(NSString *) scheduledActivityGuid;
 
 @end
 

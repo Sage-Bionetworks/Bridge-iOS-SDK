@@ -139,14 +139,19 @@ NSString * const SBBScheduledActivityStatusStringDeleted = @"deleted";
 
 - (NSString *) scheduleIdentifier
 {
-    NSRange range = [self.guid rangeOfString:@":"];
+    return self.activity.guid;
+}
+
++ (NSString *)activityGuidFrom:(NSString *) scheduledActivityGuid
+{
+    NSRange range = [scheduledActivityGuid rangeOfString:@":"];
     if (range.location != NSNotFound)
     {
-        return [self.guid substringToIndex:range.location];
+        return [scheduledActivityGuid substringToIndex:range.location];
     }
     else
     {
-        return self.guid;
+        return scheduledActivityGuid;
     }
 }
 
