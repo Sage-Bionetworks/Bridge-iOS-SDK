@@ -243,7 +243,7 @@
 		8017AF7319DA0359001AF9BA /* UIDevice+Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6F19DA0359001AF9BA /* UIDevice+Hardware.m */; };
 		8017AF7619DA038D001AF9BA /* NSDate+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF7419DA038D001AF9BA /* NSDate+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8017AF7719DA038D001AF9BA /* NSDate+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF7519DA038D001AF9BA /* NSDate+SBBAdditions.m */; };
-		80240AFF1D4AD7B900100F21 /* failed-upload-request-response.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240AFE1D4AD7B900100F21 /* failed-upload-request-response.json */; };
+		80240AFF1D4AD7B900100F21 /* activities-0529-0612.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240AFE1D4AD7B900100F21 /* activities-0529-0612.json */; };
 		80240B041D4AE6DE00100F21 /* upload-request-success.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240B031D4AE6DE00100F21 /* upload-request-success.json */; };
 		80240B061D4AE80000100F21 /* upload-request-expired.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240B051D4AE80000100F21 /* upload-request-expired.json */; };
 		80240B081D4AEC6600100F21 /* empty-response-body.json in Resources */ = {isa = PBXBuildFile; fileRef = 80240B071D4AEC6600100F21 /* empty-response-body.json */; };
@@ -518,6 +518,7 @@
 		F81BE79420B49A7100EE57D3 /* MockURLSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 601E8A0F1B191DAE00BB02FB /* MockURLSession.m */; };
 		F81BE79620B49A8300EE57D3 /* SBBTestAuthKeychainManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80C3D07819DDE94A00DEA044 /* SBBTestAuthKeychainManager.m */; };
 		F852BAC32033F8A500C2803A /* SBBDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = F852BAB32033F8A500C2803A /* SBBDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F8F063A420BE5C7C00DB7D9C /* activities-0612-0629.json in Resources */ = {isa = PBXBuildFile; fileRef = F8F063A320BE5C7C00DB7D9C /* activities-0612-0629.json */; };
 		FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */; };
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
@@ -848,7 +849,7 @@
 		8017AF6F19DA0359001AF9BA /* UIDevice+Hardware.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+Hardware.m"; sourceTree = "<group>"; };
 		8017AF7419DA038D001AF9BA /* NSDate+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+SBBAdditions.h"; sourceTree = "<group>"; };
 		8017AF7519DA038D001AF9BA /* NSDate+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+SBBAdditions.m"; sourceTree = "<group>"; };
-		80240AFE1D4AD7B900100F21 /* failed-upload-request-response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "failed-upload-request-response.json"; sourceTree = "<group>"; };
+		80240AFE1D4AD7B900100F21 /* activities-0529-0612.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "activities-0529-0612.json"; sourceTree = "<group>"; };
 		80240B031D4AE6DE00100F21 /* upload-request-success.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "upload-request-success.json"; sourceTree = "<group>"; };
 		80240B051D4AE80000100F21 /* upload-request-expired.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "upload-request-expired.json"; sourceTree = "<group>"; };
 		80240B071D4AEC6600100F21 /* empty-response-body.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "empty-response-body.json"; sourceTree = "<group>"; };
@@ -1154,6 +1155,7 @@
 		F81BE79120B497E700EE57D3 /* SBBBridgeTestHarness.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeTestHarness.m; sourceTree = "<group>"; };
 		F852BAB32033F8A500C2803A /* SBBDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDefines.h; sourceTree = "<group>"; };
 		F886FD4020360E9E00EF2248 /* SBBDataModelV12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV12.xcdatamodel; sourceTree = "<group>"; };
+		F8F063A320BE5C7C00DB7D9C /* activities-0612-0629.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "activities-0612-0629.json"; sourceTree = "<group>"; };
 		FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SBBAdditions.h"; sourceTree = "<group>"; };
 		FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SBBAdditions.m"; sourceTree = "<group>"; };
 		FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundleSBBAdditionsTests.m; sourceTree = "<group>"; };
@@ -1548,7 +1550,8 @@
 				601E8A0E1B191DAE00BB02FB /* MockURLSession.h */,
 				601E8A0F1B191DAE00BB02FB /* MockURLSession.m */,
 				D4FA38021A2B144000E7CF1E /* sample-signature.png */,
-				80240AFE1D4AD7B900100F21 /* failed-upload-request-response.json */,
+				F8F063A320BE5C7C00DB7D9C /* activities-0612-0629.json */,
+				80240AFE1D4AD7B900100F21 /* activities-0529-0612.json */,
 				80240B031D4AE6DE00100F21 /* upload-request-success.json */,
 				80240B051D4AE80000100F21 /* upload-request-expired.json */,
 				80240B071D4AEC6600100F21 /* empty-response-body.json */,
@@ -2475,7 +2478,8 @@
 			files = (
 				80240B081D4AEC6600100F21 /* empty-response-body.json in Resources */,
 				80240B041D4AE6DE00100F21 /* upload-request-success.json in Resources */,
-				80240AFF1D4AD7B900100F21 /* failed-upload-request-response.json in Resources */,
+				80240AFF1D4AD7B900100F21 /* activities-0529-0612.json in Resources */,
+				F8F063A420BE5C7C00DB7D9C /* activities-0612-0629.json in Resources */,
 				60DF9B961D4977F000E88CF3 /* cat.jpg in Resources */,
 				D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */,
 				80240B061D4AE80000100F21 /* upload-request-expired.json in Resources */,

@@ -191,6 +191,27 @@
     return codes;
 }
 
+- (void)setJSONWithFile:(NSString *)filename andResponseCode:(NSInteger)statusCode forEndpoint:(NSString *)endpoint andMethod:(NSString *)method {
+    NSURL *fileURL = [[NSBundle bundleForClass:[self class]] URLForResource:filename withExtension:@"json"];
+    if (fileURL) {
+        NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL options:0 error:nil];
+        if (data) {
+            NSError *err;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&err];
+            if (json) {
+                [self setJson:json andResponseCode:statusCode forEndpoint:endpoint andMethod:method];
+            } else {
+                NSLog(@"WARNING: Failed to decode JSON: %@", err);
+            }
+        } else {
+            NSLog(@"WARNING: Failed to get data from: %@", fileURL);
+        }
+    }
+    else {
+        NSLog(@"WARNING: Failed to get url for: %@", filename);
+    }
+}
+
 - (void)setJson:(id)jsonObject andResponseCode:(NSInteger)statusCode forEndpoint:(NSString *)endpoint andMethod:(NSString *)HTTPMethod
 {
     NSString *key = [self keyForEndpoint:endpoint method:HTTPMethod];
