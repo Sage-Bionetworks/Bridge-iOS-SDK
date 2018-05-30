@@ -338,12 +338,18 @@ static NSString *const kSessionType = @"UploadSession";
     }];
 }
 
-- (void)removeFileURLFromRetryQueue:(NSURL *)fileURL {
+- (BOOL)removeFileURLFromRetryQueue:(NSURL *)fileURL {
+    NSString *pathKey = [fileURL.path sandboxRelativePath];
+    if (!pathKey) {
+        XCTFail(@"Attempting to remove a file with a nil URL.");
+        return NO;
+    }
     NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
-    [retryUploads removeObjectForKey:[fileURL.path sandboxRelativePath]];
+    [retryUploads removeObjectForKey:pathKey];
     [defaults setValue:retryUploads forKey:kSBBUploadRetryAfterDelayKey];
     [defaults synchronize];
+    return YES;
 }
 
 - (void)testCheckAndRetryOrphanedUploadsWhenStuckGettingUploadSession {
@@ -408,7 +414,8 @@ static NSString *const kSessionType = @"UploadSession";
             [self checkFile:tempFileURL willRetry:YES stillExists:YES withMessage:@"Would retry after 500 from upload API" cleanUpAfterward:NO];
             
             // remove it from the retry queue and backdate the file two days to 'orphan' it
-            [self removeFileURLFromRetryQueue:tempFileURL];
+            BOOL removeSuccess = [self removeFileURLFromRetryQueue:tempFileURL];
+            XCTAssertTrue(removeSuccess);
             [[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate:[NSDate dateWithTimeIntervalSinceNow:-2.*86400.]} ofItemAtPath:tempFileURL.path error:nil];
             
             [self checkFile:tempFileURL willRetry:NO stillExists:YES withMessage:@"Successfully removed file from retry queue" cleanUpAfterward:NO];
@@ -521,7 +528,8 @@ static NSString *const kSessionType = @"UploadSession";
                 [self checkFile:tempFileURL willRetry:YES stillExists:YES withMessage:@"Would retry after 503 from S3" cleanUpAfterward:NO];
                 
                 // remove it from the retry queue and backdate the file two days to 'orphan' it
-                [self removeFileURLFromRetryQueue:tempFileURL];
+                BOOL removeSuccess = [self removeFileURLFromRetryQueue:tempFileURL];
+                XCTAssertTrue(removeSuccess);
                 [[NSFileManager defaultManager] setAttributes:@{NSFileModificationDate:[NSDate dateWithTimeIntervalSinceNow:-2.*86400.]} ofItemAtPath:tempFileURL.path error:nil];
                 
                 [self checkFile:tempFileURL willRetry:NO stillExists:YES withMessage:@"Successfully removed file from retry queue" cleanUpAfterward:NO];
