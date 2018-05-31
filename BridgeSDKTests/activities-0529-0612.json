@@ -1,0 +1,604 @@
+{
+    "items": [{
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-05-29T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-05-29T00:00:00.000-07:00",
+              "expiresOn": "2018-05-30T00:00:00.000-07:00",
+              "status": "available",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-05-29T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-05-29T00:00:00.000-07:00",
+              "expiresOn": "2018-05-30T00:00:00.000-07:00",
+              "status": "available",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "51934fd9-980a-406a-b2f8-3f28010c66a6:2018-05-29T16:21:22.722",
+              "schedulePlanGuid": "3d898a6f-1ef2-4ece-9e9f-025d94bcd130",
+              "activity": {
+              "label": "Finger Tapping",
+              "guid": "51934fd9-980a-406a-b2f8-3f28010c66a6",
+              "task": {
+              "identifier": "Tapping",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": true,
+              "scheduledOn": "2018-05-29T16:21:22.722-07:00",
+              "status": "available",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "0511c6de-ea4e-4691-9aa5-d2f502125817:2018-05-29T16:21:22.722",
+              "schedulePlanGuid": "3d898a6f-1ef2-4ece-9e9f-025d94bcd130",
+              "activity": {
+              "label": "Walk and Stand",
+              "guid": "0511c6de-ea4e-4691-9aa5-d2f502125817",
+              "task": {
+              "identifier": "WalkAndBalance",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": true,
+              "scheduledOn": "2018-05-29T16:21:22.722-07:00",
+              "status": "available",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "80c6d0eb-029b-43f7-8a4c-8d700de4fc17:2018-05-29T16:21:22.722",
+              "schedulePlanGuid": "3d898a6f-1ef2-4ece-9e9f-025d94bcd130",
+              "startedOn": "2018-05-29T23:31:43.844Z",
+              "finishedOn": "2018-05-29T23:37:09.831Z",
+              "activity": {
+              "label": "Tremor Test",
+              "guid": "80c6d0eb-029b-43f7-8a4c-8d700de4fc17",
+              "task": {
+              "identifier": "Tremor",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": true,
+              "scheduledOn": "2018-05-29T16:21:22.722-07:00",
+              "status": "finished",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "80c6d0eb-029b-43f7-8a4c-8d700de4fc17:2018-05-29T16:37:09.831",
+              "schedulePlanGuid": "3d898a6f-1ef2-4ece-9e9f-025d94bcd130",
+              "activity": {
+              "label": "Tremor Test",
+              "guid": "80c6d0eb-029b-43f7-8a4c-8d700de4fc17",
+              "task": {
+              "identifier": "Tremor",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": true,
+              "scheduledOn": "2018-05-29T16:37:09.831-07:00",
+              "status": "available",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-05-30T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-05-30T00:00:00.000-07:00",
+              "expiresOn": "2018-05-31T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-05-30T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-05-30T00:00:00.000-07:00",
+              "expiresOn": "2018-05-31T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-05-31T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-05-31T00:00:00.000-07:00",
+              "expiresOn": "2018-06-01T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-05-31T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-05-31T00:00:00.000-07:00",
+              "expiresOn": "2018-06-01T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-01T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-01T00:00:00.000-07:00",
+              "expiresOn": "2018-06-02T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-01T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-01T00:00:00.000-07:00",
+              "expiresOn": "2018-06-02T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-02T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-02T00:00:00.000-07:00",
+              "expiresOn": "2018-06-03T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-02T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-02T00:00:00.000-07:00",
+              "expiresOn": "2018-06-03T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-03T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-03T00:00:00.000-07:00",
+              "expiresOn": "2018-06-04T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-03T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-03T00:00:00.000-07:00",
+              "expiresOn": "2018-06-04T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-04T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-04T00:00:00.000-07:00",
+              "expiresOn": "2018-06-05T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-04T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-04T00:00:00.000-07:00",
+              "expiresOn": "2018-06-05T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-05T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-05T00:00:00.000-07:00",
+              "expiresOn": "2018-06-06T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-05T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-05T00:00:00.000-07:00",
+              "expiresOn": "2018-06-06T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-06T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-06T00:00:00.000-07:00",
+              "expiresOn": "2018-06-07T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-06T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-06T00:00:00.000-07:00",
+              "expiresOn": "2018-06-07T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-07T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-07T00:00:00.000-07:00",
+              "expiresOn": "2018-06-08T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-07T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-07T00:00:00.000-07:00",
+              "expiresOn": "2018-06-08T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-08T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-08T00:00:00.000-07:00",
+              "expiresOn": "2018-06-09T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-08T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-08T00:00:00.000-07:00",
+              "expiresOn": "2018-06-09T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-09T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-09T00:00:00.000-07:00",
+              "expiresOn": "2018-06-10T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-09T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-09T00:00:00.000-07:00",
+              "expiresOn": "2018-06-10T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-10T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-10T00:00:00.000-07:00",
+              "expiresOn": "2018-06-11T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-10T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-10T00:00:00.000-07:00",
+              "expiresOn": "2018-06-11T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-11T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-11T00:00:00.000-07:00",
+              "expiresOn": "2018-06-12T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b:2018-06-11T00:00:00.000",
+              "schedulePlanGuid": "9ac67c85-e8fb-4f4c-a4ef-f71aba7cd0b2",
+              "activity": {
+              "label": "Study Burst Task",
+              "guid": "fe79d987-28a2-4ccd-bcf3-b3d07b925a6b",
+              "task": {
+              "identifier": "study-burst-task",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-11T00:00:00.000-07:00",
+              "expiresOn": "2018-06-12T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }, {
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09:2018-06-12T00:00:00.000",
+              "schedulePlanGuid": "e24e6601-1822-48b0-8770-00870d870708",
+              "activity": {
+              "label": "Medication",
+              "guid": "273c4518-7cb6-4496-b1dd-c0b5bf291b09",
+              "task": {
+              "identifier": "Medication",
+              "type": "TaskReference"
+              },
+              "activityType": "task",
+              "type": "Activity"
+              },
+              "persistent": false,
+              "scheduledOn": "2018-06-12T00:00:00.000-07:00",
+              "expiresOn": "2018-06-13T00:00:00.000-07:00",
+              "status": "scheduled",
+              "type": "ScheduledActivity"
+              }],
+    "requestParams": {
+        "startTime": "2018-05-29T00:00:00.000-07:00",
+        "endTime": "2018-06-12T00:00:00.000-07:00",
+        "type": "RequestParams"
+    },
+    "startTime": "2018-05-29T00:00:00.000-07:00",
+    "endTime": "2018-06-12T00:00:00.000-07:00",
+    "total": 33,
+    "type": "DateTimeRangeResourceList"
+}

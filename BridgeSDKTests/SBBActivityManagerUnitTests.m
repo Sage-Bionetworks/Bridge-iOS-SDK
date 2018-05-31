@@ -440,4 +440,93 @@
     }];
 }
 
+- (void)testGetSchedulesCaching_NoPaging {
+    NSString *endpoint = kSBBActivityAPI;
+    [self.mockURLSession setJSONWithFile:@"activities-0529-0612" andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    
+    NSString *fromDateString = @"2018-05-29T00:00:00.000-07:00";
+    NSString *toDateString = @"2018-06-12T00:00:00.000-07:00";
+    NSDate *fromDate = [NSDate dateWithISO8601String:fromDateString];
+    NSDate *toDate = [NSDate dateWithISO8601String:toDateString];
+    
+    SBBActivityManager *tMan = [SBBActivityManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
+    
+    XCTestExpectation *expectReGotActivities = [self expectationWithDescription:@"Got historical activities"];
+    
+    __block NSArray *schedules;
+    [tMan getScheduledActivitiesFrom:fromDate to:toDate withCompletion:^(NSArray *results, NSError *error) {
+        XCTAssertNotNil(results);
+        XCTAssertNil(error);
+        schedules = results;
+        [expectReGotActivities fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout getting historical activities again: %@", error);
+        }
+    }];
+    
+    XCTAssertNotNil(schedules);
+    
+    NSString *firstTaskGuid = @"80c6d0eb-029b-43f7-8a4c-8d700de4fc17:2018-05-29T16:21:22.722";
+    SBBScheduledActivity *finishedTremorActivity = (SBBScheduledActivity *)[[schedules filteredArrayUsingPredicate:
+                                                                             [NSPredicate predicateWithFormat:@"%K = %@",
+                                                                              NSStringFromSelector(@selector(guid)),
+                                                                              firstTaskGuid]] firstObject];
+    XCTAssertNotNil(finishedTremorActivity);
+    
+    NSString *secondTaskGuid = @"80c6d0eb-029b-43f7-8a4c-8d700de4fc17:2018-05-29T16:37:09.831";
+    SBBScheduledActivity *scheduledTremorActivity = (SBBScheduledActivity *)[[schedules filteredArrayUsingPredicate:
+                                                                              [NSPredicate predicateWithFormat:@"%K = %@",
+                                                                               NSStringFromSelector(@selector(guid)),
+                                                                               secondTaskGuid]] firstObject];
+    XCTAssertNotNil(scheduledTremorActivity);
+}
+
+- (void)testGetSchedulesCaching_WithPaging {
+    NSString *endpoint = kSBBActivityAPI;
+    [self.mockURLSession setJSONWithFile:@"activities-0529-0612" andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    [self.mockURLSession setJSONWithFile:@"activities-0612-0629" andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    
+    NSString *fromDateString = @"2018-05-29T00:00:00.000-07:00";
+    NSString *toDateString = @"2018-06-26T00:00:00.000-07:00";
+    NSDate *fromDate = [NSDate dateWithISO8601String:fromDateString];
+    NSDate *toDate = [NSDate dateWithISO8601String:toDateString];
+    
+    SBBActivityManager *tMan = [SBBActivityManager managerWithAuthManager:SBBComponent(SBBAuthManager) networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:self.objectManager];
+    
+    XCTestExpectation *expectReGotActivities = [self expectationWithDescription:@"Got historical activities"];
+    
+    __block NSArray *schedules;
+    [tMan getScheduledActivitiesFrom:fromDate to:toDate withCompletion:^(NSArray *results, NSError *error) {
+        XCTAssertNotNil(results);
+        XCTAssertNil(error);
+        schedules = results;
+        [expectReGotActivities fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout getting historical activities again: %@", error);
+        }
+    }];
+    
+    XCTAssertNotNil(schedules);
+    
+    NSString *firstTaskGuid = @"80c6d0eb-029b-43f7-8a4c-8d700de4fc17:2018-05-29T16:21:22.722";
+    SBBScheduledActivity *finishedTremorActivity = (SBBScheduledActivity *)[[schedules filteredArrayUsingPredicate:
+                                                                             [NSPredicate predicateWithFormat:@"%K = %@",
+                                                                              NSStringFromSelector(@selector(guid)),
+                                                                              firstTaskGuid]] firstObject];
+    XCTAssertNotNil(finishedTremorActivity);
+    
+    NSString *secondTaskGuid = @"80c6d0eb-029b-43f7-8a4c-8d700de4fc17:2018-05-29T16:37:09.831";
+    SBBScheduledActivity *scheduledTremorActivity = (SBBScheduledActivity *)[[schedules filteredArrayUsingPredicate:
+                                                                              [NSPredicate predicateWithFormat:@"%K = %@",
+                                                                               NSStringFromSelector(@selector(guid)),
+                                                                               secondTaskGuid]] firstObject];
+    XCTAssertNotNil(scheduledTremorActivity);
+}
+
 @end
