@@ -276,6 +276,7 @@
 		8026D6A519EC56E8008942B0 /* SBBSurveyManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8026D6A419EC56E8008942B0 /* SBBSurveyManagerUnitTests.m */; };
 		8031DB031DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8031DB021DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m */; };
 		8034F66A1E05BCE10002BD42 /* SBBParticipantManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8034F6691E05BCE10002BD42 /* SBBParticipantManagerIntegrationTests.m */; };
+		803E596F20C0961A0034F3DA /* failed-upload-request-response.json in Resources */ = {isa = PBXBuildFile; fileRef = 803E595F20C0961A0034F3DA /* failed-upload-request-response.json */; };
 		804545891A1E78EA001D41D4 /* RNCryptor+Namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */; };
 		8045458D1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch in Headers */ = {isa = PBXBuildFile; fileRef = 8045458C1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch */; };
 		804C109E1E2841D2004B68E6 /* SBBBridgeInfoProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 804C109D1E2841C9004B68E6 /* SBBBridgeInfoProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -889,6 +890,7 @@
 		8031DB021DBFC8D600EB0EB1 /* SBBCacheManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBCacheManagerIntegrationTests.m; path = BridgeSDKTests/SBBCacheManagerIntegrationTests.m; sourceTree = SOURCE_ROOT; };
 		8032B1041EDE246F0067961A /* SBBDataModelV6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV6.xcdatamodel; sourceTree = "<group>"; };
 		8034F6691E05BCE10002BD42 /* SBBParticipantManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBBParticipantManagerIntegrationTests.m; path = BridgeSDKTests/SBBParticipantManagerIntegrationTests.m; sourceTree = SOURCE_ROOT; };
+		803E595F20C0961A0034F3DA /* failed-upload-request-response.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "failed-upload-request-response.json"; sourceTree = "<group>"; };
 		804545881A1E78EA001D41D4 /* RNCryptor+Namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RNCryptor+Namespace.h"; sourceTree = SOURCE_ROOT; };
 		8045458C1A1E896C001D41D4 /* BridgeSDKPrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BridgeSDKPrefixHeader.pch; sourceTree = "<group>"; };
 		804C109D1E2841C9004B68E6 /* SBBBridgeInfoProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBBridgeInfoProtocol.h; sourceTree = "<group>"; };
@@ -1555,6 +1557,7 @@
 				80240B031D4AE6DE00100F21 /* upload-request-success.json */,
 				80240B051D4AE80000100F21 /* upload-request-expired.json */,
 				80240B071D4AEC6600100F21 /* empty-response-body.json */,
+				803E595F20C0961A0034F3DA /* failed-upload-request-response.json */,
 				80855F5D19BE258C006601C7 /* Supporting Files */,
 				60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */,
 				60FF57281A0AFEA500CE2373 /* _SBBBridgeObject_test.h */,
@@ -2480,6 +2483,7 @@
 				80240B041D4AE6DE00100F21 /* upload-request-success.json in Resources */,
 				80240AFF1D4AD7B900100F21 /* activities-0529-0612.json in Resources */,
 				F8F063A420BE5C7C00DB7D9C /* activities-0612-0629.json in Resources */,
+				803E596F20C0961A0034F3DA /* failed-upload-request-response.json in Resources */,
 				60DF9B961D4977F000E88CF3 /* cat.jpg in Resources */,
 				D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */,
 				80240B061D4AE80000100F21 /* upload-request-expired.json in Resources */,
