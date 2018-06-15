@@ -41,6 +41,9 @@ const NSInteger SBBDefaultCacheDaysBehind = 7;
 const NSString *SBBDefaultUserDefaultsSuiteName = @"org.sagebase.Bridge";
 const NSString *SBBAppConfigDefaultsKey = @"SBBAppConfig";
 
+NSNotificationName const kSBBAppConfigUpdatedNotification = @"SBBAppConfigUpdatedNotification";
+NSString * const kSBBAppConfigInfoKey = @"SBBAppConfigInfoKey";
+
 id<SBBBridgeErrorUIDelegate> gSBBErrorUIDelegate = nil;
 SBBAppConfig *gSBBAppConfig = nil;
 
@@ -203,6 +206,8 @@ SBBAppConfig *gSBBAppConfig = nil;
                 id appConfigJSON = [SBBComponent(SBBObjectManager) bridgeJSONFromObject:appConfig];
                 [[self sharedUserDefaults] setObject:appConfigJSON forKey:(NSString *)SBBAppConfigDefaultsKey];
             }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kSBBAppConfigUpdatedNotification object:nil userInfo:@{ kSBBAppConfigInfoKey : appConfig }];
         }
     }];
 }

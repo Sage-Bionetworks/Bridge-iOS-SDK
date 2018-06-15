@@ -86,6 +86,9 @@ extern const NSInteger SBBMaxSupportedCacheDays;
     
 // The default NSUserDefaults suite to use if not otherwise specified at setup time
 extern const NSString * _Nullable SBBDefaultUserDefaultsSuiteName;
+    
+extern NSNotificationName const _Nonnull kSBBAppConfigUpdatedNotification;
+extern NSString * const _Nonnull kSBBAppConfigInfoKey;
   
 @interface BridgeSDK : NSObject
 
