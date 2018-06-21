@@ -74,15 +74,14 @@
     //
     // So the logic here is: Save the ones the server wouldn't have returned or superseded in this query, and merge those
     // back in with the ones that it did return. The ones we need to save were scheduled before the start of the range
-    // and either expired before the start of the range, or if persistent, were finished before the start of the
-    // range; or else are not scheduled until at or beyond the end of the requested range.
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K < %@ && ((%K != nil && %K < %@) OR (%K == TRUE && %K != nil && %K < %@))) OR %K >= %@",
+    // and either expired before the start of the range, or if persistent, have been marked finished; or else are not
+    // scheduled until at or beyond the end of the requested range.
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K < %@ && ((%K != nil && %K < %@) OR (%K == TRUE && %K != nil))) OR %K >= %@",
                               scheduledOnKey, self.startTime,
                               expiresOnKey,
                               expiresOnKey, self.startTime,
                               persistentKey,
                               finishedOnKey,
-                              finishedOnKey, self.startTime,
                               scheduledOnKey, self.endTime];
     savedItems = [savedItems filteredArrayUsingPredicate:predicate];
     savedItems = [savedItems arrayByAddingObjectsFromArray:self.items];
