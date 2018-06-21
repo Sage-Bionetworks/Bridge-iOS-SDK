@@ -67,10 +67,9 @@
     // been started or finished. Tasks that don't expire are treated as expiring at the end of time for this purpose.
     //
     // The one exception is that persistent task instancess (which can't have an expiresOn date) that have been marked
-    // finished are treated as having been scheduled from scheduledOn to finishedOn, since a new instance will immediately
-    // be created with a scheduledOn date equal to the previous one's finishedOn (and also since the number of these over
-    // the course of a study is unbounded and we don't want every single one to come back in every query regardless of
-    // date range).
+    // finished will only be included in the results if their scheduledOn time is in the requested date range, since
+    // the number of these over the course of a study is unbounded and we don't want every single one to come back in
+    // every query regardless of date range.
     //
     // So the logic here is: Save the ones the server wouldn't have returned or superseded in this query, and merge those
     // back in with the ones that it did return. The ones we need to save were scheduled before the start of the range
