@@ -38,4 +38,6 @@
 
 - (void)postStudyParticipant: (SBBStudyParticipant *)participant;
 
+- (void)setJSONWithFile:(NSString *)filename forEndpoint:(NSString *)endpoint andMethod:(NSString *)method;
+
 @end
