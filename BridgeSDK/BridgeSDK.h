@@ -151,9 +151,9 @@ extern NSString * const _Nonnull kSBBAppConfigInfoKey;
 + (nullable SBBAppConfig *)appConfig;
 
 /*!
- * Set a delegate to handle presenting appropriate UI to the study participant in case of "not consented" (412) and "app version not supported" (409) error responses from Bridge.
+ * Set a delegate to handle presenting appropriate UI to the study participant in case of "not consented" (412) and "app version not supported" (410) error responses from Bridge.
  *
- *  @param delegate An object that conforms to the SBBBridgeErrorUIDelegate protocol to handle UI for Bridge "not consented" (412) and "app version not supported" (409) error responses.
+ *  @param delegate An object that conforms to the SBBBridgeErrorUIDelegate protocol to handle UI for Bridge "not consented" (412) and "app version not supported" (410) error responses.
  */
 + (void)setErrorUIDelegate:(nullable id<SBBBridgeErrorUIDelegate>)delegate;
 
