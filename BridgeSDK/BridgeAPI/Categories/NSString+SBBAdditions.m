@@ -7,9 +7,29 @@
 //
 
 #import "NSString+SBBAdditions.h"
+#import "SBBBridgeInfo.h"
 
 @implementation NSString (SBBAdditions)
 
+- (NSString *)baseDirectory
+{
+    static NSString *baseDirectory;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *appGroupIdentifier = SBBBridgeInfo.shared.appGroupIdentifier;
+        if (appGroupIdentifier.length > 0) {
+            NSURL *baseDirURL = [[NSFileManager defaultManager] containerURLForSecurityApplicationGroupIdentifier:appGroupIdentifier];
+            // normalize the path--i.e. /private/var-->/var (see docs for URLByResolvingSymlinksInPath, which removes /private as a special case
+            // even though /var is actually a symlink to /private/var in this case)
+            baseDirectory = [baseDirURL URLByResolvingSymlinksInPath].path;
+        } else {
+            baseDirectory = NSHomeDirectory();
+        }
+    });
+    
+    return baseDirectory;
+}
 
 - (NSRegularExpression *)sandboxRegex
 {
@@ -17,7 +37,7 @@
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        NSString *sandboxPath = NSHomeDirectory();
+        NSString *sandboxPath = self.baseDirectory;
         
         // simulator and device have the app uuid in a different location in the path,
         // and it might change in the future, so:
@@ -63,7 +83,7 @@
     if (range.location != NSNotFound) {
         return normalizedSelf;
     }
-    return [NSHomeDirectory() stringByAppendingPathComponent:self];
+    return [self.baseDirectory stringByAppendingPathComponent:self];
 }
 
 - (BOOL)isEquivalentToPath:(NSString *)path
