@@ -2,7 +2,7 @@
 //  SBBParticipantManager.h
 //  BridgeSDK
 //
-//    Copyright (c) 2016, Sage Bionetworks
+//    Copyright (c) 2016-2018, Sage Bionetworks
 //    All rights reserved.
 //
 //    Redistribution and use in source and binary forms, with or without
@@ -30,6 +30,7 @@
 //
 
 #import "SBBBridgeAPIManager.h"
+@class SBBReportData;
 
 /*!
  @typedef SBBParticipantDataSharingScope
@@ -51,6 +52,14 @@ typedef NS_ENUM(NSInteger, SBBParticipantDataSharingScope) {
  @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
  */
 typedef void (^SBBParticipantManagerGetRecordCompletionBlock)(_Nullable id studyParticipant,  NSError * _Nullable error);
+
+/*!
+ Completion block called when retrieving a participant report from the cache or API.
+ 
+ @param participantReport An array containing a time series of, by default, SBBReportData objects, unless the ReportData type has been mapped in SBBObjectManager setupMappingForType:toClass:fieldToPropertyMappings:
+ @param error       An error that occurred during execution of the method for which this is a completion block, or nil.
+ */
+typedef void (^SBBParticipantManagerGetReportCompletionBlock)(NSArray * _Nullable participantReport,  NSError * _Nullable error);
 
 /*!
  Completion block called when retrieving data groups from the API.
@@ -115,13 +124,13 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
 - (nullable NSURLSessionTask *)setExternalIdentifier:(nullable NSString *)externalID completion:(nullable SBBParticipantManagerCompletionBlock)completion;
 
 /*!
- Change the scope of data sharing for this user.
+ Change the scope of data sharing for this participant.
  This is a convenience method that sets the participant record's sharingScope field and updates it to Bridge.
  This should only be done in response to an explicit choice on the part of the user to change the sharing scope.
 
  @note Replaces deprecated SBBUserManager dataSharing:completion: method.
 
- @param scope The scope of data sharing to set for this user.
+ @param scope The scope of data sharing to set for this participant.
 
  @param completion An SBBParticipantManagerCompletionBlock to be called upon completion.
 
@@ -130,7 +139,7 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
 - (nullable NSURLSessionTask *)setSharingScope:(SBBParticipantDataSharingScope)scope completion:(nullable SBBParticipantManagerCompletionBlock)completion;
 
 /*!
- Fetch the data groups to which this user belongs from the Bridge API.
+ Fetch the data groups to which this participant belongs from the Bridge API.
  This is a convenience method which fetches the StudyParticipant record (from cache, if available, otherwise from Bridge)
  and passes its dataGroups to the completion handler.
  
@@ -141,7 +150,7 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
 - (nullable NSURLSessionTask *)getDataGroupsWithCompletion:(nonnull SBBParticipantManagerGetGroupsCompletionBlock)completion;
 
 /*!
- Update the user's dataGroups to the Bridge API.
+ Update the participant's dataGroups to the Bridge API.
  
  This method writes a StudyParticipant record consisting of just the dataGroups field to the Bridge server.
  You may set the dataGroups directly as part of the StudyParticipant record when signing up for a Bridge account,
@@ -158,20 +167,79 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
 - (nullable NSURLSessionTask *)updateDataGroupsWithGroups:(nonnull NSSet<NSString *> *)dataGroups completion:(nullable SBBParticipantManagerCompletionBlock)completion;
 
 /*!
- Add the user to the specified data groups (tags).
+ Add the participant to the specified data groups (tags).
  
- @param dataGroups  The data groups to which to add the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, adds the specified groups to the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user's existing dataGroups, that error will be passed to the completion handler. If an attempt is made to add a user to one or more data groups that haven't first been defined in the study, the Bridge API will respond with 400 (Bad Request) with an error message detailing the problem in the body of the response.
- @param completion An SBBUserManagerCompletionBlock to be called upon completion.
+ @param dataGroups  The data groups to which to add the participant. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, adds the specified groups to the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the participant's existing dataGroups, that error will be passed to the completion handler. If an attempt is made to add a participant to one or more data groups that haven't first been defined in the study, the Bridge API will respond with 400 (Bad Request) with an error message detailing the problem in the body of the response.
+ @param completion An SBBParticipantManagerCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
 - (nullable NSURLSessionTask *)addToDataGroups:(nonnull NSSet<NSString *> *)dataGroups completion:(nullable SBBParticipantManagerCompletionBlock)completion;
 
 /*!
- Remove the user from the specified data groups (tags).
+ Remove the participant from the specified data groups (tags).
  
- @param dataGroups  The data groups from which to remove the user. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, removes the specified groups from the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the user's existing dataGroups, that error will be passed to the completion handler. If the fetch succeeds but the user is not a member of one or more of these data groups, whether because they haven't been added or because they don't exist in the study, this method will complete without updating the user's dataGroups and without an error.
- @param completion An SBBUserManagerCompletionBlock to be called upon completion.
+ @param dataGroups  The data groups from which to remove the participant. This is a convenience method which first calls getDataGroupsWithCompletion:, and in its completion handler, removes the specified groups from the returned dataGroups and posts the modified dataGroups back to the Bridge API via updateDataGroupWithGroups:completion:. If there is an error fetching the participant's existing dataGroups, that error will be passed to the completion handler. If the fetch succeeds but the participant is not a member of one or more of these data groups, whether because they haven't been added or because they don't exist in the study, this method will complete without updating the participant's dataGroups and without an error.
+ @param completion An SBBParticipantManagerCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
 - (nullable NSURLSessionTask *)removeFromDataGroups:(nonnull NSSet<NSString *> *)dataGroups completion:(nullable SBBParticipantManagerCompletionBlock)completion;
+
+/*!
+ Get the specified report data items for the user over the given time span.
+ 
+ With this version of the method, you specify the desired time range with NSDate objects and they are interpreted as millisecond timestamps marking the starting and ending points of the desired span. You should use this method for retrieving ReportData objects from reports that use dateTime timestamps.
+ 
+ @param identifier      The report identifier.
+ @param fromTimestamp   The start of the desired date range, or nil to fetch all the way back to their enrollment in the study.
+ @param toTimestamp     The end of the desired date range, or nil to fetch all the way to now.
+ @param completion      An SBBParticipantManagerGetReportCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromTimestamp:(nullable NSDate *)fromTimestamp toTimestamp:(nullable NSDate *)toTimestamp completion:(nullable SBBParticipantManagerGetReportCompletionBlock)completion;
+
+/*!
+ Get the specified report data items for the user over the given date range.
+ 
+ With this version of the method, you specify the desired date range with NSDateComponents objects and they are interpreted as calendar dates marking the first and last dates (inclusive) for which ReportData objects are being requested. You should use this method for retrieving ReportData objects from reports that use localDate datestamps.
+ 
+ @param identifier  The report identifier.
+ @param fromDate    The first date to fetch, or nil to fetch all the way back to their enrollment in the study.
+ @param toDate      The last date to fetch, or nil to fetch all the way to today.
+ @param completion  An SBBParticipantManagerGetReportCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromDate:(nullable NSDateComponents *)fromDate toDate:(nullable NSDateComponents *)toDate completion:(nullable SBBParticipantManagerGetReportCompletionBlock)completion;
+
+/*!
+ Save the specified ReportData object to the given report identifier. Any existing ReportData for the specified report with the same date
+ 
+ @note A ReportData Bridge object can have either a full ISO8601 timestamp, represented by the dateTime field, or a date-only "datestamp", represented by the localDate field. The date field of SBBReportData is an NSDate object, which represents the same time as, and serializes to/from JSON using the appropriate formatter based on, whichever of dateTime or localDate is set. To use the localDate (date-only) datestamp, use setDateComponents: and make sure the hour component of the date components is NSDateComponentUndefined (or nil in Swift). To use the dateTime timestamp, you can either set the date property with an NSDate (Date), or use the date components setter with a defined value for the hours component. Whichever you use, all ReportData records saved to a given report identifier should use the same one.
+ @param reportData  An SBBReportData object to be saved.
+ @param identifier  The identifier of the report to which this reportData is to be saved.
+ @param completion An SBBParticipantManagerCompletionBlock to be called upon completion.
+ 
+ @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
+ */
+- (nullable NSURLSessionTask *)saveReportData:(nonnull SBBReportData *)reportData forReport:(nonnull NSString *)identifier completion:(nullable SBBParticipantManagerCompletionBlock)completion;
+
+/*!
+ Save the specified report JSON data to the given report identifier with the specified dateTime timestamp.
+ 
+ This is a convenience method that builds an SBBReportData object and calls through to saveReportData:forReport:completion:.
+ */
+- (nullable NSURLSessionTask *)saveReportJSON:(nonnull id<SBBJSONValue>)reportJSON withDateTime:(nonnull NSDate *)dateTime forReport:(nonnull NSString *)identifier completion:(nullable SBBParticipantManagerCompletionBlock)completion;
+
+/*!
+ Save the specified report JSON data to the given report identifier with the specified localDate (date-only) datestamp. An date components smaller than a day (hour, minute, etc.) will be ignored.
+ 
+ This is a convenience method that builds an SBBReportData object and calls through to saveReportData:forReport:completion:.
+ */
+
+- (nullable NSURLSessionTask *)saveReportJSON:(nonnull id<SBBJSONValue>)reportJSON withLocalDate:(nonnull NSDateComponents *)dateComponents forReport:(nonnull NSString *)identifier completion:(nullable SBBParticipantManagerCompletionBlock)completion;
 
 @end
 

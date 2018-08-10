@@ -36,6 +36,7 @@
 #import "NSDate+SBBAdditions.h"
 
 #import "SBBBridgeObject.h"
+#import "SBBRequestParams.h"
 
 @interface _SBBForwardCursorPagedResourceList()
 
@@ -50,19 +51,13 @@
 
 @property (nullable, nonatomic, retain) NSNumber* hasNext;
 
-@property (nullable, nonatomic, retain) NSDate* lastOffsetBy__;
-
 @property (nullable, nonatomic, retain) NSString* listID__;
 
-@property (nullable, nonatomic, retain) NSDate* offsetBy;
-
-@property (nullable, nonatomic, retain) NSNumber* pageSize;
-
-@property (nullable, nonatomic, retain) NSDate* scheduledOnEnd;
-
-@property (nullable, nonatomic, retain) NSDate* scheduledOnStart;
+@property (nullable, nonatomic, retain) NSString* nextPageOffsetKey;
 
 @property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *items;
+
+@property (nullable, nonatomic, retain) NSManagedObject *requestParams;
 
 - (void)addItemsObject:(NSManagedObject *)value;
 - (void)removeItemsObject:(NSManagedObject *)value;
@@ -102,16 +97,6 @@
 	self.hasNext = [NSNumber numberWithBool:value_];
 }
 
-- (int16_t)pageSizeValue
-{
-	return [self.pageSize shortValue];
-}
-
-- (void)setPageSizeValue:(int16_t)value_
-{
-	self.pageSize = [NSNumber numberWithShort:value_];
-}
-
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -126,13 +111,7 @@
     if (keyValue)
         self.listID__ = keyValue;
 
-    self.offsetBy = [NSDate dateWithISO8601String:[dictionary objectForKey:@"offsetBy"]];
-
-    self.pageSize = [dictionary objectForKey:@"pageSize"];
-
-    self.scheduledOnEnd = [NSDate dateWithISO8601String:[dictionary objectForKey:@"scheduledOnEnd"]];
-
-    self.scheduledOnStart = [NSDate dateWithISO8601String:[dictionary objectForKey:@"scheduledOnStart"]];
+    self.nextPageOffsetKey = [dictionary objectForKey:@"nextPageOffsetKey"];
 
     // overwrite the old items relationship entirely rather than adding to it
     [self removeItemsObjects];
@@ -144,6 +123,14 @@
         [self addItemsObject:itemsObj];
     }
 
+    NSDictionary *requestParamsDict = [dictionary objectForKey:@"requestParams"];
+
+    if (requestParamsDict != nil)
+    {
+        SBBRequestParams *requestParamsObj = [objectManager objectFromBridgeJSON:requestParamsDict];
+        self.requestParams = requestParamsObj;
+    }
+
 }
 
 - (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -152,13 +139,7 @@
 
     [dict setObjectIfNotNil:self.hasNext forKey:@"hasNext"];
 
-    [dict setObjectIfNotNil:[self.offsetBy ISO8601String] forKey:@"offsetBy"];
-
-    [dict setObjectIfNotNil:self.pageSize forKey:@"pageSize"];
-
-    [dict setObjectIfNotNil:[self.scheduledOnEnd ISO8601String] forKey:@"scheduledOnEnd"];
-
-    [dict setObjectIfNotNil:[self.scheduledOnStart ISO8601String] forKey:@"scheduledOnStart"];
+    [dict setObjectIfNotNil:self.nextPageOffsetKey forKey:@"nextPageOffsetKey"];
 
     if ([self.items count] > 0)
 	{
@@ -173,6 +154,8 @@
 
 	}
 
+    [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.requestParams] forKey:@"requestParams"];
+
 	return [dict copy];
 }
 
@@ -185,6 +168,7 @@
 	{
 		[itemsObj awakeFromDictionaryRepresentationInit];
 	}
+	[self.requestParams awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
@@ -203,17 +187,9 @@
 
         self.hasNext = managedObject.hasNext;
 
-        self.lastOffsetBy__ = managedObject.lastOffsetBy__;
-
         self.listID__ = managedObject.listID__;
 
-        self.offsetBy = managedObject.offsetBy;
-
-        self.pageSize = managedObject.pageSize;
-
-        self.scheduledOnEnd = managedObject.scheduledOnEnd;
-
-        self.scheduledOnStart = managedObject.scheduledOnStart;
+        self.nextPageOffsetKey = managedObject.nextPageOffsetKey;
 
 		for (NSManagedObject *itemsManagedObj in managedObject.items)
 		{
@@ -224,6 +200,13 @@
                 [self addItemsObject:itemsObj];
             }
 		}
+            NSManagedObject *requestParamsManagedObj = managedObject.requestParams;
+        Class requestParamsClass = [SBBObjectManager bridgeClassFromType:requestParamsManagedObj.entity.name];
+        SBBRequestParams *requestParamsObj = [[requestParamsClass alloc] initWithManagedObject:requestParamsManagedObj objectManager:objectManager cacheManager:cacheManager];
+        if (requestParamsObj != nil)
+        {
+          self.requestParams = requestParamsObj;
+        }
     }
 
     return self;
@@ -259,17 +242,9 @@
 
     managedObject.hasNext = ((id)self.hasNext == [NSNull null]) ? nil : self.hasNext;
 
-    managedObject.lastOffsetBy__ = ((id)self.lastOffsetBy__ == [NSNull null]) ? nil : self.lastOffsetBy__;
-
     managedObject.listID__ = ((id)self.listID__ == [NSNull null]) ? nil : self.listID__;
 
-    managedObject.offsetBy = ((id)self.offsetBy == [NSNull null]) ? nil : self.offsetBy;
-
-    managedObject.pageSize = ((id)self.pageSize == [NSNull null]) ? nil : self.pageSize;
-
-    managedObject.scheduledOnEnd = ((id)self.scheduledOnEnd == [NSNull null]) ? nil : self.scheduledOnEnd;
-
-    managedObject.scheduledOnStart = ((id)self.scheduledOnStart == [NSNull null]) ? nil : self.scheduledOnStart;
+    managedObject.nextPageOffsetKey = ((id)self.nextPageOffsetKey == [NSNull null]) ? nil : self.nextPageOffsetKey;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSOrderedSet *itemsCopy = [managedObject.items copy];
@@ -306,6 +281,14 @@
 
     // ...and let go of the collection copy
     itemsCopy = nil;
+
+    // destination entity RequestParams is not directly cacheable, so delete it and create the replacement
+    if (managedObject.requestParams) {
+        [cacheContext deleteObject:managedObject.requestParams];
+    }
+    NSManagedObject *relMoRequestParams = [self.requestParams createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+
+    [managedObject setRequestParams:relMoRequestParams];
 
     // Calling code will handle saving these changes to cacheContext.
 }
@@ -403,5 +386,24 @@
 
     [(NSMutableArray *)self.items replaceObjectsAtIndexes:indexes withObjects:value];
 }
+
+- (void) setRequestParams: (SBBRequestParams*) requestParams_ settingInverse: (BOOL) setInverse
+{
+
+    _requestParams = requestParams_;
+
+}
+
+- (void) setRequestParams: (SBBRequestParams*) requestParams_
+{
+    [self setRequestParams: requestParams_ settingInverse: YES];
+}
+
+- (SBBRequestParams*) requestParams
+{
+    return _requestParams;
+}
+
+@synthesize requestParams = _requestParams;
 
 @end

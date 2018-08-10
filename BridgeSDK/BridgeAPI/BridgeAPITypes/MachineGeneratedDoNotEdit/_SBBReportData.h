@@ -1,5 +1,5 @@
 //
-//  _SBBForwardCursorPagedResourceList.h
+//  _SBBReportData.h
 //
 //	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
@@ -27,47 +27,29 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBForwardCursorPagedResourceList.h instead.
+// Make changes to SBBReportData.h instead.
 //
 
 #import <Foundation/Foundation.h>
 #import "SBBBridgeObject.h"
 
+#import "SBBJSONValue.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
-@class SBBBridgeObject;
-@class SBBRequestParams;
-
-@protocol _SBBForwardCursorPagedResourceList
+@protocol _SBBReportData
 
 @end
 
-@interface _SBBForwardCursorPagedResourceList : SBBBridgeObject
+@interface _SBBReportData : SBBBridgeObject
 
-@property (nullable, nonatomic, strong) NSNumber* hasNext;
+@property (nullable, nonatomic, strong) id<SBBJSONValue> data;
 
-@property (nonatomic, assign) BOOL hasNextValue;
+@property (nullable, nonatomic, strong) NSDate* date;
 
-@property (nullable, nonatomic, strong) NSString* nextPageOffsetKey;
+@property (nullable, nonatomic, strong) NSString* dateTime;
 
-@property (nullable, nonatomic, strong, readonly) NSArray *items;
-
-@property (nullable, nonatomic, strong, readwrite) SBBRequestParams *requestParams;
-
-- (void)addItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)addItemsObject:(SBBBridgeObject*)value_;
-- (void)removeItemsObjects;
-- (void)removeItemsObject:(SBBBridgeObject*)value_ settingInverse: (BOOL) setInverse;
-- (void)removeItemsObject:(SBBBridgeObject*)value_;
-
-- (void)insertObject:(SBBBridgeObject*)value inItemsAtIndex:(NSUInteger)idx;
-- (void)removeObjectFromItemsAtIndex:(NSUInteger)idx;
-- (void)insertItems:(NSArray *)value atIndexes:(NSIndexSet *)indexes;
-- (void)removeItemsAtIndexes:(NSIndexSet *)indexes;
-- (void)replaceObjectInItemsAtIndex:(NSUInteger)idx withObject:(SBBBridgeObject*)value;
-- (void)replaceItemsAtIndexes:(NSIndexSet *)indexes withItems:(NSArray *)values;
-
-- (void) setRequestParams: (SBBRequestParams* _Nullable) requestParams_ settingInverse: (BOOL) setInverse;
+@property (nullable, nonatomic, strong) NSString* localDate;
 
 @end
 NS_ASSUME_NONNULL_END
