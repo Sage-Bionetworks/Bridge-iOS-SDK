@@ -226,8 +226,9 @@
             [cacheContext performBlockAndWait:^{
                 // if there's an entityIDKeyPath, we're going to look for an existing object to update
                 NSManagedObject *existingObject = nil;
+                NSString *entityID = nil;
                 if (entityIDKeyPath.length) {
-                    NSString *entityID = [self valueForKeyPath:entityIDKeyPath];
+                    entityID = [self valueForKeyPath:entityIDKeyPath];
                     existingObject = [cacheManager managedObjectOfEntity:entity withId:entityID atKeyPath:entityIDKeyPath];
                 }
                 
@@ -236,6 +237,14 @@
                 } else {
                     // no existing object found to update, so creating a new one
                     [self createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+                }
+                
+                if (entityID && existingObject) {
+                    // now update the in-memory-cached Bridge object too, if any, in case it's not the same instance as this one
+                    ModelObject *inMemoryObject = [cacheManager inMemoryBridgeObjectOfType:entity.name andId:entityID];
+                    if (inMemoryObject != self) {
+                        [inMemoryObject initWithManagedObject:existingObject objectManager:objectManager cacheManager:cacheManager];
+                    }
                 }
             }];
             
