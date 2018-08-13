@@ -58,6 +58,10 @@ extern  BOOL gSBBUseCache;
 
 - (void)removeFromCacheObjectOfType:(NSString *)type withId:(NSString *)objectId;
 
+- (SBBBridgeObject *)inMemoryBridgeObjectOfType:(NSString *)type andId:(NSString *)objectId;
+
+- (void)removeFromMemoryBridgeObjectOfType:(NSString *)type andId:(NSString *)objectId;
+
 - (NSManagedObjectContext *)cacheIOContext;
 
 - (void)saveCacheIOContext;
