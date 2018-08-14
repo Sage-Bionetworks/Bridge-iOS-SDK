@@ -296,6 +296,132 @@
     }];
 }
 
+- (void)compareTaskToInMemoryAndCoreDataCaches:(SBBScheduledActivity *)task {
+    // fetch the "same" task from in-memory cache
+    SBBScheduledActivity *inMemoryTask = (SBBScheduledActivity *)[SBBComponent(SBBCacheManager) inMemoryBridgeObjectOfType:task.type andId:task.guid];
+    
+    // now delete it from in-memory cache so cache manager will go to core data, then fetch it again
+    [SBBComponent(SBBCacheManager) removeFromMemoryBridgeObjectOfType:task.type andId:task.guid];
+    SBBScheduledActivity *coreDataTask = (SBBScheduledActivity *)[SBBComponent(SBBCacheManager) cachedObjectOfType:task.type withId:task.guid createIfMissing:NO];
+    
+    XCTAssertNotNil(inMemoryTask, @"No in-memory task found with type %@ and id %@", task.type, task.guid);
+    XCTAssertNotNil(coreDataTask, @"No core data task found with type %@ and id %@", task.type, task.guid);
+    
+    XCTAssertEqualObjects(task.clientData, inMemoryTask.clientData, @"The clientData as saved to Bridge does not match in-memory cache");
+    XCTAssertEqualObjects(task.clientData, coreDataTask.clientData, @"The clientData as saved to Bridge does not match core data cache");
+    XCTAssertEqualObjects(task.startedOn, inMemoryTask.startedOn, @"The startedOn date as saved to Bridge does not match in-memory cache");
+    XCTAssertEqualObjects(task.startedOn, coreDataTask.startedOn, @"The startedOn date as saved to Bridge does not match core data cache");
+    XCTAssertEqualObjects(task.finishedOn, inMemoryTask.finishedOn, @"The finishedOn date as saved to Bridge does not match in-memory cache");
+    XCTAssertEqualObjects(task.finishedOn, coreDataTask.finishedOn, @"The finishedOn date as saved to Bridge does not match core data cache");
+}
+
+- (void)testUpdateScheduledActivitiesReconciliation {
+    NSDictionary *validJSON =
+    @{
+      @"thing": @{
+              @"thing1": @"today's-date-as-a-string",
+              @"thing2": [[NSDate date] ISO8601StringUTC]
+              },
+      @"anotherThing": @[
+              @"anotherThing1",
+              @(12345),
+              @(NO),
+              @(3.14159),
+              @{
+                  @"andAnotherThing": @"never mind"
+                  }
+              ]
+      };
+    
+    NSDictionary *validJSON2 =
+    @{
+      @"thing the second": @{
+              @"thing3": @"today's-date-as-a-string-in-local-timezone",
+              @"thing4": [[NSDate date] ISO8601String]
+              },
+      @"yetAnotherThing": @[
+              @"anotherThing2",
+              @(67890),
+              @(YES),
+              @(2.71828),
+              @{
+                  @"andYetAnotherThing": @"a piece of my mind"
+                  }
+              ]
+      };
+    
+
+    NSInteger daysAhead = 0; // just get today's
+    __block SBBScheduledActivity *task = nil;
+    NSDate *now = [NSDate date];
+    XCTestExpectation *expectTasks = [self expectationWithDescription:@"got scheduled activities for Update Activities Reconciliation test"];
+    [SBBComponent(SBBActivityManager) getScheduledActivitiesForDaysAhead:daysAhead withCompletion:^(NSArray *tasksList, NSError *error) {
+        if (error) {
+            NSLog(@"Error getting tasks for update test:\n%@", error);
+            [expectTasks fulfill];
+            return;
+        }
+        XCTAssert([tasksList isKindOfClass:[NSArray class]], @"Method returned an NSArray");
+        
+        // do the update from a copy that *isn't* the in-memory cached instance (shouldn't actually matter here)
+        task = [[tasksList lastObject] copy];
+        XCTAssert([task isKindOfClass:[SBBScheduledActivity class]], @"Method returned a list of ScheduledActivity objects");
+        task.startedOn = now;
+        task.finishedOn = now;
+        task.clientData = validJSON;
+        [SBBComponent(SBBActivityManager) updateScheduledActivities:@[task] withCompletion:^(id responseObject, NSError *error) {
+            BOOL isDictionary = [responseObject isKindOfClass:[NSDictionary class]];
+            XCTAssert(isDictionary, @"Update activity response is an NSDictionary");
+            if (isDictionary) {
+                XCTAssertEqualObjects([responseObject objectForKey:@"message"], @"Activities updated.", @"Update activity succeeded.");
+                
+                // retrieve from Bridge and make sure the updates "took", both in CoreData and in the in-memory cache
+                [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:task.scheduledOn to:task.expiresOn withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+                    [self compareTaskToInMemoryAndCoreDataCaches:task];
+                    [expectTasks fulfill];
+                }];
+            } else {
+                [expectTasks fulfill];
+            }
+        }];
+    }];
+    
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error attempting to get tasks for update reconciliation test: %@", error);
+        }
+    }];
+    
+    // now set a new client data and started/finished times
+    now = [NSDate date];
+    task.startedOn = now;
+    task.finishedOn = now;
+    task.clientData = validJSON2;
+    XCTestExpectation *expectReUpdated = [self expectationWithDescription:@"re-updated scheduled activities for Update Activities Reconciliation test"];
+
+    [SBBComponent(SBBActivityManager) updateScheduledActivities:@[task] withCompletion:^(id responseObject, NSError *error) {
+        BOOL isDictionary = [responseObject isKindOfClass:[NSDictionary class]];
+        XCTAssert(isDictionary, @"Update activity response is an NSDictionary");
+        if (isDictionary) {
+            XCTAssertEqualObjects([responseObject objectForKey:@"message"], @"Activities updated.", @"Update activity succeeded.");
+            
+            // retrieve from Bridge and make sure the reconciliation "took", both in CoreData and in the in-memory cache
+            [SBBComponent(SBBActivityManager) getScheduledActivitiesFrom:task.scheduledOn to:task.expiresOn withCompletion:^(NSArray * _Nullable activitiesList, NSError * _Nullable error) {
+                [self compareTaskToInMemoryAndCoreDataCaches:task];
+                [expectReUpdated fulfill];
+            }];
+        } else {
+            [expectReUpdated fulfill];
+        }
+    }];
+    
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error attempting to update and re-fetch tasks for update reconciliation test: %@", error);
+        }
+    }];
+}
+
 - (void)createTestSchedule:(NSDictionary *)schedule completionHandler:(SBBNetworkManagerCompletionBlock)completion
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
