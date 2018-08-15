@@ -61,6 +61,7 @@ extern NSString * const kSBBAuthResetAPI;
 - (void)clearSessionToken;
 - (void)postNewSessionInfo:(id)sessionInfo;
 - (BOOL)canAuthenticate;
+- (void)attemptReauthWithCompletion:(SBBNetworkManagerCompletionBlock)completion;
 
 @end
 

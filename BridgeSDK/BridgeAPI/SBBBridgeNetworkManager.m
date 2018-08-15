@@ -121,9 +121,8 @@
 #if DEBUG
         NSLog(@"Bridge API call returned status code 401; attempting to refresh session token");
 #endif
-        // clear the stored session token if any, and attempt reauth
-        [_authManager clearSessionToken];
-        [_authManager ensureSignedInWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        // attempt reauth
+        [_authManager attemptReauthWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
             // ignore 412 Not Consented on signIn when auto-renewing the session token; some Bridge endpoints still work when not consented,
             // and those that don't will themselves return a 412 status code
             BOOL relevantError = (error && error.code != SBBErrorCodeServerPreconditionNotMet);

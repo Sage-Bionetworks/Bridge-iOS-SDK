@@ -499,11 +499,15 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             _sessionToken = sessionToken;
         });
         
-        // UserSessionInfo will always include a sessionToken and a reauthToken.
+        // UserSessionInfo will always include a sessionToken.
         NSMutableDictionary *keysAndValues = [@{
-                                                self.reauthTokenKey: reauthToken,
                                                 self.sessionTokenKey: sessionToken
                                                 } mutableCopy];
+        
+        if (reauthToken) {
+            keysAndValues[self.reauthTokenKey] = reauthToken;
+        }
+        
         if (password) {
             keysAndValues[self.passwordKey] = password;
         }
@@ -578,6 +582,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                               NSStringFromSelector(@selector(password)):password,
                               NSStringFromSelector(@selector(type)):kSignInType};
     return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        // check for cases where we need to discard the sessionToken: SBBErrorCodeServerNotAuthenticated (auth failed), 404 (no such account, at least not verified),
+        // SBBErrorCodeServerAccountDisabled (account has been disabled)
+        if (error.code == SBBErrorCodeServerNotAuthenticated ||
+            error.code == 404 ||
+            error.code == SBBErrorCodeServerAccountDisabled) {
+            [self clearSessionToken];
+        }
         [self handleSignInWithCredential:credentialKey value:credentialValue password:password task:task response:responseObject error:error completion:completion];
     }];
 }
@@ -653,6 +664,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     params[credentialKey] = credentialValue;
 
     return [_networkManager post:kSBBAuthReauthAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        // check for cases where we need to discard the reauthToken: SBBErrorCodeServerNotAuthenticated (auth failed), 404 (no such account, at least not verified),
+        // SBBErrorCodeServerAccountDisabled (account has been disabled)
+        if (error.code == SBBErrorCodeServerNotAuthenticated ||
+            error.code == 404 ||
+            error.code == SBBErrorCodeServerAccountDisabled) {
+            [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey ]];
+        }
         [self handleSignInWithCredential:credentialKey value:credentialValue password:nil task:task response:responseObject error:error completion:completion];
     }];
 }
@@ -834,6 +852,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     
     // early exit if no stored password is available
     if (!password.length) {
+        // clear the session token since without a password, we have no way to sign in without user intervention
+        [self clearSessionToken];
         if (completion) {
             completion(nil, nil, [NSError SBBNoCredentialsError]);
         }
@@ -850,6 +870,25 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [self signInWithCredential:credentialKey value:credentialValue password:password completion:completion];
 }
 
+- (void)attemptReauthWithCompletion:(SBBNetworkManagerCompletionBlock)completion
+{
+    if (self.reauthTokenFromKeychain.length) {
+        [self reauthWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+            // if the response was a 401, try again the other way
+            if (error.code == SBBErrorCodeServerNotAuthenticated) {
+                [self attemptSignInWithStoredCredentialsWithCompletion:completion];
+                return;
+            }
+            
+            if (completion) {
+                completion(task, responseObject, error);
+            }
+        }];
+    } else {
+        [self attemptSignInWithStoredCredentialsWithCompletion:completion];
+    }
+}
+
 - (void)ensureSignedInWithCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
     if ([self isAuthenticated]) {
@@ -857,21 +896,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             completion(nil, nil, nil);
         }
     } else {
-        if (self.reauthTokenFromKeychain.length) {
-            [self reauthWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-                // if the response was a 401, try again the other way
-                if (error.code == SBBErrorCodeServerNotAuthenticated) {
-                    [self attemptSignInWithStoredCredentialsWithCompletion:completion];
-                    return;
-                }
-                
-                if (completion) {
-                    completion(task, responseObject, error);
-                }
-            }];
-        } else {
-            [self attemptSignInWithStoredCredentialsWithCompletion:completion];
-        }
+        [self attemptReauthWithCompletion:completion];
     }
 }
 
@@ -984,7 +1009,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     }
 }
 
-// used by SBBBridgeNetworkManager to auto-reauth when session tokens expire
+// used internally for unit testing, or when (re-)authentication via (stored) credentials fails, to mark the auth manager as not authenticated
 - (void)clearSessionToken
 {
     [self setSessionToken:nil];
