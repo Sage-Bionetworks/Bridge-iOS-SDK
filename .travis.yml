@@ -14,13 +14,14 @@ install:
 script:
 - "./travis/build.sh"
 deploy:
-  provider: s3
+- provider: s3
   access_key_id: AKIAI6OL6JAPHW5QJTLQ
   secret_access_key:
     secure: ur2qqEudbSmVAtOfAbHbyjM9k05GBCvd9HCN+ujn8adHo2Zoka9pbAFYfP2STFMCBkjyfIqHZTWxbisqvn/ofMmruoO9ve8k0LtxQVn/43EW8DC4feftyBmU6ZMlbgtvfFuG452EazQGhLzmMedBhMT6hrU5D8sbVQsAXqGmEGY=
   bucket: developer.sagebridge.org
   skip_cleanup: true
-  local_dir: Documentation
+  acl: public_read
+  local_dir: "./Documentation"
   upload-dir: "$TRAVIS_XCODE_SCHEME/$TRAVIS_TAG"
-  on:
-    tags: true
+#  on:
+#    tags: true
