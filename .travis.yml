@@ -23,5 +23,5 @@ deploy:
   acl: public_read
   local_dir: "./Documentation"
   upload-dir: "$TRAVIS_XCODE_SCHEME/$TRAVIS_TAG"
-#  on:
-#    tags: true
+  on:
+    tags: true
