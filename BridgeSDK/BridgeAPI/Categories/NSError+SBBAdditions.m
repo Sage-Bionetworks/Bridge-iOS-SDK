@@ -96,6 +96,10 @@
                                                                                            @"Error Description: Account holder has not consented to the study"),
                                               SBB_ORIGINAL_ERROR_KEY: foundationObject}];
     }
+    else if (statusCode == 423)
+    {
+        retError = [self SBBAccountDisabledError];
+    }
     else if (NSLocationInRange(statusCode, NSMakeRange(400, 99))) {
         NSString *localizedFormat = NSLocalizedStringWithDefaultValue(@"SBB_ERROR_4XX_CONTACT_SUPPORT", @"BridgeSDK", [NSBundle bundleForClass:[BridgeSDK class]], @"Client Error: %@. Please contact customer support.",
                                                       @"Error Description: Unknown client app error");
