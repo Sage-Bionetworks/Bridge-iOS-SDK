@@ -36,7 +36,8 @@ platform :ios do
 --no-create-docset \
 --no-install-docset \
 --no-publish-docset --clean-output --no-repeat-first-par \
---no-warn-invalid-crossref',
+--no-warn-invalid-crossref \
+--verbose 6',
       warnings: "--warn-missing-output-path --warn-missing-company-id"
     )
   end
