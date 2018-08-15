@@ -11,10 +11,12 @@ install:
 - gem install bundler
 - bundle install
 - "./travis/install-mogenerator.sh"
-- "./travis/install-appledoc.sh"
+# - "./travis/install-appledoc.sh"
 - appledoc --version
 script:
+- ls -al .
 - "./travis/build.sh"
+- ls -al ./Documentation/html/css
 - tree ./Documentation
 deploy:
 - provider: s3
