@@ -116,7 +116,7 @@
 
 - (void)handleHTTPError:(NSError *)error task:(NSURLSessionTask *)task response:(id)responseObject retryObject:(SBBNetworkRetryObject *)retryObject
 {
-    if (retryObject && retryObject.retryBlock && error.code == SBBErrorCodeServerNotAuthenticated && [_authManager isAuthenticated])
+    if (retryObject && retryObject.retryBlock && error.code == SBBErrorCodeServerNotAuthenticated && [_authManager canAuthenticate])
     {
 #if DEBUG
         NSLog(@"Bridge API call returned status code 401; attempting to refresh session token");

@@ -912,6 +912,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return (self.sessionToken.length > 0);
 }
 
+- (BOOL)canAuthenticate
+{
+    return (self.savedReauthToken.length > 0);
+}
+
 - (void)addAuthHeaderToHeaders:(NSMutableDictionary *)headers
 {
     if (self.isAuthenticated) {
