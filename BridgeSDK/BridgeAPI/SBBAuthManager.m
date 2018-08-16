@@ -244,7 +244,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     dispatch_once(&onceToken, ^{
         id<SBBNetworkManagerProtocol> networkManager = SBBComponent(SBBNetworkManager);
         shared = [[self alloc] initWithNetworkManager:networkManager];
-        [shared setupForEnvironment];
     });
     
     return shared;
@@ -255,14 +254,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     SBBNetworkManager *networkManager = [SBBNetworkManager networkManagerForEnvironment:environment study:study
                                                                             baseURLPath:baseURLPath];
     SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
     return authManager;
 }
 
 + (instancetype)authManagerWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager
 {
     SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
     return authManager;
 }
 
@@ -270,12 +267,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     id<SBBNetworkManagerProtocol> networkManager = [[SBBNetworkManager alloc] initWithBaseURL:baseURL];
     SBBAuthManager *authManager = [[self alloc] initWithNetworkManager:networkManager];
-    [authManager setupForEnvironment];
     return authManager;
 }
 
-- (void)setupForEnvironment
+// whenever we set the keychain manager, refetch the saved session token
+- (void)setKeychainManager:(id<SBBAuthKeychainManagerProtocol>)keychainManager
 {
+    _keychainManager = keychainManager;
     dispatchSyncToAuthQueue(^{
         _sessionToken = self.savedSessionToken;
     });
@@ -285,7 +283,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     if (self = [super init]) {
         _networkManager = networkManager;
-        _keychainManager = [_SBBAuthKeychainManager new];
+        self.keychainManager = [_SBBAuthKeychainManager new];
         
         // Clear keychain on first run in case of reinstallation
         NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
@@ -489,6 +487,15 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return;
     }
     
+    // check for cases where we need to discard the sessionToken and reauthToken: SBBErrorCodeServerNotAuthenticated (auth failed),
+    // 404 (no such account, at least not verified), SBBErrorCodeServerAccountDisabled (account has been disabled)
+    if (error.code == SBBErrorCodeServerNotAuthenticated ||
+        error.code == 404 ||
+        error.code == SBBErrorCodeServerAccountDisabled) {
+        [self clearSessionToken];
+        [self clearReauthToken];
+    }
+
     // Save session token, reauth token, and password in the keychain
     // ??? Save credentials in the keychain?
     NSString *sessionToken = responseObject[NSStringFromSelector(@selector(sessionToken))];
@@ -582,13 +589,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                               NSStringFromSelector(@selector(password)):password,
                               NSStringFromSelector(@selector(type)):kSignInType};
     return [_networkManager post:kSBBAuthSignInAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        // check for cases where we need to discard the sessionToken: SBBErrorCodeServerNotAuthenticated (auth failed), 404 (no such account, at least not verified),
-        // SBBErrorCodeServerAccountDisabled (account has been disabled)
-        if (error.code == SBBErrorCodeServerNotAuthenticated ||
-            error.code == 404 ||
-            error.code == SBBErrorCodeServerAccountDisabled) {
-            [self clearSessionToken];
-        }
         [self handleSignInWithCredential:credentialKey value:credentialValue password:password task:task response:responseObject error:error completion:completion];
     }];
 }
@@ -664,13 +664,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     params[credentialKey] = credentialValue;
 
     return [_networkManager post:kSBBAuthReauthAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        // check for cases where we need to discard the reauthToken: SBBErrorCodeServerNotAuthenticated (auth failed), 404 (no such account, at least not verified),
-        // SBBErrorCodeServerAccountDisabled (account has been disabled)
-        if (error.code == SBBErrorCodeServerNotAuthenticated ||
-            error.code == 404 ||
-            error.code == SBBErrorCodeServerAccountDisabled) {
-            [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey ]];
-        }
         [self handleSignInWithCredential:credentialKey value:credentialValue password:nil task:task response:responseObject error:error completion:completion];
     }];
 }
@@ -1013,6 +1006,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (void)clearSessionToken
 {
     [self setSessionToken:nil];
+}
+
+- (void)clearReauthToken
+{
+    [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey ]];
 }
 
 @end
