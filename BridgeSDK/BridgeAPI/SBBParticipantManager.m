@@ -356,7 +356,7 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     }];
 }
 
-- (NSString *)localDateStringFromDateComponents:(NSDateComponents *)dateComponents
+- (NSDate *)gregorianDateFromDateComponents:(NSDateComponents *)dateComponents
 {
     static NSCalendar *gregorianCalendar;
     static dispatch_once_t onceToken;
@@ -364,7 +364,13 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         gregorianCalendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
     });
     
-    NSDate *date = [gregorianCalendar dateFromComponents:dateComponents];
+    return [gregorianCalendar dateFromComponents:dateComponents];
+
+}
+
+- (NSString *)localDateStringFromDateComponents:(NSDateComponents *)dateComponents
+{
+    NSDate *date = [self gregorianDateFromDateComponents:dateComponents];
     return date.ISO8601DateOnlyString;
 }
 
@@ -390,10 +396,12 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
+    NSDate *startDate = [self localDateStringFromDateComponents:fromDate];
+    NSDate *endDate = [self localDateStringFromDateComponents:toDate];
     NSDictionary *parameters = @{
                                  @"identifier": identifier,
-                                 @"startDate": [self localDateStringFromDateComponents:fromDate],
-                                 @"endDate": [self localDateStringFromDateComponents:toDate]
+                                 @"startDate": startDate,
+                                 @"endDate": endDate
                                  };
     
     return [self.networkManager get:kSBBParticipantReportsAPI3Format headers:headers parameters:parameters background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
@@ -418,12 +426,23 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
             SBBResourceList *reportList = [self.objectManager objectFromBridgeJSON:objectJSON];
             reportItems = reportList.items;
         }
+        
+        // fall back to cache
         if (!reportItems && gSBBUseCache) {
             SBBResourceList *reportList = [self.cacheManager cachedObjectOfType:SBBResourceList.entityName withId:self.listIdentifier createIfMissing:NO];
             
+            // filter to the desired localDate range. conveniently, ISO date strings can be compared as strings:
+            // https://fits.gsfc.nasa.gov/iso-time.html
+            NSString *localDateSelector = NSStringFromSelector(@selector(localDate));
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K <= %@",
+                                        localDateSelector, startDate,
+                                        localDateSelector, endDate];
+            reportItems = [reportList.items filteredArrayUsingPredicate:predicate];
+            
             // cached items are unmapped so we need to map them before returning
-            reportItems = [self mappedObjectsInList:reportList.items];
+            reportItems = [self mappedObjectsInList:reportItems];
         }
+        
         if (completion) {
             completion(reportItems, error);
         }
