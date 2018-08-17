@@ -431,7 +431,7 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         if (!reportItems && gSBBUseCache) {
             SBBResourceList *reportList = [self.cacheManager cachedObjectOfType:SBBResourceList.entityName withId:self.listIdentifier createIfMissing:NO];
             
-            // filter to the desired localDate range. conveniently, ISO date strings can be compared as strings:
+            // filter to the desired localDate range. conveniently, ISO8601 dates (and times) can be compared as strings:
             // https://fits.gsfc.nasa.gov/iso-time.html
             NSString *localDateSelector = NSStringFromSelector(@selector(localDate));
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K <= %@",
