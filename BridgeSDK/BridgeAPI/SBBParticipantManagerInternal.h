@@ -34,6 +34,8 @@
 
 /* CONSTANTS */
 extern NSString * const kSBBParticipantAPI;
+extern NSString * const kSBBParticipantReportsAPI3Format;
+extern NSString * const kSBBParticipantReportsAPI4Format;
 
 extern NSString * const kSBBParticipantDataSharingScopeStrings[];
 

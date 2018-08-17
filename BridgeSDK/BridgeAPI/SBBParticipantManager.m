@@ -36,10 +36,15 @@
 #import "SBBUserManagerInternal.h"
 #import "SBBComponentManager.h"
 #import "SBBAuthManagerInternal.h"
+#import "SBBReportData.h"
 
 #define PARTICIPANT_API V3_API_PREFIX @"/participants/self"
+#define PARTICIPANT_REPORTS_API3_FORMAT V3_API_PREFIX @"/users/self/%@"
+#define PARTICIPANT_REPORTS_API4_FORMAT V4_API_PREFIX @"/users/self/%@"
 
 NSString * const kSBBParticipantAPI = PARTICIPANT_API;
+NSString * const kSBBParticipantReportsAPI3Format = PARTICIPANT_REPORTS_API3_FORMAT;
+NSString * const kSBBParticipantReportsAPI4Format = PARTICIPANT_REPORTS_API4_FORMAT;
 
 NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     @"no_sharing",
@@ -349,6 +354,116 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         NSSet<NSString *> *newGroups = [removeSet copy];
         [self updateDataGroupsWithGroups:newGroups completion:completion];
     }];
+}
+
+- (NSString *)localDateStringFromDateComponents:(NSDateComponents *)dateComponents
+{
+    static NSCalendar *gregorianCalendar;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        gregorianCalendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    });
+    
+    NSDate *date = [gregorianCalendar dateFromComponents:dateComponents];
+    return date.ISO8601DateOnlyString;
+}
+
+- (NSString *)listIdentifier
+{
+    return [SBBReportData entityName];
+}
+
+- (NSArray *)mappedObjectsInList:(NSArray *)list
+{
+    NSMutableArray *mappedList = [list mutableCopy];
+    if ([self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)]) {
+        // in case object mapping has been set up
+        for (NSInteger i = 0; i < list.count; ++i) {
+            mappedList[i] = [((id<SBBObjectManagerInternalProtocol>)self.objectManager) mappedObjectForBridgeObject:list[i]];
+        }
+    }
+    
+    return [mappedList copy];
+}
+
+- (NSURLSessionTask *)getReport:(NSString *)identifier fromDate:(NSDateComponents *)fromDate toDate:(NSDateComponents *)toDate completion:(SBBParticipantManagerGetReportCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSDictionary *parameters = @{
+                                 @"identifier": identifier,
+                                 @"startDate": [self localDateStringFromDateComponents:fromDate],
+                                 @"endDate": [self localDateStringFromDateComponents:toDate]
+                                 };
+    
+    return [self.networkManager get:kSBBParticipantReportsAPI3Format headers:headers parameters:parameters background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        NSArray *reportItems = nil;
+        if (!error) {
+            NSDictionary *objectJSON = responseObject;
+            if (gSBBUseCache) {
+                // Set an identifier in the JSON so we can find the cached object later--since
+                // ResourceList doesn't come with anything by which to distinguish one
+                // from another if the items[] list is empty.
+                NSMutableDictionary *objectWithListIdentifier = [responseObject mutableCopy];
+                
+                // -- get the identifier key path we need to set from the cache manager core data entity description
+                //    rather than hardcoding it with a string literal
+                NSEntityDescription *entityDescription = [SBBResourceList entityForContext:self.cacheManager.cacheIOContext];
+                NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
+                
+                // -- set it in the JSON to this Participant Manager's list identifier
+                [objectWithListIdentifier setValue:self.listIdentifier forKeyPath:entityIDKeyPath];
+                objectJSON = [objectWithListIdentifier copy];
+            }
+            SBBResourceList *reportList = [self.objectManager objectFromBridgeJSON:objectJSON];
+            reportItems = reportList.items;
+        }
+        if (!reportItems && gSBBUseCache) {
+            SBBResourceList *reportList = [self.cacheManager cachedObjectOfType:SBBResourceList.entityName withId:self.listIdentifier createIfMissing:NO];
+            
+            // cached items are unmapped so we need to map them before returning
+            reportItems = [self mappedObjectsInList:reportList.items];
+        }
+        if (completion) {
+            completion(reportItems, error);
+        }
+    }];
+}
+
+- (NSURLSessionTask *)getReport:(NSString *)identifier fromTimestamp:(NSDate *)fromTimestamp toTimestamp:(NSDate *)toTimestamp completion:(SBBParticipantManagerGetReportCompletionBlock)completion
+{
+    
+}
+
+- (NSURLSessionTask *)saveReportData:(SBBReportData *)reportData forReport:(NSString *)identifier completion:(SBBParticipantManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    
+    NSString *endpoint = [NSString stringWithFormat:kSBBParticipantReportsAPI4Format, identifier];
+    NSDictionary *reportDataJSON = [self.objectManager bridgeJSONFromObject:reportData];
+    
+    return [self.networkManager post:endpoint headers:headers parameters:reportDataJSON background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        if (completion) {
+            completion(responseObject, error);
+        }
+    }];
+}
+
+- (NSURLSessionTask *)saveReportJSON:(id)reportJSON withDateTime:(NSDate *)dateTime forReport:(NSString *)identifier completion:(SBBParticipantManagerCompletionBlock)completion
+{
+    SBBReportData *reportData = [SBBReportData new];
+    reportData.data = reportJSON;
+    reportData.date = dateTime;
+    return [self saveReportData:reportData forReport:identifier completion:completion];
+}
+
+- (NSURLSessionTask *)saveReportJSON:(id)reportJSON withLocalDate:(NSDateComponents *)dateComponents forReport:(NSString *)identifier completion:(SBBParticipantManagerCompletionBlock)completion
+{
+    SBBReportData *reportData = [SBBReportData new];
+    reportData.data = reportJSON;
+    [reportData setDateComponents:dateComponents];
+    return [self saveReportData:reportData forReport:identifier completion:completion];
 }
 
 @end

@@ -77,6 +77,10 @@ typedef void (^SBBParticipantManagerGetGroupsCompletionBlock)(NSSet<NSString *> 
  */
 typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject, NSError * _Nullable error);
 
+/*!
+ This protocol defines the interface to the SBBParticipantManager's non-constructor, non-initializer methods. The interface is
+ abstracted out for use in mock objects for testing, and to allow selecting among multiple implementations at runtime.
+ */
 @protocol SBBParticipantManagerProtocol <SBBBridgeAPIManagerProtocol>
 
 /*!
@@ -243,6 +247,10 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
 
 @end
 
+/*!
+ This class handles communication with the Bridge Participants API, and with the client-facing participant reports
+ endpoints (which for historical reasons still use the otherwise mostly-deprecated Users API).
+ */
 @interface SBBParticipantManager : SBBBridgeAPIManager<SBBComponent, SBBParticipantManagerProtocol>
 
 

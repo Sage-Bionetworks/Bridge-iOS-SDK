@@ -31,4 +31,6 @@
 
 @interface SBBReportData : _SBBReportData <_SBBReportData>
 // Custom logic goes here.
+- (void)setDateComponents:(NSDateComponents *)dateComponents;
+
 @end
