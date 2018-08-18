@@ -1,5 +1,5 @@
 //
-//  SBBReportData.m
+//  SBBDateRangeResourceList.h
 //
 //	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
@@ -27,68 +27,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBReportData.h"
-#import "NSDate+SBBAdditions.h"
+#import "_SBBDateRangeResourceList.h"
 
-@interface SBBReportData ()
-
-@property (nonatomic, strong) NSDate *date_;
-
-@end
-
-@implementation SBBReportData
-
-#pragma mark Abstract method overrides
-
+@interface SBBDateRangeResourceList : _SBBDateRangeResourceList <_SBBDateRangeResourceList>
 // Custom logic goes here.
-
-- (NSDate *)date
-{
-    if (!self.date_) {
-        NSString *dateString = self.dateTime ?: self.localDate;
-        self.date_ = [NSDate dateWithISO8601String:dateString];
-    }
-    
-    return self.date_;
-}
-
-- (void)setDate:(NSDate *)date
-{
-    self.date_ = date;
-    self.dateTime = date.ISO8601StringUTC;
-    self.localDate = nil;
-}
-
-- (void)setDateComponents:(NSDateComponents *)dateComponents
-{
-    static NSCalendar *gregorianCalendar;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        gregorianCalendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
-    });
-    
-    NSDate *date = [gregorianCalendar dateFromComponents:dateComponents];
-    
-    // if the hour component isn't set, treat it as localDate; if it is, use dateTime instead
-    if ([dateComponents valueForComponent:NSCalendarUnitHour] == NSDateComponentUndefined) {
-        self.localDate = date.ISO8601DateOnlyString;
-    } else {
-        self.dateTime = date.ISO8601StringUTC;
-    }
-}
-
-- (void)setDateTime:(NSString *)dateTime
-{
-    super.dateTime = dateTime;
-    self.localDate = nil;
-    self.date_ = nil;
-}
-
-- (void)setLocalDate:(NSString *)localDate
-{
-    super.localDate = localDate;
-    self.dateTime = nil;
-    self.date_ = nil;
-}
-
 @end

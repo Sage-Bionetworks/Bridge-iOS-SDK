@@ -169,6 +169,12 @@
         <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
+    <entity name="DateRangeResourceList" parentEntity="ResourceList" syncable="YES">
+        <userInfo>
+            <entry key="entityIDKeyPath" value="listID__"/>
+            <entry key="entityIDRegex" value="^(ReportData)$"/>
+        </userInfo>
+    </entity>
     <entity name="DateTimeConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="allowFuture" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
@@ -203,6 +209,7 @@
         <relationship name="requestParams" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="RequestParams" inverseName="requestParamsForwardCursorPagedResourceList" inverseEntity="RequestParams" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="listID__"/>
+            <entry key="entityIDRegex" value="^(ReportData)$"/>
         </userInfo>
     </entity>
     <entity name="GuidHolder" parentEntity="BridgeObject" syncable="YES">
@@ -657,6 +664,7 @@
     <elements>
         <element name="AbstractStudyParticipant" positionX="18" positionY="108" width="128" height="300"/>
         <element name="Activity" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="ActivityEvent" positionX="45" positionY="180" width="128" height="90"/>
         <element name="AppConfig" positionX="36" positionY="171" width="128" height="165"/>
         <element name="BloodPressureConstraints" positionX="18" positionY="153" width="128" height="60"/>
         <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
@@ -705,6 +713,6 @@
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WeightConstraints" positionX="36" positionY="171" width="128" height="75"/>
-        <element name="ActivityEvent" positionX="45" positionY="180" width="128" height="90"/>
+        <element name="DateRangeResourceList" positionX="54" positionY="189" width="128" height="45"/>
     </elements>
 </model>

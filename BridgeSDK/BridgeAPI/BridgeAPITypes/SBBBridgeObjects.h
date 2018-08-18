@@ -10,6 +10,7 @@
 #import "SBBConsentStatus.h"
 #import "SBBDataGroups.h"
 #import "SBBDateConstraints.h"
+#import "SBBDateRangeResourceList.h"
 #import "SBBDateTimeConstraints.h"
 #import "SBBDateTimeRangeResourceList.h"
 #import "SBBDecimalConstraints.h"

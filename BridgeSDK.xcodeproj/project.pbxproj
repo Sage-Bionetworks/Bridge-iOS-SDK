@@ -174,6 +174,10 @@
 		60E86D75211E430F0073C69C /* _SBBActivityEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 60E86D73211E430F0073C69C /* _SBBActivityEvent.m */; };
 		60E86D78211E432B0073C69C /* SBBActivityEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 60E86D76211E432A0073C69C /* SBBActivityEvent.m */; };
 		60E86D79211E432B0073C69C /* SBBActivityEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E86D77211E432B0073C69C /* SBBActivityEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		60E86DFD2127648B0073C69C /* _SBBDateRangeResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 60E86DEC212764890073C69C /* _SBBDateRangeResourceList.m */; };
+		60E86DFE2127648B0073C69C /* _SBBDateRangeResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E86DFC2127648A0073C69C /* _SBBDateRangeResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		60E86E01212764C00073C69C /* SBBDateRangeResourceList.m in Sources */ = {isa = PBXBuildFile; fileRef = 60E86DFF212764BE0073C69C /* SBBDateRangeResourceList.m */; };
+		60E86E02212764C00073C69C /* SBBDateRangeResourceList.h in Headers */ = {isa = PBXBuildFile; fileRef = 60E86E00212764BF0073C69C /* SBBDateRangeResourceList.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		60F1E3FD1A38E871009B380E /* machine.ih.motemplate in Resources */ = {isa = PBXBuildFile; fileRef = 60F1E3FC1A38E871009B380E /* machine.ih.motemplate */; };
 		60F1E3FF1A392F7D009B380E /* _SBBBridgeObjectInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 60F1E3FE1A392F7D009B380E /* _SBBBridgeObjectInternal.h */; };
 		60F1E4011A3932B5009B380E /* human.ih.motemplate in Resources */ = {isa = PBXBuildFile; fileRef = 60F1E4001A3932B5009B380E /* human.ih.motemplate */; };
@@ -780,6 +784,10 @@
 		60E86D73211E430F0073C69C /* _SBBActivityEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBActivityEvent.m; sourceTree = "<group>"; };
 		60E86D76211E432A0073C69C /* SBBActivityEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBActivityEvent.m; sourceTree = "<group>"; };
 		60E86D77211E432B0073C69C /* SBBActivityEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBActivityEvent.h; sourceTree = "<group>"; };
+		60E86DEC212764890073C69C /* _SBBDateRangeResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBDateRangeResourceList.m; sourceTree = "<group>"; };
+		60E86DFC2127648A0073C69C /* _SBBDateRangeResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBDateRangeResourceList.h; sourceTree = "<group>"; };
+		60E86DFF212764BE0073C69C /* SBBDateRangeResourceList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBDateRangeResourceList.m; sourceTree = "<group>"; };
+		60E86E00212764BF0073C69C /* SBBDateRangeResourceList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDateRangeResourceList.h; sourceTree = "<group>"; };
 		60F1E3FC1A38E871009B380E /* machine.ih.motemplate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = machine.ih.motemplate; sourceTree = "<group>"; };
 		60F1E3FE1A392F7D009B380E /* _SBBBridgeObjectInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBBridgeObjectInternal.h; sourceTree = "<group>"; };
 		60F1E4001A3932B5009B380E /* human.ih.motemplate */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = human.ih.motemplate; sourceTree = "<group>"; };
@@ -1271,6 +1279,8 @@
 				80C87F0C1C18E61000FE8A63 /* SBBDataGroups.m */,
 				800E794D19ED74A600EEE612 /* SBBDateConstraints.h */,
 				800E794E19ED74A600EEE612 /* SBBDateConstraints.m */,
+				60E86E00212764BF0073C69C /* SBBDateRangeResourceList.h */,
+				60E86DFF212764BE0073C69C /* SBBDateRangeResourceList.m */,
 				800E794F19ED74A600EEE612 /* SBBDateTimeConstraints.h */,
 				800E795019ED74A600EEE612 /* SBBDateTimeConstraints.m */,
 				80BAFD5F1EFCA4600000FC59 /* SBBDateTimeRangeResourceList.h */,
@@ -1842,6 +1852,8 @@
 				80C87F081C18E55A00FE8A63 /* _SBBDataGroups.m */,
 				800E792519ED740F00EEE612 /* _SBBDateConstraints.h */,
 				800E792619ED740F00EEE612 /* _SBBDateConstraints.m */,
+				60E86DFC2127648A0073C69C /* _SBBDateRangeResourceList.h */,
+				60E86DEC212764890073C69C /* _SBBDateRangeResourceList.m */,
 				800E792719ED740F00EEE612 /* _SBBDateTimeConstraints.h */,
 				800E792819ED740F00EEE612 /* _SBBDateTimeConstraints.m */,
 				80BAFD4D1EFCA44A0000FC59 /* _SBBDateTimeRangeResourceList.h */,
@@ -1962,6 +1974,7 @@
 				80B2C64F1E3AD493001F9FEA /* ZZNewArchiveEntry.h in Headers */,
 				8026D65E19E7527F008942B0 /* SBBSurveyManager.h in Headers */,
 				80F7C34119E5DC0D00574800 /* _SBBBridgeObject.h in Headers */,
+				60E86DFE2127648B0073C69C /* _SBBDateRangeResourceList.h in Headers */,
 				80F88E4B1AF98DA70090D462 /* SBBActivityManager.h in Headers */,
 				80561DB71E6A0866005FBFA3 /* _SBBResourceListInternal.h in Headers */,
 				80B2C6421E3AD493001F9FEA /* ZZDataChannelOutput.h in Headers */,
@@ -2075,6 +2088,7 @@
 				80B2C6511E3AD493001F9FEA /* ZZNewArchiveEntryWriter.h in Headers */,
 				FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */,
 				8026D68A19E888DB008942B0 /* SBBUploadSession.h in Headers */,
+				60E86E02212764C00073C69C /* SBBDateRangeResourceList.h in Headers */,
 				6056DE231CF61F4000C21E82 /* SBBSurveyInternal.h in Headers */,
 				605EDC431FD87CEC00F43D69 /* SBBNotificationManager.h in Headers */,
 				6079A5EB20658F2A0075D081 /* SBBAbstractStudyParticipant.h in Headers */,
@@ -2805,6 +2819,7 @@
 				8026BD2319C892E40077F3EB /* SBBComponentManager.m in Sources */,
 				80B2C6491E3AD493001F9FEA /* ZZFileChannel.m in Sources */,
 				800E797819ED7BCB00EEE612 /* SBBSurveyRule.m in Sources */,
+				60E86E01212764C00073C69C /* SBBDateRangeResourceList.m in Sources */,
 				80E819781A83E8EB00513919 /* SBBSurveyInfoScreen.m in Sources */,
 				8017AF7319DA0359001AF9BA /* UIDevice+Hardware.m in Sources */,
 				8026BD1219C7532D0077F3EB /* UICKeyChainStore.m in Sources */,
@@ -2829,6 +2844,7 @@
 				800E796C19ED74C500EEE612 /* SBBSurveyQuestionOption.m in Sources */,
 				605EDC3E1FD87C1F00F43D69 /* SBBGuidHolder.m in Sources */,
 				80B2C63B1E3AD493001F9FEA /* ZZArchiveEntry.m in Sources */,
+				60E86DFD2127648B0073C69C /* _SBBDateRangeResourceList.m in Sources */,
 				80E819671A83E89E00513919 /* _SBBImage.m in Sources */,
 				606FDE261A2F9E4300898466 /* SBBIdentifierHolder.m in Sources */,
 				80B2C64E1E3AD493001F9FEA /* ZZInflateInputStream.m in Sources */,

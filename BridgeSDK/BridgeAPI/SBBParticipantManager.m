@@ -39,8 +39,8 @@
 #import "SBBReportData.h"
 
 #define PARTICIPANT_API V3_API_PREFIX @"/participants/self"
-#define PARTICIPANT_REPORTS_API3_FORMAT V3_API_PREFIX @"/users/self/%@"
-#define PARTICIPANT_REPORTS_API4_FORMAT V4_API_PREFIX @"/users/self/%@"
+#define PARTICIPANT_REPORTS_API3_FORMAT V3_API_PREFIX @"/users/self/reports/%@"
+#define PARTICIPANT_REPORTS_API4_FORMAT V4_API_PREFIX @"/users/self/reports/%@"
 
 NSString * const kSBBParticipantAPI = PARTICIPANT_API;
 NSString * const kSBBParticipantReportsAPI3Format = PARTICIPANT_REPORTS_API3_FORMAT;
@@ -374,11 +374,6 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     return date.ISO8601DateOnlyString;
 }
 
-- (NSString *)listIdentifier
-{
-    return [SBBReportData entityName];
-}
-
 - (NSArray *)mappedObjectsInList:(NSArray *)list
 {
     NSMutableArray *mappedList = [list mutableCopy];
@@ -396,8 +391,8 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 {
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
-    NSDate *startDate = [self localDateStringFromDateComponents:fromDate];
-    NSDate *endDate = [self localDateStringFromDateComponents:toDate];
+    NSString *startDate = [self localDateStringFromDateComponents:fromDate];
+    NSString *endDate = [self localDateStringFromDateComponents:toDate];
     NSDictionary *parameters = @{
                                  @"identifier": identifier,
                                  @"startDate": startDate,
@@ -409,34 +404,34 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         if (!error) {
             NSDictionary *objectJSON = responseObject;
             if (gSBBUseCache) {
-                // Set an identifier in the JSON so we can find the cached object later--since
-                // ResourceList doesn't come with anything by which to distinguish one
-                // from another if the items[] list is empty.
+                // Set an identifier in the JSON so we can find the cached list for this report later--since
+                // ReportDataList (DateRangeResourceList) and ReportData don't come with anything by which
+                // to distinguish which report they are for.
                 NSMutableDictionary *objectWithListIdentifier = [responseObject mutableCopy];
                 
                 // -- get the identifier key path we need to set from the cache manager core data entity description
                 //    rather than hardcoding it with a string literal
-                NSEntityDescription *entityDescription = [SBBResourceList entityForContext:self.cacheManager.cacheIOContext];
+                NSEntityDescription *entityDescription = [SBBDateRangeResourceList entityForContext:self.cacheManager.cacheIOContext];
                 NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
                 
-                // -- set it in the JSON to this Participant Manager's list identifier
-                [objectWithListIdentifier setValue:self.listIdentifier forKeyPath:entityIDKeyPath];
+                // -- set it in the JSON to this report's identifier
+                [objectWithListIdentifier setValue:identifier forKeyPath:entityIDKeyPath];
                 objectJSON = [objectWithListIdentifier copy];
             }
-            SBBResourceList *reportList = [self.objectManager objectFromBridgeJSON:objectJSON];
+            SBBDateRangeResourceList *reportList = [self.objectManager objectFromBridgeJSON:objectJSON];
             reportItems = reportList.items;
         }
         
         // fall back to cache
         if (!reportItems && gSBBUseCache) {
-            SBBResourceList *reportList = [self.cacheManager cachedObjectOfType:SBBResourceList.entityName withId:self.listIdentifier createIfMissing:NO];
+            SBBDateRangeResourceList *reportList = [self.cacheManager cachedObjectOfType:SBBDateRangeResourceList.entityName withId:identifier createIfMissing:NO];
             
             // filter to the desired localDate range. conveniently, ISO8601 dates (and times) can be compared as strings:
             // https://fits.gsfc.nasa.gov/iso-time.html
-            NSString *localDateSelector = NSStringFromSelector(@selector(localDate));
+            NSString *localDateKey = NSStringFromSelector(@selector(localDate));
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K <= %@",
-                                        localDateSelector, startDate,
-                                        localDateSelector, endDate];
+                                        localDateKey, startDate,
+                                        localDateKey, endDate];
             reportItems = [reportList.items filteredArrayUsingPredicate:predicate];
             
             // cached items are unmapped so we need to map them before returning
@@ -449,9 +444,87 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     }];
 }
 
+- (NSURLSessionTask *)fetchReport:(NSString *)identifier startDate:(NSString *)startDate endDate:(NSString *)endDate offsetKey:(NSString *)offsetKey accumulatedItems:(NSMutableArray *)accumulatedItems completion:(SBBParticipantManagerCompletionBlock)completion
+{
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    NSMutableDictionary *parameters = [@{
+                                         @"identifier": identifier,
+                                         @"startDate": startDate,
+                                         @"endDate": endDate
+                                         } mutableCopy];
+    if (offsetKey) {
+        parameters[@"offsetKey"] = offsetKey;
+    }
+    
+    return [self.networkManager get:kSBBParticipantReportsAPI4Format headers:headers parameters:parameters background:YES completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        if (!error) {
+            NSDictionary *objectJSON = responseObject;
+            if (gSBBUseCache) {
+                // Set an identifier in the JSON so we can find the cached list for this report later--since
+                // ForwardCursorReportDataList (ForwardCursorPagedResourceList) and ReportData don't come with
+                // anything by which to distinguish which report they are for.
+                NSMutableDictionary *objectWithListIdentifier = [responseObject mutableCopy];
+                
+                // -- get the identifier key path we need to set from the cache manager core data entity description
+                //    rather than hardcoding it with a string literal
+                NSEntityDescription *entityDescription = [SBBForwardCursorPagedResourceList entityForContext:self.cacheManager.cacheIOContext];
+                NSString *entityIDKeyPath = entityDescription.userInfo[@"entityIDKeyPath"];
+                
+                // -- set it in the JSON to this report's identifier
+                [objectWithListIdentifier setValue:identifier forKeyPath:entityIDKeyPath];
+                objectJSON = [objectWithListIdentifier copy];
+            }
+            SBBForwardCursorPagedResourceList *reportList = [self.objectManager objectFromBridgeJSON:objectJSON];
+            
+            // if we're not caching, add this page of items to accumulatedItems
+            if (accumulatedItems) {
+                [accumulatedItems addObjectsFromArray:reportList.items];
+            }
+            
+            // keep going if we need to
+            if (reportList.hasNext) {
+                [self fetchReport:identifier startDate:startDate endDate:endDate offsetKey:reportList.nextPageOffsetKey accumulatedItems:accumulatedItems completion:completion];
+                return;
+            }
+        }
+        
+        if (completion) {
+            completion(nil, error);
+        }
+    }];
+}
+
 - (NSURLSessionTask *)getReport:(NSString *)identifier fromTimestamp:(NSDate *)fromTimestamp toTimestamp:(NSDate *)toTimestamp completion:(SBBParticipantManagerGetReportCompletionBlock)completion
 {
+    NSString *startDate = fromTimestamp.ISO8601StringUTC;
+    NSString *endDate = toTimestamp.ISO8601StringUTC;
+    __block NSMutableArray *accumulatedItems = gSBBUseCache ? nil : [NSMutableArray array];
     
+    return [self fetchReport:identifier startDate:startDate endDate:endDate offsetKey:nil accumulatedItems:accumulatedItems completion:^(NSArray *participantReport,  NSError *error) {
+        NSArray *reportItems = nil;
+        if (gSBBUseCache) {
+            // if using cache, pull the list for this report that we've just updated in the cache, and filter and map the dateTime range we requested
+            SBBForwardCursorPagedResourceList *reportList = [self.cacheManager cachedObjectOfType:SBBForwardCursorPagedResourceList.entityName withId:identifier createIfMissing:NO];
+            
+            // filter to the desired dateTime range. conveniently, ISO8601 dates and times can be compared as strings:
+            // https://fits.gsfc.nasa.gov/iso-time.html
+            NSString *dateTimeKey = NSStringFromSelector(@selector(dateTime));
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K <= %@",
+                                      dateTimeKey, startDate,
+                                      dateTimeKey, endDate];
+            reportItems = [reportList.items filteredArrayUsingPredicate:predicate];
+            
+            // cached items are unmapped so we need to map them before returning
+            reportItems = [self mappedObjectsInList:participantReport];
+        } else {
+            reportItems = [accumulatedItems copy];
+        }
+        
+        if (completion) {
+            completion(reportItems, error);
+        }
+    }];
 }
 
 - (NSURLSessionTask *)saveReportData:(SBBReportData *)reportData forReport:(NSString *)identifier completion:(SBBParticipantManagerCompletionBlock)completion
