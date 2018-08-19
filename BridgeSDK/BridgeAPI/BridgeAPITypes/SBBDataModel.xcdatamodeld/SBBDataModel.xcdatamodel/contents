@@ -74,6 +74,9 @@
         <attribute name="answerValue" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="eventId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="eventId"/>
+        </userInfo>
     </entity>
     <entity name="AppConfig" parentEntity="BridgeObject" syncable="YES">
         <attribute name="clientData" optional="YES" attributeType="Transformable" syncable="YES">
