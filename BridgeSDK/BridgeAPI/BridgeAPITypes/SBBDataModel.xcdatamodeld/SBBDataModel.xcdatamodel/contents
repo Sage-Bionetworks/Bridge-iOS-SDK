@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17F77" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="AbstractStudyParticipant" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
         <attribute name="attributes" optional="YES" attributeType="Transformable" syncable="YES">
             <userInfo>
@@ -172,7 +172,6 @@
     <entity name="DateRangeResourceList" parentEntity="ResourceList" syncable="YES">
         <userInfo>
             <entry key="entityIDKeyPath" value="listID__"/>
-            <entry key="entityIDRegex" value="^(ReportData)$"/>
         </userInfo>
     </entity>
     <entity name="DateTimeConstraints" parentEntity="SurveyConstraints" syncable="YES">
@@ -209,7 +208,6 @@
         <relationship name="requestParams" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="RequestParams" inverseName="requestParamsForwardCursorPagedResourceList" inverseEntity="RequestParams" syncable="YES"/>
         <userInfo>
             <entry key="entityIDKeyPath" value="listID__"/>
-            <entry key="entityIDRegex" value="^(ReportData)$"/>
         </userInfo>
     </entity>
     <entity name="GuidHolder" parentEntity="BridgeObject" syncable="YES">
@@ -674,6 +672,7 @@
         <element name="ConsentStatus" positionX="0" positionY="90" width="128" height="135"/>
         <element name="DataGroups" positionX="0" positionY="90" width="128" height="60"/>
         <element name="DateConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="DateRangeResourceList" positionX="54" positionY="189" width="128" height="45"/>
         <element name="DateTimeConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="DateTimeRangeResourceList" positionX="18" positionY="153" width="128" height="75"/>
         <element name="DecimalConstraints" positionX="0" positionY="0" width="128" height="105"/>
@@ -713,6 +712,5 @@
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WeightConstraints" positionX="36" positionY="171" width="128" height="75"/>
-        <element name="DateRangeResourceList" positionX="54" positionY="189" width="128" height="45"/>
     </elements>
 </model>

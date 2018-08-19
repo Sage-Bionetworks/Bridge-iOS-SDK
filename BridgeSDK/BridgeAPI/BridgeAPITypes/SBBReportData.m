@@ -29,6 +29,7 @@
 
 #import "SBBReportData.h"
 #import "NSDate+SBBAdditions.h"
+#import "ModelObjectInternal.h"
 
 @interface SBBReportData ()
 
@@ -41,6 +42,16 @@
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.
+- (NSDictionary *)dictionaryRepresentationFromObjectManager:(id<SBBObjectManagerProtocol>)objectManager
+{
+    NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
+    
+    // date (in JSON) should be a copy of either dateTime or localDate, whichever is set (only one will be)
+    NSString *dateJSON = self.dateTime ?: self.localDate;
+    [dict setObjectIfNotNil:dateJSON forKey:@"date"];
+     
+    return [dict copy];
+}
 
 - (NSDate *)date
 {
@@ -55,8 +66,8 @@
 - (void)setDate:(NSDate *)date
 {
     self.date_ = date;
-    self.dateTime = date.ISO8601StringUTC;
-    self.localDate = nil;
+    super.dateTime = date.ISO8601StringUTC;
+    super.localDate = nil;
 }
 
 - (void)setDateComponents:(NSDateComponents *)dateComponents
@@ -80,15 +91,19 @@
 - (void)setDateTime:(NSString *)dateTime
 {
     super.dateTime = dateTime;
-    self.localDate = nil;
-    self.date_ = nil;
+    if (dateTime) {
+        super.localDate = nil;
+        self.date_ = nil;
+    }
 }
 
 - (void)setLocalDate:(NSString *)localDate
 {
     super.localDate = localDate;
-    self.dateTime = nil;
-    self.date_ = nil;
+    if (localDate) {
+        super.dateTime = nil;
+        self.date_ = nil;
+    }
 }
 
 @end

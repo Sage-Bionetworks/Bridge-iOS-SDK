@@ -57,7 +57,9 @@
         [newItems addObject:savedReportData];
     }
     
-    [newItems sortUsingSelector:@selector(localDate)];
+    [newItems sortUsingComparator:^NSComparisonResult(SBBReportData * _Nonnull item1, SBBReportData * _Nonnull item2) {
+        return [item1.localDate compare:item2.localDate];
+    }];
     
     [self removeItemsObjects];
     for (SBBReportData *newReportData in newItems) {

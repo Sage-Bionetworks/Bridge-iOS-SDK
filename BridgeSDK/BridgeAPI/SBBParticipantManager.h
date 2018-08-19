@@ -31,6 +31,7 @@
 
 #import "SBBBridgeAPIManager.h"
 @class SBBReportData;
+@protocol SBBJSONValue;
 
 /*!
  @typedef SBBParticipantDataSharingScope
@@ -196,13 +197,13 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
  With this version of the method, you specify the desired time range with NSDate objects and they are interpreted as millisecond timestamps marking the starting and ending points of the desired span. You should use this method for retrieving ReportData objects from reports that use dateTime timestamps.
  
  @param identifier      The report identifier.
- @param fromTimestamp   The start of the desired date range, or nil to fetch all the way back to their enrollment in the study.
- @param toTimestamp     The end of the desired date range, or nil to fetch all the way to now.
+ @param fromTimestamp   The start of the desired date range.
+ @param toTimestamp     The end of the desired date range.
  @param completion      An SBBParticipantManagerGetReportCompletionBlock to be called upon completion.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromTimestamp:(nullable NSDate *)fromTimestamp toTimestamp:(nullable NSDate *)toTimestamp completion:(nullable SBBParticipantManagerGetReportCompletionBlock)completion;
+- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromTimestamp:(nonnull NSDate *)fromTimestamp toTimestamp:(nonnull NSDate *)toTimestamp completion:(nullable SBBParticipantManagerGetReportCompletionBlock)completion;
 
 /*!
  Get the specified report data items for the user over the given date range.
@@ -210,18 +211,18 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
  With this version of the method, you specify the desired date range with NSDateComponents objects and they are interpreted as calendar dates marking the first and last dates (inclusive) for which ReportData objects are being requested. You should use this method for retrieving ReportData objects from reports that use localDate datestamps.
  
  @param identifier  The report identifier.
- @param fromDate    The first date to fetch, or nil to fetch all the way back to their enrollment in the study.
- @param toDate      The last date to fetch, or nil to fetch all the way to today.
+ @param fromDate    The first date to fetch.
+ @param toDate      The last date to fetch.
  @param completion  An SBBParticipantManagerGetReportCompletionBlock to be called upon completion.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromDate:(nullable NSDateComponents *)fromDate toDate:(nullable NSDateComponents *)toDate completion:(nullable SBBParticipantManagerGetReportCompletionBlock)completion;
+- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromDate:(nonnull NSDateComponents *)fromDate toDate:(nonnull NSDateComponents *)toDate completion:(nullable SBBParticipantManagerGetReportCompletionBlock)completion;
 
 /*!
  Save the specified ReportData object to the given report identifier. Any existing ReportData for the specified report with the same date
  
- @note A ReportData Bridge object can have either a full ISO8601 timestamp, represented by the dateTime field, or a date-only "datestamp", represented by the localDate field. The date field of SBBReportData is an NSDate object, which represents the same time as, and serializes to/from JSON using the appropriate formatter based on, whichever of dateTime or localDate is set. To use the localDate (date-only) datestamp, use setDateComponents: and make sure the hour component of the date components is NSDateComponentUndefined (or nil in Swift). To use the dateTime timestamp, you can either set the date property with an NSDate (Date), or use the date components setter with a defined value for the hours component. Whichever you use, all ReportData records saved to a given report identifier should use the same one.
+ @note A ReportData Bridge object can have either a full ISO8601 timestamp, represented by the dateTime field, or a date-only "datestamp", represented by the localDate field. The date field of SBBReportData is an NSDate object, which represents the same time as, and serializes to/from JSON by copying, whichever of dateTime or localDate is set. To use the localDate (date-only) datestamp, use setDateComponents: and make sure the hour component of the date components is NSDateComponentUndefined (or nil in Swift). To use the dateTime timestamp, you can either set the date property with an NSDate (Date), or use the date components setter with a defined value for the hours component. Whichever you use, all ReportData records saved to a given report identifier should use the same one.
  @param reportData  An SBBReportData object to be saved.
  @param identifier  The identifier of the report to which this reportData is to be saved.
  @param completion An SBBParticipantManagerCompletionBlock to be called upon completion.
@@ -238,7 +239,7 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
 - (nullable NSURLSessionTask *)saveReportJSON:(nonnull id<SBBJSONValue>)reportJSON withDateTime:(nonnull NSDate *)dateTime forReport:(nonnull NSString *)identifier completion:(nullable SBBParticipantManagerCompletionBlock)completion;
 
 /*!
- Save the specified report JSON data to the given report identifier with the specified localDate (date-only) datestamp. An date components smaller than a day (hour, minute, etc.) will be ignored.
+ Save the specified report JSON data to the given report identifier with the specified localDate (date-only) datestamp. Any date components smaller than a day (hour, minute, etc.) will be ignored.
  
  This is a convenience method that builds an SBBReportData object and calls through to saveReportData:forReport:completion:.
  */
