@@ -253,7 +253,7 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
  @param error A pointer to an NSError reference, which this method will fill in if there's an error processing the fetch request. Optional (as always).
  @return The SBBReportData object from the given report identifier with the most recent date.
  */
-- (SBBReportData *)getLatestCachedDataForReport:(nonnull NSString *)identifier error:(NSError **)error;
+- (nullable SBBReportData *)getLatestCachedDataForReport:(nonnull NSString *)identifier error:(NSError * _Nullable * _Nullable)error;
 
 @end
 

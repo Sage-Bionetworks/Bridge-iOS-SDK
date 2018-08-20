@@ -92,7 +92,7 @@ NSString * const kSBBActivityEventsAPI = ACTIVITYEVENTS_API;
             // fall back to cache
             NSSortDescriptor *sortByTimestamp = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(timestamp)) ascending:YES];
             NSError *fetchError = nil;
-            events = [self.cacheManager fetchCachedObjectsOfType:SBBActivityEvent.entityName predicate:nil sortDescriptors:sortByTimestamp fetchLimit:0 error:&fetchError];
+            events = (NSArray<SBBActivityEvent *> *)[self.cacheManager fetchCachedObjectsOfType:SBBActivityEvent.entityName predicate:nil sortDescriptors:@[ sortByTimestamp ] fetchLimit:0 error:&fetchError];
             if (fetchError) {
                 NSLog(@"Error fetching cached ActivityEvent objects: %@", fetchError);
                 
