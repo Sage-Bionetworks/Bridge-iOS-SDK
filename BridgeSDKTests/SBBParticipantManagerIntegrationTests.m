@@ -597,8 +597,9 @@
     NSTimeInterval hour = 3600.0;
     NSString *identifier = @"Playlist";
     
+    NSDate *now = [NSDate date];
     for (id<SBBJSONValue>data in dataList) {
-        NSDate *timestamp = [NSDate dateWithTimeIntervalSinceNow:hour * timeOffset--];
+        NSDate *timestamp = [now dateByAddingTimeInterval:hour * timeOffset--];
         [self addItemData:data toReport:identifier withDate:timestamp dateOnly:NO];
     }
     
@@ -712,6 +713,47 @@
         XCTAssertEqualObjects(item.localDate, localDateUpdating, @"Expected re-retrieved report to have the same localDate at the same index, but instead of %@ it's %@", localDateUpdating, item.localDate);
         XCTAssertEqualObjects(item.data, newData, @"Expected re-retrieved item to have data %@\nbut it has %@", newData, item.data);
     }
+}
+
+- (void)testGetLatestCachedDataForReport
+{
+    // first set a bunch to retrieve, of each type (timestamped & datestamped)
+    // - timestamped
+    NSArray<NSString *> *dataList = self.reportJSONDataList;
+    
+    NSInteger timeOffset = 0;
+    NSTimeInterval hour = 3600.0;
+    NSString *tsIdentifier = @"TimestampedReport";
+    
+    NSDate *now = [NSDate date];
+    for (id<SBBJSONValue>data in dataList) {
+        NSDate *timestamp = [now dateByAddingTimeInterval:hour * timeOffset--];
+        [self addItemData:data toReport:tsIdentifier withDate:timestamp dateOnly:NO];
+    }
+
+    // - datestamped
+    NSString *dsIdentifier = @"DatestampedReport";
+    
+    NSInteger daysOffset = 0;
+    NSDateComponents *components = [self dateOnlyComponentsForDate:now];
+    for (id<SBBJSONValue>data in dataList) {
+        components.day += daysOffset--;
+        NSDate *timestamp = [self.gregorianCalendar dateFromComponents:components];
+        [self addItemData:data toReport:dsIdentifier withDate:timestamp dateOnly:YES];
+    }
+    
+    // now get the latest from each one, and make sure it is indeed the latest
+    NSError *fetchError = nil;
+    SBBReportData *latestTimestamped = [SBBComponent(SBBParticipantManager) getLatestCachedDataForReport:tsIdentifier error:&fetchError];
+    XCTAssertNil(fetchError, @"Expected no fetch error for latest timestamped report item, but got this: %@", fetchError);
+    XCTAssertEqualObjects(latestTimestamped.dateTime, now.ISO8601StringUTC);
+    XCTAssertEqualObjects(latestTimestamped.data, dataList[0]);
+    
+    fetchError = nil;
+    SBBReportData *latestDatestamped = [SBBComponent(SBBParticipantManager) getLatestCachedDataForReport:dsIdentifier error:&fetchError];
+    XCTAssertNil(fetchError, @"Expected no fetch error for latest datestamped report item, but got this: %@", fetchError);
+    XCTAssertEqualObjects(latestDatestamped.localDate, now.ISO8601DateOnlyString);
+    XCTAssertEqualObjects(latestDatestamped.data, dataList[0]);
 }
 
 @end

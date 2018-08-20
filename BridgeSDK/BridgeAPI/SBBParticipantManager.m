@@ -426,7 +426,7 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         if (!reportItems && gSBBUseCache) {
             SBBDateRangeResourceList *reportList = (SBBDateRangeResourceList *)[self.cacheManager cachedObjectOfType:SBBDateRangeResourceList.entityName withId:identifier createIfMissing:NO];
             
-            // filter to the desired localDate range. conveniently, ISO8601 dates (and times) can be compared as strings:
+            // filter to the desired localDate range. conveniently, ISO8601 dates can be compared as strings:
             // https://fits.gsfc.nasa.gov/iso-time.html
             NSString *localDateKey = NSStringFromSelector(@selector(localDate));
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K <= %@",
@@ -508,7 +508,8 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
             // if using cache, pull the list for this report that we've just updated in the cache, and filter and map the dateTime range we requested
             SBBForwardCursorPagedResourceList *reportList = (SBBForwardCursorPagedResourceList *)[self.cacheManager cachedObjectOfType:SBBForwardCursorPagedResourceList.entityName withId:identifier createIfMissing:NO];
             
-            // filter to the desired dateTime range. conveniently, ISO8601 dates and times can be compared as strings:
+            // filter to the desired dateTime range. conveniently, ISO8601 dates and times can be compared as strings,
+            // as long as they are in the same time zone, and we always format the dateTime strings to UTC:
             // https://fits.gsfc.nasa.gov/iso-time.html
             NSString *dateTimeKey = NSStringFromSelector(@selector(dateTime));
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K <= %@",
@@ -607,6 +608,48 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
         }];
     }
     return [self saveReportData:reportData forReport:identifier completion:completion];
+}
+
+- (SBBReportData *)getLatestCachedDataForReport:(NSString *)identifier error:(NSError **)error
+{
+    
+    BOOL canQueryCache = gSBBUseCache && [self.objectManager conformsToProtocol:@protocol(SBBObjectManagerInternalProtocol)];
+    NSAssert(canQueryCache, @"Attempting to get cached schedules with a non-conformant set up.");
+    
+    NSError *requestError = nil;
+    
+    // ReportData objects are not individually cacheable, since they don't contain any information in their JSON indicating which report they belong to.
+    // When stored in CoreData, fortunately, they do have backlinks to their containing lists, which are cached by the report identifier.
+    // Unfortunately, timestamped and datestamped reports come from Bridge in two unrelated types of lists, so we have to look for both.
+    // - get the keys for the report identifiers in the containing lists
+    NSEntityDescription *fcprlEntityDescription = [SBBForwardCursorPagedResourceList entityForContext:self.cacheManager.cacheIOContext];
+    NSString *fcprlEntityIDKeyPath = fcprlEntityDescription.userInfo[@"entityIDKeyPath"];
+    NSString *fcprlReportIdentifierKeyPath = [NSString stringWithFormat:@"%@.%@",
+                                         NSStringFromSelector(@selector(forwardCursorPagedResourceList)),
+                                         fcprlEntityIDKeyPath];
+    NSEntityDescription *drrlEntityDescription = [SBBDateRangeResourceList entityForContext:self.cacheManager.cacheIOContext];
+    NSString *drrlEntityIDKeyPath = drrlEntityDescription.userInfo[@"entityIDKeyPath"];
+    NSString *drrlReportIdentifierKeyPath = [NSString stringWithFormat:@"%@.%@",
+                                         NSStringFromSelector(@selector(resourceList)),
+                                         drrlEntityIDKeyPath];
+
+    // - search for all ReportData objects in the list for this report
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@ || %K == %@",
+                                            fcprlReportIdentifierKeyPath, identifier,
+                                            drrlReportIdentifierKeyPath, identifier];
+    // - sort them in descending order so the first item in the list will be the one we're looking for
+    NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(date)) ascending:NO];
+    // - limit to 1 result so we just get the one we want
+    NSArray *results = [self.cacheManager fetchCachedObjectsOfType:SBBReportData.entityName
+                                                         predicate:predicate
+                                                   sortDescriptors:@[ descriptor ]
+                                                        fetchLimit:1
+                                                             error:&requestError];
+    if ((requestError != nil) && (error != nil)) {
+        *error = requestError;
+    }
+    
+    return [results firstObject];
 }
 
 @end

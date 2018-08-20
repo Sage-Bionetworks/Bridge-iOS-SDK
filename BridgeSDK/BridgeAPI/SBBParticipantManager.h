@@ -246,6 +246,15 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
 
 - (nullable NSURLSessionTask *)saveReportJSON:(nonnull id<SBBJSONValue>)reportJSON withLocalDate:(nonnull NSDateComponents *)dateComponents forReport:(nonnull NSString *)identifier completion:(nullable SBBParticipantManagerCompletionBlock)completion;
 
+/*!
+ Get the latest cached report data from the given report.
+ 
+ @param identifier The identifier for the report to be searched.
+ @param error A pointer to an NSError reference, which this method will fill in if there's an error processing the fetch request. Optional (as always).
+ @return The SBBReportData object from the given report identifier with the most recent date.
+ */
+- (SBBReportData *)getLatestCachedDataForReport:(nonnull NSString *)identifier error:(NSError **)error;
+
 @end
 
 /*!
