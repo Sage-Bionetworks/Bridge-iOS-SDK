@@ -1,7 +1,7 @@
 //
 //  SBBDateTimeRangeResourceList.m
 //
-//	Copyright (c) 2014-2017 Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,7 @@
 // Custom logic goes here.
 - (void)reconcileWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerInternalProtocol>)objectManager
 {
+    // This is how ScheduledActivity lists are returned in the /v4/activities API.
     // For items[], we want to accumulate the ScheduledActivities for a given forward cursor paged list
     // as the pages are loaded from Bridge, rather than overwriting items[] with just the current page of
     // activities each time.

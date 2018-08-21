@@ -1,8 +1,7 @@
 //
-//  SBBParticipantManagerInternal.h
-//  BridgeSDK
+//  _SBBDateRangeResourceList.h
 //
-//	Copyright (c) 2015-2016, Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -27,28 +26,20 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBDateRangeResourceList.h instead.
+//
 
-#import "SBBParticipantManager.h"
-#import "SBBActivityManagerInternal.h"
-#import "SBBBridgeAPIManagerInternal.h"
+#import <Foundation/Foundation.h>
+#import "SBBResourceList.h"
 
-/* CONSTANTS */
-extern NSString * const kSBBParticipantAPI;
-extern NSString * const kSBBParticipantReportsAPI3Format;
-extern NSString * const kSBBParticipantReportsAPI4Format;
+NS_ASSUME_NONNULL_BEGIN
 
-extern NSString * const kSBBParticipantDataSharingScopeStrings[];
-
-@protocol SBBParticipantManagerInternalProtocol <SBBParticipantManagerProtocol, SBBBridgeAPIManagerInternalProtocol>
-
-@property (nonatomic, strong) id<SBBActivityManagerInternalProtocol> activityManager;
-
-- (void)clearUserInfoFromCache;
-- (NSURLSessionTask *)getParticipantRecordFromBridgeWithCompletion:(SBBParticipantManagerGetRecordCompletionBlock)completion;
-- (NSDictionary *)bridgeJSONForParticipantWithField:(NSString *)fieldName setTo:(id)value;
+@protocol _SBBDateRangeResourceList
 
 @end
 
-@interface SBBParticipantManager(internal)<SBBParticipantManagerInternalProtocol>
+@interface _SBBDateRangeResourceList : SBBResourceList
 
 @end
+NS_ASSUME_NONNULL_END

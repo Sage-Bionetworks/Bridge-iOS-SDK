@@ -30,6 +30,7 @@
 
 #import "BridgeSDK.h"
 
+#define V1_API_PREFIX @"/v1"
 #define V3_API_PREFIX @"/v3"
 #define V4_API_PREFIX @"/v4"
 

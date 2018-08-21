@@ -486,4 +486,274 @@
     }];
 }
 
+- (NSCalendar *)gregorianCalendar
+{
+    static NSCalendar *gregorianCalendar;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        gregorianCalendar = [NSCalendar calendarWithIdentifier:NSCalendarIdentifierGregorian];
+    });
+    
+    return gregorianCalendar;
+}
+
+- (NSDateComponents *)dateOnlyComponentsForDate:(NSDate *)date
+{
+    return [self.gregorianCalendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
+}
+
+- (void)addItemData:(id<SBBJSONValue>)data toReport:(NSString *)identifier withDate:(NSDate *)date dateOnly:(BOOL)dateOnly
+{
+    XCTestExpectation *savedItem = [self expectationWithDescription:@"Saved report item data to Bridge"];
+    if (dateOnly) {
+        NSDateComponents *components = [self dateOnlyComponentsForDate:date];
+        [SBBComponent(SBBParticipantManager) saveReportJSON:data withLocalDate:components forReport:identifier completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+            XCTAssertNil(error, @"Unexpected error saving datestamped report item: %@", error);
+            [savedItem fulfill];
+        }];
+    } else {
+        [SBBComponent(SBBParticipantManager) saveReportJSON:data withDateTime:date forReport:identifier completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+            XCTAssertNil(error, @"Unexpected error saving timestamped report item: %@", error);
+            [savedItem fulfill];
+        }];
+    }
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout saving report item data to Bridge: %@", error);
+        }
+    }];
+}
+
+- (void)testAddTimestampedReportItem
+{
+    NSDictionary *itemData = @{
+                               @"whatYouWant": @"Baby I got it",
+                               @"whatYouNeed": @"Do you know I got it"
+                               };
+    
+    NSDate *now = [NSDate date];
+    [self addItemData:itemData toReport:@"Respect" withDate:now dateOnly:NO];
+}
+
+- (void)testAddDatestampedReportItem
+{
+    NSDictionary *itemData = @{
+                               @"allImAskin": @"Is for a little respect when you get home (just a little bit)",
+                               @"heyBaby": @"(just a little bit) when you get home"
+                               };
+    
+    NSString *datestamp = @"1967-04-29";
+    NSDate *releaseDate = [NSDate dateWithISO8601String:datestamp];
+    [self addItemData:itemData toReport:@"Respect" withDate:releaseDate dateOnly:YES];
+}
+
+- (NSArray<NSString *> *)reportJSONDataList
+{
+    return @[
+             @{ @"title": @"Respect" },
+             @{ @"title": @"Natural Woman" },
+             @{ @"title": @"Chain of Fools" },
+             @{ @"title": @"Think" }
+             ];
+}
+
+- (NSArray<SBBReportData *> *)retrieveItemsForReport:(NSString *)identifier from:(NSDate *)fromDate to:(NSDate *)toDate dateOnly:(BOOL)dateOnly
+{
+    XCTestExpectation *retrievedReport = [self expectationWithDescription:@"Retrieved participant report from Bridge"];
+    __block NSArray<SBBReportData *> *items = nil;
+    if (dateOnly) {
+        NSDateComponents *startDate = [self dateOnlyComponentsForDate:fromDate];
+        NSDateComponents *endDate = [self dateOnlyComponentsForDate:toDate];
+        [SBBComponent(SBBParticipantManager) getReport:identifier fromDate:startDate toDate:endDate completion:^(NSArray * _Nullable participantReport, NSError * _Nullable error) {
+            items = participantReport;
+            [retrievedReport fulfill];
+        }];
+    } else {
+        [SBBComponent(SBBParticipantManager) getReport:identifier fromTimestamp:fromDate toTimestamp:toDate completion:^(NSArray * _Nullable participantReport, NSError * _Nullable error) {
+            items = participantReport;
+            [retrievedReport fulfill];
+        }];
+    }
+    
+    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout retrieving participant report from Bridge: %@", error);
+        }
+    }];
+
+    return items;
+}
+
+- (void)testGetTimestampedReportItems
+{
+    // first set a bunch to retrieve; make sure there are more than one page's worth (default page size is 50)
+    NSArray<NSString *> *dataList = self.reportJSONDataList;
+    while (dataList.count <= 50) {
+        dataList = [dataList arrayByAddingObjectsFromArray:dataList];
+    }
+    
+    NSInteger timeOffset = 0;
+    NSTimeInterval hour = 3600.0;
+    NSString *identifier = @"Playlist";
+    
+    NSDate *now = [NSDate date];
+    for (id<SBBJSONValue>data in dataList) {
+        NSDate *timestamp = [now dateByAddingTimeInterval:hour * timeOffset--];
+        [self addItemData:data toReport:identifier withDate:timestamp dateOnly:NO];
+    }
+    
+    // now retrieve them
+    NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:hour * timeOffset];
+    NSDate *endDate = [NSDate date];
+    NSArray<SBBReportData *> *items = [self retrieveItemsForReport:identifier from:startDate to:endDate dateOnly:NO];
+
+    XCTAssert(items.count == dataList.count, @"Expected %ld report data items but got %ld", dataList.count, items.count);
+    if (items.count == dataList.count) {
+        // expect the items to be in chronological order, so the reverse of their order in the data list
+        NSInteger listOffset = dataList.count - 1;
+        for (SBBReportData *item in items) {
+            XCTAssertNil(item.localDate, @"Expected report item localDate to be nil but it's %@", item.localDate);
+            XCTAssertNotNil(item.dateTime, @"Expected report item dateTime to not be nil but it is nil");
+            id<SBBJSONValue> expectedData = dataList[listOffset--];
+            XCTAssertEqual(item.data, expectedData, @"Expected item to have this data: %@\nbut got this instead: %@", expectedData, item.data);
+        }
+    }
+    
+    // now save different data at one of the existing timestamps and make sure it gets overwritten
+    id<SBBJSONValue> newData = @{ @"title": @"I Say a Little Prayer" };
+    uint32_t index = arc4random_uniform((uint32_t)items.count);
+    NSDate *dateUpdating = items[index].date;
+    NSString *dateTimeUpdating = items[index].dateTime;
+    [self addItemData:newData toReport:identifier withDate:dateUpdating dateOnly:NO];
+    
+    // - check that it was overwritten locally:
+    SBBForwardCursorPagedResourceList *cachedReport = (SBBForwardCursorPagedResourceList *)[SBBComponent(SBBCacheManager) cachedObjectOfType:SBBForwardCursorPagedResourceList.entityName withId:identifier createIfMissing:NO];
+    XCTAssertNotNil(cachedReport, @"Expected to have a timestamped report cached for %@, but apparently not", identifier);
+    if (cachedReport) {
+        NSString *dateTimeKey = NSStringFromSelector(@selector(dateTime));
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", dateTimeKey, dateTimeUpdating];
+        NSArray<SBBReportData *> *matches = [cachedReport.items filteredArrayUsingPredicate:predicate];
+        XCTAssert(matches.count == 1, @"Expected cached report to have exactly one dateTime match but it has %ld", matches.count);
+        if (matches.count == 1) {
+            SBBReportData *item = matches[0];
+            XCTAssertEqualObjects(item.data, newData, @"Expected updated item to have data %@\nbut instead it has %@", newData, item.data);
+        }
+    }
+    
+    // - clear the report from local cache, retrieve from Bridge, and check again to be sure it got overwritten there too:
+    [SBBComponent(SBBCacheManager) removeFromCacheObjectOfType:SBBForwardCursorPagedResourceList.entityName withId:identifier];
+    items = [self retrieveItemsForReport:identifier from:startDate to:endDate dateOnly:NO];
+    XCTAssert(items.count > index, @"Expected re-retrieved report to have at least %u items, but it only has %ld", index + 1, items.count);
+    if (items.count > index) {
+        SBBReportData *item = items[index];
+        XCTAssertEqualObjects(item.dateTime, dateTimeUpdating, @"Expected re-retrieved report to have the same dateTime at the same index, but instead of %@ it's %@", dateTimeUpdating, item.dateTime);
+        XCTAssertEqualObjects(item.data, newData, @"Expected re-retrieved item to have data %@\nbut it has %@", newData, item.data);
+    }
+}
+
+- (void)testGetDatestampedReportItems
+{
+    // first set a bunch to retrieve
+    NSArray<NSString *> *dataList = self.reportJSONDataList;
+    NSString *identifier = @"SongOfTheDay";
+    
+    NSInteger daysOffset = 0;
+    NSDateComponents *components = [self dateOnlyComponentsForDate:[NSDate date]];
+    for (id<SBBJSONValue>data in dataList) {
+        components.day += daysOffset--;
+        NSDate *timestamp = [self.gregorianCalendar dateFromComponents:components];
+        [self addItemData:data toReport:identifier withDate:timestamp dateOnly:YES];
+    }
+
+    // now retrieve them
+    NSDate *startDate = [self.gregorianCalendar dateFromComponents:components];
+    NSDate *endDate = [NSDate date];
+    NSArray<SBBReportData *> *items = [self retrieveItemsForReport:identifier from:startDate to:endDate dateOnly:YES];
+    
+    XCTAssert(items.count == dataList.count, @"Expected %ld report data items but got %ld", dataList.count, items.count);
+    if (items.count == dataList.count) {
+        // expect the items to be in chronological order, so the reverse of their order in the data list
+        NSInteger listOffset = dataList.count - 1;
+        for (SBBReportData *item in items) {
+            XCTAssertNotNil(item.localDate, @"Expected report item localDate to not be nil but it is nil");
+            XCTAssertNil(item.dateTime, @"Expected report item dateTime to be nil but it's %@", item.dateTime);
+            id<SBBJSONValue> expectedData = dataList[listOffset--];
+            XCTAssertEqual(item.data, expectedData, @"Expected item to have this data: %@\nbut got this instead: %@", expectedData, item.data);
+        }
+    }
+    
+    // now save different data at one of the existing datestamps and make sure it gets overwritten
+    id<SBBJSONValue> newData = @{ @"title": @"I Say a Little Prayer" };
+    uint32_t index = arc4random_uniform((uint32_t)items.count);
+    NSDate *dateUpdating = items[index].date;
+    NSString *localDateUpdating = items[index].localDate;
+    [self addItemData:newData toReport:identifier withDate:dateUpdating dateOnly:YES];
+    
+    // - check that it was overwritten locally:
+    SBBDateRangeResourceList *cachedReport = (SBBDateRangeResourceList *)[SBBComponent(SBBCacheManager) cachedObjectOfType:SBBDateRangeResourceList.entityName withId:identifier createIfMissing:NO];
+    XCTAssertNotNil(cachedReport, @"Expected to have a datestamped report cached for %@, but apparently not", identifier);
+    if (cachedReport) {
+        NSString *localDateKey = NSStringFromSelector(@selector(localDate));
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@", localDateKey, localDateUpdating];
+        NSArray<SBBReportData *> *matches = [cachedReport.items filteredArrayUsingPredicate:predicate];
+        XCTAssert(matches.count == 1, @"Expected cached report to have exactly one localDate match but it has %ld", matches.count);
+        if (matches.count == 1) {
+            SBBReportData *item = matches[0];
+            XCTAssertEqualObjects(item.data, newData, @"Expected updated item to have data %@\nbut instead it has %@", newData, item.data);
+        }
+    }
+    
+    // - clear the report from local cache, retrieve from Bridge, and check again to be sure it got overwritten there too:
+    [SBBComponent(SBBCacheManager) removeFromCacheObjectOfType:SBBDateRangeResourceList.entityName withId:identifier];
+    items = [self retrieveItemsForReport:identifier from:startDate to:endDate dateOnly:YES];
+    XCTAssert(items.count > index, @"Expected re-retrieved report to have at least %u items, but it only has %ld", index + 1, items.count);
+    if (items.count > index) {
+        SBBReportData *item = items[index];
+        XCTAssertEqualObjects(item.localDate, localDateUpdating, @"Expected re-retrieved report to have the same localDate at the same index, but instead of %@ it's %@", localDateUpdating, item.localDate);
+        XCTAssertEqualObjects(item.data, newData, @"Expected re-retrieved item to have data %@\nbut it has %@", newData, item.data);
+    }
+}
+
+- (void)testGetLatestCachedDataForReport
+{
+    // first set a bunch to retrieve, of each type (timestamped & datestamped)
+    // - timestamped
+    NSArray<NSString *> *dataList = self.reportJSONDataList;
+    
+    NSInteger timeOffset = 0;
+    NSTimeInterval hour = 3600.0;
+    NSString *tsIdentifier = @"TimestampedReport";
+    
+    NSDate *now = [NSDate date];
+    for (id<SBBJSONValue>data in dataList) {
+        NSDate *timestamp = [now dateByAddingTimeInterval:hour * timeOffset--];
+        [self addItemData:data toReport:tsIdentifier withDate:timestamp dateOnly:NO];
+    }
+
+    // - datestamped
+    NSString *dsIdentifier = @"DatestampedReport";
+    
+    NSInteger daysOffset = 0;
+    NSDateComponents *components = [self dateOnlyComponentsForDate:now];
+    for (id<SBBJSONValue>data in dataList) {
+        components.day += daysOffset--;
+        NSDate *timestamp = [self.gregorianCalendar dateFromComponents:components];
+        [self addItemData:data toReport:dsIdentifier withDate:timestamp dateOnly:YES];
+    }
+    
+    // now get the latest from each one, and make sure it is indeed the latest
+    NSError *fetchError = nil;
+    SBBReportData *latestTimestamped = [SBBComponent(SBBParticipantManager) getLatestCachedDataForReport:tsIdentifier error:&fetchError];
+    XCTAssertNil(fetchError, @"Expected no fetch error for latest timestamped report item, but got this: %@", fetchError);
+    XCTAssertEqualObjects(latestTimestamped.dateTime, now.ISO8601StringUTC);
+    XCTAssertEqualObjects(latestTimestamped.data, dataList[0]);
+    
+    fetchError = nil;
+    SBBReportData *latestDatestamped = [SBBComponent(SBBParticipantManager) getLatestCachedDataForReport:dsIdentifier error:&fetchError];
+    XCTAssertNil(fetchError, @"Expected no fetch error for latest datestamped report item, but got this: %@", fetchError);
+    XCTAssertEqualObjects(latestDatestamped.localDate, now.ISO8601DateOnlyString);
+    XCTAssertEqualObjects(latestDatestamped.data, dataList[0]);
+}
+
 @end

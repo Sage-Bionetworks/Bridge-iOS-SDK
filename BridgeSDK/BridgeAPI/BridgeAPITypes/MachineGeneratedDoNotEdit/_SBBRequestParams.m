@@ -69,6 +69,8 @@
 
 @property (nullable, nonatomic, retain) NSNumber* total;
 
+@property (nullable, nonatomic, retain) NSManagedObject *requestParamsForwardCursorPagedResourceList;
+
 @property (nullable, nonatomic, retain) NSManagedObject *requestParamsResourceList;
 
 @end

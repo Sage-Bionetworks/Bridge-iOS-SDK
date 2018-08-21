@@ -1,8 +1,7 @@
 //
-//  SBBParticipantManagerInternal.h
-//  BridgeSDK
+//  SBBActivityEvent.h
 //
-//	Copyright (c) 2015-2016, Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -28,27 +27,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBParticipantManager.h"
-#import "SBBActivityManagerInternal.h"
-#import "SBBBridgeAPIManagerInternal.h"
+#import "_SBBActivityEvent.h"
 
-/* CONSTANTS */
-extern NSString * const kSBBParticipantAPI;
-extern NSString * const kSBBParticipantReportsAPI3Format;
-extern NSString * const kSBBParticipantReportsAPI4Format;
-
-extern NSString * const kSBBParticipantDataSharingScopeStrings[];
-
-@protocol SBBParticipantManagerInternalProtocol <SBBParticipantManagerProtocol, SBBBridgeAPIManagerInternalProtocol>
-
-@property (nonatomic, strong) id<SBBActivityManagerInternalProtocol> activityManager;
-
-- (void)clearUserInfoFromCache;
-- (NSURLSessionTask *)getParticipantRecordFromBridgeWithCompletion:(SBBParticipantManagerGetRecordCompletionBlock)completion;
-- (NSDictionary *)bridgeJSONForParticipantWithField:(NSString *)fieldName setTo:(id)value;
-
-@end
-
-@interface SBBParticipantManager(internal)<SBBParticipantManagerInternalProtocol>
-
+@interface SBBActivityEvent : _SBBActivityEvent <_SBBActivityEvent>
+// Custom logic goes here.
 @end

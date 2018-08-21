@@ -1,5 +1,5 @@
 //
-//  SBBForwardCursorPagedResourceList.m
+//  SBBDateRangeResourceList.m
 //
 //	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
@@ -27,20 +27,19 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBForwardCursorPagedResourceList.h"
+#import "SBBDateRangeResourceList.h"
 #import "SBBObjectManagerInternal.h"
 #import "ModelObjectInternal.h"
-#import "SBBForwardCursorPagedResourceListInternal.h"
 
-@implementation SBBForwardCursorPagedResourceList
+@implementation SBBDateRangeResourceList
 
 #pragma mark Abstract method overrides
 
 // Custom logic goes here.
 - (void)reconcileWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerInternalProtocol>)objectManager
 {
-    // This is how ReportData lists are returned in the /v4/users/self/reports/{identifier} API.
-    // For items[], we want to merge the ReportData items for a given page of a paged resource list
+    // This is how ReportData lists are returned in the /v3/users/self/reports/{identifier} API.
+    // For items[], we want to merge the ReportData items for a given date range resource list
     // when the date range is loaded from Bridge, rather than overwriting items[] with just the
     // current date range of items each time.
     NSArray<SBBReportData *> *savedItems = [self.items copy];
@@ -49,17 +48,17 @@
     [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
     
     // Since ReportData objects generally originate from the app, the client copies are canonical,
-    // so we'll restore the saved ones, replacing any from the server with matching dateTimes.
+    // so we'll restore the saved ones, replacing any from the server with matching localDates.
     NSMutableArray<SBBReportData *> *newItems = [self.items mutableCopy];
-    NSString *dateTimeKey = NSStringFromSelector(@selector(dateTime));
+    NSString *localDateKey = NSStringFromSelector(@selector(localDate));
     for (SBBReportData *savedReportData in savedItems) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K != %@", dateTimeKey, savedReportData.dateTime];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K != %@", localDateKey, savedReportData.localDate];
         [newItems filterUsingPredicate:predicate];
         [newItems addObject:savedReportData];
     }
     
-    [newItems sortUsingComparator:^NSComparisonResult(SBBReportData *  _Nonnull item1, SBBReportData *  _Nonnull item2) {
-        return [item1.dateTime compare:item2.dateTime];
+    [newItems sortUsingComparator:^NSComparisonResult(SBBReportData * _Nonnull item1, SBBReportData * _Nonnull item2) {
+        return [item1.localDate compare:item2.localDate];
     }];
     
     [self removeItemsObjects];

@@ -197,14 +197,14 @@
 	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for (SBBSchemaReference *schemaReferencesObj in self.schemaReferences)
-	{
-		[schemaReferencesObj awakeFromDictionaryRepresentationInit];
-	}
-
 	for (SBBSurveyReference *surveyReferencesObj in self.surveyReferences)
 	{
 		[surveyReferencesObj awakeFromDictionaryRepresentationInit];
+	}
+
+	for (SBBSchemaReference *schemaReferencesObj in self.schemaReferences)
+	{
+		[schemaReferencesObj awakeFromDictionaryRepresentationInit];
 	}
 
 	[super awakeFromDictionaryRepresentationInit];
