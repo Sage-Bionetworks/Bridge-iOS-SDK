@@ -203,7 +203,7 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromTimestamp:(nonnull NSDate *)fromTimestamp toTimestamp:(nonnull NSDate *)toTimestamp completion:(nullable SBBParticipantManagerGetReportCompletionBlock)completion;
+- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromTimestamp:(nonnull NSDate *)fromTimestamp toTimestamp:(nonnull NSDate *)toTimestamp completion:(nonnull SBBParticipantManagerGetReportCompletionBlock)completion;
 
 /*!
  Get the specified report data items for the user over the given date range.
@@ -217,7 +217,7 @@ typedef void (^SBBParticipantManagerCompletionBlock)(_Nullable id responseObject
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromDate:(nonnull NSDateComponents *)fromDate toDate:(nonnull NSDateComponents *)toDate completion:(nullable SBBParticipantManagerGetReportCompletionBlock)completion;
+- (nullable NSURLSessionTask *)getReport:(nonnull NSString *)identifier fromDate:(nonnull NSDateComponents *)fromDate toDate:(nonnull NSDateComponents *)toDate completion:(nonnull SBBParticipantManagerGetReportCompletionBlock)completion;
 
 /*!
  Save the specified ReportData object to the given report identifier. Any existing ReportData for the specified report with the same date
