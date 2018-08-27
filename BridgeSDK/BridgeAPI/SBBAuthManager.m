@@ -62,6 +62,9 @@ NSString *kSignInType = @"SignIn";
 NSString * const kSBBUserSessionUpdatedNotification = @"SBBUserSessionUpdatedNotification";
 NSString * const kSBBUserSessionInfoKey = @"SBBUserSessionInfoKey";
 
+NSString * const kSBBAppHasRunBefore = @"SBBAppHasRunBefore";
+
+
 static NSString *envReauthTokenKeyFormat[] = {
     @"SBBReauthToken-%@",
     @"SBBReauthTokenStaging-%@",
@@ -270,10 +273,30 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return authManager;
 }
 
+- (void)clearOldKeychainOnReinstall
+{
+    // Use a UserDefaults flag so we can tell if this has been run since the last install.
+    NSUserDefaults *defaults = BridgeSDK.sharedUserDefaults;
+    if (![defaults boolForKey:kSBBAppHasRunBefore]) {
+        // UserDefaults says this is a fresh install, which could be a re-install after having previously
+        // deleted the app, so we need to make sure the keychain is also fresh
+        // (see comment in setKeychainManager:).
+        [_keychainManager clearKeychainStore];
+        [defaults setBool:YES forKey:kSBBAppHasRunBefore];
+    }
+}
+
 // whenever we set the keychain manager, refetch the saved session token
 - (void)setKeychainManager:(id<SBBAuthKeychainManagerProtocol>)keychainManager
 {
     _keychainManager = keychainManager;
+    
+    // Weird iOS behavior (bug?): If you kill your app before deleting it, when you re-install the keychain
+    // will be gone. But if you fail to kill it before deleting, when you re-install, the keychain will
+    // still be there (but CoreData will not, causing us headaches). So we need to make sure to delete any
+    // old keychain on first launch of a fresh install.
+    [self clearOldKeychainOnReinstall];
+
     dispatchSyncToAuthQueue(^{
         _sessionToken = self.savedSessionToken;
     });
