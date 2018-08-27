@@ -275,8 +275,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (void)clearOldKeychainOnReinstall
 {
+    // Use a UserDefaults flag so we can tell if this has been run since the last install.
     NSUserDefaults *defaults = BridgeSDK.sharedUserDefaults;
     if (![defaults boolForKey:kSBBAppHasRunBefore]) {
+        // UserDefaults says this is a fresh install, which could be a re-install after having previously
+        // deleted the app, so we need to make sure the keychain is also fresh
+        // (see comment in setKeychainManager:).
         [_keychainManager clearKeychainStore];
         [defaults setBool:YES forKey:kSBBAppHasRunBefore];
     }
