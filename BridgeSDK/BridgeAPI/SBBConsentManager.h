@@ -133,23 +133,20 @@ typedef void (^SBBConsentManagerGetCompletionBlock)(id _Nullable consentSignatur
 - (nonnull NSURLSessionTask *)getConsentSignatureForSubpopulation:(nonnull NSString *)subpopGuid completion:(nullable SBBConsentManagerGetCompletionBlock)completion;
 
 /*!
- *  Withdraw the user's consent signature previously submitted. This has the effect of withdrawing them from the
- *  study altogether.
- *
- *  @deprecated Use withdrawConsentForSubpopulation:withReason: instead.
+ *  Withdraw all consents to research for this participant, whether currently applicable or not.
  *
  *  @param reason A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.
  *  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  *
  *  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
  */
-- (nonnull NSURLSessionTask *)withdrawConsentWithReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion __attribute__((deprecated("use withdrawConsentForSubpopulation:withReason: instead")));
+- (nonnull NSURLSessionTask *)withdrawConsentWithReason:(nullable NSString *)reason completion:(nullable SBBConsentManagerCompletionBlock)completion;
 
 /*!
  Withdraw the user's consent signature previously submitted for a specific subpopulation.
  
  @param subpopGuid The GUID of the subpopulation for which the consent signature is being withdrawn.
- @param reason     A freeform text string entered by the participant describing their reasons for withdrawing from the study. Optional, can be nil or empty.
+ @param reason     A freeform text string entered by the participant describing their reasons for withdrawing from the study subpopulation. Optional, can be nil or empty.
  @param completion An SBBConsentManagerCompletionBlock to be called upon completion.
  
  @return An NSURLSessionTask object so you can cancel or suspend/resume the request.
