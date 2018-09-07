@@ -33,8 +33,7 @@
 #import "SBBConsentManager.h"
 
 /* CONSTANTS */
-extern NSString* const kSBBConsentAPI;
-extern NSString* const kSBBConsentWithdrawAPI;
+extern NSString* const kSBBConsentWithdrawAllAPI;
 extern NSString* const kSBBConsentSubpopulationsAPIFormat;
 extern NSString* const kSBBConsentSubpopulationsWithdrawAPIFormat;
 extern NSString* const kSBBConsentSubpopulationsEmailAPIFormat;

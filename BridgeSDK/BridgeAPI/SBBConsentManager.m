@@ -41,14 +41,10 @@
 #import "SBBParticipantManagerInternal.h"
 #import "ModelObjectInternal.h"
 
-#define CONSENT_API V3_API_PREFIX @"/consents/signature"
+#define CONSENT_WITHDRAW_ALL_API V3_API_PREFIX @"/consents/withdraw"
 #define CONSENT_SUBPOPULATIONS_API_FORMAT V3_API_PREFIX @"/subpopulations/%@/consents/signature"
 
-// deprecated APIs
-NSString * const kSBBConsentAPI = CONSENT_API;
-NSString * const kSBBConsentWithdrawAPI = CONSENT_API  @"/withdraw";
-
-// use these instead
+NSString * const kSBBConsentWithdrawAllAPI = CONSENT_WITHDRAW_ALL_API;
 NSString * const kSBBConsentSubpopulationsAPIFormat = CONSENT_SUBPOPULATIONS_API_FORMAT;
 NSString * const kSBBConsentSubpopulationsWithdrawAPIFormat = CONSENT_SUBPOPULATIONS_API_FORMAT @"/withdraw";
 NSString * const kSBBConsentSubpopulationsEmailAPIFormat = CONSENT_SUBPOPULATIONS_API_FORMAT @"/email";
@@ -171,7 +167,18 @@ NSString * const kSBBMimeTypePng = @"image/png";
 
 - (NSURLSessionTask *)withdrawConsentWithReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
 {
-    return [self withdrawConsentForSubpopulation:[SBBBridgeInfo shared].studyIdentifier withReason:reason completion:completion];
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [self.authManager addAuthHeaderToHeaders:headers];
+    
+    NSDictionary *parameters = reason.length ? @{@"reason": reason} : @{};
+    return [self.networkManager post:kSBBConsentWithdrawAllAPI
+                             headers:headers
+                          parameters:parameters
+                          completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+                              if (completion) {
+                                  completion(responseObject, error);
+                              }
+                          }];
 }
 
 - (NSURLSessionTask *)withdrawConsentForSubpopulation:(NSString *)subpopGuid withReason:(NSString *)reason completion:(SBBConsentManagerCompletionBlock)completion
