@@ -170,19 +170,22 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 + (NSString *)sdkKeychainAccessGroup
 {
+    NSString *keychainAccessGroup = SBBBridgeInfo.shared.keychainAccessGroup;
+    if (!keychainAccessGroup.length) {
+        return nil;
+    }
+    
     NSString *bundleSeedID = [self bundleSeedID];
     if (!bundleSeedID) {
         return nil;
     }
-    return [NSString stringWithFormat:@"%@.org.sagebase.Bridge", bundleSeedID];
+    
+    return [NSString stringWithFormat:@"%@.%@", bundleSeedID, keychainAccessGroup];
 }
 
 + (UICKeyChainStore *)sdkKeychainStore
 {
     NSString *accessGroup = self.sdkKeychainAccessGroup;
-    if (!accessGroup) {
-        return nil;
-    }
     return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:accessGroup];
 }
 

@@ -2,7 +2,7 @@
 //  SBBBridgeInfo.m
 //  BridgeSDK
 //
-//	Copyright (c) 2017, Sage Bionetworks
+//	Copyright (c) 2017-2018, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -90,6 +90,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
     self.appGroupIdentifier = info.appGroupIdentifier;
     self.usesStandardUserDefaults = info.usesStandardUserDefaults;
     self.userDefaultsSuiteName = info.userDefaultsSuiteName;
+    self.keychainAccessGroup = info.keychainAccessGroup;
 }
 
 - (NSString *)studyIdentifier
@@ -152,6 +153,16 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 - (void)setAppGroupIdentifier:(NSString *)appGroupIdentifier
 {
     _bridgeInfo[NSStringFromSelector(@selector(appGroupIdentifier))] = [appGroupIdentifier copy];
+}
+
+- (NSString *)keychainAccessGroup
+{
+    return _bridgeInfo[NSStringFromSelector(@selector(keychainAccessGroup))];
+}
+
+- (void)setKeychainAccessGroup:(NSString *)keychainAccessGroup
+{
+    _bridgeInfo[NSStringFromSelector(@selector(keychainAccessGroup))] = [keychainAccessGroup copy];
 }
 
 - (BOOL)usesStandardUserDefaults
