@@ -2,7 +2,7 @@
 //  SBBBridgeInfoProtocol.h
 //  BridgeSDK
 //
-// Copyright (c) 2017, Sage Bionetworks. All rights reserved.
+// Copyright (c) 2017-2018, Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -37,12 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol SBBBridgeInfoProtocol <NSObject>
 
 /**
- Study identifier used to setup the study with Bridge
+ The study identifier used to set up the study with Bridge.
  */
 @property (nonatomic, readonly, copy) NSString *studyIdentifier;
 
 /**
- Name of .pem certificate file to use for uploading to Bridge (without the .pem extension)
+ The name of .pem certificate file to use for uploading to Bridge (without the .pem extension).
  */
 @property (nonatomic, readonly, copy) NSString * _Nullable certificateName;
 
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) NSInteger cacheDaysBehind;
 
 /**
- Server environment to use.
+ The server environment to use.
  Generally you should not set this to anything other than SBBEnvironmentProd unless you are running your own
  Bridge server, and then only to test changes to the server which you have not yet deployed to production.
  */
@@ -87,6 +87,12 @@ NS_ASSUME_NONNULL_BEGIN
  (if provided).
  */
 @property (nonatomic, readonly, copy) NSString * _Nullable appGroupIdentifier;
+
+/**
+ This property, if set, is used for the keychain access group in which to store the session token,
+ reauth token, and (if any) password. If not set, the default keychain is used.
+ */
+@property (nonatomic, readonly, copy) NSString * _Nullable keychainAccessGroup;
 
 @end
 
