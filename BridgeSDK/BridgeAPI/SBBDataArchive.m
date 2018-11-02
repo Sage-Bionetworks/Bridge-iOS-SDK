@@ -111,7 +111,7 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     NSString *workingDirectoryPath = [NSTemporaryDirectory() stringByAppendingPathComponent:self.reference];
     if (![[NSFileManager defaultManager] fileExistsAtPath:workingDirectoryPath]) {
         NSError * fileError;
-        BOOL created = [[NSFileManager defaultManager] createDirectoryAtPath:workingDirectoryPath withIntermediateDirectories:YES attributes:@{ NSFileProtectionKey : NSFileProtectionComplete } error:&fileError];
+        BOOL created = [[NSFileManager defaultManager] createDirectoryAtPath:workingDirectoryPath withIntermediateDirectories:YES attributes:@{ NSFileProtectionKey : NSFileProtectionCompleteUntilFirstUserAuthentication } error:&fileError];
         if (!created) {
             workingDirectoryPath = nil;
             NSAssert(NO, @"Error creating working directory %@:\n%@", workingDirectoryPath, fileError);
