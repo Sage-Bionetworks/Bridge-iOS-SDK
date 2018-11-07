@@ -1189,6 +1189,7 @@
 		F81BE79020B497E700EE57D3 /* SBBBridgeTestHarness.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBBridgeTestHarness.h; sourceTree = "<group>"; };
 		F81BE79120B497E700EE57D3 /* SBBBridgeTestHarness.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SBBBridgeTestHarness.m; sourceTree = "<group>"; };
 		F852BAB32033F8A500C2803A /* SBBDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDefines.h; sourceTree = "<group>"; };
+		F85F9A0A219368B5002E17C3 /* SBBDataModelV16.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV16.xcdatamodel; sourceTree = "<group>"; };
 		F886FD4020360E9E00EF2248 /* SBBDataModelV12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV12.xcdatamodel; sourceTree = "<group>"; };
 		F8F063A320BE5C7C00DB7D9C /* activities-0612-0629.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "activities-0612-0629.json"; sourceTree = "<group>"; };
 		FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SBBAdditions.h"; sourceTree = "<group>"; };
@@ -2646,7 +2647,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SBB_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDK/BridgeAPI/BridgeAPITypes\"\necho \"${SBB_OBJECTS_DIR}\"\nSBB_MACHINE_DIR=\"${SBB_OBJECTS_DIR}/MachineGeneratedDoNotEdit\"\nmkdir -p \"${SBB_MACHINE_DIR}\"\nSBB_DATA_MODEL=\"${SBB_OBJECTS_DIR}/SBBDataModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${SBB_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${SBB_OBJECTS_DIR}\" --machine-dir \"${SBB_MACHINE_DIR}\" --includeh \"${SBB_OBJECTS_DIR}/SBBBridgeObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"";
+			shellScript = "SBB_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDK/BridgeAPI/BridgeAPITypes\"\necho \"${SBB_OBJECTS_DIR}\"\nSBB_MACHINE_DIR=\"${SBB_OBJECTS_DIR}/MachineGeneratedDoNotEdit\"\nmkdir -p \"${SBB_MACHINE_DIR}\"\nSBB_DATA_MODEL=\"${SBB_OBJECTS_DIR}/SBBDataModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${SBB_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${SBB_OBJECTS_DIR}\" --machine-dir \"${SBB_MACHINE_DIR}\" --includeh \"${SBB_OBJECTS_DIR}/SBBBridgeObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"\n";
 		};
 		F50981CA1AA57B1E002E2264 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2672,7 +2673,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.1 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.1 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DIR=\"${PROJECT_DIR}/Output\"\necho \"${SBB_OUTPUT_DIR}\"\nmkdir -p \"${SBB_OUTPUT_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DIR}\"\nlipo -create \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" -output \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\"";
+			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.1 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.1 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DIR=\"${PROJECT_DIR}/Output\"\necho \"${SBB_OUTPUT_DIR}\"\nmkdir -p \"${SBB_OUTPUT_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DIR}\"\nlipo -create \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" -output \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3595,6 +3596,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F85F9A0A219368B5002E17C3 /* SBBDataModelV16.xcdatamodel */,
 				60E86D5A211E325F0073C69C /* SBBDataModelV15.xcdatamodel */,
 				6079A5D120657E6D0075D081 /* SBBDataModelV14.xcdatamodel */,
 				609E82C2203DFDA300E8AD49 /* SBBDataModelV13.xcdatamodel */,
