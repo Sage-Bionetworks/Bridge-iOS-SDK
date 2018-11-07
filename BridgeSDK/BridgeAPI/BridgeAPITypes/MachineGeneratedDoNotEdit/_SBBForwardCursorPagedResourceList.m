@@ -164,11 +164,12 @@
 	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	[self.requestParams awakeFromDictionaryRepresentationInit];
+
 	for (SBBBridgeObject *itemsObj in self.items)
 	{
 		[itemsObj awakeFromDictionaryRepresentationInit];
 	}
-	[self.requestParams awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }

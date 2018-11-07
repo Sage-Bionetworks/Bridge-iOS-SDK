@@ -34,10 +34,15 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
+#import "SBBConfigReference.h"
 #import "SBBSchemaReference.h"
 #import "SBBSurveyReference.h"
 
 @interface _SBBAppConfig()
+
+// redefine relationships internally as readwrite
+
+@property (nonatomic, strong, readwrite) NSArray *configReferences;
 
 // redefine relationships internally as readwrite
 
@@ -54,6 +59,8 @@
 
 @property (nullable, nonatomic, retain) id<SBBJSONValue> clientData;
 
+@property (nullable, nonatomic, retain) id<SBBJSONValue> configElements;
+
 @property (nullable, nonatomic, retain) NSDate* createdOn;
 
 @property (nullable, nonatomic, retain) NSString* guid;
@@ -64,9 +71,17 @@
 
 @property (nullable, nonatomic, retain) NSNumber* version;
 
+@property (nullable, nonatomic, retain) NSSet<NSManagedObject *> *configReferences;
+
 @property (nullable, nonatomic, retain) NSSet<NSManagedObject *> *schemaReferences;
 
 @property (nullable, nonatomic, retain) NSSet<NSManagedObject *> *surveyReferences;
+
+- (void)addConfigReferencesObject:(NSManagedObject *)value;
+- (void)removeConfigReferencesObject:(NSManagedObject *)value;
+
+- (void)addConfigReferences:(NSSet<NSManagedObject *> *)values;
+- (void)removeConfigReferences:(NSSet<NSManagedObject *> *)values;
 
 - (void)addSchemaReferencesObject:(NSManagedObject *)value;
 - (void)removeSchemaReferencesObject:(NSManagedObject *)value;
@@ -115,6 +130,8 @@
 
     self.clientData = [dictionary objectForKey:@"clientData"];
 
+    self.configElements = [dictionary objectForKey:@"configElements"];
+
     self.createdOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"createdOn"]];
 
     self.guid = [dictionary objectForKey:@"guid"];
@@ -124,6 +141,16 @@
     self.modifiedOn = [NSDate dateWithISO8601String:[dictionary objectForKey:@"modifiedOn"]];
 
     self.version = [dictionary objectForKey:@"version"];
+
+    // overwrite the old configReferences relationship entirely rather than adding to it
+    [self removeConfigReferencesObjects];
+
+    for (id dictRepresentationForObject in [dictionary objectForKey:@"configReferences"])
+    {
+        SBBConfigReference *configReferencesObj = [objectManager objectFromBridgeJSON:dictRepresentationForObject];
+
+        [self addConfigReferencesObject:configReferencesObj];
+    }
 
     // overwrite the old schemaReferences relationship entirely rather than adding to it
     [self removeSchemaReferencesObjects];
@@ -153,6 +180,8 @@
 
     [dict setObjectIfNotNil:self.clientData forKey:@"clientData"];
 
+    [dict setObjectIfNotNil:self.configElements forKey:@"configElements"];
+
     [dict setObjectIfNotNil:[self.createdOn ISO8601String] forKey:@"createdOn"];
 
     [dict setObjectIfNotNil:self.guid forKey:@"guid"];
@@ -162,6 +191,19 @@
     [dict setObjectIfNotNil:[self.modifiedOn ISO8601String] forKey:@"modifiedOn"];
 
     [dict setObjectIfNotNil:self.version forKey:@"version"];
+
+    if ([self.configReferences count] > 0)
+	{
+
+		NSMutableArray *configReferencesRepresentationsForDictionary = [NSMutableArray arrayWithCapacity:[self.configReferences count]];
+
+		for (SBBConfigReference *obj in self.configReferences)
+        {
+            [configReferencesRepresentationsForDictionary addObject:[objectManager bridgeJSONFromObject:obj]];
+		}
+		[dict setObjectIfNotNil:configReferencesRepresentationsForDictionary forKey:@"configReferences"];
+
+	}
 
     if ([self.schemaReferences count] > 0)
 	{
@@ -197,14 +239,19 @@
 	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	for (SBBSchemaReference *schemaReferencesObj in self.schemaReferences)
+	{
+		[schemaReferencesObj awakeFromDictionaryRepresentationInit];
+	}
+
 	for (SBBSurveyReference *surveyReferencesObj in self.surveyReferences)
 	{
 		[surveyReferencesObj awakeFromDictionaryRepresentationInit];
 	}
 
-	for (SBBSchemaReference *schemaReferencesObj in self.schemaReferences)
+	for (SBBConfigReference *configReferencesObj in self.configReferences)
 	{
-		[schemaReferencesObj awakeFromDictionaryRepresentationInit];
+		[configReferencesObj awakeFromDictionaryRepresentationInit];
 	}
 
 	[super awakeFromDictionaryRepresentationInit];
@@ -224,6 +271,8 @@
 
         self.clientData = managedObject.clientData;
 
+        self.configElements = managedObject.configElements;
+
         self.createdOn = managedObject.createdOn;
 
         self.guid = managedObject.guid;
@@ -233,6 +282,16 @@
         self.modifiedOn = managedObject.modifiedOn;
 
         self.version = managedObject.version;
+
+		for (NSManagedObject *configReferencesManagedObj in managedObject.configReferences)
+		{
+            Class objectClass = [SBBObjectManager bridgeClassFromType:configReferencesManagedObj.entity.name];
+            SBBConfigReference *configReferencesObj = [[objectClass alloc] initWithManagedObject:configReferencesManagedObj objectManager:objectManager cacheManager:cacheManager];
+            if (configReferencesObj != nil)
+            {
+                [self addConfigReferencesObject:configReferencesObj];
+            }
+		}
 
 		for (NSManagedObject *schemaReferencesManagedObj in managedObject.schemaReferences)
 		{
@@ -288,6 +347,8 @@
 
     managedObject.clientData = ((id)self.clientData == [NSNull null]) ? nil : self.clientData;
 
+    managedObject.configElements = ((id)self.configElements == [NSNull null]) ? nil : self.configElements;
+
     if (self.createdOn) managedObject.createdOn = self.createdOn;
 
     if (self.guid) managedObject.guid = self.guid;
@@ -297,6 +358,40 @@
     if (self.modifiedOn) managedObject.modifiedOn = self.modifiedOn;
 
     if (self.version) managedObject.version = self.version;
+
+    // first make a copy of the existing relationship collection, to iterate through while mutating original
+    NSSet *configReferencesCopy = [managedObject.configReferences copy];
+
+    // now remove all items from the existing relationship
+    [managedObject removeConfigReferences:managedObject.configReferences];
+
+    // now put the "new" items, if any, into the relationship
+    if ([self.configReferences count] > 0) {
+		for (SBBConfigReference *obj in self.configReferences) {
+            NSManagedObject *relMo = nil;
+            if ([obj isDirectlyCacheableWithContext:cacheContext]) {
+                // get it from the cache manager
+                relMo = [cacheManager cachedObjectForBridgeObject:obj inContext:cacheContext];
+            }
+            if (!relMo) {
+                // sub object is not directly cacheable, or not currently cached, so create it before adding
+                relMo = [obj createInContext:cacheContext withObjectManager:objectManager cacheManager:cacheManager];
+            }
+
+            [managedObject addConfigReferencesObject:relMo];
+
+        }
+	}
+
+    // now release any objects that aren't still in the relationship (they will be deleted when they no longer belong to any to-many relationships)
+    for (NSManagedObject *relMo in configReferencesCopy) {
+        if (![relMo valueForKey:@"appConfig"]) {
+           [self releaseManagedObject:relMo inContext:cacheContext];
+        }
+    }
+
+    // ...and let go of the collection copy
+    configReferencesCopy = nil;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSSet *schemaReferencesCopy = [managedObject.schemaReferences copy];
@@ -370,6 +465,43 @@
 }
 
 #pragma mark Direct access
+
+- (void)addConfigReferencesObject:(SBBConfigReference*)value_ settingInverse: (BOOL) setInverse
+{
+    if (self.configReferences == nil)
+	{
+
+		self.configReferences = [NSMutableArray array];
+
+	}
+
+	[(NSMutableArray *)self.configReferences addObject:value_];
+
+}
+
+- (void)addConfigReferencesObject:(SBBConfigReference*)value_
+{
+    [self addConfigReferencesObject:(SBBConfigReference*)value_ settingInverse: YES];
+}
+
+- (void)removeConfigReferencesObjects
+{
+
+    self.configReferences = [NSMutableArray array];
+
+}
+
+- (void)removeConfigReferencesObject:(SBBConfigReference*)value_ settingInverse: (BOOL) setInverse
+{
+
+    [(NSMutableArray *)self.configReferences removeObject:value_];
+
+}
+
+- (void)removeConfigReferencesObject:(SBBConfigReference*)value_
+{
+    [self removeConfigReferencesObject:(SBBConfigReference*)value_ settingInverse: YES];
+}
 
 - (void)addSchemaReferencesObject:(SBBSchemaReference*)value_ settingInverse: (BOOL) setInverse
 {

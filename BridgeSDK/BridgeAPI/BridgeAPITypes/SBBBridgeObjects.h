@@ -6,6 +6,7 @@
 #import "SBBBooleanConstraints.h"
 #import "SBBBridgeObject.h"
 #import "SBBCompoundActivity.h"
+#import "SBBConfigReference.h"
 #import "SBBConsentSignature.h"
 #import "SBBConsentStatus.h"
 #import "SBBDataGroups.h"
