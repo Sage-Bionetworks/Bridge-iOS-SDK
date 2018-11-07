@@ -37,6 +37,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class SBBConfigReference;
 @class SBBSchemaReference;
 @class SBBSurveyReference;
 
@@ -47,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface _SBBAppConfig : SBBBridgeObject
 
 @property (nullable, nonatomic, strong) id<SBBJSONValue> clientData;
+
+@property (nullable, nonatomic, strong) id<SBBJSONValue> configElements;
 
 @property (nonatomic, strong) NSDate* createdOn;
 
@@ -60,9 +63,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) int64_t versionValue;
 
+@property (nullable, nonatomic, strong, readonly) NSArray *configReferences;
+
 @property (nullable, nonatomic, strong, readonly) NSArray *schemaReferences;
 
 @property (nullable, nonatomic, strong, readonly) NSArray *surveyReferences;
+
+- (void)addConfigReferencesObject:(SBBConfigReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)addConfigReferencesObject:(SBBConfigReference*)value_;
+- (void)removeConfigReferencesObjects;
+- (void)removeConfigReferencesObject:(SBBConfigReference*)value_ settingInverse: (BOOL) setInverse;
+- (void)removeConfigReferencesObject:(SBBConfigReference*)value_;
 
 - (void)addSchemaReferencesObject:(SBBSchemaReference*)value_ settingInverse: (BOOL) setInverse;
 - (void)addSchemaReferencesObject:(SBBSchemaReference*)value_;

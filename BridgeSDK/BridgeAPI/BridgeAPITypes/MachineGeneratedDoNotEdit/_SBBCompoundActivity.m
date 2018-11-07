@@ -164,14 +164,14 @@
 	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
-	for (SBBSurveyReference *surveyListObj in self.surveyList)
-	{
-		[surveyListObj awakeFromDictionaryRepresentationInit];
-	}
-
 	for (SBBSchemaReference *schemaListObj in self.schemaList)
 	{
 		[schemaListObj awakeFromDictionaryRepresentationInit];
+	}
+
+	for (SBBSurveyReference *surveyListObj in self.surveyList)
+	{
+		[surveyListObj awakeFromDictionaryRepresentationInit];
 	}
 
 	[super awakeFromDictionaryRepresentationInit];

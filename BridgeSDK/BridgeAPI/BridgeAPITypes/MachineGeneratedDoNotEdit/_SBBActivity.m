@@ -158,10 +158,10 @@
 	if (self.sourceDictionaryRepresentation == nil)
 		return; // awakeFromDictionaryRepresentationInit has been already executed on this object.
 
+	[self.compoundActivity awakeFromDictionaryRepresentationInit];
+	[self.survey awakeFromDictionaryRepresentationInit];
 	[self.task awakeFromDictionaryRepresentationInit];
 	[self.image awakeFromDictionaryRepresentationInit];
-	[self.survey awakeFromDictionaryRepresentationInit];
-	[self.compoundActivity awakeFromDictionaryRepresentationInit];
 
 	[super awakeFromDictionaryRepresentationInit];
 }
