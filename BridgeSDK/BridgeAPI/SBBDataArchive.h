@@ -57,6 +57,27 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithReference:(NSString *)reference
   jsonValidationMapping:(nullable NSDictionary <NSString *, NSPredicate *> *)jsonValidationMapping NS_DESIGNATED_INITIALIZER;
 
+/**
+ The name of the `v2_generic` data file. By default, `dataFilename = "answers.json`.
+ 
+ @seealso   https://developer.sagebridge.org/articles/bundled_zip_file_uploads.html
+ */
+@property (nonatomic) NSString *dataFilename;
+
+/**
+ Whether or not this archive should use the `v1_legacy` format for the data archive schema.
+ 
+ @seealso   https://developer.sagebridge.org/articles/bundled_zip_file_uploads.html
+ */
+@property (nonatomic) BOOL usesV1LegacySchema;
+
+/**
+ Convenience method for adding a `v2_generic` formatted archive. This will add a "answers.json" file to the
+ archive and set that file as the `dataFormat` file.
+ 
+ @seealso   https://developer.sagebridge.org/articles/bundled_zip_file_uploads.html
+ */
+- (void)insertAnswersDictionary:(NSDictionary *)dictionary;
 
 /**
  Add a json serializable object to the info dictionary
@@ -66,7 +87,6 @@ NS_ASSUME_NONNULL_BEGIN
  @param     key                 Key for the json object to be included
  */
 - (void)setArchiveInfoObject:(id)object forKey:(NSString*)key;
-
 
 /**
  Converts a dictionary into json data and inserts into the archive.
