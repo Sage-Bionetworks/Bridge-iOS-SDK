@@ -47,9 +47,14 @@ static NSString * kFilesKey                         = @"files";
 static NSString * kAppNameKey                       = @"appName";
 static NSString * kAppVersionKey                    = @"appVersion";
 static NSString * kPhoneInfoKey                     = @"phoneInfo";
+static NSString * kDataFilenameKey                  = @"dataFilename";
+static NSString * kFormatKey                        = @"format";
 static NSString * kItemKey                          = @"item";
 static NSString * kJsonPathExtension                = @"json";
 static NSString * kJsonInfoFilename                 = @"info.json";
+
+static NSString * kV2GenericFormat                  = @"v2_generic";
+static NSString * kV1LegacyFormat                   = @"v1_legacy";
 
 @interface SBBDataArchive ()
 
@@ -94,6 +99,8 @@ static NSString * kJsonInfoFilename                 = @"info.json";
     _zipEntries = [NSMutableArray array];
     _filesList = [NSMutableArray array];
     _infoDict = [NSMutableDictionary dictionary];
+    _dataFilename = @"answers.json";
+    _usesV1LegacySchema = false;
     NSError * error;
     
     _zipArchive = [[ZZArchive alloc] initWithURL:zipArchiveURL
@@ -123,6 +130,11 @@ static NSString * kJsonInfoFilename                 = @"info.json";
 
 - (void)setArchiveInfoObject:(id)object forKey:(NSString*)key {
     self.infoDict[key] = [[SBBObjectManager objectManager] bridgeJSONFromObject:object];
+}
+
+- (void)insertAnswersDictionary:(NSDictionary *)dictionary
+{
+    [self insertDictionaryIntoArchive:dictionary filename:self.dataFilename createdOn:[NSDate date]];
 }
 
 - (void)insertURLIntoArchive:(NSURL*)url fileName:(NSString *)filename
@@ -250,6 +262,10 @@ static NSString * kJsonInfoFilename                 = @"info.json";
         [self.infoDict setObject:[[NSBundle mainBundle] appName] forKey:kAppNameKey];
         [self.infoDict setObject:[self.class appVersion] forKey:kAppVersionKey];
         [self.infoDict setObject:[[UIDevice currentDevice] deviceInfo] forKey:kPhoneInfoKey];
+        [self.infoDict setObject:self.dataFilename forKey:kDataFilenameKey];
+        
+        NSString *format = self.usesV1LegacySchema ? kV1LegacyFormat : kV2GenericFormat;
+        [self.infoDict setObject:format forKey:kFormatKey];
 
         [self insertDictionaryIntoArchive:self.infoDict filename:kJsonInfoFilename createdOn:[NSDate date]];
         
