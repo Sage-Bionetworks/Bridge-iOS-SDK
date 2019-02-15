@@ -675,19 +675,21 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
 {
     if (!_cacheIOContext) {
         [self dispatchSyncToCacheManagerCoreDataQueue:^{
-            // check again in case it got set before we got our turn in the core data queue
-            if (!_cacheIOContext) {
-                // now check if one already exists for this persistent store name
-                _cacheIOContext = gCoreDataCacheIOContextsByPersistentStoreName[self.persistentStoreName];
+            // Check again in case it got set before we got our turn in the core data queue.
+            if (_cacheIOContext != nil) {
+                return;
             }
             
-            if (!_cacheIOContext) {
-                // if not, then create one for this persistent store name and store it where other CacheManager instances can find it
-                _cacheIOContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-                _cacheIOContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
-                _cacheIOContext.undoManager = [[NSUndoManager alloc] init];
-                gCoreDataCacheIOContextsByPersistentStoreName[self.persistentStoreName] = _cacheIOContext;
+            // Now check if one already exists for this persistent store name.
+            NSManagedObjectContext *cacheIOContext = gCoreDataCacheIOContextsByPersistentStoreName[self.persistentStoreName];
+            if (!cacheIOContext) {
+                // If not, then create one for this persistent store name and store it where other CacheManager instances can find it.
+                cacheIOContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+                cacheIOContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
+                cacheIOContext.undoManager = [[NSUndoManager alloc] init];
+                gCoreDataCacheIOContextsByPersistentStoreName[self.persistentStoreName] = cacheIOContext;
             }
+            _cacheIOContext = cacheIOContext;
         }];
     }
     
