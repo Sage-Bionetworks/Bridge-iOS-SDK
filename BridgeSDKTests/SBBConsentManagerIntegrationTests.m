@@ -29,8 +29,8 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     
-    self.testSubpopOptionalGuid = @"0c132b61-f5fd-4e75-9813-5b7dce04cdd7";
-    self.testSubpopRequiredGuid = @"cfbbbaed-bf7a-4b20-aad8-f649a7e6e7fc";
+    self.testSubpopOptionalGuid = @"e0a13185-90b3-4e24-9007-9505de46a389";
+    self.testSubpopRequiredGuid = @"72d3d10f-1a59-4bd2-8d3f-997bb458bcd3";
 }
 
 - (void)tearDown {
