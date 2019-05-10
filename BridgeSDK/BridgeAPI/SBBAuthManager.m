@@ -520,6 +520,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         error.code == SBBErrorCodeServerAccountDisabled) {
         [self clearSessionToken];
         [self clearReauthToken];
+        [self resetUserSessionInfo];
     }
 
     // Save session token, reauth token, and password in the keychain

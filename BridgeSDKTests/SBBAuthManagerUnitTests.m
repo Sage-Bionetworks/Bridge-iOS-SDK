@@ -13,6 +13,7 @@
 #import "MockURLSession.h"
 #import "SBBStudyManagerInternal.h"
 #import "ModelObjectInternal.h"
+#import "SBBCacheManager.h"
 
 @interface SBBAuthManagerUnitTests : SBBBridgeAPIUnitTestCase
 
@@ -187,6 +188,7 @@
     NSString *reauthToken = [[NSProcessInfo processInfo] globallyUniqueString];
     NSString *email = @"signedUpUser";
     NSDictionary *sessionInfoJson = @{NSStringFromSelector(@selector(email)): email,
+                                      NSStringFromSelector(@selector(emailVerified)): @YES,
                                       NSStringFromSelector(@selector(sessionToken)): sessionToken,
                                       NSStringFromSelector(@selector(reauthToken)): reauthToken,
                                       NSStringFromSelector(@selector(type)): SBBUserSessionInfo.entityName,
@@ -242,6 +244,52 @@
     
     XCTAssert([aMan.sessionToken isEqualToString:sessionToken], @"Expected authManager's sessionToken to be %@, but instead it's %@", sessionToken, aMan.sessionToken);
     XCTAssert([gotAppConfig isKindOfClass:[SBBTestBridgeObject class]], @"Converted incoming json to mapped class");
+    SBBStudyParticipant *participant = (SBBStudyParticipant *)[aMan.cacheManager cachedSingletonObjectOfType:@"StudyParticipant" createIfMissing:NO];
+    XCTAssert(participant.email = email, @"Expected cached study participant email to be %@, but it's %@", email, participant.email);
+
+    // now set up the network manager to return a 404 on reauth attempt
+    // this would happen if e.g. there's no account with the given identifier, or the reauthToken is bad
+    NSDictionary *failedSessionInfoJson = @{
+                                      @"statusCode": @404,
+                                      @"message": @"Account not found.",
+                                      @"entityClass": @"Account",
+                                      @"type": @"EntityNotFoundException"
+                                      };
+    [self.mockNetworkManager setJson:failedSessionInfoJson andResponseCode:404 forEndpoint:kSBBAuthReauthAPI andMethod:@"POST"];
+
+    // once again tell the mock URL session created below to return a 401 status code, which will trigger the auto-renew logic in SBBBridgeNetworkManager;
+    // when that throws a 404, there's nothing further we can do without participant intervention, so the original request should be abandoned.
+    aMan.placeholderSessionInfo.sessionToken = expiredToken;
+    [aMan setSessionToken:expiredToken];
+    
+    // now hit that arbitrary Bridge endpoint again, and ensure that it fails to renew the session token and gives up
+    mockURLSession = [MockURLSession new];
+    bridgeNetMan.mainSession = mockURLSession;
+    
+    [mockURLSession setJson:appConfig andResponseCode:200 forEndpoint:endpoint andMethod:@"GET"];
+    XCTestExpectation *expectDidntGetAppConfig = [self expectationWithDescription:@"Didn't get appConfig"];
+    gotAppConfig = nil;
+    gotError = nil;
+    [sMan getAppConfigWithCompletion:^(id appConfig, NSError *error) {
+        gotAppConfig = appConfig;
+        gotError = error;
+        [expectDidntGetAppConfig fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Time out error trying to fail to auto-renew with reauthToken:\n%@", error);
+        }
+    }];
+    
+    XCTAssertNil(aMan.sessionToken, @"Expected authManager's sessionToken to be nil, but instead it's %@", aMan.sessionToken);
+    XCTAssert(gotAppConfig == nil, @"Expected to abandon the original request, but instead got %@", gotAppConfig);
+    XCTAssert(gotError.code == 404, @"Expected to get an error but instead got %@", gotError);
+    
+    // Double-check that the cached StudyParticipant has been cleared out as well
+    participant = (SBBStudyParticipant *)[aMan.cacheManager cachedSingletonObjectOfType:@"StudyParticipant" createIfMissing:NO];
+    XCTAssertNil(participant, @"Expected cached study participant to be cleared, but it's %@", participant);
 }
+
 
 @end
