@@ -647,9 +647,11 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
                                                              error:&requestError];
     if ((requestError != nil) && (error != nil)) {
         *error = requestError;
+        return nil;
     }
-    
-    return [results firstObject];
+    else {
+        return [results firstObject] ?: [[SBBReportData alloc] init];
+    }
 }
 
 @end
