@@ -180,13 +180,20 @@
     if ([platform isEqualToString:@"iPhone10,5"])   return UIDevice8PlusiPhone;
     if ([platform isEqualToString:@"iPhone10,3"])   return UIDeviceXiPhone;
     if ([platform isEqualToString:@"iPhone10,6"])   return UIDeviceXiPhone;
+    if ([platform isEqualToString:@"iPhone11,8"])   return UIDeviceXRiPhone;
+    if ([platform isEqualToString:@"iPhone11,2"])   return UIDeviceXSiPhone;
+    if ([platform isEqualToString:@"iPhone11,6"])   return UIDeviceXSMaxiPhone;
+
 
     // iPod
     if ([platform hasPrefix:@"iPod1"])              return UIDevice1GiPod;
     if ([platform hasPrefix:@"iPod2"])              return UIDevice2GiPod;
     if ([platform hasPrefix:@"iPod3"])              return UIDevice3GiPod;
     if ([platform hasPrefix:@"iPod4"])              return UIDevice4GiPod;
-    
+    if ([platform hasPrefix:@"iPod5"])              return UIDevice5GiPod;
+    if ([platform hasPrefix:@"iPod7"])              return UIDevice6GiPod;
+
+
     // iPad
     if ([platform hasPrefix:@"iPad1"])              return UIDevice1GiPad;
     if ([platform isEqualToString:@"iPad2,1"])      return UIDevice2GiPad;
@@ -225,6 +232,20 @@
     if ([platform isEqualToString:@"iPad7,2"])      return UIDevicePro12_9_2GiPad;
     if ([platform isEqualToString:@"iPad7,3"])      return UIDevicePro10_5iPad;
     if ([platform isEqualToString:@"iPad7,4"])      return UIDevicePro10_5iPad;
+    if ([platform isEqualToString:@"iPad7,5"])      return UIDevice6GiPad;
+    if ([platform isEqualToString:@"iPad7,6"])      return UIDevice6GiPad;
+    if ([platform isEqualToString:@"iPad8,1"])      return UIDevicePro11iPad;
+    if ([platform isEqualToString:@"iPad8,2"])      return UIDevicePro11iPad;
+    if ([platform isEqualToString:@"iPad8,3"])      return UIDevicePro11iPad;
+    if ([platform isEqualToString:@"iPad8,4"])      return UIDevicePro11iPad;
+    if ([platform isEqualToString:@"iPad8,5"])      return UIDevicePro12_9_3GiPad;
+    if ([platform isEqualToString:@"iPad8,6"])      return UIDevicePro12_9_3GiPad;
+    if ([platform isEqualToString:@"iPad8,7"])      return UIDevicePro12_9_3GiPad;
+    if ([platform isEqualToString:@"iPad8,8"])      return UIDevicePro12_9_3GiPad;
+    if ([platform isEqualToString:@"iPad11,1"])     return UIDeviceMini5GiPad;
+    if ([platform isEqualToString:@"iPad11,2"])     return UIDeviceMini5GiPad;
+    if ([platform isEqualToString:@"iPad11,3"])     return UIDeviceAir3GiPad;
+    if ([platform isEqualToString:@"iPad11,4"])     return UIDeviceAir3GiPad;
 
     // Apple TV
     if ([platform hasPrefix:@"AppleTV2"])           return UIDeviceAppleTV2;
@@ -242,6 +263,10 @@
     if ([platform isEqualToString:@"Watch3,2"])     return UIDeviceWatchSeries3;
     if ([platform isEqualToString:@"Watch3,3"])     return UIDeviceWatchSeries3;
     if ([platform isEqualToString:@"Watch3,4"])     return UIDeviceWatchSeries3;
+    if ([platform isEqualToString:@"Watch4,1"])     return UIDeviceWatchSeries4;
+    if ([platform isEqualToString:@"Watch4,2"])     return UIDeviceWatchSeries4;
+    if ([platform isEqualToString:@"Watch4,3"])     return UIDeviceWatchSeries4;
+    if ([platform isEqualToString:@"Watch4,4"])     return UIDeviceWatchSeries4;
 
     if ([platform hasPrefix:@"iPhone"])             return UIDeviceUnknowniPhone;
     if ([platform hasPrefix:@"iPod"])               return UIDeviceUnknowniPod;
@@ -281,7 +306,10 @@
         case UIDevice8iPhone: return IPHONE_8_NAMESTRING;
         case UIDevice8PlusiPhone: return IPHONE_8PLUS_NAMESTRING;
         case UIDeviceXiPhone: return IPHONE_X_NAMESTRING;
-        case UIDeviceUnknowniPhone: return [NSString stringWithFormat:@"%@ (%@)", IPHONE_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceXRiPhone: return IPHONE_XR_NAMESTRING;
+        case UIDeviceXSiPhone: return IPHONE_XS_NAMESTRING;
+        case UIDeviceXSMaxiPhone: return IPHONE_XSMAX_NAMESTRING;
+        case UIDeviceUnknowniPhone: return [NSString stringWithFormat:@"%@ [%@]", IPHONE_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDevice1GiPod: return IPOD_1G_NAMESTRING;
         case UIDevice2GiPod: return IPOD_2G_NAMESTRING;
@@ -289,7 +317,7 @@
         case UIDevice4GiPod: return IPOD_4G_NAMESTRING;
         case UIDevice5GiPod: return IPOD_5G_NAMESTRING;
         case UIDevice6GiPod: return IPOD_6G_NAMESTRING;
-        case UIDeviceUnknowniPod: return [NSString stringWithFormat:@"%@ (%@)", IPOD_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceUnknowniPod: return [NSString stringWithFormat:@"%@ [%@]", IPOD_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDevice1GiPad : return IPAD_1G_NAMESTRING;
         case UIDevice2GiPad : return IPAD_2G_NAMESTRING;
@@ -306,19 +334,25 @@
         case UIDevice5GiPad : return IPAD_5G_NAMESTRING;
         case UIDevicePro12_9_2GiPad: return IPAD_PRO_12_9_2G_NAMESTRING;
         case UIDevicePro10_5iPad: return IPAD_PRO_10_5_NAMESTRING;
-        case UIDeviceUnknowniPad : return [NSString stringWithFormat:@"%@ (%@)", IPAD_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDevice6GiPad: return IPAD_6G_NAMESTRING;
+        case UIDevicePro11iPad: return IPAD_PRO_11_NAMESTRING;
+        case UIDevicePro12_9_3GiPad: return IPAD_PRO_12_9_3G_NAMESTRING;
+        case UIDeviceMini5GiPad: return IPAD_MINI_5G_NAMESTRING;
+        case UIDeviceAir3GiPad: return IPAD_AIR_3G_NAMESTRING;
+        case UIDeviceUnknowniPad : return [NSString stringWithFormat:@"%@ [%@]", IPAD_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDeviceAppleTV2 : return APPLETV_2G_NAMESTRING;
         case UIDeviceAppleTV3 : return APPLETV_3G_NAMESTRING;
         case UIDeviceAppleTV4 : return APPLETV_4G_NAMESTRING;
         case UIDeviceAppleTV4K : return APPLETV_4K_NAMESTRING;
-        case UIDeviceUnknownAppleTV: return [NSString stringWithFormat:@"%@ (%@)", APPLETV_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceUnknownAppleTV: return [NSString stringWithFormat:@"%@ [%@]", APPLETV_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDeviceWatch : return WATCH_NAMESTRING;
         case UIDeviceWatchSeries1 : return WATCH_S1_NAMESTRING;
         case UIDeviceWatchSeries2 : return WATCH_S2_NAMESTRING;
         case UIDeviceWatchSeries3 : return WATCH_S3_NAMESTRING;
-        case UIDeviceUnknownWatch : return [NSString stringWithFormat:@"%@ (%@)", WATCH_UNKNOWN_NAMESTRING, [self platform]];
+        case UIDeviceWatchSeries4 : return WATCH_S4_NAMESTRING;
+        case UIDeviceUnknownWatch : return [NSString stringWithFormat:@"%@ [%@]", WATCH_UNKNOWN_NAMESTRING, [self platform]];
             
         case UIDeviceSimulator: return SIMULATOR_NAMESTRING;
         case UIDeviceSimulatoriPhone: return SIMULATOR_IPHONE_NAMESTRING;
@@ -328,7 +362,7 @@
 
         case UIDeviceIFPGA: return IFPGA_NAMESTRING;
             
-        default: return [NSString stringWithFormat:@"%@ (%@)", IOS_FAMILY_UNKNOWN_DEVICE, [self platform]];
+        default: return [NSString stringWithFormat:@"%@ [%@]", IOS_FAMILY_UNKNOWN_DEVICE, [self platform]];
     }
 }
 

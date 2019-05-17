@@ -30,6 +30,9 @@
 #define IPHONE_8_NAMESTRING             @"iPhone 8"
 #define IPHONE_8PLUS_NAMESTRING         @"iPhone 8+"
 #define IPHONE_X_NAMESTRING             @"iPhone X"
+#define IPHONE_XR_NAMESTRING            @"iPhone XR"
+#define IPHONE_XS_NAMESTRING            @"iPhone XS"
+#define IPHONE_XSMAX_NAMESTRING         @"iPhone XS Max"
 #define IPHONE_UNKNOWN_NAMESTRING       @"Unknown iPhone"
 
 #define IPOD_1G_NAMESTRING              @"iPod touch 1G"
@@ -50,11 +53,16 @@
 #define IPAD_MINI3_NAMESTRING           @"iPad Mini 3"
 #define IPAD_MINI4_NAMESTRING           @"iPad Mini 4"
 #define IPAD_AIR2_NAMESTRING            @"iPad Air 2"
-#define IPAD_PRO_12_9_1G_NAMESTRING     @"iPad Pro (12.9\")"
-#define IPAD_PRO_9_7_NAMESTRING         @"iPad Pro (9.7\")"
+#define IPAD_PRO_12_9_1G_NAMESTRING     @"iPad Pro, 12.9\""
+#define IPAD_PRO_9_7_NAMESTRING         @"iPad Pro, 9.7\""
 #define IPAD_5G_NAMESTRING              @"iPad 5G"
-#define IPAD_PRO_12_9_2G_NAMESTRING     @"iPad Pro (12.9\") 2G"
-#define IPAD_PRO_10_5_NAMESTRING        @"iPad Pro (10.5\")"
+#define IPAD_PRO_12_9_2G_NAMESTRING     @"iPad Pro, 12.9\" 2G"
+#define IPAD_PRO_10_5_NAMESTRING        @"iPad Pro, 10.5\""
+#define IPAD_6G_NAMESTRING              @"iPad 6G"
+#define IPAD_PRO_11_NAMESTRING          @"iPad Pro, 11\""
+#define IPAD_PRO_12_9_3G_NAMESTRING     @"iPad Pro, 12.9\" 3G"
+#define IPAD_MINI_5G_NAMESTRING         @"iPad Mini 5G"
+#define IPAD_AIR_3G_NAMESTRING          @"iPad Air 3G"
 #define IPAD_UNKNOWN_NAMESTRING         @"Unknown iPad"
 
 #define APPLETV_2G_NAMESTRING           @"Apple TV 2G"
@@ -67,6 +75,7 @@
 #define WATCH_S1_NAMESTRING             @"Apple Watch Series 1"
 #define WATCH_S2_NAMESTRING             @"Apple Watch Series 2"
 #define WATCH_S3_NAMESTRING             @"Apple Watch Series 3"
+#define WATCH_S4_NAMESTRING             @"Apple Watch Series 4"
 #define WATCH_UNKNOWN_NAMESTRING        @"Unknown Apple Watch"
 
 #define IOS_FAMILY_UNKNOWN_DEVICE       @"Unknown iOS device"
@@ -104,6 +113,9 @@ typedef enum {
     UIDevice8iPhone,
     UIDevice8PlusiPhone,
     UIDeviceXiPhone,
+    UIDeviceXRiPhone,
+    UIDeviceXSiPhone,
+    UIDeviceXSMaxiPhone,
 
     UIDevice1GiPod,
     UIDevice2GiPod,
@@ -127,6 +139,11 @@ typedef enum {
     UIDevice5GiPad,
     UIDevicePro12_9_2GiPad,
     UIDevicePro10_5iPad,
+    UIDevice6GiPad,
+    UIDevicePro11iPad,
+    UIDevicePro12_9_3GiPad,
+    UIDeviceMini5GiPad,
+    UIDeviceAir3GiPad,
     
     UIDeviceAppleTV2,
     UIDeviceAppleTV3,
@@ -137,6 +154,7 @@ typedef enum {
     UIDeviceWatchSeries1,
     UIDeviceWatchSeries2,
     UIDeviceWatchSeries3,
+    UIDeviceWatchSeries4,
     
     UIDeviceUnknowniPhone,
     UIDeviceUnknowniPod,
