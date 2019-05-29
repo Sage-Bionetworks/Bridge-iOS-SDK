@@ -142,12 +142,19 @@
 - (void)updateManagedObject:(NSManagedObject *)managedObject withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
     NSDictionary *jsonDict = [objectManager bridgeJSONFromObject:self];
+    managedObject.ciphertext = nil; // clear it in case there's an error serializing or encrypting jsonDict
     NSError *error;
     NSData *plaintext = [NSJSONSerialization dataWithJSONObject:jsonDict options:0 error:&error];
     NSString *password = cacheManager.encryptionKey;
+    if (error) {
+        NSLog(@"Error serializing jsonDict to NSData for %@ in cache: %@\njsonDict: %@", [self.class entityName], error, jsonDict);
+    }
     if (password && !error) {
         NSData *ciphertext = [RNEncryptor encryptData:plaintext withSettings:kRNCryptorAES256Settings password:password error:&error];
-        if (!error) {
+        if (error) {
+            NSLog(@"Error encrypting %@ for cache: %@", [self.class entityName], error);
+        } else {
+            // jsonDict was successfully serialized and encrypted, so now we can set it
             managedObject.ciphertext = ciphertext;
         }
     }
