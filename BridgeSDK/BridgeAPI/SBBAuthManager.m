@@ -513,16 +513,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return;
     }
     
-    // check for cases where we need to discard the sessionToken, reauthToken, and password:
-    // • SBBErrorCodeServerNotAuthenticated (auth failed)
-    // • 404 (no such account, at least not verified)
-    // • SBBErrorCodeServerAccountDisabled (account has been disabled)
+    // check for cases where we need to discard the sessionToken and reauthToken: SBBErrorCodeServerNotAuthenticated (auth failed),
+    // 404 (no such account, at least not verified), SBBErrorCodeServerAccountDisabled (account has been disabled)
     if (error.code == SBBErrorCodeServerNotAuthenticated ||
         error.code == 404 ||
         error.code == SBBErrorCodeServerAccountDisabled) {
         [self clearSessionToken];
         [self clearReauthToken];
-        [self clearPassword];
         [self resetUserSessionInfo];
     }
 
@@ -1041,11 +1038,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (void)clearReauthToken
 {
     [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey ]];
-}
-
-- (void)clearPassword
-{
-    [self.keychainManager removeValuesForKeys:@[ self.passwordKey ]];
 }
 
 @end
