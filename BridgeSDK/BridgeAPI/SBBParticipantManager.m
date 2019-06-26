@@ -387,9 +387,9 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 
 - (NSURLSessionTask *)getReport:(NSString *)identifier fromDate:(NSDateComponents *)fromDate toDate:(NSDateComponents *)toDate completion:(SBBParticipantManagerGetReportCompletionBlock)completion
 {
-    NSString *startDate = [self gregorianDateFromDateComponents:fromDate];
-    NSString *endDate = [self gregorianDateFromDateComponents:toDate];
-    return [self getReport:identifier fromTimestamp:startDate toTimestamp:endDate completion:completion];
+    NSDate *startDate = [self gregorianDateFromDateComponents:fromDate];
+    NSDate *endDate = [self gregorianDateFromDateComponents:toDate];
+    return [self getReport:identifier fromTimestamp:startDate toTimestamp:endDate dateOnly:YES completion:completion];
 }
 
 - (NSURLSessionTask *)fetchReport:(NSString *)identifier startTime:(NSString *)startTime endTime:(NSString *)endTime offsetKey:(NSString *)offsetKey accumulatedItems:(NSMutableArray *)accumulatedItems completion:(SBBParticipantManagerCompletionBlock)completion
@@ -435,19 +435,21 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
             if (reportList.hasNextValue) {
                 [self fetchReport:identifier startTime:startTime endTime:endTime offsetKey:reportList.nextPageOffsetKey accumulatedItems:accumulatedItems completion:completion];
                 return;
+            } else if (completion) {
+                completion(nil, error);
             }
-        }
-        
-        if (completion) {
-            completion(nil, error);
         }
     }];
 }
 
-- (NSURLSessionTask *)getReport:(NSString *)identifier fromTimestamp:(NSDate *)fromTimestamp toTimestamp:(NSDate *)toTimestamp completion:(SBBParticipantManagerGetReportCompletionBlock)completion
+- (NSURLSessionTask *)getReport:(NSString *)identifier fromTimestamp:(NSDate *)fromTimestamp toTimestamp:(NSDate *)toTimestamp completion:(SBBParticipantManagerGetReportCompletionBlock)completion {
+    return [self getReport:identifier fromTimestamp:fromTimestamp toTimestamp:toTimestamp dateOnly:NO completion:completion];
+}
+
+- (NSURLSessionTask *)getReport:(NSString *)identifier fromTimestamp:(NSDate *)fromTimestamp toTimestamp:(NSDate *)toTimestamp dateOnly:(BOOL)dateOnly completion:(SBBParticipantManagerGetReportCompletionBlock)completion
 {
-    NSString *startTime = fromTimestamp.ISO8601StringUTC;
-    NSString *endTime = toTimestamp.ISO8601StringUTC;
+    NSString *startTime = dateOnly ? fromTimestamp.ISO8601DateOnlyString : fromTimestamp.ISO8601StringUTC;
+    NSString *endTime = dateOnly? toTimestamp.ISO8601DateOnlyString : toTimestamp.ISO8601StringUTC;
     __block NSMutableArray *accumulatedItems = gSBBUseCache ? nil : [NSMutableArray array];
     
     return [self fetchReport:identifier startTime:startTime endTime:endTime offsetKey:nil accumulatedItems:accumulatedItems completion:^(id responseObject,  NSError *error) {
@@ -459,10 +461,10 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
             // filter to the desired dateTime range. conveniently, ISO8601 dates and times can be compared as strings,
             // as long as they are in the same time zone, and we always format the dateTime strings to UTC:
             // https://fits.gsfc.nasa.gov/iso-time.html
-            NSString *dateTimeKey = NSStringFromSelector(@selector(dateTime));
+            NSString *dateKey = dateOnly ? NSStringFromSelector(@selector(localDate)) : NSStringFromSelector(@selector(dateTime));
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K >= %@ AND %K <= %@",
-                                      dateTimeKey, startTime,
-                                      dateTimeKey, endTime];
+                                      dateKey, startTime,
+                                      dateKey, endTime];
             reportItems = [reportList.items filteredArrayUsingPredicate:predicate];
             
             // cached items are unmapped so we need to map them before returning
@@ -479,6 +481,32 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 
 - (NSURLSessionTask *)saveReportData:(SBBReportData *)reportData forReport:(NSString *)identifier completion:(SBBParticipantManagerCompletionBlock)completion
 {
+    if (gSBBUseCache) {
+        // Save the report data item in the local cache, replacing any existing item with the same timestamp
+        [self.cacheManager.cacheIOContext performBlock:^{
+            SBBForwardCursorPagedResourceList *fcprl = (SBBForwardCursorPagedResourceList *)[self.cacheManager cachedObjectOfType:SBBForwardCursorPagedResourceList.entityName withId:identifier createIfMissing:YES];
+            
+            // find where this goes and put it there (or update it)
+            NSArray<SBBReportData *> *items = fcprl.items;
+            NSUInteger index = 0;
+            NSComparisonResult order = NSOrderedAscending;
+            while (index < items.count &&
+                   (order = [items[index].date compare:reportData.date]) == NSOrderedAscending) {
+                ++index;
+            }
+            if (order == NSOrderedSame) {
+                // one with this dateTime or localDate already exists, so just replace its report data
+                items[index].data = reportData.data;
+            } else {
+                // there isn't one with this exact dateTime or localDate yet, so insert it where it goes
+                [fcprl insertObject:reportData inItemsAtIndex:index];
+            }
+            
+            // update the changes to CoreData
+            [fcprl saveToCoreDataCacheWithObjectManager:self.objectManager];
+        }];
+    }
+    
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self.authManager addAuthHeaderToHeaders:headers];
     
@@ -497,31 +525,6 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     SBBReportData *reportData = [SBBReportData new];
     reportData.data = reportJSON;
     reportData.date = dateTime;
-    if (gSBBUseCache) {
-        // Save the report data item in the local cache, replacing any existing item with the same timestamp
-        [self.cacheManager.cacheIOContext performBlock:^{
-            SBBForwardCursorPagedResourceList *fcprl = (SBBForwardCursorPagedResourceList *)[self.cacheManager cachedObjectOfType:SBBForwardCursorPagedResourceList.entityName withId:identifier createIfMissing:YES];
-            
-            // find where this goes and put it there (or update it)
-            NSArray<SBBReportData *> *items = fcprl.items;
-            NSUInteger index = 0;
-            NSComparisonResult order = NSOrderedAscending;
-            while (index < items.count &&
-                   (order = [items[index].date compare:reportData.date]) == NSOrderedAscending) {
-                ++index;
-            }
-            if (order == NSOrderedSame) {
-                // one with this dateTime already exists, so just replace its report data
-                items[index].data = reportJSON;
-            } else {
-                // there isn't one with this exact dateTime yet, so insert it where it goes
-                [fcprl insertObject:reportData inItemsAtIndex:index];
-            }
-            
-            // update the changes to CoreData
-            [fcprl saveToCoreDataCacheWithObjectManager:self.objectManager];
-        }];
-    }
     return [self saveReportData:reportData forReport:identifier completion:completion];
 }
 
@@ -530,31 +533,6 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     SBBReportData *reportData = [SBBReportData new];
     reportData.data = reportJSON;
     [reportData setDateComponents:dateComponents];
-    if (gSBBUseCache) {
-        // Save the report data item in the local cache, replacing any existing item with the same datestamp
-        [self.cacheManager.cacheIOContext performBlock:^{
-            SBBDateRangeResourceList *drrl = (SBBDateRangeResourceList *)[self.cacheManager cachedObjectOfType:SBBDateRangeResourceList.entityName withId:identifier createIfMissing:YES];
-            
-            // find where this goes and put it there (or update it)
-            NSArray<SBBReportData *> *items = drrl.items;
-            NSUInteger index = 0;
-            NSComparisonResult order = NSOrderedAscending;
-            while (index < items.count &&
-                   (order = [items[index].localDate compare:reportData.localDate options:NSLiteralSearch]) == NSOrderedAscending) {
-                ++index;
-            }
-            if (order == NSOrderedSame) {
-                // one with this localDate already exists, so just replace its report data
-                items[index].data = reportJSON;
-            } else {
-                // there isn't one with this localDate yet, so insert it where it goes
-                [drrl insertObject:reportData inItemsAtIndex:index];
-            }
-            
-            // update the changes to CoreData
-            [drrl saveToCoreDataCacheWithObjectManager:self.objectManager];
-        }];
-    }
     return [self saveReportData:reportData forReport:identifier completion:completion];
 }
 
@@ -568,23 +546,16 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
     
     // ReportData objects are not individually cacheable, since they don't contain any information in their JSON indicating which report they belong to.
     // When stored in CoreData, fortunately, they do have backlinks to their containing lists, which are cached by the report identifier.
-    // Unfortunately, timestamped and datestamped reports come from Bridge in two unrelated types of lists, so we have to look for both.
-    // - get the keys for the report identifiers in the containing lists
+    // - get the key for the report identifier in the containing list
     NSEntityDescription *fcprlEntityDescription = [SBBForwardCursorPagedResourceList entityForContext:self.cacheManager.cacheIOContext];
     NSString *fcprlEntityIDKeyPath = fcprlEntityDescription.userInfo[@"entityIDKeyPath"];
     NSString *fcprlReportIdentifierKeyPath = [NSString stringWithFormat:@"%@.%@",
                                          NSStringFromSelector(@selector(forwardCursorPagedResourceList)),
                                          fcprlEntityIDKeyPath];
-    NSEntityDescription *drrlEntityDescription = [SBBDateRangeResourceList entityForContext:self.cacheManager.cacheIOContext];
-    NSString *drrlEntityIDKeyPath = drrlEntityDescription.userInfo[@"entityIDKeyPath"];
-    NSString *drrlReportIdentifierKeyPath = [NSString stringWithFormat:@"%@.%@",
-                                         NSStringFromSelector(@selector(resourceList)),
-                                         drrlEntityIDKeyPath];
 
     // - search for all ReportData objects in the list for this report
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@ || %K == %@",
-                                            fcprlReportIdentifierKeyPath, identifier,
-                                            drrlReportIdentifierKeyPath, identifier];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K == %@",
+                                            fcprlReportIdentifierKeyPath, identifier];
     // - sort them in descending order so the first item in the list will be the one we're looking for
     NSSortDescriptor *descriptor = [NSSortDescriptor sortDescriptorWithKey:NSStringFromSelector(@selector(date)) ascending:NO];
     // - limit to 1 result so we just get the one we want

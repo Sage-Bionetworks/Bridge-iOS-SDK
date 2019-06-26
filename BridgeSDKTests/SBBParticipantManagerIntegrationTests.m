@@ -658,12 +658,11 @@
     NSArray<NSString *> *dataList = self.reportJSONDataList;
     NSString *identifier = @"SongOfTheDay";
     
-    NSInteger daysOffset = 0;
     NSDateComponents *components = [self dateOnlyComponentsForDate:[NSDate date]];
     for (id<SBBJSONValue>data in dataList) {
-        components.day += daysOffset--;
         NSDate *timestamp = [self.gregorianCalendar dateFromComponents:components];
         [self addItemData:data toReport:identifier withDate:timestamp dateOnly:YES];
+        components.day--;
     }
 
     // now retrieve them
@@ -679,7 +678,7 @@
             XCTAssertNotNil(item.localDate, @"Expected report item localDate to not be nil but it is nil");
             XCTAssertNil(item.dateTime, @"Expected report item dateTime to be nil but it's %@", item.dateTime);
             id<SBBJSONValue> expectedData = dataList[listOffset--];
-            XCTAssertEqual(item.data, expectedData, @"Expected item to have this data: %@\nbut got this instead: %@", expectedData, item.data);
+            XCTAssertEqualObjects(item.data, expectedData, @"Expected item to have this data: %@\nbut got this instead: %@", expectedData, item.data);
         }
     }
     
@@ -691,7 +690,7 @@
     [self addItemData:newData toReport:identifier withDate:dateUpdating dateOnly:YES];
     
     // - check that it was overwritten locally:
-    SBBDateRangeResourceList *cachedReport = (SBBDateRangeResourceList *)[SBBComponent(SBBCacheManager) cachedObjectOfType:SBBDateRangeResourceList.entityName withId:identifier createIfMissing:NO];
+    SBBDateRangeResourceList *cachedReport = (SBBDateRangeResourceList *)[SBBComponent(SBBCacheManager) cachedObjectOfType:SBBForwardCursorPagedResourceList.entityName withId:identifier createIfMissing:NO];
     XCTAssertNotNil(cachedReport, @"Expected to have a datestamped report cached for %@, but apparently not", identifier);
     if (cachedReport) {
         NSString *localDateKey = NSStringFromSelector(@selector(localDate));
@@ -705,7 +704,7 @@
     }
     
     // - clear the report from local cache, retrieve from Bridge, and check again to be sure it got overwritten there too:
-    [SBBComponent(SBBCacheManager) removeFromCacheObjectOfType:SBBDateRangeResourceList.entityName withId:identifier];
+    [SBBComponent(SBBCacheManager) removeFromCacheObjectOfType:SBBForwardCursorPagedResourceList.entityName withId:identifier];
     items = [self retrieveItemsForReport:identifier from:startDate to:endDate dateOnly:YES];
     XCTAssert(items.count > index, @"Expected re-retrieved report to have at least %u items, but it only has %ld", index + 1, items.count);
     if (items.count > index) {
