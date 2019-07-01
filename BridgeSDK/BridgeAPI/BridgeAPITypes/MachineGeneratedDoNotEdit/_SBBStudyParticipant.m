@@ -106,7 +106,8 @@
 
     NSString *password = cacheManager.encryptionKey;
     if (password) {
-        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
+        NSError *error = nil;
+        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:&error];
         if (error && !plaintext) {
             NSLog(@"Error decrypting %@ with password '%@': %@", self.class.entityName, password, error);
             self = nil;
