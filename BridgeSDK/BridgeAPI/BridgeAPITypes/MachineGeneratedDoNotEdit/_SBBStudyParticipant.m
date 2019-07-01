@@ -107,8 +107,13 @@
     NSString *password = cacheManager.encryptionKey;
     if (password) {
         NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
-        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
-        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+        if (error && !plaintext) {
+            NSLog(@"Error decrypting %@ with password '%@': %@", self.class.entityName, password, error);
+            self = nil;
+        } else {
+            NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
+            self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+        }
     } else {
         self = nil;
     }
