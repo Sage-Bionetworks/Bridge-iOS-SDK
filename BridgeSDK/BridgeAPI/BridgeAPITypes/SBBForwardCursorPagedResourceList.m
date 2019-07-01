@@ -1,7 +1,7 @@
 //
 //  SBBForwardCursorPagedResourceList.m
 //
-//	Copyright (c) 2014-2018 Sage Bionetworks
+//	Copyright (c) 2014-2019 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -49,17 +49,20 @@
     [self updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
     
     // Since ReportData objects generally originate from the app, the client copies are canonical,
-    // so we'll restore the saved ones, replacing any from the server with matching dateTimes.
+    // so we'll restore the saved ones, replacing any from the server with matching dates.
     NSMutableArray<SBBReportData *> *newItems = [self.items mutableCopy];
     NSString *dateTimeKey = NSStringFromSelector(@selector(dateTime));
+    NSString *localDateKey = NSStringFromSelector(@selector(localDate));
     for (SBBReportData *savedReportData in savedItems) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"%K != %@", dateTimeKey, savedReportData.dateTime];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%K != NULL && %K != %@) || (%K != NULL && %K != %@)",
+                                  dateTimeKey, dateTimeKey, savedReportData.dateTime,
+                                  localDateKey, localDateKey, savedReportData.localDate];
         [newItems filterUsingPredicate:predicate];
         [newItems addObject:savedReportData];
     }
     
     [newItems sortUsingComparator:^NSComparisonResult(SBBReportData *  _Nonnull item1, SBBReportData *  _Nonnull item2) {
-        return [item1.dateTime compare:item2.dateTime];
+        return [item1.date compare:item2.date];
     }];
     
     [self removeItemsObjects];

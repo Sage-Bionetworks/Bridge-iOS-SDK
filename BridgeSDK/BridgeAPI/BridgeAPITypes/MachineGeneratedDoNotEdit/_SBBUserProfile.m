@@ -270,9 +270,17 @@ static id dynamicGetterIMP(id self, SEL _cmd)
 
     NSString *password = cacheManager.encryptionKey;
     if (password) {
-        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:nil];
-        NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
-        self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+        NSError *error = nil;
+        NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:&error];
+        if (error || !plaintext) {
+#if DEBUG
+            NSLog(@"Error decrypting %@ with password '%@': %@", self.class.entityName, password, error);
+#endif
+            self = nil;
+        } else {
+            NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
+            self = [self initWithDictionaryRepresentation:jsonDict objectManager:objectManager];
+        }
     } else {
         self = nil;
     }
