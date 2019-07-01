@@ -108,8 +108,10 @@
     if (password) {
         NSError *error = nil;
         NSData *plaintext = [RNDecryptor decryptData:managedObject.ciphertext withPassword:password error:&error];
-        if (error && !plaintext) {
+        if (error || !plaintext) {
+#if DEBUG
             NSLog(@"Error decrypting %@ with password '%@': %@", self.class.entityName, password, error);
+#endif
             self = nil;
         } else {
             NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:plaintext options:0 error:NULL];
