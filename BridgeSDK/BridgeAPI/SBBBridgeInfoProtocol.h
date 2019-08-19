@@ -94,6 +94,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, readonly, copy) NSString * _Nullable keychainAccessGroup;
 
+/**
+ This property, if set, is used for the keychain service in which to store the session token,
+ reauth token, and (if any) password. If not set, the default keychain is used.
+ */
+@property (nonatomic, readonly, copy) NSString * _Nullable keychainService;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -91,6 +91,7 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
     self.usesStandardUserDefaults = info.usesStandardUserDefaults;
     self.userDefaultsSuiteName = info.userDefaultsSuiteName;
     self.keychainAccessGroup = info.keychainAccessGroup;
+    self.keychainService = info.keychainService;
 }
 
 - (NSString *)studyIdentifier
@@ -163,6 +164,16 @@ const NSInteger SBBMaxSupportedCacheDays = 30;
 - (void)setKeychainAccessGroup:(NSString *)keychainAccessGroup
 {
     _bridgeInfo[NSStringFromSelector(@selector(keychainAccessGroup))] = [keychainAccessGroup copy];
+}
+
+- (NSString *)keychainService
+{
+    return _bridgeInfo[NSStringFromSelector(@selector(keychainService))];
+}
+
+- (void)setKeychainService:(NSString *)keychainService
+{
+    _bridgeInfo[NSStringFromSelector(@selector(keychainService))] = [keychainService copy];
 }
 
 - (BOOL)usesStandardUserDefaults

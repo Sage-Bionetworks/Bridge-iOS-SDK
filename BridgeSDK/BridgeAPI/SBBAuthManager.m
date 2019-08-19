@@ -183,10 +183,16 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [NSString stringWithFormat:@"%@.%@", bundleSeedID, keychainAccessGroup];
 }
 
++ (NSString *)sdkKeychainService
+{
+    return SBBBridgeInfo.shared.keychainService ?: kBridgeKeychainService;
+}
+
 + (UICKeyChainStore *)sdkKeychainStore
 {
     NSString *accessGroup = self.sdkKeychainAccessGroup;
-    return [UICKeyChainStore keyChainStoreWithService:kBridgeKeychainService accessGroup:accessGroup];
+    NSString *service = self.sdkKeychainService;
+    return [UICKeyChainStore keyChainStoreWithService:service accessGroup:accessGroup];
 }
 
 - (void)clearKeychainStore
