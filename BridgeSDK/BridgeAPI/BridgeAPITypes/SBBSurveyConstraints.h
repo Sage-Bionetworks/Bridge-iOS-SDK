@@ -44,7 +44,9 @@ ENUM_EXTERN SBBDataType const SBBDataTypeHeight;
 ENUM_EXTERN SBBDataType const SBBDataTypeInteger;
 ENUM_EXTERN SBBDataType const SBBDataTypeString;
 ENUM_EXTERN SBBDataType const SBBDataTypeTime;
-ENUM_EXTERN SBBDataType const SBBDataTypeWeight; 
+ENUM_EXTERN SBBDataType const SBBDataTypeWeight;
+ENUM_EXTERN SBBDataType const SBBDataTypePostalCode;
+ENUM_EXTERN SBBDataType const SBBDataTypeYearMonth;
 
 @interface SBBSurveyConstraints : _SBBSurveyConstraints <_SBBSurveyConstraints>
 

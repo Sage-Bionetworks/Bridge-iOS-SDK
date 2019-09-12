@@ -25,6 +25,7 @@
 #import "SBBMultiValueConstraints.h"
 #import "SBBOAuthAccessToken.h"
 #import "SBBPhone.h"
+#import "SBBPostalCodeConstraints.h"
 #import "SBBReportData.h"
 #import "SBBRequestParams.h"
 #import "SBBResourceList.h"
@@ -51,3 +52,4 @@
 #import "SBBUserProfile.h"
 #import "SBBUserSessionInfo.h"
 #import "SBBWeightConstraints.h"
+#import "SBBYearMonthConstraints.h"

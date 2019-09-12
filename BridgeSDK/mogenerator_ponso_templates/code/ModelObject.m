@@ -243,7 +243,7 @@
                     // now update the in-memory-cached Bridge object too, if any, in case it's not the same instance as this one
                     ModelObject *inMemoryObject = [cacheManager inMemoryBridgeObjectOfType:entity.name andId:entityID];
                     if (inMemoryObject != self) {
-                        [inMemoryObject initWithManagedObject:existingObject objectManager:objectManager cacheManager:cacheManager];
+                        inMemoryObject = [inMemoryObject initWithManagedObject:existingObject objectManager:objectManager cacheManager:cacheManager];
                     }
                 }
             }];

@@ -1,7 +1,7 @@
 //
-//  SBBSurveyConstraints.m
+//  _SBBYearMonthConstraints.h
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,28 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBYearMonthConstraints.h instead.
+//
 
+#import <Foundation/Foundation.h>
 #import "SBBSurveyConstraints.h"
 
-SBBDataType const SBBDataTypeBloodPressure = @"bloodpressure";
-SBBDataType const SBBDataTypeBoolean = @"boolean";
-SBBDataType const SBBDataTypeDate = @"date";
-SBBDataType const SBBDataTypeDateTime = @"datetime";
-SBBDataType const SBBDataTypeDecimal = @"decimal";
-SBBDataType const SBBDataTypeDuration = @"duration";
-SBBDataType const SBBDataTypeHeight = @"height";
-SBBDataType const SBBDataTypeInteger = @"integer";
-SBBDataType const SBBDataTypeString = @"string";
-SBBDataType const SBBDataTypeTime = @"time";
-SBBDataType const SBBDataTypeWeight = @"weight";
-SBBDataType const SBBDataTypePostalCode = @"postalcode";
-SBBDataType const SBBDataTypeYearMonth = @"yearmonth";
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation SBBSurveyConstraints
-
-#pragma mark Abstract method overrides
-
-+ (SBBDataType)defaultDataType {
-    return SBBDataTypeString;
-}
-
-- (SBBDataType)dataTypeValue {
-    return [self.dataType lowercaseString] ? : [[self class] defaultDataType];
-}
+@protocol _SBBYearMonthConstraints
 
 @end
+
+@interface _SBBYearMonthConstraints : SBBSurveyConstraints
+
+@property (nullable, nonatomic, strong) NSNumber* allowFuture;
+
+@property (nonatomic, assign) BOOL allowFutureValue;
+
+@property (nullable, nonatomic, strong) NSString* earliestValue;
+
+@property (nullable, nonatomic, strong) NSString* latestValue;
+
+@end
+NS_ASSUME_NONNULL_END

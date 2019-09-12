@@ -1,7 +1,7 @@
 //
-//  SBBSurveyConstraints.m
+//  SBBPostalCodeConstraints.h
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2018 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -27,32 +27,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBSurveyConstraints.h"
+#import "_SBBPostalCodeConstraints.h"
 
-SBBDataType const SBBDataTypeBloodPressure = @"bloodpressure";
-SBBDataType const SBBDataTypeBoolean = @"boolean";
-SBBDataType const SBBDataTypeDate = @"date";
-SBBDataType const SBBDataTypeDateTime = @"datetime";
-SBBDataType const SBBDataTypeDecimal = @"decimal";
-SBBDataType const SBBDataTypeDuration = @"duration";
-SBBDataType const SBBDataTypeHeight = @"height";
-SBBDataType const SBBDataTypeInteger = @"integer";
-SBBDataType const SBBDataTypeString = @"string";
-SBBDataType const SBBDataTypeTime = @"time";
-SBBDataType const SBBDataTypeWeight = @"weight";
-SBBDataType const SBBDataTypePostalCode = @"postalcode";
-SBBDataType const SBBDataTypeYearMonth = @"yearmonth";
-
-@implementation SBBSurveyConstraints
-
-#pragma mark Abstract method overrides
-
-+ (SBBDataType)defaultDataType {
-    return SBBDataTypeString;
-}
-
-- (SBBDataType)dataTypeValue {
-    return [self.dataType lowercaseString] ? : [[self class] defaultDataType];
-}
-
+@interface SBBPostalCodeConstraints : _SBBPostalCodeConstraints <_SBBPostalCodeConstraints>
+// Custom logic goes here.
 @end
