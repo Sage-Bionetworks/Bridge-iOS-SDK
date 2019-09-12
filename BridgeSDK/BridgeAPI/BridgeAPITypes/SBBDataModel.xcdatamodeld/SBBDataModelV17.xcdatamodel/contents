@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14492.1" systemVersion="18G95" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="18A391" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
     <entity name="AbstractStudyParticipant" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
         <attribute name="attributes" optional="YES" attributeType="Transformable" syncable="YES">
             <userInfo>
@@ -307,9 +307,6 @@
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-    </entity>
-    <entity name="PostalCodeConstraints" parentEntity="SurveyConstraints" syncable="YES">
-        <attribute name="countryCode" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="ReportData" parentEntity="BridgeObject" syncable="YES">
         <attribute name="data" optional="YES" attributeType="Transformable" syncable="YES">
@@ -680,11 +677,6 @@
         <attribute name="isInfant" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="YearMonthConstraints" parentEntity="SurveyConstraints" syncable="YES">
-        <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="earliestValue" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="latestValue" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
     <elements>
         <element name="AbstractStudyParticipant" positionX="18" positionY="108" width="128" height="300"/>
         <element name="Activity" positionX="0" positionY="0" width="128" height="195"/>
@@ -694,7 +686,6 @@
         <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
         <element name="BridgeObject" positionX="0" positionY="0" width="128" height="105"/>
         <element name="CompoundActivity" positionX="18" positionY="162" width="128" height="120"/>
-        <element name="ConfigReference" positionX="27" positionY="153" width="128" height="90"/>
         <element name="ConsentSignature" positionX="9" positionY="99" width="128" height="120"/>
         <element name="ConsentStatus" positionX="0" positionY="90" width="128" height="135"/>
         <element name="DataGroups" positionX="0" positionY="90" width="128" height="60"/>
@@ -739,7 +730,6 @@
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WeightConstraints" positionX="36" positionY="171" width="128" height="75"/>
-        <element name="PostalCodeConstraints" positionX="27" positionY="153" width="128" height="60"/>
-        <element name="YearMonthConstraints" positionX="36" positionY="162" width="128" height="90"/>
+        <element name="ConfigReference" positionX="27" positionY="153" width="128" height="90"/>
     </elements>
 </model>
