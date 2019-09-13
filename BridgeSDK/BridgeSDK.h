@@ -2,7 +2,7 @@
 //  BridgeSDK.h
 //  BridgeSDK
 //
-//	Copyright (c) 2014-2018, Sage Bionetworks
+//	Copyright (c) 2014-2019, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -42,6 +42,7 @@ extern const unsigned char BridgeSDKVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <BridgeSDK/PublicHeader.h>
     
+#import <BridgeSDK/SBBActivityEventManager.h>
 #import <BridgeSDK/SBBActivityManager.h>
 #import <BridgeSDK/SBBAuthManager.h>
 #import <BridgeSDK/SBBBridgeNetworkManager.h>
@@ -56,6 +57,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/SBBNotificationManager.h>
 #import <BridgeSDK/SBBOAuthManager.h>
 #import <BridgeSDK/SBBObjectManager.h>
+#import <BridgeSDK/SBBParticipantManager.h>
 #import <BridgeSDK/SBBScheduleManager.h>
 #import <BridgeSDK/SBBStudyManager.h>
 #import <BridgeSDK/SBBSurveyManager.h>

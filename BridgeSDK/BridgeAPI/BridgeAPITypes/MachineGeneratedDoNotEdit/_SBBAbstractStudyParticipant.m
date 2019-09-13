@@ -57,6 +57,8 @@
 
 @property (nullable, nonatomic, retain) NSString* externalId;
 
+@property (nullable, nonatomic, retain) NSDictionary<NSString *, NSString *>* externalIds;
+
 @property (nullable, nonatomic, retain) NSString* firstName;
 
 @property (nullable, nonatomic, retain) NSString* id;
@@ -74,6 +76,8 @@
 @property (nullable, nonatomic, retain) NSString* sharingScope;
 
 @property (nullable, nonatomic, retain) NSString* status;
+
+@property (nullable, nonatomic, retain) NSArray<NSString *>* substudyIds;
 
 @property (nullable, nonatomic, retain) NSManagedObject *phone;
 
@@ -145,6 +149,8 @@
 
     self.externalId = [dictionary objectForKey:@"externalId"];
 
+    _externalIds = [dictionary objectForKey:@"externalIds"];
+
     self.firstName = [dictionary objectForKey:@"firstName"];
 
     _id = [dictionary objectForKey:@"id"];
@@ -162,6 +168,8 @@
     self.sharingScope = [dictionary objectForKey:@"sharingScope"];
 
     self.status = [dictionary objectForKey:@"status"];
+
+    self.substudyIds = [dictionary objectForKey:@"substudyIds"];
 
     NSDictionary *phoneDict = [dictionary objectForKey:@"phone"];
 
@@ -194,6 +202,8 @@
 
     [dict setObjectIfNotNil:self.externalId forKey:@"externalId"];
 
+    [dict setObjectIfNotNil:self.externalIds forKey:@"externalIds"];
+
     [dict setObjectIfNotNil:self.firstName forKey:@"firstName"];
 
     [dict setObjectIfNotNil:self.id forKey:@"id"];
@@ -211,6 +221,8 @@
     [dict setObjectIfNotNil:self.sharingScope forKey:@"sharingScope"];
 
     [dict setObjectIfNotNil:self.status forKey:@"status"];
+
+    [dict setObjectIfNotNil:self.substudyIds forKey:@"substudyIds"];
 
     [dict setObjectIfNotNil:[objectManager bridgeJSONFromObject:self.phone] forKey:@"phone"];
 
@@ -253,6 +265,8 @@
 
         self.externalId = managedObject.externalId;
 
+        _externalIds = managedObject.externalIds;
+
         self.firstName = managedObject.firstName;
 
         _id = managedObject.id;
@@ -270,6 +284,8 @@
         self.sharingScope = managedObject.sharingScope;
 
         self.status = managedObject.status;
+
+        self.substudyIds = managedObject.substudyIds;
 
             NSManagedObject *phoneManagedObj = managedObject.phone;
         Class phoneClass = [SBBObjectManager bridgeClassFromType:phoneManagedObj.entity.name];
@@ -325,6 +341,8 @@
 
     managedObject.externalId = ((id)self.externalId == [NSNull null]) ? nil : self.externalId;
 
+    managedObject.externalIds = ((id)self.externalIds == [NSNull null]) ? nil : self.externalIds;
+
     managedObject.firstName = ((id)self.firstName == [NSNull null]) ? nil : self.firstName;
 
     managedObject.id = ((id)self.id == [NSNull null]) ? nil : self.id;
@@ -342,6 +360,8 @@
     managedObject.sharingScope = ((id)self.sharingScope == [NSNull null]) ? nil : self.sharingScope;
 
     managedObject.status = ((id)self.status == [NSNull null]) ? nil : self.status;
+
+    managedObject.substudyIds = ((id)self.substudyIds == [NSNull null]) ? nil : self.substudyIds;
 
     // destination entity Phone is not directly cacheable, so delete it and create the replacement
     if (managedObject.phone) {

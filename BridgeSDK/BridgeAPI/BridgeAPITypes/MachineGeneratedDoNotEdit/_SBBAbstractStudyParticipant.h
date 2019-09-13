@@ -61,6 +61,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSString* externalId;
 
+@property (nullable, nonatomic, strong, readonly) NSDictionary<NSString *, NSString *>* externalIds;
+
 @property (nullable, nonatomic, strong) NSString* firstName;
 
 @property (nullable, nonatomic, strong, readonly) NSString* id;
@@ -82,6 +84,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, strong) NSString* sharingScope;
 
 @property (nullable, nonatomic, strong) NSString* status;
+
+@property (nullable, nonatomic, strong) NSArray<NSString *>* substudyIds;
 
 @property (nullable, nonatomic, strong, readwrite) SBBPhone *phone;
 

@@ -2,7 +2,7 @@
 //  SBBParticipantManagerInternal.h
 //  BridgeSDK
 //
-//	Copyright (c) 2015-2016, Sage Bionetworks
+//	Copyright (c) 2015-2019, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -45,6 +45,7 @@ extern NSString * const kSBBParticipantDataSharingScopeStrings[];
 - (void)clearUserInfoFromCache;
 - (NSURLSessionTask *)getParticipantRecordFromBridgeWithCompletion:(SBBParticipantManagerGetRecordCompletionBlock)completion;
 - (NSDictionary *)bridgeJSONForParticipantWithField:(NSString *)fieldName setTo:(id)value;
+- (NSURLSessionTask *)updateParticipantJSONToBridge:(id)json completion:(SBBParticipantManagerCompletionBlock)completion;
 
 @end
 

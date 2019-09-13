@@ -193,7 +193,7 @@
 		60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */; };
 		60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57311A0AFEA500CE2373 /* SBBTestBridgeObject.m */; };
 		60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */; };
-		80015060212A0931006B3C8E /* SBBActivityEventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8001505E212A0931006B3C8E /* SBBActivityEventManager.h */; };
+		80015060212A0931006B3C8E /* SBBActivityEventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8001505E212A0931006B3C8E /* SBBActivityEventManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80015061212A0931006B3C8E /* SBBActivityEventManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8001505F212A0931006B3C8E /* SBBActivityEventManager.m */; };
 		80015063212A09B2006B3C8E /* SBBActivityEventManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80015062212A09B2006B3C8E /* SBBActivityEventManagerInternal.h */; };
 		80015065212A1EAD006B3C8E /* SBBActivityEventManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80015064212A1EAD006B3C8E /* SBBActivityEventManagerIntegrationTests.m */; };

@@ -2,7 +2,7 @@
 //  SBBActivityEventManager.h
 //  BridgeSDK
 //
-//    Copyright (c) 2018, Sage Bionetworks
+//    Copyright (c) 2018-2019, Sage Bionetworks
 //    All rights reserved.
 //
 //    Redistribution and use in source and binary forms, with or without
@@ -28,7 +28,8 @@
 //    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <BridgeSDK/BridgeSDK.h>
+#import <Foundation/Foundation.h>
+#import "SBBBridgeAPIManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
