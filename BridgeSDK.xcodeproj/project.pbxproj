@@ -720,6 +720,7 @@
 		601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBBAdditions.m"; sourceTree = "<group>"; };
 		602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManagerUnitTests.m; sourceTree = "<group>"; };
 		6035A9B920101DBB0096BC94 /* SBBNotificationManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBNotificationManagerInternal.h; sourceTree = "<group>"; };
+		603DE2FC232C06E20049141C /* SBBDataModelV18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV18.xcdatamodel; sourceTree = "<group>"; };
 		6056DE051CF61ECD00C21E82 /* _SBBStudyParticipant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBStudyParticipant.h; sourceTree = "<group>"; };
 		6056DE061CF61ECD00C21E82 /* _SBBStudyParticipant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBStudyParticipant.m; sourceTree = "<group>"; };
 		6056DE0A1CF61ECD00C21E82 /* _SBBStudyParticipantInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBStudyParticipantInternal.h; sourceTree = "<group>"; };
@@ -3647,6 +3648,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				603DE2FC232C06E20049141C /* SBBDataModelV18.xcdatamodel */,
 				FFF20D01232ABA1D00F501C3 /* SBBDataModelV17.xcdatamodel */,
 				F85F9A0A219368B5002E17C3 /* SBBDataModelV16.xcdatamodel */,
 				60E86D5A211E325F0073C69C /* SBBDataModelV15.xcdatamodel */,
