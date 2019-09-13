@@ -292,12 +292,13 @@
 
     // Create an external identifier to test with
     NSString *externalIdentifierFormat = @"test-external-identifier%@";
+    NSString *substudyId = @"test-external-id-substudy";
     NSString *unique = [[NSProcessInfo processInfo] globallyUniqueString];
     __block NSString *externalIdentifier = [NSString stringWithFormat:externalIdentifierFormat, unique];
     NSDictionary *externalIdObject =
     @{
       @"identifier": externalIdentifier,
-      @"substudyId": @"test-external-id-substudy",
+      @"substudyId": substudyId,
       @"type": @"ExternalIdentifier"
       };
     
@@ -339,7 +340,7 @@
                     NSLog(@"Error getting study participant record after setting external identifier:\n%@\nResponse: %@", error, responseObject);
                 }
                 XCTAssert([studyParticipant isKindOfClass:[SBBStudyParticipant class]], @"Failed to retrieve study participant record");
-                XCTAssert([[[studyParticipant externalIds] allKeys] containsObject:externalIdentifier], @"Fetched StudyParticipant's externalIds map does not contain %@:\n%@", externalIdentifier, [studyParticipant externalIds]);
+                XCTAssertEqual([studyParticipant externalIds][substudyId], externalIdentifier, @"Fetched StudyParticipant's externalIds does not map substudy %@ to identifier %@:\n%@", substudyId, externalIdentifier, [studyParticipant externalIds]);
                 if (!gSBBUseCache) {
                     // we're done here
                     [expectSetIdentifier fulfill];
@@ -353,7 +354,7 @@
                         NSLog(@"Error getting study participant record from Bridge after setting external identifier:\n%@\nResponse: %@", error, responseObject);
                     }
                     XCTAssert([studyParticipant isKindOfClass:[SBBStudyParticipant class]], @"Retrieved study participant record from Bridge");
-                    XCTAssert([[[studyParticipant externalIds] allKeys] containsObject:externalIdentifier], @"Fetched StudyParticipant's externalIds map does not contain %@:\n%@", externalIdentifier, [studyParticipant externalIds]);
+                    XCTAssertEqual([studyParticipant externalIds][substudyId], externalIdentifier, @"Cached StudyParticipant's externalIds does not map substudy %@ to identifier %@:\n%@", substudyId, externalIdentifier, [studyParticipant externalIds]);
                     [expectSetIdentifier fulfill];
                 }];
             }

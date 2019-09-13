@@ -213,7 +213,6 @@ NSString * const kUserSessionInfoIdKey = @"id";
       @"consent": [NSNumber numberWithBool:consented],
       @"roles": roles,
       @"dataGroups": @[@"test_user"],
-      @"substudyIds": @[@"test"],
       @"type": @"SignUp"
       };
     
