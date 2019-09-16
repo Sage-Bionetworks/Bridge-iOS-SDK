@@ -340,7 +340,8 @@
                     NSLog(@"Error getting study participant record after setting external identifier:\n%@\nResponse: %@", error, responseObject);
                 }
                 XCTAssert([studyParticipant isKindOfClass:[SBBStudyParticipant class]], @"Failed to retrieve study participant record");
-                XCTAssertEqual([studyParticipant externalIds][substudyId], externalIdentifier, @"Fetched StudyParticipant's externalIds does not map substudy %@ to identifier %@:\n%@", substudyId, externalIdentifier, [studyParticipant externalIds]);
+                XCTAssertEqualObjects
+([studyParticipant externalIds][substudyId], externalIdentifier, @"Cached StudyParticipant's externalIds does not map substudy %@ to identifier %@:\n%@", substudyId, externalIdentifier, [studyParticipant externalIds]);
                 if (!gSBBUseCache) {
                     // we're done here
                     [expectSetIdentifier fulfill];
@@ -354,7 +355,7 @@
                         NSLog(@"Error getting study participant record from Bridge after setting external identifier:\n%@\nResponse: %@", error, responseObject);
                     }
                     XCTAssert([studyParticipant isKindOfClass:[SBBStudyParticipant class]], @"Retrieved study participant record from Bridge");
-                    XCTAssertEqual([studyParticipant externalIds][substudyId], externalIdentifier, @"Cached StudyParticipant's externalIds does not map substudy %@ to identifier %@:\n%@", substudyId, externalIdentifier, [studyParticipant externalIds]);
+                    XCTAssertEqualObjects([studyParticipant externalIds][substudyId], externalIdentifier, @"Fetched StudyParticipant's externalIds does not map substudy %@ to identifier %@:\n%@", substudyId, externalIdentifier, [studyParticipant externalIds]);
                     [expectSetIdentifier fulfill];
                 }];
             }
@@ -371,7 +372,7 @@
     // -- First, remove the externalId from the participant:
     NSDictionary *participant =
     @{
-      @"externalIds": @[],
+      @"externalIds": @{},
       @"type": @"StudyParticipant"
       };
     NSString *participantId = self.testSignInResponseObject[@"id"];
