@@ -714,7 +714,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
                     NSLog(@"Corrupt SQLite db deleted and rebuilt");
                 }
             }
-#if DEBUG
+#if DEBUG_CACHE_MANAGER
             else {
                 // Now that we're setting some attributes and relationships as non-optional,
                 // we will get this error any time we add a new object to the cache that has
@@ -726,7 +726,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
                 NSLog(@"Error saving cache manager's managed object context. If this is a validation error and at some later time the context is successfully saved, you can ignore this error:\n%@",  error);
             }
         } else {
-            // NSLog(@"Cache manager's managed object context has been saved");
+            NSLog(@"Cache manager's managed object context has been saved");
 #endif
         }
     }];
