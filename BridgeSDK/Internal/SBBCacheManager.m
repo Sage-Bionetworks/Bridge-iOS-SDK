@@ -714,7 +714,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
                     NSLog(@"Corrupt SQLite db deleted and rebuilt");
                 }
             }
-#if DEBUG
+#if DEBUG_CACHE_MANAGER
             else {
                 // Now that we're setting some attributes and relationships as non-optional,
                 // we will get this error any time we add a new object to the cache that has
