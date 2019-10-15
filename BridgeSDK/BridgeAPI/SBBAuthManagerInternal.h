@@ -73,6 +73,12 @@ extern NSString * const kSBBAuthResetAPI;
 @property (nonatomic, strong) id<SBBObjectManagerProtocol> objectManager;
 @property (nonatomic, strong) SBBUserSessionInfo *placeholderSessionInfo;
 
+// Keep track of whether an auth/reauth call to Bridge is currently in progress.
+@property (nonatomic, readonly, assign) BOOL authCallInProgress;
+
+// Keep a list of completion handlers for in-flight auth/reauth calls.
+@property (nonatomic, strong) NSMutableArray<SBBNetworkManagerCompletionBlock> *authCompletionHandlers;
+
 // so we can override the "keychain" for testing purposes
 @property (nonatomic, strong) id<SBBAuthKeychainManagerProtocol> keychainManager;
 

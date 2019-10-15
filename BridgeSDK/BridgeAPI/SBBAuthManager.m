@@ -86,6 +86,37 @@ static NSString *envPasswordKeyFormat[] = {
     @"SBBPasswordCustom-%@"
 };
 
+static NSString *envCredentialValueKeyFormat[] = {
+    @"SBBCredential-%@",
+    @"SBBCredentialStaging-%@",
+    @"SBBCredentialDev-%@",
+    @"SBBCredentialCustom-%@"
+};
+
+static NSString *envCredentialKeyKeyFormat[] = {
+    @"SBBCredentialKey-%@",
+    @"SBBCredentialKeyStaging-%@",
+    @"SBBCredentialKeyDev-%@",
+    @"SBBCredentialKeyCustom-%@"
+};
+
+dispatch_queue_t AuthAttemptQueue()
+{
+    static dispatch_queue_t q;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        q = dispatch_queue_create("org.sagebase.BridgeAuthAttemptQueue", DISPATCH_QUEUE_SERIAL);
+    });
+    
+    return q;
+}
+
+// use with care--not protected. Used for preventing multiple concurrent
+// auth/reauth requests to Bridge.
+void dispatchSyncToAuthAttemptQueue(dispatch_block_t dispatchBlock)
+{
+    dispatch_sync(AuthAttemptQueue(), dispatchBlock);
+}
 
 dispatch_queue_t AuthQueue()
 {
@@ -247,6 +278,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 @implementation SBBAuthManager
 @synthesize authDelegate = _authDelegate;
 @synthesize sessionToken = _sessionToken;
+@synthesize authCallInProgress = _authCallInProgress;
+@synthesize authCompletionHandlers = _authCompletionHandlers;
 
 + (instancetype)defaultComponent
 {
@@ -316,6 +349,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (self = [super init]) {
         _networkManager = networkManager;
         self.keychainManager = [_SBBAuthKeychainManager new];
+        self.authCompletionHandlers = [NSMutableArray array];
         
         // Clear keychain on first run in case of reinstallation
         NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
@@ -524,9 +558,17 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (error.code == SBBErrorCodeServerNotAuthenticated ||
         error.code == 404 ||
         error.code == SBBErrorCodeServerAccountDisabled) {
-        [self clearSessionToken];
-        [self clearReauthToken];
-        [self resetUserSessionInfo];
+        dispatchSyncToAuthAttemptQueue(^{
+            [self clearSessionToken];
+            [self clearReauthToken];
+            [self resetUserSessionInfo];
+            if (error.code != SBBErrorCodeServerNotAuthenticated) {
+                // If the account itself is bad, and not just the reauth token, clear any saved password
+                // and credential as well.
+                [self clearPassword];
+                [self clearCredential];
+            }
+        });
     }
 
     // Save session token, reauth token, and password in the keychain
@@ -546,6 +588,15 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         
         if (reauthToken) {
             keysAndValues[self.reauthTokenKey] = reauthToken;
+        }
+        
+        // We want to keep track of the credentials used for signing in independently
+        // of the StudyParticipant object, and manage them together in tandem with the
+        // reauthToken, to ensure the SDK always either has everything it needs to
+        // re-authenticate or nothing.
+        if (credentialKey && credentialValue) {
+            keysAndValues[self.credentialKeyKey] = credentialKey;
+            keysAndValues[self.credentialValueKey] = credentialValue;
         }
         
         if (password) {
@@ -575,9 +626,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         [self postNewSessionInfo:sessionInfo];
     }
     
-    if (completion) {
-        completion(task, responseObject, error);
-    }
+    dispatchSyncToAuthAttemptQueue(^{
+        for (SBBNetworkManagerCompletionBlock completion in self.authCompletionHandlers) {
+            completion(task, responseObject, error);
+        }
+        [self.authCompletionHandlers removeAllObjects];
+        _authCallInProgress = NO;
+    });
 }
 
 - (NSURLSessionTask *)signInWithEmail:(NSString *)email password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
@@ -605,6 +660,21 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [self signInWithCredential:NSStringFromSelector(@selector(externalId)) value:externalId password:password completion:completion];
 }
 
+// All methods that call a Bridge authentication or reauthentication endpoint should call this with the
+// completion handler that was passed to them, and check the return value; if YES then a call is in
+// progress so they should just return nil for the session task.
+- (BOOL)testAndSetAuthCallInProgressWithCompletion:(SBBNetworkManagerCompletionBlock)completion
+{
+    __block BOOL wasInProgress;
+    dispatchSyncToAuthAttemptQueue(^{
+        wasInProgress = self.authCallInProgress;
+        _authCallInProgress = YES;
+        [self.authCompletionHandlers addObject:completion];
+    });
+    
+    return wasInProgress;
+}
+
 - (NSURLSessionTask *)signInWithCredential:(NSString *)credentialKey value:(id<SBBJSONValue>)credentialValue password:(NSString *)password completion:(SBBNetworkManagerCompletionBlock)completion
 {
     NSString *study = SBBBridgeInfo.shared.studyIdentifier;
@@ -617,6 +687,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
+    // If an auth/reauth call is already in progress, just queue up the completion handler and return nil
+    // for the NSURLSessionTask.
+    if ([self testAndSetAuthCallInProgressWithCompletion:completion]) {
+        return nil;
+    }
+
     NSDictionary *params = @{ NSStringFromSelector(@selector(study)):SBBBridgeInfo.shared.studyIdentifier,
                               credentialKey:credentialValue,
                               NSStringFromSelector(@selector(password)):password,
@@ -628,6 +704,16 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (BOOL)accountIdentifyingCredential:(NSString **)credentialKey value:(id<SBBJSONValue> *)credentialValue errorMessage:(NSString *)message earlyCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
+    // First check the keychain for a stored account-identifying credential
+    NSString *storedCredentialKey = self.credentialKeyFromKeychain;
+    NSString *storedCredentialValue = self.credentialValueFromKeychain;
+    if (storedCredentialKey.length && storedCredentialValue.length) {
+        *credentialKey = storedCredentialKey;
+        *credentialValue = storedCredentialValue;
+        return YES;
+    }
+    
+    // If not found, fall back to looking for them in the study participant
     SBBStudyParticipant *participant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:SBBStudyParticipant.entityName createIfMissing:NO];
     if (!participant) {
         participant = _placeholderSessionInfo.studyParticipant;
@@ -693,6 +779,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (![self accountIdentifyingCredential:&credentialKey value:&credentialValue errorMessage:@"Attempting to reauth an account with a reauth token but with no email, phone, or externalId--something is seriously wrong here" earlyCompletion:completion]) {
         return nil;
     }
+    
+    // If an auth/reauth call is already in progress, just queue up the completion handler and return nil
+    // for the NSURLSessionTask.
+    if ([self testAndSetAuthCallInProgressWithCompletion:completion]) {
+        return nil;
+    }
 
     params[credentialKey] = credentialValue;
 
@@ -745,6 +837,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
+    // If an auth/reauth call is already in progress, just queue up the completion handler and return nil
+    // for the NSURLSessionTask.
+    if ([self testAndSetAuthCallInProgressWithCompletion:completion]) {
+        return nil;
+    }
+
     NSDictionary *params = @{ NSStringFromSelector(@selector(study)): study,
                               NSStringFromSelector(@selector(email)): email,
                               NSStringFromSelector(@selector(token)): token
@@ -804,6 +902,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
+    // If an auth/reauth call is already in progress, just queue up the completion handler and return nil
+    // for the NSURLSessionTask.
+    if ([self testAndSetAuthCallInProgressWithCompletion:completion]) {
+        return nil;
+    }
+
     NSDictionary *phone = @{ NSStringFromSelector(@selector(type)): SBBPhone.entityName,
                              NSStringFromSelector(@selector(number)): phoneNumber,
                              NSStringFromSelector(@selector(regionCode)): regionCode
@@ -1019,6 +1123,34 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [self.keychainManager valueForKey:self.passwordKey];
 }
 
+- (NSString *)credentialKeyKey
+{
+    return [NSString stringWithFormat:envCredentialKeyKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
+}
+
+- (NSString *)credentialKeyFromKeychain
+{
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        return nil;
+    }
+    
+    return [self.keychainManager valueForKey:self.credentialKeyKey];
+}
+
+- (NSString *)credentialValueKey
+{
+    return [NSString stringWithFormat:envCredentialValueKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
+}
+
+- (NSString *)credentialValueFromKeychain
+{
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        return nil;
+    }
+    
+    return [self.keychainManager valueForKey:self.credentialValueKey];
+}
+
 #pragma mark SDK-private methods
 
 // used internally for unit testing
@@ -1044,6 +1176,16 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (void)clearReauthToken
 {
     [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey ]];
+}
+
+- (void)clearPassword
+{
+    [self.keychainManager removeValuesForKeys:@[ self.passwordKey ]];
+}
+
+- (void)clearCredential
+{
+    [self.keychainManager removeValuesForKeys:@[ self.credentialKeyKey, self.credentialValueKey ]];
 }
 
 @end
