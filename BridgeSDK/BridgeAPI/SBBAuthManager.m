@@ -627,6 +627,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         for (SBBNetworkManagerCompletionBlock completion in self.authCompletionHandlers) {
             completion(task, responseObject, error);
         }
+        [self.authCompletionHandlers removeAllObjects];
         self.authCallInProgress = NO;
     });
 }
