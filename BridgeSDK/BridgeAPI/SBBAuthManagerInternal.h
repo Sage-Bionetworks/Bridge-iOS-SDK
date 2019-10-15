@@ -74,10 +74,7 @@ extern NSString * const kSBBAuthResetAPI;
 @property (nonatomic, strong) SBBUserSessionInfo *placeholderSessionInfo;
 
 // Keep track of whether an auth/reauth call to Bridge is currently in progress.
-@property (nonatomic, assign) BOOL authCallInProgress;
-
-// Keep track of the URL session task for an in-progress auth/reauth call to Bridge.
-@property (nonatomic, assign) NSURLSessionTask *inProgressAuthURLSessionTask;
+@property (nonatomic, readonly, assign) BOOL authCallInProgress;
 
 // Keep a list of completion handlers for in-flight auth/reauth calls.
 @property (nonatomic, strong) NSMutableArray<SBBNetworkManagerCompletionBlock> *authCompletionHandlers;

@@ -279,7 +279,6 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 @synthesize authDelegate = _authDelegate;
 @synthesize sessionToken = _sessionToken;
 @synthesize authCallInProgress = _authCallInProgress;
-@synthesize inProgressAuthURLSessionTask = _inProgressAuthURLSessionTask;
 @synthesize authCompletionHandlers = _authCompletionHandlers;
 
 + (instancetype)defaultComponent
@@ -591,6 +590,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             keysAndValues[self.reauthTokenKey] = reauthToken;
         }
         
+        // We want to keep track of the credentials used for signing in independently
+        // of the StudyParticipant object, and manage them together in tandem with the
+        // reauthToken, to ensure the SDK always either has everything it needs to
+        // re-authenticate or nothing.
         if (credentialKey && credentialValue) {
             keysAndValues[self.credentialKeyKey] = credentialKey;
             keysAndValues[self.credentialValueKey] = credentialValue;
@@ -628,7 +631,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             completion(task, responseObject, error);
         }
         [self.authCompletionHandlers removeAllObjects];
-        self.authCallInProgress = NO;
+        _authCallInProgress = NO;
     });
 }
 
@@ -659,13 +662,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 // All methods that call a Bridge authentication or reauthentication endpoint should call this with the
 // completion handler that was passed to them, and check the return value; if YES then a call is in
-// progress so they should just return the in-progress call's session task.
+// progress so they should just return nil for the session task.
 - (BOOL)testAndSetAuthCallInProgressWithCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
     __block BOOL wasInProgress;
     dispatchSyncToAuthAttemptQueue(^{
         wasInProgress = self.authCallInProgress;
-        self.authCallInProgress = YES;
+        _authCallInProgress = YES;
         [self.authCompletionHandlers addObject:completion];
     });
     
@@ -684,10 +687,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
-    // If an auth/reauth call is already in progress, just queue up the completion handler and return the
-    // existing NSURLSessionTask object.
+    // If an auth/reauth call is already in progress, just queue up the completion handler and return nil
+    // for the NSURLSessionTask.
     if ([self testAndSetAuthCallInProgressWithCompletion:completion]) {
-        return self.inProgressAuthURLSessionTask;
+        return nil;
     }
 
     NSDictionary *params = @{ NSStringFromSelector(@selector(study)):SBBBridgeInfo.shared.studyIdentifier,
@@ -777,10 +780,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
-    // If an auth/reauth call is already in progress, just queue up the completion handler and return the
-    // existing NSURLSessionTask object.
+    // If an auth/reauth call is already in progress, just queue up the completion handler and return nil
+    // for the NSURLSessionTask.
     if ([self testAndSetAuthCallInProgressWithCompletion:completion]) {
-        return self.inProgressAuthURLSessionTask;
+        return nil;
     }
 
     params[credentialKey] = credentialValue;
@@ -834,10 +837,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
-    // If an auth/reauth call is already in progress, just queue up the completion handler and return the
-    // existing NSURLSessionTask object.
+    // If an auth/reauth call is already in progress, just queue up the completion handler and return nil
+    // for the NSURLSessionTask.
     if ([self testAndSetAuthCallInProgressWithCompletion:completion]) {
-        return self.inProgressAuthURLSessionTask;
+        return nil;
     }
 
     NSDictionary *params = @{ NSStringFromSelector(@selector(study)): study,
@@ -899,10 +902,10 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         return nil;
     }
     
-    // If an auth/reauth call is already in progress, just queue up the completion handler and return the
-    // existing NSURLSessionTask object.
+    // If an auth/reauth call is already in progress, just queue up the completion handler and return nil
+    // for the NSURLSessionTask.
     if ([self testAndSetAuthCallInProgressWithCompletion:completion]) {
-        return self.inProgressAuthURLSessionTask;
+        return nil;
     }
 
     NSDictionary *phone = @{ NSStringFromSelector(@selector(type)): SBBPhone.entityName,
