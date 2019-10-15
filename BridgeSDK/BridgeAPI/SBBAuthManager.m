@@ -86,6 +86,20 @@ static NSString *envPasswordKeyFormat[] = {
     @"SBBPasswordCustom-%@"
 };
 
+static NSString *envCredentialValueKeyFormat[] = {
+    @"SBBCredential-%@",
+    @"SBBCredentialStaging-%@",
+    @"SBBCredentialDev-%@",
+    @"SBBCredentialCustom-%@"
+};
+
+static NSString *envCredentialKeyKeyFormat[] = {
+    @"SBBCredentialKey-%@",
+    @"SBBCredentialKeyStaging-%@",
+    @"SBBCredentialKeyDev-%@",
+    @"SBBCredentialKeyCustom-%@"
+};
+
 dispatch_queue_t AuthAttemptQueue()
 {
     static dispatch_queue_t q;
@@ -549,6 +563,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             [self clearSessionToken];
             [self clearReauthToken];
             [self resetUserSessionInfo];
+            if (error.code != SBBErrorCodeServerNotAuthenticated) {
+                // If the account itself is bad, and not just the reauth token, clear any saved password
+                // and credential as well.
+                [self clearPassword];
+                [self clearCredential];
+            }
         });
     }
 
@@ -569,6 +589,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         
         if (reauthToken) {
             keysAndValues[self.reauthTokenKey] = reauthToken;
+        }
+        
+        if (credentialKey && credentialValue) {
+            keysAndValues[self.credentialKeyKey] = credentialKey;
+            keysAndValues[self.credentialValueKey] = credentialValue;
         }
         
         if (password) {
@@ -675,6 +700,16 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (BOOL)accountIdentifyingCredential:(NSString **)credentialKey value:(id<SBBJSONValue> *)credentialValue errorMessage:(NSString *)message earlyCompletion:(SBBNetworkManagerCompletionBlock)completion
 {
+    // First check the keychain for a stored account-identifying credential
+    NSString *storedCredentialKey = self.credentialKeyFromKeychain;
+    NSString *storedCredentialValue = self.credentialValueFromKeychain;
+    if (storedCredentialKey.length && storedCredentialValue.length) {
+        *credentialKey = storedCredentialKey;
+        *credentialValue = storedCredentialValue;
+        return YES;
+    }
+    
+    // If not found, fall back to looking for them in the study participant
     SBBStudyParticipant *participant = (SBBStudyParticipant *)[self.cacheManager cachedSingletonObjectOfType:SBBStudyParticipant.entityName createIfMissing:NO];
     if (!participant) {
         participant = _placeholderSessionInfo.studyParticipant;
@@ -1084,6 +1119,34 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [self.keychainManager valueForKey:self.passwordKey];
 }
 
+- (NSString *)credentialKeyKey
+{
+    return [NSString stringWithFormat:envCredentialKeyKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
+}
+
+- (NSString *)credentialKeyFromKeychain
+{
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        return nil;
+    }
+    
+    return [self.keychainManager valueForKey:self.credentialKeyKey];
+}
+
+- (NSString *)credentialValueKey
+{
+    return [NSString stringWithFormat:envCredentialValueKeyFormat[_networkManager.environment], [SBBBridgeInfo shared].studyIdentifier];
+}
+
+- (NSString *)credentialValueFromKeychain
+{
+    if (![SBBBridgeInfo shared].studyIdentifier) {
+        return nil;
+    }
+    
+    return [self.keychainManager valueForKey:self.credentialValueKey];
+}
+
 #pragma mark SDK-private methods
 
 // used internally for unit testing
@@ -1109,6 +1172,16 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (void)clearReauthToken
 {
     [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey ]];
+}
+
+- (void)clearPassword
+{
+    [self.keychainManager removeValuesForKeys:@[ self.passwordKey ]];
+}
+
+- (void)clearCredential
+{
+    [self.keychainManager removeValuesForKeys:@[ self.credentialKeyKey, self.credentialValueKey ]];
 }
 
 @end
