@@ -236,12 +236,12 @@
     NSMutableArray<NSString *> *reauthTokens = [NSMutableArray array];
     
     for (uint32_t i = 0; i < 10; ++i) {
-        NSString *description = [NSString stringWithFormat:@"reauth attempt %d completed", i];
+        NSString *description = [NSString stringWithFormat:@"reauth attempt %u completed", i];
         XCTestExpectation *expectation = [self expectationWithDescription:description];
         [self tryReauthWithAuthMan:(id<SBBAuthManagerInternalProtocol>)aMan sessionTokens:sessionTokens reauthTokens:reauthTokens expectation:expectation];
     }
     for (uint32_t j = 0; j < 2; ++j) {
-        NSString *description = [NSString stringWithFormat:@"signIn attempt %d completed", j];
+        NSString *description = [NSString stringWithFormat:@"signIn attempt %u completed", j];
         XCTestExpectation *expectation = [self expectationWithDescription:description];
         [self tryReSignInWithAuthMan:(id<SBBAuthManagerInternalProtocol>)aMan sessionTokens:sessionTokens reauthTokens:reauthTokens expectation:expectation];
     }
@@ -262,10 +262,10 @@
     XCTAssertNotEqualObjects(reauthToken0, @"FAILED", @"Failed to get new reauth token");
     
     for (uint32_t i = 1; i < 10; ++i) {
-        XCTAssertEqualObjects(sessionToken0, sessionTokens[i], @"sessionTokens[%ld]: %@ != %@", i, sessionTokens[i], sessionToken0);
+        XCTAssertEqualObjects(sessionToken0, sessionTokens[i], @"sessionTokens[%u]: %@ != %@", i, sessionTokens[i], sessionToken0);
     }
     for (uint32_t j = 1; j < 2; ++j) {
-        XCTAssertEqualObjects(reauthToken0, reauthTokens[j], @"reauthTokens[%ld]: %@ != %@", j, reauthTokens[j], reauthToken0);
+        XCTAssertEqualObjects(reauthToken0, reauthTokens[j], @"reauthTokens[%u]: %@ != %@", j, reauthTokens[j], reauthToken0);
     }
 
     XCTestExpectation *expectSignedOut = [self expectationWithDescription:@"signed-in test user signed out"];

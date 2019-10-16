@@ -376,7 +376,6 @@
       @"type": @"StudyParticipant"
       };
     NSString *participantId = self.testSignInResponseObject[@"id"];
-    NSString *resParticipantApi = [NSString stringWithFormat:RES_PARTICIPANT_API_FORMAT, participantId];
     SBBParticipantManager *pMan = [SBBParticipantManager managerWithAuthManager:gAdminAuthManager networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
     [pMan updateParticipantJSONToBridge:participant completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
         if (error) {
