@@ -324,13 +324,13 @@
 
     if (!externalIdentifier) {
         // If we couldn't create the externalIdentifier, just fail & bail (we've already logged it)
-        XCTAssert(NO);
+        XCTFail(@"Impossible code path: failed to create externalIdentifier but it's not nil");
         return;
     }
     
     XCTestExpectation *expectSetIdentifier = [self expectationWithDescription:@"set external identifier"];
     [SBBComponent(SBBParticipantManager) setExternalIdentifier:externalIdentifier completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
-        XCTAssert(!error, @"Server rejected external identifier %@", externalIdentifier);
+        XCTAssertNil(error, @"Server rejected external identifier %@", externalIdentifier);
         if (error) {
             NSLog(@"Error setting external identifier:\n%@\nResponse: %@", error, responseObject);
             [expectSetIdentifier fulfill];
@@ -375,7 +375,6 @@
       @"externalIds": @{},
       @"type": @"StudyParticipant"
       };
-    NSString *participantId = self.testSignInResponseObject[@"id"];
     SBBParticipantManager *pMan = [SBBParticipantManager managerWithAuthManager:gAdminAuthManager networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
     [pMan updateParticipantJSONToBridge:participant completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
         if (error) {
