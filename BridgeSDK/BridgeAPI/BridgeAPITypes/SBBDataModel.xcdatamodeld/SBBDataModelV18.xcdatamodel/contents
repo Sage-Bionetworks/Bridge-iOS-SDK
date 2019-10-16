@@ -24,12 +24,6 @@
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="emailVerified" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="externalId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="externalIds" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="NSDictionary&lt;NSString *, NSString *&gt;"/>
-                <entry key="mogenerator.readonly" value="YES"/>
-            </userInfo>
-        </attribute>
         <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="String" syncable="YES">
             <userInfo>
@@ -51,11 +45,6 @@
         </attribute>
         <attribute name="sharingScope" optional="YES" attributeType="String" regularExpressionString="no_sharing|sponsors_and_partners|all_qualified_researchers" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" regularExpressionString="disabled|enabled|unverified" syncable="YES"/>
-        <attribute name="substudyIds" optional="YES" attributeType="Transformable" syncable="YES">
-            <userInfo>
-                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;"/>
-            </userInfo>
-        </attribute>
         <relationship name="phone" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Phone" inverseName="studyParticipant" inverseEntity="Phone" syncable="YES"/>
         <userInfo>
             <entry key="additionalHeaderFileName" value="SBBStudyParticipantCustomAttributes.h"/>
@@ -697,7 +686,7 @@
         <attribute name="latestValue" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AbstractStudyParticipant" positionX="18" positionY="108" width="128" height="330"/>
+        <element name="AbstractStudyParticipant" positionX="18" positionY="108" width="128" height="300"/>
         <element name="Activity" positionX="0" positionY="0" width="128" height="195"/>
         <element name="ActivityEvent" positionX="45" positionY="180" width="128" height="90"/>
         <element name="AppConfig" positionX="36" positionY="171" width="128" height="195"/>

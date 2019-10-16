@@ -69,7 +69,7 @@
     aMan.keychainManager = [SBBTestAuthKeychainManager new];
     
     XCTestExpectation *expectSessionUpdate = [self expectationWithDescription:@"got session updated notification after reset"];
-    id<NSObject> observer = [[NSNotificationCenter defaultCenter] addObserverForName:kSBBUserSessionUpdatedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
+    __block id<NSObject> observer = [[NSNotificationCenter defaultCenter] addObserverForName:kSBBUserSessionUpdatedNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         [[NSNotificationCenter defaultCenter] removeObserver:observer];
         [expectSessionUpdate fulfill];
     }];

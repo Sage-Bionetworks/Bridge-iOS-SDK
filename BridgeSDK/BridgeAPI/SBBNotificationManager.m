@@ -80,7 +80,9 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
 - (NSString *)deviceIdFromDeviceToken:(NSData *)deviceToken
 {
     // see https://stackoverflow.com/a/20914740
-    NSString *tokenString = [[[deviceToken description]
+    // emm 2019-10-16 In the latest iOS SDK (used by Xcode 11.1) `description` returns a different string
+    // than it used to; `debugDescription` returns what `description` used to.
+    NSString *tokenString = [[[deviceToken debugDescription]
                               stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]]
                               stringByReplacingOccurrencesOfString:@" " withString:@""];
     return tokenString;

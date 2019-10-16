@@ -3,7 +3,7 @@
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 7/15/15.
-//  Copyright (c) 2015 Sage Bionetworks. All rights reserved.
+//  Copyright (c) 2015-2019 Sage Bionetworks. All rights reserved.
 //
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
@@ -12,8 +12,8 @@
 #import "SBBNetworkManagerInternal.h"
 #import "SBBTestAuthKeychainManager.h"
 
-static SBBAuthManager *gAdminAuthManager;
-static SBBAuthManager *gDevAuthManager;
+SBBAuthManager *gAdminAuthManager;
+SBBAuthManager *gDevAuthManager;
 
 NSString * const kUserSessionInfoIdKey = @"id";
 
@@ -212,6 +212,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
       @"password": password,
       @"consent": [NSNumber numberWithBool:consented],
       @"roles": roles,
+      @"dataGroups": @[@"test_user"],
       @"type": @"SignUp"
       };
     

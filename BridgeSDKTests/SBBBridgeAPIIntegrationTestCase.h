@@ -3,13 +3,15 @@
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 7/15/15.
-//  Copyright (c) 2015 Sage Bionetworks. All rights reserved.
+//  Copyright (c) 2015-2019 Sage Bionetworks. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
 @import BridgeSDK;
 
 extern NSString * const kUserSessionInfoIdKey;
+extern SBBAuthManager *gAdminAuthManager;
+extern SBBAuthManager *gDevAuthManager;
 
 typedef void (^SBBBridgeAPIIntegrationTestCaseCreateCompletionBlock)(NSString *emailAddress, NSString *password, id responseObject, NSError *error);
 typedef void (^SBBBridgeAPIIntegrationTestCaseCreateSubpopCompletionBlock)(NSString *subpopGuid, id responseObject, NSError *error);

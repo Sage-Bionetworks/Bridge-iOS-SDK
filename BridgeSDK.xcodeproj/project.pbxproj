@@ -193,7 +193,7 @@
 		60FF57381A0AFEA500CE2373 /* SBBBridgeObject_test.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF572F1A0AFEA500CE2373 /* SBBBridgeObject_test.m */; };
 		60FF57391A0AFEA500CE2373 /* SBBTestBridgeObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57311A0AFEA500CE2373 /* SBBTestBridgeObject.m */; };
 		60FF573A1A0AFEA500CE2373 /* SBBTestBridgeSubObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 60FF57331A0AFEA500CE2373 /* SBBTestBridgeSubObject.m */; };
-		80015060212A0931006B3C8E /* SBBActivityEventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8001505E212A0931006B3C8E /* SBBActivityEventManager.h */; };
+		80015060212A0931006B3C8E /* SBBActivityEventManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 8001505E212A0931006B3C8E /* SBBActivityEventManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80015061212A0931006B3C8E /* SBBActivityEventManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8001505F212A0931006B3C8E /* SBBActivityEventManager.m */; };
 		80015063212A09B2006B3C8E /* SBBActivityEventManagerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 80015062212A09B2006B3C8E /* SBBActivityEventManagerInternal.h */; };
 		80015065212A1EAD006B3C8E /* SBBActivityEventManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 80015064212A1EAD006B3C8E /* SBBActivityEventManagerIntegrationTests.m */; };
@@ -720,6 +720,7 @@
 		601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBBAdditions.m"; sourceTree = "<group>"; };
 		602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManagerUnitTests.m; sourceTree = "<group>"; };
 		6035A9B920101DBB0096BC94 /* SBBNotificationManagerInternal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBBNotificationManagerInternal.h; sourceTree = "<group>"; };
+		603DE2FC232C06E20049141C /* SBBDataModelV18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV18.xcdatamodel; sourceTree = "<group>"; };
 		6056DE051CF61ECD00C21E82 /* _SBBStudyParticipant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBStudyParticipant.h; sourceTree = "<group>"; };
 		6056DE061CF61ECD00C21E82 /* _SBBStudyParticipant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBStudyParticipant.m; sourceTree = "<group>"; };
 		6056DE0A1CF61ECD00C21E82 /* _SBBStudyParticipantInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBStudyParticipantInternal.h; sourceTree = "<group>"; };
@@ -3162,7 +3163,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 60;
+				CURRENT_PROJECT_VERSION = 61;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3203,7 +3204,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 60;
+				CURRENT_PROJECT_VERSION = 61;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -3233,7 +3234,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 60;
+				DYLIB_CURRENT_VERSION = 61;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3269,7 +3270,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 60;
+				DYLIB_CURRENT_VERSION = 61;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3430,12 +3431,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 60;
+				CURRENT_PROJECT_VERSION = 61;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 60;
+				DYLIB_CURRENT_VERSION = 61;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3480,12 +3481,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 60;
+				CURRENT_PROJECT_VERSION = 61;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 60;
+				DYLIB_CURRENT_VERSION = 61;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -3647,6 +3648,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				603DE2FC232C06E20049141C /* SBBDataModelV18.xcdatamodel */,
 				FFF20D01232ABA1D00F501C3 /* SBBDataModelV17.xcdatamodel */,
 				F85F9A0A219368B5002E17C3 /* SBBDataModelV16.xcdatamodel */,
 				60E86D5A211E325F0073C69C /* SBBDataModelV15.xcdatamodel */,

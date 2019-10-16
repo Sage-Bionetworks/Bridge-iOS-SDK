@@ -3,7 +3,7 @@
 //  BridgeSDK
 //
 //  Created by Erin Mounts on 12/17/16.
-//  Copyright (c) 2016 Sage Bionetworks. All rights reserved.
+//  Copyright (c) 2016-2019 Sage Bionetworks. All rights reserved.
 //
 
 #import "SBBBridgeAPIIntegrationTestCase.h"
@@ -15,6 +15,9 @@
 #import "SBBBridgeNetworkManager.h"
 #import "SBBTestBridgeObject.h"
 #import "ModelObjectInternal.h"
+
+#define DEV_EXTERNAL_ID_API @"/v4/externalids"
+#define RES_PARTICIPANT_API_FORMAT @"/v3/participants/%@"
 
 @interface TestParticipantMappingObject : NSObject 
 
@@ -284,10 +287,50 @@
 
 - (void)testSetExternalIdentifier
 {
+    NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+    [gAdminAuthManager addAuthHeaderToHeaders:headers];
+
+    // Create an external identifier to test with
+    NSString *externalIdentifierFormat = @"test-external-identifier%@";
+    NSString *substudyId = @"test-external-id-substudy";
+    NSString *unique = [[NSProcessInfo processInfo] globallyUniqueString];
+    __block NSString *externalIdentifier = [NSString stringWithFormat:externalIdentifierFormat, unique];
+    NSDictionary *externalIdObject =
+    @{
+      @"identifier": externalIdentifier,
+      @"substudyId": substudyId,
+      @"type": @"ExternalIdentifier"
+      };
+    
+    XCTestExpectation *expectCreatedIdentifier = [self expectationWithDescription:@"created external identifier"];
+    id<SBBBridgeNetworkManagerProtocol> bridgeMan = SBBComponent(SBBBridgeNetworkManager);
+    [bridgeMan post:DEV_EXTERNAL_ID_API headers:headers parameters:externalIdObject completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+        if (error) {
+            NSLog(@"Failed to create external ID %@\nError:%@\nResponse:%@", externalIdentifier, error, responseObject);
+            externalIdentifier = nil;
+        } else {
+            NSLog(@"Created test external ID %@", externalIdentifier);
+        }
+        
+        [expectCreatedIdentifier fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
+        if (error) {
+            NSLog(@"Timeout creating external identifier %@: %@", externalIdentifier, error);
+            externalIdentifier = nil;
+        }
+    }];
+
+    if (!externalIdentifier) {
+        // If we couldn't create the externalIdentifier, just fail & bail (we've already logged it)
+        XCTFail(@"Impossible code path: failed to create externalIdentifier but it's not nil");
+        return;
+    }
+    
     XCTestExpectation *expectSetIdentifier = [self expectationWithDescription:@"set external identifier"];
-    NSString *externalIdentifier = @"test-external-identifier";
     [SBBComponent(SBBParticipantManager) setExternalIdentifier:externalIdentifier completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
-        XCTAssert(!error, @"Server accepted external identifier");
+        XCTAssertNil(error, @"Server rejected external identifier %@", externalIdentifier);
         if (error) {
             NSLog(@"Error setting external identifier:\n%@\nResponse: %@", error, responseObject);
             [expectSetIdentifier fulfill];
@@ -296,8 +339,9 @@
                 if (error) {
                     NSLog(@"Error getting study participant record after setting external identifier:\n%@\nResponse: %@", error, responseObject);
                 }
-                XCTAssert([studyParticipant isKindOfClass:[SBBStudyParticipant class]], @"Retrieved study participant record");
-                XCTAssert([[studyParticipant externalId] isEqualToString:externalIdentifier], @"Fetched StudyParticipant reflects new externalId");
+                XCTAssert([studyParticipant isKindOfClass:[SBBStudyParticipant class]], @"Failed to retrieve study participant record");
+                XCTAssertEqualObjects
+([studyParticipant externalIds][substudyId], externalIdentifier, @"Cached StudyParticipant's externalIds does not map substudy %@ to identifier %@:\n%@", substudyId, externalIdentifier, [studyParticipant externalIds]);
                 if (!gSBBUseCache) {
                     // we're done here
                     [expectSetIdentifier fulfill];
@@ -311,7 +355,7 @@
                         NSLog(@"Error getting study participant record from Bridge after setting external identifier:\n%@\nResponse: %@", error, responseObject);
                     }
                     XCTAssert([studyParticipant isKindOfClass:[SBBStudyParticipant class]], @"Retrieved study participant record from Bridge");
-                    XCTAssert([[studyParticipant externalId] isEqualToString:externalIdentifier], @"Fetched StudyParticipant from Bridge reflects new externalId");
+                    XCTAssertEqualObjects([studyParticipant externalIds][substudyId], externalIdentifier, @"Fetched StudyParticipant's externalIds does not map substudy %@ to identifier %@:\n%@", substudyId, externalIdentifier, [studyParticipant externalIds]);
                     [expectSetIdentifier fulfill];
                 }];
             }
@@ -322,6 +366,32 @@
         if (error) {
             NSLog(@"Timeout setting & checking external identifier: %@", error);
         }
+    }];
+    
+    // Now clean up the test externalId so we don't accumulate them over time.
+    // -- First, remove the externalId from the participant:
+    NSDictionary *participant =
+    @{
+      @"externalIds": @{},
+      @"type": @"StudyParticipant"
+      };
+    SBBParticipantManager *pMan = [SBBParticipantManager managerWithAuthManager:gAdminAuthManager networkManager:SBBComponent(SBBBridgeNetworkManager) objectManager:SBBComponent(SBBObjectManager)];
+    [pMan updateParticipantJSONToBridge:participant completion:^(id  _Nullable responseObject, NSError * _Nullable error) {
+        if (error) {
+            NSLog(@"Failed to remove externalId %@ from test participant: %@", externalIdentifier, error);
+            return;
+        }
+        
+        // -- Now, delete the externalId from the study altogether:
+        NSString *endpoint = [NSString stringWithFormat:@"%@/%@", DEV_EXTERNAL_ID_API, externalIdentifier];
+        [bridgeMan delete:endpoint headers:headers parameters:externalIdObject completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
+            if (error) {
+                NSLog(@"Failed to delete external ID %@\nError:%@\nResponse:%@", externalIdentifier, error, responseObject);
+                externalIdentifier = nil;
+            } else {
+                NSLog(@"Deleted test external ID %@", externalIdentifier);
+            }
+        }];
     }];
 }
 
