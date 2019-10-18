@@ -31,4 +31,7 @@
 
 @interface SBBHeightConstraints : _SBBHeightConstraints <_SBBHeightConstraints>
 // Custom logic goes here.
+
+@property (readonly, nonatomic) BOOL isInfantValue;
+
 @end

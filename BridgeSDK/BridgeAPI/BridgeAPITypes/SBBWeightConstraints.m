@@ -37,6 +37,8 @@
 
 #pragma mark Abstract method overrides
 
-// Custom logic goes here.
+- (BOOL) isInfantValue {
+    return self.forInfantValue;
+}
 
 @end
