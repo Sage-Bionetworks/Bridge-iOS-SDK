@@ -32,21 +32,61 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
 typedef NSString * SBBDataType NS_STRING_ENUM;
 
-ENUM_EXTERN SBBDataType const SBBDataTypeBloodPressure;
+ENUM_EXTERN SBBDataType const SBBDataTypeString;
+ENUM_EXTERN SBBDataType const SBBDataTypeInteger;
+ENUM_EXTERN SBBDataType const SBBDataTypeDecimal;
 ENUM_EXTERN SBBDataType const SBBDataTypeBoolean;
 ENUM_EXTERN SBBDataType const SBBDataTypeDate;
-ENUM_EXTERN SBBDataType const SBBDataTypeDateTime;
-ENUM_EXTERN SBBDataType const SBBDataTypeDecimal;
-ENUM_EXTERN SBBDataType const SBBDataTypeDuration;
-ENUM_EXTERN SBBDataType const SBBDataTypeHeight;
-ENUM_EXTERN SBBDataType const SBBDataTypeInteger;
-ENUM_EXTERN SBBDataType const SBBDataTypeString;
 ENUM_EXTERN SBBDataType const SBBDataTypeTime;
+ENUM_EXTERN SBBDataType const SBBDataTypeDateTime;
+ENUM_EXTERN SBBDataType const SBBDataTypeDuration;
+ENUM_EXTERN SBBDataType const SBBDataTypeBloodPressure;
+ENUM_EXTERN SBBDataType const SBBDataTypeHeight;
 ENUM_EXTERN SBBDataType const SBBDataTypeWeight;
-ENUM_EXTERN SBBDataType const SBBDataTypePostalCode;
 ENUM_EXTERN SBBDataType const SBBDataTypeYearMonth;
+ENUM_EXTERN SBBDataType const SBBDataTypeYear;
+ENUM_EXTERN SBBDataType const SBBDataTypePostalCode;
+
+
+typedef NSString * SBBUnit NS_STRING_ENUM;
+
+// Duration
+ENUM_EXTERN SBBUnit const SBBUnitSeconds;
+ENUM_EXTERN SBBUnit const SBBUnitMinutes;
+ENUM_EXTERN SBBUnit const SBBUnitHours;
+ENUM_EXTERN SBBUnit const SBBUnitDays;
+ENUM_EXTERN SBBUnit const SBBUnitWeeks;
+ENUM_EXTERN SBBUnit const SBBUnitMonths;
+ENUM_EXTERN SBBUnit const SBBUnitYears;
+
+// US Customary measures
+ENUM_EXTERN SBBUnit const SBBUnitInches;
+ENUM_EXTERN SBBUnit const SBBUnitFeet;
+ENUM_EXTERN SBBUnit const SBBUnitYards;
+ENUM_EXTERN SBBUnit const SBBUnitMiles;
+ENUM_EXTERN SBBUnit const SBBUnitOunces;
+ENUM_EXTERN SBBUnit const SBBUnitPounds;
+ENUM_EXTERN SBBUnit const SBBUnitPints;
+ENUM_EXTERN SBBUnit const SBBUnitQuarts;
+ENUM_EXTERN SBBUnit const SBBUnitGallons;
+
+// Metric measures
+ENUM_EXTERN SBBUnit const SBBUnitCentimeters;
+ENUM_EXTERN SBBUnit const SBBUnitMeters;
+ENUM_EXTERN SBBUnit const SBBUnitKilometers;
+ENUM_EXTERN SBBUnit const SBBUnitGrams;
+ENUM_EXTERN SBBUnit const SBBUnitKilgrams;
+ENUM_EXTERN SBBUnit const SBBUnitMilliliters;
+ENUM_EXTERN SBBUnit const SBBUnitCubicCentimeters;
+ENUM_EXTERN SBBUnit const SBBUnitLiters;
+ENUM_EXTERN SBBUnit const SBBUnitCubicMeters;
+
+// Pressure measures
+ENUM_EXTERN SBBUnit const SBBUnitMillimetersOfMercury; //(mmHg)
+
 
 @interface SBBSurveyConstraints : _SBBSurveyConstraints <_SBBSurveyConstraints>
 

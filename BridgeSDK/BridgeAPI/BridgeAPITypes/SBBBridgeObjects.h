@@ -52,4 +52,5 @@
 #import "SBBUserProfile.h"
 #import "SBBUserSessionInfo.h"
 #import "SBBWeightConstraints.h"
+#import "SBBYearConstraints.h"
 #import "SBBYearMonthConstraints.h"

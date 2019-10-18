@@ -540,6 +540,10 @@
 		F85F9A5B21938F88002E17C3 /* SBBConfigReference.h in Headers */ = {isa = PBXBuildFile; fileRef = F85F9A5921938F88002E17C3 /* SBBConfigReference.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F85F9A5C21938F88002E17C3 /* SBBConfigReference.m in Sources */ = {isa = PBXBuildFile; fileRef = F85F9A5A21938F88002E17C3 /* SBBConfigReference.m */; };
 		F8F063A420BE5C7C00DB7D9C /* activities-0612-0629.json in Resources */ = {isa = PBXBuildFile; fileRef = F8F063A320BE5C7C00DB7D9C /* activities-0612-0629.json */; };
+		FF0493AC235A5ADC006F0703 /* _SBBYearConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FF0493AA235A5ADC006F0703 /* _SBBYearConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FF0493AD235A5ADC006F0703 /* _SBBYearConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0493AB235A5ADC006F0703 /* _SBBYearConstraints.m */; };
+		FF0493B0235A5B09006F0703 /* SBBYearConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0493AE235A5B09006F0703 /* SBBYearConstraints.m */; };
+		FF0493B1235A5B09006F0703 /* SBBYearConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FF0493AF235A5B09006F0703 /* SBBYearConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */; };
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
@@ -1209,6 +1213,11 @@
 		F85F9A5A21938F88002E17C3 /* SBBConfigReference.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBConfigReference.m; sourceTree = "<group>"; };
 		F886FD4020360E9E00EF2248 /* SBBDataModelV12.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV12.xcdatamodel; sourceTree = "<group>"; };
 		F8F063A320BE5C7C00DB7D9C /* activities-0612-0629.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "activities-0612-0629.json"; sourceTree = "<group>"; };
+		FF04939A235A48EB006F0703 /* SBBDataModelV19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV19.xcdatamodel; sourceTree = "<group>"; };
+		FF0493AA235A5ADC006F0703 /* _SBBYearConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _SBBYearConstraints.h; sourceTree = "<group>"; };
+		FF0493AB235A5ADC006F0703 /* _SBBYearConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBYearConstraints.m; sourceTree = "<group>"; };
+		FF0493AE235A5B09006F0703 /* SBBYearConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBYearConstraints.m; sourceTree = "<group>"; };
+		FF0493AF235A5B09006F0703 /* SBBYearConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBYearConstraints.h; sourceTree = "<group>"; };
 		FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SBBAdditions.h"; sourceTree = "<group>"; };
 		FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SBBAdditions.m"; sourceTree = "<group>"; };
 		FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundleSBBAdditionsTests.m; sourceTree = "<group>"; };
@@ -1405,6 +1414,8 @@
 				807AE2F71B62E98C002588BB /* SBBUserSessionInfo.m */,
 				806C42781FFF0DC8007A51D8 /* SBBWeightConstraints.h */,
 				806C42771FFF0DC8007A51D8 /* SBBWeightConstraints.m */,
+				FF0493AF235A5B09006F0703 /* SBBYearConstraints.h */,
+				FF0493AE235A5B09006F0703 /* SBBYearConstraints.m */,
 				FFF20D2D232AC01B00F501C3 /* SBBYearMonthConstraints.h */,
 				FFF20D2C232AC01B00F501C3 /* SBBYearMonthConstraints.m */,
 			);
@@ -1986,6 +1997,8 @@
 				807AE2E71B62E8C3002588BB /* _SBBUserSessionInfo.m */,
 				806C426C1FFF0D7E007A51D8 /* _SBBWeightConstraints.h */,
 				806C426B1FFF0D7E007A51D8 /* _SBBWeightConstraints.m */,
+				FF0493AA235A5ADC006F0703 /* _SBBYearConstraints.h */,
+				FF0493AB235A5ADC006F0703 /* _SBBYearConstraints.m */,
 				FFF20D24232ABEED00F501C3 /* _SBBYearMonthConstraints.h */,
 				FFF20D26232ABEED00F501C3 /* _SBBYearMonthConstraints.m */,
 			);
@@ -2031,6 +2044,7 @@
 				80B2C6421E3AD493001F9FEA /* ZZDataChannelOutput.h in Headers */,
 				806C426E1FFF0D7E007A51D8 /* _SBBWeightConstraints.h in Headers */,
 				805D4BEC1ECBAC57002143F0 /* _SBBSchemaReference.h in Headers */,
+				FF0493AC235A5ADC006F0703 /* _SBBYearConstraints.h in Headers */,
 				800E793119ED740F00EEE612 /* _SBBDecimalConstraints.h in Headers */,
 				8017AF7219DA0359001AF9BA /* UIDevice+Hardware.h in Headers */,
 				8026D69219E892B5008942B0 /* SBBUploadRequest.h in Headers */,
@@ -2191,6 +2205,7 @@
 				804545891A1E78EA001D41D4 /* RNCryptor+Namespace.h in Headers */,
 				FFF20D32232AC01B00F501C3 /* SBBPostalCodeConstraints.h in Headers */,
 				800E793F19ED744000EEE612 /* _SBBIntegerConstraints.h in Headers */,
+				FF0493B1235A5B09006F0703 /* SBBYearConstraints.h in Headers */,
 				60E86D70211E3E7E0073C69C /* SBBReportData.h in Headers */,
 				80104A3D19D1F61B001F2573 /* SBBUserManager.h in Headers */,
 				80E60DA819FAD64C0053D166 /* SBBScheduleManager.h in Headers */,
@@ -2774,6 +2789,7 @@
 				80B2C6541E3AD493001F9FEA /* ZZOldArchiveEntry.mm in Sources */,
 				800E793419ED740F00EEE612 /* _SBBDurationConstraints.m in Sources */,
 				6079A5B82062E17E0075D081 /* SBBStudyManager.m in Sources */,
+				FF0493B0235A5B09006F0703 /* SBBYearConstraints.m in Sources */,
 				6079A5E520658E4E0075D081 /* _SBBAbstractStudyParticipant.m in Sources */,
 				8051DCDE1A1E6FDB0068D06E /* RNCryptorEngine.m in Sources */,
 				8053B62F1A00356000A2E6C4 /* _SBBResourceList.m in Sources */,
@@ -2844,6 +2860,7 @@
 				800E796419ED74B600EEE612 /* SBBIntegerConstraints.m in Sources */,
 				800E796619ED74B600EEE612 /* SBBMultiValueConstraints.m in Sources */,
 				80B2C6391E3AD493001F9FEA /* ZZAESDecryptInputStream.mm in Sources */,
+				FF0493AD235A5ADC006F0703 /* _SBBYearConstraints.m in Sources */,
 				804C10A21E2847FE004B68E6 /* SBBBridgeInfo.m in Sources */,
 				807AE2E91B62E8C3002588BB /* _SBBSurveyReference.m in Sources */,
 				FFF20D2A232ABEEE00F501C3 /* _SBBYearMonthConstraints.m in Sources */,
@@ -3163,7 +3180,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3204,7 +3221,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -3234,7 +3251,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 61;
+				DYLIB_CURRENT_VERSION = 62;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3270,7 +3287,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 61;
+				DYLIB_CURRENT_VERSION = 62;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3431,12 +3448,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 61;
+				DYLIB_CURRENT_VERSION = 62;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3481,12 +3498,12 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 61;
+				DYLIB_CURRENT_VERSION = 62;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -3648,6 +3665,7 @@
 		80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				FF04939A235A48EB006F0703 /* SBBDataModelV19.xcdatamodel */,
 				603DE2FC232C06E20049141C /* SBBDataModelV18.xcdatamodel */,
 				FFF20D01232ABA1D00F501C3 /* SBBDataModelV17.xcdatamodel */,
 				F85F9A0A219368B5002E17C3 /* SBBDataModelV16.xcdatamodel */,

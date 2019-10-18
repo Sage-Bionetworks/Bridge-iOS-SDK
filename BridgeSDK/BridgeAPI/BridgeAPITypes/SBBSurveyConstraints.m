@@ -29,19 +29,54 @@
 
 #import "SBBSurveyConstraints.h"
 
-SBBDataType const SBBDataTypeBloodPressure = @"bloodpressure";
+SBBDataType const SBBDataTypeString = @"string";
+SBBDataType const SBBDataTypeInteger = @"integer";
+SBBDataType const SBBDataTypeDecimal = @"decimal";
 SBBDataType const SBBDataTypeBoolean = @"boolean";
 SBBDataType const SBBDataTypeDate = @"date";
-SBBDataType const SBBDataTypeDateTime = @"datetime";
-SBBDataType const SBBDataTypeDecimal = @"decimal";
-SBBDataType const SBBDataTypeDuration = @"duration";
-SBBDataType const SBBDataTypeHeight = @"height";
-SBBDataType const SBBDataTypeInteger = @"integer";
-SBBDataType const SBBDataTypeString = @"string";
 SBBDataType const SBBDataTypeTime = @"time";
+SBBDataType const SBBDataTypeDateTime = @"datetime";
+SBBDataType const SBBDataTypeDuration = @"duration";
+SBBDataType const SBBDataTypeBloodPressure = @"bloodpressure";
+SBBDataType const SBBDataTypeHeight = @"height";
 SBBDataType const SBBDataTypeWeight = @"weight";
-SBBDataType const SBBDataTypePostalCode = @"postalcode";
 SBBDataType const SBBDataTypeYearMonth = @"yearmonth";
+SBBDataType const SBBDataTypeYear = @"year";
+SBBDataType const SBBDataTypePostalCode = @"postalcode";
+
+// Duration
+SBBUnit const SBBUnitSeconds = @"seconds";
+SBBUnit const SBBUnitMinutes = @"minutes";
+SBBUnit const SBBUnitHours = @"hours";
+SBBUnit const SBBUnitDays = @"days";
+SBBUnit const SBBUnitWeeks = @"weeks";
+SBBUnit const SBBUnitMonths = @"months";
+SBBUnit const SBBUnitYears = @"years";
+
+// US Customary measures
+SBBUnit const SBBUnitInches = @"inches";
+SBBUnit const SBBUnitFeet = @"feet";
+SBBUnit const SBBUnitYards = @"yards";
+SBBUnit const SBBUnitMiles = @"miles";
+SBBUnit const SBBUnitOunces = @"ounces";
+SBBUnit const SBBUnitPounds = @"pounds";
+SBBUnit const SBBUnitPints = @"pints";
+SBBUnit const SBBUnitQuarts = @"quarts";
+SBBUnit const SBBUnitGallons = @"gallons";
+
+// Metric measures
+SBBUnit const SBBUnitCentimeters = @"centimeters";
+SBBUnit const SBBUnitMeters = @"meters";
+SBBUnit const SBBUnitKilometers = @"kilometers";
+SBBUnit const SBBUnitGrams = @"grams";
+SBBUnit const SBBUnitKilgrams = @"kilograms";
+SBBUnit const SBBUnitMilliliters = @"milliliters";
+SBBUnit const SBBUnitCubicCentimeters = @"cubic_centimeters";
+SBBUnit const SBBUnitLiters = @"liters";
+SBBUnit const SBBUnitCubicMeters = @"cubic_meters";
+
+// Pressure measures
+SBBUnit const SBBUnitMillimetersOfMercury = @"millimeters_mercury"; //(mmHg)
 
 @implementation SBBSurveyConstraints
 
