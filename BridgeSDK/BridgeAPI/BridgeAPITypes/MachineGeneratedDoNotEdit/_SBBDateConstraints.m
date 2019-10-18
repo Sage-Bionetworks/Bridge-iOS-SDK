@@ -43,6 +43,8 @@
 
 @property (nullable, nonatomic, retain) NSNumber* allowFuture;
 
+@property (nullable, nonatomic, retain) NSNumber* allowPast;
+
 @property (nullable, nonatomic, retain) NSDate* earliestValue;
 
 @property (nullable, nonatomic, retain) NSDate* latestValue;
@@ -73,6 +75,16 @@
 	self.allowFuture = [NSNumber numberWithBool:value_];
 }
 
+- (BOOL)allowPastValue
+{
+	return [self.allowPast boolValue];
+}
+
+- (void)setAllowPastValue:(BOOL)value_
+{
+	self.allowPast = [NSNumber numberWithBool:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -80,6 +92,8 @@
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
     self.allowFuture = [dictionary objectForKey:@"allowFuture"];
+
+    self.allowPast = [dictionary objectForKey:@"allowPast"];
 
     self.earliestValue = [NSDate dateWithISO8601String:[dictionary objectForKey:@"earliestValue"]];
 
@@ -92,6 +106,8 @@
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.allowFuture forKey:@"allowFuture"];
+
+    [dict setObjectIfNotNil:self.allowPast forKey:@"allowPast"];
 
     [dict setObjectIfNotNil:[self.earliestValue ISO8601String] forKey:@"earliestValue"];
 
@@ -121,6 +137,8 @@
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.allowFuture = managedObject.allowFuture;
+
+        self.allowPast = managedObject.allowPast;
 
         self.earliestValue = managedObject.earliestValue;
 
@@ -159,6 +177,8 @@
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     managedObject.allowFuture = ((id)self.allowFuture == [NSNull null]) ? nil : self.allowFuture;
+
+    managedObject.allowPast = ((id)self.allowPast == [NSNull null]) ? nil : self.allowPast;
 
     managedObject.earliestValue = ((id)self.earliestValue == [NSNull null]) ? nil : self.earliestValue;
 

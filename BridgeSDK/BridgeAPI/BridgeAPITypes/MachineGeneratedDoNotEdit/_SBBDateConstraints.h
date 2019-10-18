@@ -45,6 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL allowFutureValue;
 
+@property (nullable, nonatomic, strong) NSNumber* allowPast;
+
+@property (nonatomic, assign) BOOL allowPastValue;
+
 @property (nullable, nonatomic, strong) NSDate* earliestValue;
 
 @property (nullable, nonatomic, strong) NSDate* latestValue;

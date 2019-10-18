@@ -41,7 +41,7 @@
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
 @interface NSManagedObject (WeightConstraints)
 
-@property (nullable, nonatomic, retain) NSNumber* isInfant;
+@property (nullable, nonatomic, retain) NSNumber* forInfant;
 
 @property (nullable, nonatomic, retain) NSString* unit;
 
@@ -61,14 +61,14 @@
 
 #pragma mark Scalar values
 
-- (BOOL)isInfantValue
+- (BOOL)forInfantValue
 {
-	return [self.isInfant boolValue];
+	return [self.forInfant boolValue];
 }
 
-- (void)setIsInfantValue:(BOOL)value_
+- (void)setForInfantValue:(BOOL)value_
 {
-	self.isInfant = [NSNumber numberWithBool:value_];
+	self.forInfant = [NSNumber numberWithBool:value_];
 }
 
 #pragma mark Dictionary representation
@@ -77,7 +77,7 @@
 {
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
-    self.isInfant = [dictionary objectForKey:@"isInfant"];
+    self.forInfant = [dictionary objectForKey:@"forInfant"];
 
     self.unit = [dictionary objectForKey:@"unit"];
 
@@ -87,7 +87,7 @@
 {
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
-    [dict setObjectIfNotNil:self.isInfant forKey:@"isInfant"];
+    [dict setObjectIfNotNil:self.forInfant forKey:@"forInfant"];
 
     [dict setObjectIfNotNil:self.unit forKey:@"unit"];
 
@@ -114,7 +114,7 @@
 
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
-        self.isInfant = managedObject.isInfant;
+        self.forInfant = managedObject.forInfant;
 
         self.unit = managedObject.unit;
 
@@ -150,7 +150,7 @@
 {
     [super updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
-    managedObject.isInfant = ((id)self.isInfant == [NSNull null]) ? nil : self.isInfant;
+    managedObject.forInfant = ((id)self.forInfant == [NSNull null]) ? nil : self.forInfant;
 
     managedObject.unit = ((id)self.unit == [NSNull null]) ? nil : self.unit;
 

@@ -1,7 +1,7 @@
 //
-//  SBBSurveyQuestion.m
+//  _SBBYearConstraints.h
 //
-//	Copyright (c) 2014, Sage Bionetworks
+//	Copyright (c) 2014-2019 Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -26,35 +26,32 @@
 //	(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
+// DO NOT EDIT. This file is machine-generated and constantly overwritten.
+// Make changes to SBBYearConstraints.h instead.
+//
 
-#import "SBBSurveyQuestion.h"
+#import <Foundation/Foundation.h>
+#import "ModelObject.h"
 
-SBBUIHintType const SBBUIHintTypeBloodPressure = @"bloodpressure";
-SBBUIHintType const SBBUIHintTypeCheckbox = @"checkbox";
-SBBUIHintType const SBBUIHintTypeCombobox = @"combobox";
-SBBUIHintType const SBBUIHintTypeDatePicker = @"datepicker";
-SBBUIHintType const SBBUIHintTypeDateTimePicker = @"datetimepicker";
-SBBUIHintType const SBBUIHintTypeHeight = @"height";
-SBBUIHintType const SBBUIHintTypeList = @"list";
-SBBUIHintType const SBBUIHintTypeMultilineText = @"multilinetext";
-SBBUIHintType const SBBUIHintTypeNumberfield = @"numberfield";
-SBBUIHintType const SBBUIHintTypeRadioButton = @"radiobutton";
-SBBUIHintType const SBBUIHintTypeSelect = @"select";
-SBBUIHintType const SBBUIHintTypeSlider = @"slider";
-SBBUIHintType const SBBUIHintTypeTextfield = @"textfield";
-SBBUIHintType const SBBUIHintTypeTimePicker = @"timepicker";
-SBBUIHintType const SBBUIHintTypeToggle = @"toggle";
-SBBUIHintType const SBBUIHintTypeWeight = @"weight";
-SBBUIHintType const SBBUIHintTypeYearMonth = @"yearmonth";
-SBBUIHintType const SBBUIHintTypeYear = @"year";
-SBBUIHintType const SBBUIHintTypePostalCode = @"postalcode";
+NS_ASSUME_NONNULL_BEGIN
 
-@implementation SBBSurveyQuestion
-
-#pragma mark Abstract method overrides
-
-- (nullable SBBUIHintType)uiHintValue {
-    return self.uiHint;
-}
+@protocol _SBBYearConstraints
 
 @end
+
+@interface _SBBYearConstraints : ModelObject
+
+@property (nullable, nonatomic, strong) NSNumber* allowFuture;
+
+@property (nonatomic, assign) BOOL allowFutureValue;
+
+@property (nullable, nonatomic, strong) NSNumber* allowPast;
+
+@property (nonatomic, assign) BOOL allowPastValue;
+
+@property (nullable, nonatomic, strong) NSString* earliestValue;
+
+@property (nullable, nonatomic, strong) NSString* latestValue;
+
+@end
+NS_ASSUME_NONNULL_END

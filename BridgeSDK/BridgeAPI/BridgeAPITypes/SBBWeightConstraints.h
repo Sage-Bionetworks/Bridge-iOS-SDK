@@ -30,5 +30,7 @@
 #import "_SBBWeightConstraints.h"
 
 @interface SBBWeightConstraints : _SBBWeightConstraints <_SBBWeightConstraints>
-// Custom logic goes here.
+
+@property (readonly, nonatomic) BOOL isInfantValue;
+
 @end

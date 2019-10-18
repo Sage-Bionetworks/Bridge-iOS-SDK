@@ -1,5 +1,5 @@
 //
-//  _SBBYearMonthConstraints.m
+//  _SBBYearConstraints.m
 //
 //	Copyright (c) 2014-2019 Sage Bionetworks
 //	All rights reserved.
@@ -27,19 +27,19 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // DO NOT EDIT. This file is machine-generated and constantly overwritten.
-// Make changes to SBBYearMonthConstraints.m instead.
+// Make changes to SBBYearConstraints.m instead.
 //
 
-#import "_SBBYearMonthConstraints.h"
+#import "_SBBYearConstraints.h"
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-@interface _SBBYearMonthConstraints()
+@interface _SBBYearConstraints()
 
 @end
 
 // see xcdoc://?url=developer.apple.com/library/etc/redirect/xcode/ios/602958/documentation/Cocoa/Conceptual/CoreData/Articles/cdAccessorMethods.html
-@interface NSManagedObject (YearMonthConstraints)
+@interface NSManagedObject (YearConstraints)
 
 @property (nullable, nonatomic, retain) NSNumber* allowFuture;
 
@@ -51,7 +51,7 @@
 
 @end
 
-@implementation _SBBYearMonthConstraints
+@implementation _SBBYearConstraints
 
 - (instancetype)init
 {
@@ -128,7 +128,7 @@
 
 + (NSString *)entityName
 {
-    return @"YearMonthConstraints";
+    return @"YearConstraints";
 }
 
 - (instancetype)initWithManagedObject:(NSManagedObject *)managedObject objectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
@@ -152,7 +152,7 @@
 
 - (NSManagedObject *)createInContext:(NSManagedObjectContext *)cacheContext withObjectManager:(id<SBBObjectManagerProtocol>)objectManager cacheManager:(id<SBBCacheManagerProtocol>)cacheManager
 {
-    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"YearMonthConstraints" inManagedObjectContext:cacheContext];
+    NSManagedObject *managedObject = [NSEntityDescription insertNewObjectForEntityForName:@"YearConstraints" inManagedObjectContext:cacheContext];
     [self updateManagedObject:managedObject withObjectManager:objectManager cacheManager:cacheManager];
 
     // Calling code will handle saving these changes to cacheContext.

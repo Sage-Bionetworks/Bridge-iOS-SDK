@@ -50,6 +50,9 @@ ENUM_EXTERN SBBUIHintType const SBBUIHintTypeTextfield;
 ENUM_EXTERN SBBUIHintType const SBBUIHintTypeTimePicker;
 ENUM_EXTERN SBBUIHintType const SBBUIHintTypeToggle;
 ENUM_EXTERN SBBUIHintType const SBBUIHintTypeWeight;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeYearMonth;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypeYear;
+ENUM_EXTERN SBBUIHintType const SBBUIHintTypePostalCode;
 
 @interface SBBSurveyQuestion : _SBBSurveyQuestion <_SBBSurveyQuestion>
 

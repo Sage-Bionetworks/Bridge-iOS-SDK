@@ -41,9 +41,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface _SBBWeightConstraints : SBBSurveyConstraints
 
-@property (nullable, nonatomic, strong) NSNumber* isInfant;
+@property (nullable, nonatomic, strong) NSNumber* forInfant;
 
-@property (nonatomic, assign) BOOL isInfantValue;
+@property (nonatomic, assign) BOOL forInfantValue;
 
 @property (nullable, nonatomic, strong) NSString* unit;
 
