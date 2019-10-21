@@ -519,7 +519,7 @@
         </userInfo>
     </entity>
     <entity name="SurveyConstraints" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="dataType" optional="YES" attributeType="String" regularExpressionString="^(string|boolean|integer|decimal|date|time|datetime|duration)$" syncable="YES"/>
+        <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="rules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyConstraints" inverseEntity="SurveyRule" syncable="YES"/>
         <relationship name="surveyQuestion" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyQuestion" inverseName="constraints" inverseEntity="SurveyQuestion" syncable="YES">
             <userInfo>
@@ -746,7 +746,7 @@
         <element name="SubscriptionStatus" positionX="18" positionY="153" width="128" height="90"/>
         <element name="SubscriptionStatusList" positionX="27" positionY="162" width="128" height="45"/>
         <element name="Survey" positionX="0" positionY="0" width="128" height="255"/>
-        <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="88"/>
         <element name="SurveyElement" positionX="0" positionY="0" width="128" height="165"/>
         <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="60"/>
         <element name="SurveyQuestion" positionX="0" positionY="0" width="128" height="75"/>
