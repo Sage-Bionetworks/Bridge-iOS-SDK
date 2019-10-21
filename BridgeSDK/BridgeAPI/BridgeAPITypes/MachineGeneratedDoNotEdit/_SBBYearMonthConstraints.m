@@ -45,9 +45,9 @@
 
 @property (nullable, nonatomic, retain) NSNumber* allowPast;
 
-@property (nullable, nonatomic, retain) NSString* earliestValue;
+@property (nullable, nonatomic, retain) NSDate* earliestValue;
 
-@property (nullable, nonatomic, retain) NSString* latestValue;
+@property (nullable, nonatomic, retain) NSDate* latestValue;
 
 @end
 
@@ -95,9 +95,9 @@
 
     self.allowPast = [dictionary objectForKey:@"allowPast"];
 
-    self.earliestValue = [dictionary objectForKey:@"earliestValue"];
+    self.earliestValue = [NSDate dateWithISO8601String:[dictionary objectForKey:@"earliestValue"]];
 
-    self.latestValue = [dictionary objectForKey:@"latestValue"];
+    self.latestValue = [NSDate dateWithISO8601String:[dictionary objectForKey:@"latestValue"]];
 
 }
 
@@ -109,9 +109,9 @@
 
     [dict setObjectIfNotNil:self.allowPast forKey:@"allowPast"];
 
-    [dict setObjectIfNotNil:self.earliestValue forKey:@"earliestValue"];
+    [dict setObjectIfNotNil:[self.earliestValue ISO8601String] forKey:@"earliestValue"];
 
-    [dict setObjectIfNotNil:self.latestValue forKey:@"latestValue"];
+    [dict setObjectIfNotNil:[self.latestValue ISO8601String] forKey:@"latestValue"];
 
 	return [dict copy];
 }

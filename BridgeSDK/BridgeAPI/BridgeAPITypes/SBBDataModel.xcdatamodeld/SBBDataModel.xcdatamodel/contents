@@ -696,14 +696,14 @@
     <entity name="YearConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="earliestValue" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="latestValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <entity name="YearMonthConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="earliestValue" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="latestValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
     </entity>
     <elements>
         <element name="AbstractStudyParticipant" positionX="18" positionY="108" width="128" height="330"/>
