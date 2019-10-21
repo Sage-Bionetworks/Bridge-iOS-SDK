@@ -693,7 +693,7 @@
         <attribute name="forInfant" optional="YES" attributeType="Boolean" usesScalarValueType="NO" elementID="isInfant" syncable="YES"/>
         <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="YearConstraints" syncable="YES">
+    <entity name="YearConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="earliestValue" optional="YES" attributeType="String" syncable="YES"/>
@@ -760,7 +760,7 @@
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WeightConstraints" positionX="36" positionY="171" width="128" height="73"/>
-        <element name="YearMonthConstraints" positionX="36" positionY="162" width="128" height="103"/>
         <element name="YearConstraints" positionX="27" positionY="153" width="128" height="103"/>
+        <element name="YearMonthConstraints" positionX="36" positionY="162" width="128" height="103"/>
     </elements>
 </model>

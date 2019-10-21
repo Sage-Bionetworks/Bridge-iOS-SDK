@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ModelObject.h"
+#import "SBBSurveyConstraints.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface _SBBYearConstraints : ModelObject
+@interface _SBBYearConstraints : SBBSurveyConstraints
 
 @property (nullable, nonatomic, strong) NSNumber* allowFuture;
 
