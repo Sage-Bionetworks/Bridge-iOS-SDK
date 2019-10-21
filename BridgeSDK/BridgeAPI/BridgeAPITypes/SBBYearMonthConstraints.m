@@ -35,4 +35,8 @@
 
 // Custom logic goes here.
 
++ (SBBDataType)defaultDataType {
+    return SBBDataTypeYearMonth;
+}
+
 @end

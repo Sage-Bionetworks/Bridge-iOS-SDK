@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ModelObject.h"
+#import "SBBSurveyConstraints.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface _SBBYearConstraints : ModelObject
+@interface _SBBYearConstraints : SBBSurveyConstraints
 
 @property (nullable, nonatomic, strong) NSNumber* allowFuture;
 
@@ -49,9 +49,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL allowPastValue;
 
-@property (nullable, nonatomic, strong) NSString* earliestValue;
+@property (nullable, nonatomic, strong) NSDate* earliestValue;
 
-@property (nullable, nonatomic, strong) NSString* latestValue;
+@property (nullable, nonatomic, strong) NSDate* latestValue;
 
 @end
 NS_ASSUME_NONNULL_END

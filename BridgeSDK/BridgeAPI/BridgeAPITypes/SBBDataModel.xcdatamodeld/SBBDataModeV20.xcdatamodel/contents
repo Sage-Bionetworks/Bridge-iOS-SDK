@@ -519,17 +519,16 @@
         </userInfo>
     </entity>
     <entity name="SurveyConstraints" parentEntity="BridgeObject" syncable="YES">
-        <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="rules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyConstraints" inverseEntity="SurveyRule" syncable="YES">
-            <userInfo>
-                <entry key="deprecated" value="use SurveyElement afterRules instead"/>
-            </userInfo>
-        </relationship>
+        <attribute name="dataType" optional="YES" attributeType="String" regularExpressionString="^(string|boolean|integer|decimal|date|time|datetime|duration)$" syncable="YES"/>
+        <relationship name="rules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyConstraints" inverseEntity="SurveyRule" syncable="YES"/>
         <relationship name="surveyQuestion" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyQuestion" inverseName="constraints" inverseEntity="SurveyQuestion" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
+        <userInfo>
+            <entry key="deprecated" value="use SurveyElement afterRules instead"/>
+        </userInfo>
     </entity>
     <entity name="SurveyElement" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
         <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
@@ -694,17 +693,17 @@
         <attribute name="forInfant" optional="YES" attributeType="Boolean" usesScalarValueType="NO" elementID="isInfant" syncable="YES"/>
         <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="YearConstraints" parentEntity="SurveyConstraints" syncable="YES">
+    <entity name="YearConstraints" syncable="YES">
         <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="earliestValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latestValue" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="YearMonthConstraints" parentEntity="SurveyConstraints" syncable="YES">
         <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="earliestValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latestValue" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="AbstractStudyParticipant" positionX="18" positionY="108" width="128" height="330"/>
@@ -747,7 +746,7 @@
         <element name="SubscriptionStatus" positionX="18" positionY="153" width="128" height="90"/>
         <element name="SubscriptionStatusList" positionX="27" positionY="162" width="128" height="45"/>
         <element name="Survey" positionX="0" positionY="0" width="128" height="255"/>
-        <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="88"/>
+        <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="90"/>
         <element name="SurveyElement" positionX="0" positionY="0" width="128" height="165"/>
         <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="60"/>
         <element name="SurveyQuestion" positionX="0" positionY="0" width="128" height="75"/>
@@ -761,7 +760,7 @@
         <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
         <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="180"/>
         <element name="WeightConstraints" positionX="36" positionY="171" width="128" height="73"/>
-        <element name="YearConstraints" positionX="27" positionY="153" width="128" height="103"/>
         <element name="YearMonthConstraints" positionX="36" positionY="162" width="128" height="103"/>
+        <element name="YearConstraints" positionX="27" positionY="153" width="128" height="103"/>
     </elements>
 </model>
