@@ -520,15 +520,16 @@
     </entity>
     <entity name="SurveyConstraints" parentEntity="BridgeObject" syncable="YES">
         <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="rules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyConstraints" inverseEntity="SurveyRule" syncable="YES"/>
+        <relationship name="rules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyConstraints" inverseEntity="SurveyRule" syncable="YES">
+            <userInfo>
+                <entry key="deprecated" value="use SurveyElement afterRules instead"/>
+            </userInfo>
+        </relationship>
         <relationship name="surveyQuestion" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyQuestion" inverseName="constraints" inverseEntity="SurveyQuestion" syncable="YES">
             <userInfo>
                 <entry key="notInPONSODictionary" value="1"/>
             </userInfo>
         </relationship>
-        <userInfo>
-            <entry key="deprecated" value="use SurveyElement afterRules instead"/>
-        </userInfo>
     </entity>
     <entity name="SurveyElement" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
         <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
