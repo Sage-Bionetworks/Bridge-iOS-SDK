@@ -561,13 +561,13 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         dispatchSyncToAuthAttemptQueue(^{
             [self clearSessionToken];
             [self clearReauthToken];
-            [self resetUserSessionInfo];
             if (error.code != SBBErrorCodeServerNotAuthenticated) {
                 // If the account itself is bad, and not just the reauth token, clear any saved password
                 // and credential as well.
                 [self clearPassword];
                 [self clearCredential];
             }
+            [self resetUserSessionInfo];
         });
     }
 
@@ -1069,7 +1069,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (BOOL)canAuthenticate
 {
-    return (self.savedReauthToken.length > 0);
+    return (self.savedReauthToken.length > 0) || (self.savedPassword.length > 0);
 }
 
 - (void)addAuthHeaderToHeaders:(NSMutableDictionary *)headers
