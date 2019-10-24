@@ -235,14 +235,21 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     });
 }
 
-- (void)setKeysAndValues:(NSDictionary<NSString *,NSString *> *)keysAndValues
+- (void)setKeysAndValues:(NSDictionary<NSString *, NSObject<SBBJSONValue> *> *)keysAndValues
 {
     dispatchSyncToKeychainQueue(^{
         UICKeyChainStore *store = [self.class sdkKeychainStore];
         NSArray *keys = keysAndValues.allKeys;
         for (NSString *key in keys) {
-            NSString *value = keysAndValues[key];
-            [store setString:value forKey:key];
+            NSObject<SBBJSONValue> *value = keysAndValues[key];
+            if ([value isKindOfClass:[NSString class]]) {
+                [store setString:(NSString *)value forKey:key];
+            } else if ([NSJSONSerialization isValidJSONObject:value]) {
+                NSData *data = [NSJSONSerialization dataWithJSONObject:value options:0 error:nil];
+                [store setData:data forKey:key];
+            } else {
+                NSAssert(false, @"Attempting to store a non-string, non-JSON-serializable value in the keychain: %@", value);
+            }
         }
         [store synchronize];
     });
@@ -709,7 +716,14 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     NSString *storedCredentialValue = self.credentialValueFromKeychain;
     if (storedCredentialKey.length && storedCredentialValue.length) {
         *credentialKey = storedCredentialKey;
-        *credentialValue = storedCredentialValue;
+        if ([storedCredentialKey isEqualToString:NSStringFromSelector(@selector(phone))]) {
+            // a phone credential gets stored as a JSON-encoded string so deserialize it back to a phone object:
+            NSData *data = [storedCredentialValue dataUsingEncoding:NSUTF8StringEncoding];
+            *credentialValue = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        } else {
+            // all other credentials are strings to begin with:
+            *credentialValue = storedCredentialValue;
+        }
         return YES;
     }
     
