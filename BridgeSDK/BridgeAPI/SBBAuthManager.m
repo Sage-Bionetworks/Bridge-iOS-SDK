@@ -1069,7 +1069,12 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (BOOL)canAuthenticate
 {
-    return (self.savedReauthToken.length > 0) || (self.savedPassword.length > 0);
+    return (self.savedReauthToken.length > 0) || ((self.savedPassword.length > 0) && (self.hasSavedCredential));
+}
+
+- (BOOL)hasSavedCredential
+{
+    return (self.credentialKeyFromKeychain.length > 0 ) && (self.credentialValueFromKeychain.length > 0 );
 }
 
 - (void)addAuthHeaderToHeaders:(NSMutableDictionary *)headers
