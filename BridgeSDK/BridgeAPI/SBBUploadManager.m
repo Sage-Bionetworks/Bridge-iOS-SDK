@@ -304,13 +304,16 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
 {
     NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
     NSMutableDictionary *files = [[defaults dictionaryForKey:kUploadFilesKey] mutableCopy];
-    for (NSString *tempFilePath in files.allKeys) {
-        NSString *key = [tempFilePath sandboxRelativePath];
-        NSString *thisFile = files[key];
-        if ([thisFile isEquivalentToPath:filePath]) {
-            [files removeObjectForKey:key];
+    NSArray *allKeys = files.allKeys;
+    NSString *sandboxFilePath = [filePath sandboxRelativePath];
+    NSString *sandboxSavePath = [saveFilePath sandboxRelativePath];
+    
+    for (NSString *tempFilePath in allKeys) {
+        NSString *thisFile = files[tempFilePath];
+        if ([thisFile isEqualToString:sandboxFilePath]) {
+            [files removeObjectForKey:tempFilePath];
             
-            if (![tempFilePath isEquivalentToPath:saveFilePath]) {
+            if (![tempFilePath isEqualToString:sandboxSavePath]) {
                 // also delete any other temp files which were copies of the same original file
                 [self deleteTempFile:tempFilePath];
             }
@@ -479,17 +482,19 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
         
         NSMutableDictionary *retryUploads = [[defaults dictionaryForKey:kSBBUploadRetryAfterDelayKey] mutableCopy];
         for (NSString *fileURLString in retryUploads.allKeys) {
-            NSString *filePath = [fileURLString fullyQualifiedPath];
-            NSDate *retryTime = [self retryTimeForFile:filePath];
-            if ([retryTime timeIntervalSinceNow] <= 0.) {
-                [self setRetryTime:nil forFile:filePath];
-                NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
-                SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
-                
-                if (completion && uploadRequestJSON.allKeys.count) {
-                    [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
-                } else {
-                    [self retryOrphanedUploadFromScratch:filePath];
+            @autoreleasepool {
+                NSString *filePath = [fileURLString fullyQualifiedPath];
+                NSDate *retryTime = [self retryTimeForFile:filePath];
+                if ([retryTime timeIntervalSinceNow] <= 0.) {
+                    [self setRetryTime:nil forFile:filePath];
+                    NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
+                    SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
+                    
+                    if (completion && uploadRequestJSON.allKeys.count) {
+                        [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
+                    } else {
+                        [self retryOrphanedUploadFromScratch:filePath];
+                    }
                 }
             }
         }

@@ -80,12 +80,14 @@ SBBAppConfig *gSBBAppConfig = nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         NSArray<NSString *> *uploads = SBBEncryptor.encryptedFilesAwaitingUploadResponse;
         for (NSString *file in uploads) {
-            NSURL *fileUrl = [NSURL fileURLWithPath:file];
-            [uMan uploadFileToBridge:fileUrl completion:^(NSError *error) {
-                if (!error) {
-                    [SBBEncryptor cleanUpEncryptedFile:fileUrl];
-                }
-            }];
+            @autoreleasepool {
+                NSURL *fileUrl = [NSURL fileURLWithPath:file];
+                [uMan uploadFileToBridge:fileUrl completion:^(NSError *error) {
+                    if (!error) {
+                        [SBBEncryptor cleanUpEncryptedFile:fileUrl];
+                    }
+                }];
+            }
         }
     });
 }
