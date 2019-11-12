@@ -72,6 +72,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL usesV1LegacySchema;
 
 /**
+ Convenience property for accessing the JSON-encoded `dataFilename` dictionary.
+ */
+@property (nonatomic, nullable, readonly) NSDictionary *answersDictionary;
+
+/**
  Convenience method for adding a `v2_generic` formatted archive. This will add a "answers.json" file to the
  archive and set that file as the `dataFormat` file.
  

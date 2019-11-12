@@ -199,6 +199,14 @@ static NSString * kV1LegacyFormat                   = @"v1_legacy";
                                      return data;
                                  }]];
     
+    // Check if this is the answers dictionary and set the property if it is.
+    if ([self.dataFilename isEqualToString:filename]) {
+        id obj = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        if ([obj isKindOfClass:[NSDictionary class]]) {
+            _answersDictionary = obj;
+        }
+    }
+    
     //add the fileInfoEntry
     NSString *extension = [filename pathExtension] ? : kJsonPathExtension;
     NSDictionary *fileInfoEntry = @{ kFileInfoNameKey: filename,
