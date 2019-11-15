@@ -451,7 +451,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 
 - (NSString *)sessionToken
 {
-    return _sessionToken;
+    __block NSString *token = nil;
+    dispatchSyncToAuthQueue(^{
+        token = _sessionToken;
+    });
+    return token;
 }
 
 - (NSURLSessionTask *)signUpStudyParticipant:(SBBSignUp *)signUp completion:(SBBNetworkManagerCompletionBlock)completion
@@ -803,7 +807,22 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     params[credentialKey] = credentialValue;
 
     return [_networkManager post:kSBBAuthReauthAPI headers:nil parameters:params completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        [self handleSignInWithCredential:credentialKey value:credentialValue password:nil task:task response:responseObject error:error completion:completion];
+        if (error.code == 404 && completion != nil) {
+            // If the reauth token was invalid, call our completion handler directly
+            // to let it fall back to trying with stored credentials before attempting
+            // to handle the response from Bridge in the usual way.
+            dispatchSyncToAuthAttemptQueue(^{
+                // don't double-call the completion handler when sign-in attempt finishes
+                [self.authCompletionHandlers removeObject:completion];
+                
+                // allow the stored-credentials attempt to actually call Bridge
+                _authCallInProgress = NO;
+            });
+
+            completion(task, responseObject, error);
+        } else {
+            [self handleSignInWithCredential:credentialKey value:credentialValue password:nil task:task response:responseObject error:error completion:completion];
+        }
     }];
 }
 
@@ -1018,8 +1037,14 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     if (self.reauthTokenFromKeychain.length) {
         [self reauthWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-            // if the response was a 401, try again the other way
-            if (error.code == SBBErrorCodeServerNotAuthenticated) {
+            // if the response was a 404 meaning the reauthToken was invalid,
+            // try again the other way
+            if (error.code == 404) {
+                // don't double-call this completion handler when we do get signed in
+                dispatchSyncToAuthAttemptQueue(^{
+                    [self.authCompletionHandlers removeObject:completion];
+                });
+                
                 [self attemptSignInWithStoredCredentialsWithCompletion:completion];
                 return;
             }
