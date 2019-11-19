@@ -384,7 +384,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (void)postNewSessionInfo:(id)info
 {
     NSDictionary *userInfo = @{ kSBBUserSessionInfoKey : info };
-    [[NSNotificationCenter defaultCenter] postNotificationName:kSBBUserSessionUpdatedNotification object:self userInfo:userInfo];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:kSBBUserSessionUpdatedNotification object:self userInfo:userInfo];
+    });
 }
 
 - (SBBUserSessionInfo *)cachedSessionInfo
@@ -553,6 +555,18 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     return [self signInWithEmail:username password:password completion:completion];
 }
 
+// This 'private' method must only ever be called on the auth attempt queue!
+- (void)resetAuthStateIncludingCredential:(BOOL)includeCredential
+{
+    [self clearSessionToken];
+    [self clearReauthToken];
+    if (includeCredential) {
+        [self clearPassword];
+        [self clearCredential];
+    }
+    [self resetUserSessionInfo];
+}
+
 - (void)handleSignInWithCredential:(NSString *)credentialKey value:(id<SBBJSONValue>)credentialValue password:(NSString *)password task:(NSURLSessionTask *)task response:(id)responseObject error:(NSError *)error completion:(SBBNetworkManagerCompletionBlock)completion
 {
     // check for and handle app version out of date error (n.b.: our networkManager instance is a vanilla one, and we need
@@ -570,15 +584,8 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
         error.code == 404 ||
         error.code == SBBErrorCodeServerAccountDisabled) {
         dispatchSyncToAuthAttemptQueue(^{
-            [self clearSessionToken];
-            [self clearReauthToken];
-            if (error.code != SBBErrorCodeServerNotAuthenticated) {
-                // If the account itself is bad, and not just the reauth token, clear any saved password
-                // and credential as well.
-                [self clearPassword];
-                [self clearCredential];
-            }
-            [self resetUserSessionInfo];
+            BOOL credentialNeedsReset = (error.code != SBBErrorCodeServerNotAuthenticated);
+            [self resetAuthStateIncludingCredential:credentialNeedsReset];
         });
     }
 
@@ -639,7 +646,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     
     dispatchSyncToAuthAttemptQueue(^{
         for (SBBNetworkManagerCompletionBlock completion in self.authCompletionHandlers) {
-            completion(task, responseObject, error);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(task, responseObject, error);
+            });
         }
         [self.authCompletionHandlers removeAllObjects];
         _authCallInProgress = NO;
@@ -969,18 +978,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     NSMutableDictionary *headers = [NSMutableDictionary dictionary];
     [self addAuthHeaderToHeaders:headers];
     return [_networkManager post:kSBBAuthSignOutAPI headers:headers parameters:nil completion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-        // Remove the session tokens and credentials from the keychain
-        // ??? Do we want to not do this in case of error?
-        [self.keychainManager removeValuesForKeys:@[ self.reauthTokenKey, self.sessionTokenKey, self.passwordKey ]];
-
-        // clear the in-memory copy of the session token, too
-        dispatchSyncToAuthQueue(^{
-            _sessionToken = nil;
+        dispatchSyncToAuthAttemptQueue(^{
+            [self resetAuthStateIncludingCredential:YES];
         });
-    
-        [self.cacheManager resetCache];
 
-        [self resetUserSessionInfo];
+        [self.cacheManager resetCache];
 
         if (completion) {
             completion(task, responseObject, error);
@@ -1015,11 +1017,26 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     
     // early exit if no stored password is available
     if (!password.length) {
-        // clear the session token since without a password, we have no way to sign in without user intervention
-        [self clearSessionToken];
-        if (completion) {
-            completion(nil, nil, [NSError SBBNoCredentialsError]);
-        }
+        // Clear the auth state since without a password, we have no way to sign in without user intervention.
+        // This needs to happen on the auth attempt queue.
+        dispatchSyncToAuthAttemptQueue(^{
+            // Lack of password doesn't necessarily mean the credential is invalid; they
+            // might just be using one of the non-password secure auth techniques.
+            [self resetAuthStateIncludingCredential:NO];
+            
+            if (completion) {
+                // If there's an auth attempt in progress, piggyback off of that.
+                // Otherwise call the completion handler directly.
+                if (self.authCallInProgress) {
+                    [self.authCompletionHandlers addObject:completion];
+                } else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        completion(nil, nil, [NSError SBBNoCredentialsError]);
+                    });
+                }
+            }
+        });
+        
         return nil;
     }
     
@@ -1027,6 +1044,9 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     NSString *credentialKey;
     id<SBBJSONValue> credentialValue;
     if (![self accountIdentifyingCredential:&credentialKey value:&credentialValue errorMessage:@"Attempting to reauth an account with a password but with no email, phone, or externalId--something is seriously wrong here" earlyCompletion:completion]) {
+        dispatchSyncToAuthAttemptQueue(^{
+            [self resetAuthStateIncludingCredential:YES];
+        });
         return nil;
     }
 
@@ -1037,9 +1057,11 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     if (self.reauthTokenFromKeychain.length) {
         [self reauthWithCompletion:^(NSURLSessionTask *task, id responseObject, NSError *error) {
-            // if the response was a 404 meaning the reauthToken was invalid,
+            // if the response was a 404 meaning the reauthToken was invalid, or
+            // SBBErrorCodeNoCredentialsAvailable meaning there was no reauthToken,
             // try again the other way
-            if (error.code == 404) {
+            if (error.code == 404 ||
+                error.code == SBBErrorCodeNoCredentialsAvailable) {
                 // don't double-call this completion handler when we do get signed in
                 dispatchSyncToAuthAttemptQueue(^{
                     [self.authCompletionHandlers removeObject:completion];
