@@ -119,8 +119,8 @@ extern "C" {
 
 #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
 #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
-#define ENGINESDIR "/Users/codete/Library/Developer/Xcode/DerivedData/CardioHealth-hcvubanhyhamdoaymbaplfsdsxhc/Build/Intermediates.noindex/openssl.build/Debug-iphoneos/libssl.build/DerivedSources/bin/iPhoneOS13.2-arm64.sdk/lib/engines"
-#define OPENSSLDIR "/Users/codete/Library/Developer/Xcode/DerivedData/CardioHealth-hcvubanhyhamdoaymbaplfsdsxhc/Build/Intermediates.noindex/openssl.build/Debug-iphoneos/libssl.build/DerivedSources/bin/iPhoneOS13.2-arm64.sdk"
+#define ENGINESDIR "/Users/erin/Library/Developer/Xcode/DerivedData/mPower2-hfkmqcyhrlytyqdqcmkodnecdzki/Build/Intermediates.noindex/openssl.build/Debug-iphoneos/libssl.build/DerivedSources/bin/iPhoneOS13.2-arm64.sdk/lib/engines"
+#define OPENSSLDIR "/Users/erin/Library/Developer/Xcode/DerivedData/mPower2-hfkmqcyhrlytyqdqcmkodnecdzki/Build/Intermediates.noindex/openssl.build/Debug-iphoneos/libssl.build/DerivedSources/bin/iPhoneOS13.2-arm64.sdk"
 #endif
 #endif
 

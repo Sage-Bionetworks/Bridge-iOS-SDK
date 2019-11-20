@@ -44,6 +44,8 @@ extern NSString * const kSBBAuthSignOutAPI;
 extern NSString * const kSBBAuthRequestResetAPI;
 extern NSString * const kSBBAuthResetAPI;
 
+void dispatchSyncToAuthAttemptQueue(dispatch_block_t dispatchBlock);
+
 @protocol SBBAuthKeychainManagerProtocol
 
 - (void)clearKeychainStore;
@@ -86,6 +88,8 @@ extern NSString * const kSBBAuthResetAPI;
 - (instancetype)initWithNetworkManager:(id<SBBNetworkManagerProtocol>)networkManager;
 
 - (void)postUserSessionUpdatedNotification;
+
+- (void)resetAuthStateIncludingCredential:(BOOL)includeCredential;
 
 - (NSString *)savedEmail;
 - (NSString *)savedPassword;

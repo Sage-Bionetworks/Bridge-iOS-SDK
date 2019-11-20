@@ -45,8 +45,10 @@
         [expectSessionUpdate fulfill];
     }];
     
-    [aMan resetUserSessionInfo];
-    
+    dispatchSyncToAuthAttemptQueue(^{
+        [aMan resetAuthStateIncludingCredential:YES];
+    });
+
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error waiting for session info update notification after reset:\n%@", error);
@@ -284,7 +286,10 @@
     
     XCTAssertNil(aMan.sessionToken, @"Expected authManager's sessionToken to be nil, but instead it's %@", aMan.sessionToken);
     XCTAssert(gotAppConfig == nil, @"Expected to abandon the original request, but instead got %@", gotAppConfig);
-    XCTAssert(gotError.code == 404, @"Expected to get an error but instead got %@", gotError);
+    
+    // When the reauth attempt failed due to the 404, it would fall back to trying to
+    // use stored credentials; since we haven't set those up, it should get this error:
+    XCTAssert(gotError.code == SBBErrorCodeNoCredentialsAvailable, @"Expected to get a no credentials available error but instead got %@", gotError);
     
     // Double-check that the cached StudyParticipant has been cleared out as well
     participant = (SBBStudyParticipant *)[aMan.cacheManager cachedSingletonObjectOfType:@"StudyParticipant" createIfMissing:NO];

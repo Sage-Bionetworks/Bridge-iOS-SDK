@@ -74,8 +74,10 @@
         [expectSessionUpdate fulfill];
     }];
     
-    [aMan resetUserSessionInfo];
-    
+    dispatchSyncToAuthAttemptQueue(^{
+        [aMan resetAuthStateIncludingCredential:YES];
+    });
+
     [self waitForExpectationsWithTimeout:5.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error waiting for session info update notification after reset:\n%@", error);
