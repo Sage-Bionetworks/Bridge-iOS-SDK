@@ -384,9 +384,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (void)postNewSessionInfo:(id)info
 {
     NSDictionary *userInfo = @{ kSBBUserSessionInfoKey : info };
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:kSBBUserSessionUpdatedNotification object:self userInfo:userInfo];
-    });
+    [[NSNotificationCenter defaultCenter] postNotificationName:kSBBUserSessionUpdatedNotification object:self userInfo:userInfo];
 }
 
 - (SBBUserSessionInfo *)cachedSessionInfo
