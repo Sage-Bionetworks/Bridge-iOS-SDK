@@ -2632,7 +2632,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "TEST_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDKTests\"\necho \"${TEST_OBJECTS_DIR}\"\nTEST_MACHINE_DIR=\"${TEST_OBJECTS_DIR}\"\nTEST_DATA_MODEL=\"${TEST_OBJECTS_DIR}/TestModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${TEST_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${TEST_OBJECTS_DIR}\" --machine-dir \"${TEST_MACHINE_DIR}\" --includeh \"${TEST_OBJECTS_DIR}/SBBTestObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"";
+			shellScript = "TEST_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDKTests\"\necho \"${TEST_OBJECTS_DIR}\"\nTEST_MACHINE_DIR=\"${TEST_OBJECTS_DIR}\"\nTEST_DATA_MODEL=\"${TEST_OBJECTS_DIR}/TestModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${TEST_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${TEST_OBJECTS_DIR}\" --machine-dir \"${TEST_MACHINE_DIR}\" --includeh \"${TEST_OBJECTS_DIR}/SBBTestObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"\n";
 		};
 		804545871A1E7829001D41D4 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;

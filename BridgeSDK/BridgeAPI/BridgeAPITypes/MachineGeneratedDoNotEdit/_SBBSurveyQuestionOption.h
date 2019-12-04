@@ -45,6 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSString* detail;
 
+@property (nullable, nonatomic, strong) NSNumber* exclusive;
+
+@property (nonatomic, assign) BOOL exclusiveValue;
+
 @property (nonatomic, strong) NSString* label;
 
 @property (nullable, nonatomic, strong) id<NSCopying, NSCoding, NSObject> value;

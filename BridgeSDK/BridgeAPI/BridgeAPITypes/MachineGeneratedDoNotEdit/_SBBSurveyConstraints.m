@@ -49,6 +49,8 @@
 
 @property (nullable, nonatomic, retain) NSString* dataType;
 
+@property (nullable, nonatomic, retain) NSNumber* required;
+
 @property (nullable, nonatomic, retain) NSOrderedSet<NSManagedObject *> *rules;
 
 @property (nullable, nonatomic, retain) NSManagedObject *surveyQuestion;
@@ -81,6 +83,16 @@
 
 #pragma mark Scalar values
 
+- (BOOL)requiredValue
+{
+	return [self.required boolValue];
+}
+
+- (void)setRequiredValue:(BOOL)value_
+{
+	self.required = [NSNumber numberWithBool:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -88,6 +100,8 @@
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
     self.dataType = [dictionary objectForKey:@"dataType"];
+
+    self.required = [dictionary objectForKey:@"required"];
 
     // overwrite the old rules relationship entirely rather than adding to it
     [self removeRulesObjects];
@@ -106,6 +120,8 @@
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.dataType forKey:@"dataType"];
+
+    [dict setObjectIfNotNil:self.required forKey:@"required"];
 
     if ([self.rules count] > 0)
 	{
@@ -150,6 +166,8 @@
 
         self.dataType = managedObject.dataType;
 
+        self.required = managedObject.required;
+
 		for (NSManagedObject *rulesManagedObj in managedObject.rules)
 		{
             Class objectClass = [SBBObjectManager bridgeClassFromType:rulesManagedObj.entity.name];
@@ -193,6 +211,8 @@
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.dataType = ((id)self.dataType == [NSNull null]) ? nil : self.dataType;
+
+    managedObject.required = ((id)self.required == [NSNull null]) ? nil : self.required;
 
     // first make a copy of the existing relationship collection, to iterate through while mutating original
     NSOrderedSet *rulesCopy = [managedObject.rules copy];

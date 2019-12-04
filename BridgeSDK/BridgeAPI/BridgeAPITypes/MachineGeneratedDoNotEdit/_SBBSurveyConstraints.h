@@ -45,6 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, nonatomic, strong) NSString* dataType;
 
+@property (nullable, nonatomic, strong) NSNumber* required;
+
+@property (nonatomic, assign) BOOL requiredValue;
+
 @property (nullable, nonatomic, strong, readonly) NSArray *rules;
 
 - (void)addRulesObject:(SBBSurveyRule*)value_ settingInverse: (BOOL) setInverse;
