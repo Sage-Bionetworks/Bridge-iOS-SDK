@@ -45,6 +45,8 @@
 
 @property (nullable, nonatomic, retain) NSString* detail;
 
+@property (nullable, nonatomic, retain) NSNumber* exclusive;
+
 @property (nullable, nonatomic, retain) NSString* label;
 
 @property (nullable, nonatomic, retain) id<NSCopying, NSCoding, NSObject> value;
@@ -69,6 +71,16 @@
 
 #pragma mark Scalar values
 
+- (BOOL)exclusiveValue
+{
+	return [self.exclusive boolValue];
+}
+
+- (void)setExclusiveValue:(BOOL)value_
+{
+	self.exclusive = [NSNumber numberWithBool:value_];
+}
+
 #pragma mark Dictionary representation
 
 - (void)updateWithDictionaryRepresentation:(NSDictionary *)dictionary objectManager:(id<SBBObjectManagerProtocol>)objectManager
@@ -76,6 +88,8 @@
     [super updateWithDictionaryRepresentation:dictionary objectManager:objectManager];
 
     self.detail = [dictionary objectForKey:@"detail"];
+
+    self.exclusive = [dictionary objectForKey:@"exclusive"];
 
     self.label = [dictionary objectForKey:@"label"];
 
@@ -96,6 +110,8 @@
     NSMutableDictionary *dict = [[super dictionaryRepresentationFromObjectManager:objectManager] mutableCopy];
 
     [dict setObjectIfNotNil:self.detail forKey:@"detail"];
+
+    [dict setObjectIfNotNil:self.exclusive forKey:@"exclusive"];
 
     [dict setObjectIfNotNil:self.label forKey:@"label"];
 
@@ -129,6 +145,8 @@
     if (self = [super initWithManagedObject:managedObject objectManager:objectManager cacheManager:cacheManager]) {
 
         self.detail = managedObject.detail;
+
+        self.exclusive = managedObject.exclusive;
 
         self.label = managedObject.label;
 
@@ -175,6 +193,8 @@
     NSManagedObjectContext *cacheContext = managedObject.managedObjectContext;
 
     managedObject.detail = ((id)self.detail == [NSNull null]) ? nil : self.detail;
+
+    managedObject.exclusive = ((id)self.exclusive == [NSNull null]) ? nil : self.exclusive;
 
     if (self.label) managedObject.label = self.label;
 
