@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="18G103" minimumToolsVersion="Xcode 4.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="">
+    <entity name="AbstractStudyParticipant" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="attributes" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="SBBStudyParticipantCustomAttributes"/>
+            </userInfo>
+        </attribute>
+        <attribute name="clientData" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="id&lt;SBBJSONValue&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="dataGroups" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSSet&lt;NSString *&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="emailVerified" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="externalId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="externalIds" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSDictionary&lt;NSString *, NSString *&gt;"/>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="languages" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="notifyByEmail" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="phoneVerified" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="roles" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="sharingScope" optional="YES" attributeType="String" regularExpressionString="no_sharing|sponsors_and_partners|all_qualified_researchers" syncable="YES"/>
+        <attribute name="status" optional="YES" attributeType="String" regularExpressionString="disabled|enabled|unverified" syncable="YES"/>
+        <attribute name="substudyIds" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray&lt;NSString *&gt;"/>
+            </userInfo>
+        </attribute>
+        <relationship name="phone" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Phone" inverseName="studyParticipant" inverseEntity="Phone" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBStudyParticipantCustomAttributes.h"/>
+        </userInfo>
+    </entity>
+    <entity name="Activity" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="activityType" attributeType="String" defaultValueString="task" regularExpressionString="^(task|survey|compound)$" syncable="YES"/>
+        <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="label" attributeType="String" defaultValueString=" " syncable="YES"/>
+        <attribute name="labelDetail" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="compoundActivity" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CompoundActivity" inverseName="activity" inverseEntity="CompoundActivity" syncable="YES"/>
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Image" inverseName="activity" inverseEntity="Image" syncable="YES"/>
+        <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Schedule" inverseName="activities" inverseEntity="Schedule" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="scheduledActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduledActivity" inverseName="activity" inverseEntity="ScheduledActivity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="activity" inverseEntity="SurveyReference" syncable="YES"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TaskReference" inverseName="activity" inverseEntity="TaskReference" syncable="YES"/>
+    </entity>
+    <entity name="ActivityEvent" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="answerValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="eventId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="eventId"/>
+        </userInfo>
+    </entity>
+    <entity name="AppConfig" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="clientData" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="id&lt;SBBJSONValue&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="configElements" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="id&lt;SBBJSONValue&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="createdOn" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="guid" attributeType="String" syncable="YES"/>
+        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="modifiedOn" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="version" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="configReferences" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConfigReference" inverseName="appConfig" inverseEntity="ConfigReference" syncable="YES"/>
+        <relationship name="schemaReferences" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SchemaReference" inverseName="appConfig" inverseEntity="SchemaReference" syncable="YES"/>
+        <relationship name="surveyReferences" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="appConfig" inverseEntity="SurveyReference" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBJSONValue.h"/>
+            <entry key="entityIDKeyPath" value="type"/>
+        </userInfo>
+    </entity>
+    <entity name="BloodPressureConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="BooleanConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
+    <entity name="BridgeObject" isAbstract="YES" syncable="YES">
+        <attribute name="lastRetrieved" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="type" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="forwardCursorPagedResourceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ForwardCursorPagedResourceList" inverseName="items" inverseEntity="ForwardCursorPagedResourceList" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="resourceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ResourceList" inverseName="items" inverseEntity="ResourceList" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="CompoundActivity" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="activityDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="taskIdentifier" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="compoundActivity" inverseEntity="Activity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="schemaList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SchemaReference" inverseName="compoundActivity" inverseEntity="SchemaReference" syncable="YES"/>
+        <relationship name="surveyList" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SurveyReference" inverseName="compoundActivity" inverseEntity="SurveyReference" syncable="YES"/>
+    </entity>
+    <entity name="ConfigReference" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="id" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="revision" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="appConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppConfig" inverseName="configReferences" inverseEntity="AppConfig" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="ConsentSignature" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="birthdate" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="imageData" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageMimeType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="scope" attributeType="String" defaultValueString="no_sharing" regularExpressionString="^(no_sharing|sponsors_and_partners|all_qualified_researchers)$" syncable="YES"/>
+    </entity>
+    <entity name="ConsentStatus" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="consented" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="required" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="signedMostRecentConsent" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="subpopulationGuid" optional="YES" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <relationship name="userSessionInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserSessionInfo" inverseName="consentStatuses" inverseEntity="UserSessionInfo" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="subpopulationGuid"/>
+        </userInfo>
+    </entity>
+    <entity name="DataGroups" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="dataGroups" attributeType="Transformable" customClassName="NSSet&lt;NSString *&gt;" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSSet&lt;NSString *&gt;"/>
+            </userInfo>
+        </attribute>
+        <userInfo>
+            <entry key="deprecated" value="use NSSet instead"/>
+            <entry key="entityIDKeyPath" value="type"/>
+            <entry key="hasClientWritableFields" value="1"/>
+        </userInfo>
+    </entity>
+    <entity name="DateConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="DateRangeResourceList" parentEntity="ResourceList" syncable="YES">
+        <userInfo>
+            <entry key="entityIDKeyPath" value="listID__"/>
+        </userInfo>
+    </entity>
+    <entity name="DateTimeConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="DateTimeRangeResourceList" parentEntity="ResourceList" syncable="YES">
+        <attribute name="endTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="listID__"/>
+            <entry key="entityIDRegex" value="^(ScheduledActivity)$"/>
+        </userInfo>
+    </entity>
+    <entity name="DecimalConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="maxValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="minValue" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="step" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years|inches|feet|yards|miles|ounces|pounds|pints|quarts|gallons|centimeters|meters|kilometers|grams|kilograms|milliliters|cubic_centimeters|liters|cubic_meters)$" syncable="YES"/>
+    </entity>
+    <entity name="DurationConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="unit" optional="YES" attributeType="String" defaultValueString="seconds" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years)$" syncable="YES"/>
+    </entity>
+    <entity name="ForwardCursorPagedResourceList" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="hasNext" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="listID__" optional="YES" attributeType="String" defaultValueString="ScheduledActivity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="nextPageOffsetKey" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="forwardCursorPagedResourceList" inverseEntity="BridgeObject" syncable="YES"/>
+        <relationship name="requestParams" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="RequestParams" inverseName="requestParamsForwardCursorPagedResourceList" inverseEntity="RequestParams" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="listID__"/>
+        </userInfo>
+    </entity>
+    <entity name="GuidHolder" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="guid" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="type"/>
+        </userInfo>
+    </entity>
+    <entity name="HeightConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="forInfant" optional="YES" attributeType="Boolean" usesScalarValueType="NO" elementID="isInfant" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="IdentifierHolder" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="identifier" attributeType="String" defaultValueString="-" syncable="YES"/>
+    </entity>
+    <entity name="Image" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="height" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="source" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="image" inverseEntity="Activity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="surveyInfoScreen" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyInfoScreen" inverseName="image" inverseEntity="SurveyInfoScreen" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="surveyQuestionOption" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyQuestionOption" inverseName="image" inverseEntity="SurveyQuestionOption" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="IntegerConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="maxValue" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="minValue" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="step" optional="YES" attributeType="Integer 64" defaultValueString="1" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" defaultValueString="centimeters" regularExpressionString="^(seconds|minutes|hours|days|weeks|months|years|inches|feet|yards|miles|ounces|pounds|pints|quarts|gallons|centimeters|meters|kilometers|grams|kilograms|milliliters|cubic_centimeters|liters|cubic_meters)$" syncable="YES"/>
+    </entity>
+    <entity name="MultiValueConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="allowMultiple" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="allowOther" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="enumeration" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyQuestionOption" inverseName="multiValueConstraints" inverseEntity="SurveyQuestionOption" syncable="YES"/>
+    </entity>
+    <entity name="OAuthAccessToken" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="accessToken" attributeType="String" defaultValueString="-" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="expiresOn" attributeType="Date" defaultDateTimeInterval="442112400" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="providerUserID" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="vendorID" attributeType="String" defaultValueString="fitbit" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+    </entity>
+    <entity name="Phone" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="nationalFormat" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="number" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="regionCode" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="studyParticipant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AbstractStudyParticipant" inverseName="phone" inverseEntity="AbstractStudyParticipant" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="PostalCodeConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="countryCode" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="ReportData" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="data" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="id&lt;SBBJSONValue&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="dateTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="localDate" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBJSONValue.h"/>
+        </userInfo>
+    </entity>
+    <entity name="RequestParams" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="assignmentFilter" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="emailFilter" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="idFilter" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="offsetBy" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="offsetKey" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pageSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="reportType" optional="YES" attributeType="String" regularExpressionString="participant|study" syncable="YES"/>
+        <attribute name="scheduledOnEnd" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scheduledOnStart" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="startDate" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="total" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="requestParamsForwardCursorPagedResourceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ForwardCursorPagedResourceList" inverseName="requestParams" inverseEntity="ForwardCursorPagedResourceList" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="requestParamsResourceList" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ResourceList" inverseName="requestParams" inverseEntity="ResourceList" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="ResourceList" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="listID__" optional="YES" attributeType="String" defaultValueString="ScheduledActivity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="total" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="BridgeObject" inverseName="resourceList" inverseEntity="BridgeObject" syncable="YES"/>
+        <relationship name="requestParams" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="RequestParams" inverseName="requestParamsResourceList" inverseEntity="RequestParams" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="listID__"/>
+            <entry key="entityIDRegex" value="^(Schedule)$"/>
+        </userInfo>
+    </entity>
+    <entity name="Schedule" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="cronTrigger" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="delay" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="endsOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="eventId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="expires" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="interval" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="label" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="persistent" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scheduleType" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="startsOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="times" attributeType="Transformable" customClassName="NSArray" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSArray"/>
+            </userInfo>
+        </attribute>
+        <relationship name="activities" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Activity" inverseName="schedule" inverseEntity="Activity" syncable="YES"/>
+        <userInfo>
+            <entry key="deprecated" value="Use SBBScheduledActivity instead."/>
+        </userInfo>
+    </entity>
+    <entity name="ScheduledActivity" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="clientData" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="id&lt;SBBJSONValue&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="expiresOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="finishedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="persistent" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="scheduledOn" attributeType="Date" defaultDateTimeInterval="536806980" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="schedulePlanGuid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="activity" maxCount="1" deletionRule="Cascade" destinationEntity="Activity" inverseName="scheduledActivity" inverseEntity="Activity" syncable="YES"/>
+        <userInfo>
+            <entry key="additionalHeaderFileName" value="SBBJSONValue.h"/>
+            <entry key="entityIDKeyPath" value="guid"/>
+            <entry key="hasClientWritableFields" value="1"/>
+        </userInfo>
+    </entity>
+    <entity name="SchemaReference" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="activityDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="minuteDuration" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="revision" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="appConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppConfig" inverseName="schemaReferences" inverseEntity="AppConfig" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="compoundActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompoundActivity" inverseName="schemaList" inverseEntity="CompoundActivity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="taskReference" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TaskReference" inverseName="schema" inverseEntity="TaskReference" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="SignUp" parentEntity="AbstractStudyParticipant" syncable="YES">
+        <attribute name="checkForConsent" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="study" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="StringConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="maxLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="minLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="pattern" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="patternErrorMessage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="patternPlaceholder" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="StudyParticipant" parentEntity="AbstractStudyParticipant" syncable="YES">
+        <attribute name="ciphertext" optional="YES" attributeType="Binary" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="healthCode" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="YES"/>
+            </userInfo>
+        </attribute>
+        <relationship name="userSessionInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserSessionInfo" inverseName="studyParticipant" inverseEntity="UserSessionInfo" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <userInfo>
+            <entry key="encrypted" value="ciphertext"/>
+            <entry key="entityIDKeyPath" value="type"/>
+        </userInfo>
+    </entity>
+    <entity name="SubscriptionStatus" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="subscribed" attributeType="Boolean" usesScalarValueType="NO" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="topicGuid" attributeType="String" syncable="YES"/>
+        <attribute name="topicName" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="mogenerator.readonly" value="1"/>
+            </userInfo>
+        </attribute>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="topicGuid"/>
+            <entry key="mogenerator.readonly" value="1"/>
+        </userInfo>
+    </entity>
+    <entity name="SubscriptionStatusList" parentEntity="ResourceList" syncable="YES">
+        <userInfo>
+            <entry key="entityIDKeyPath" value="listID__"/>
+        </userInfo>
+    </entity>
+    <entity name="Survey" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="copyrightNotice" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="guidAndCreatedOn" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="identifier" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="minuteDuration" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="modifiedOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="moduleId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="moduleVersion" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="name" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="published" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="schemaRevision" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="version" attributeType="Double" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="elements" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyElement" inverseName="survey" inverseEntity="SurveyElement" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="guidAndCreatedOn"/>
+            <entry key="syntheticKeyComponentPaths" value="guid,createdOn"/>
+        </userInfo>
+    </entity>
+    <entity name="SurveyConstraints" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="dataType" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="rules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyConstraints" inverseEntity="SurveyRule" syncable="YES">
+            <userInfo>
+                <entry key="deprecated" value="use SurveyElement afterRules instead"/>
+            </userInfo>
+        </relationship>
+        <relationship name="surveyQuestion" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyQuestion" inverseName="constraints" inverseEntity="SurveyQuestion" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="SurveyElement" isAbstract="YES" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="identifier" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="prompt" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="promptDetail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="afterRules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyElementAfterRules" inverseEntity="SurveyRule" syncable="YES"/>
+        <relationship name="beforeRules" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="SurveyRule" inverseName="surveyElementBeforeRules" inverseEntity="SurveyRule" syncable="YES"/>
+        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Survey" inverseName="elements" inverseEntity="Survey" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="guid"/>
+        </userInfo>
+    </entity>
+    <entity name="SurveyInfoScreen" parentEntity="SurveyElement" syncable="YES">
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image" inverseName="surveyInfoScreen" inverseEntity="Image" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="guid"/>
+        </userInfo>
+    </entity>
+    <entity name="SurveyQuestion" parentEntity="SurveyElement" syncable="YES">
+        <attribute name="uiHint" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <relationship name="constraints" maxCount="1" deletionRule="Cascade" destinationEntity="SurveyConstraints" inverseName="surveyQuestion" inverseEntity="SurveyConstraints" syncable="YES"/>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="guid"/>
+        </userInfo>
+    </entity>
+    <entity name="SurveyQuestionOption" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="detail" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="label" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="id&lt;NSCopying, NSCoding, NSObject&gt;"/>
+            </userInfo>
+        </attribute>
+        <relationship name="image" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Image" inverseName="surveyQuestionOption" inverseEntity="Image" syncable="YES"/>
+        <relationship name="multiValueConstraints" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="MultiValueConstraints" inverseName="enumeration" inverseEntity="MultiValueConstraints" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="SurveyReference" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="activityDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createdOn" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="guid" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="href" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="identifier" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="minuteDuration" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="survey" inverseEntity="Activity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="appConfig" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AppConfig" inverseName="surveyReferences" inverseEntity="AppConfig" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="compoundActivity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CompoundActivity" inverseName="surveyList" inverseEntity="CompoundActivity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="SurveyRule" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="assignDataGroup" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="dataGroups" optional="YES" attributeType="Transformable" syncable="YES">
+            <userInfo>
+                <entry key="attributeValueClassName" value="NSSet&lt;NSString *&gt;"/>
+            </userInfo>
+        </attribute>
+        <attribute name="displayIf" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="displayUnless" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="endSurvey" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="operator" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="skipTo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="surveyConstraints" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyConstraints" inverseName="rules" inverseEntity="SurveyConstraints" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="surveyElementAfterRules" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyElement" inverseName="afterRules" inverseEntity="SurveyElement" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="surveyElementBeforeRules" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SurveyElement" inverseName="beforeRules" inverseEntity="SurveyElement" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+    </entity>
+    <entity name="TaskReference" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="activityDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="identifier" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="minuteDuration" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="activity" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Activity" inverseName="task" inverseEntity="Activity" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="schema" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SchemaReference" inverseName="taskReference" inverseEntity="SchemaReference" syncable="YES"/>
+    </entity>
+    <entity name="TimeConstraints" parentEntity="SurveyConstraints" syncable="YES"/>
+    <entity name="UploadRequest" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="contentLength" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="contentMd5" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="contentType" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="UploadSession" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="expires" attributeType="Date" defaultDateTimeInterval="442113060" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="id" attributeType="String" defaultValueString="-" syncable="YES"/>
+        <attribute name="url" attributeType="String" defaultValueString="-" syncable="YES"/>
+    </entity>
+    <entity name="UserProfile" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="ciphertext" optional="YES" attributeType="Binary" syncable="YES">
+            <userInfo>
+                <entry key="notInPONSODictionary" value="1"/>
+            </userInfo>
+        </attribute>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="firstName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastName" optional="YES" attributeType="String" syncable="YES"/>
+        <userInfo>
+            <entry key="deprecated" value="use SBBStudyParticipant instead"/>
+            <entry key="encrypted" value="ciphertext"/>
+            <entry key="entityIDKeyPath" value="type"/>
+            <entry key="isExtendable" value="1"/>
+        </userInfo>
+    </entity>
+    <entity name="UserSessionInfo" parentEntity="BridgeObject" syncable="YES">
+        <attribute name="authenticated" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="consented" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="dataSharing" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="environment" optional="YES" attributeType="String" regularExpressionString="^(local|develop|staging|production)$" syncable="YES"/>
+        <attribute name="reauthToken" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sessionToken" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="signedMostRecentConsent" optional="YES" attributeType="Boolean" usesScalarValueType="NO" syncable="YES"/>
+        <relationship name="consentStatuses" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ConsentStatus" inverseName="userSessionInfo" inverseEntity="ConsentStatus" syncable="YES">
+            <userInfo>
+                <entry key="isDictionaryJSON" value="1"/>
+            </userInfo>
+        </relationship>
+        <relationship name="studyParticipant" maxCount="1" deletionRule="Cascade" destinationEntity="StudyParticipant" inverseName="userSessionInfo" inverseEntity="StudyParticipant" syncable="YES">
+            <userInfo>
+                <entry key="includedAsSubobject" value="1"/>
+            </userInfo>
+        </relationship>
+        <userInfo>
+            <entry key="entityIDKeyPath" value="type"/>
+            <entry key="includesSubobject" value="StudyParticipant"/>
+        </userInfo>
+    </entity>
+    <entity name="WeightConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="forInfant" optional="YES" attributeType="Boolean" usesScalarValueType="NO" elementID="isInfant" syncable="YES"/>
+        <attribute name="unit" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="YearConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <entity name="YearMonthConstraints" parentEntity="SurveyConstraints" syncable="YES">
+        <attribute name="allowFuture" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="allowPast" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="earliestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="latestValue" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="AbstractStudyParticipant" positionX="18" positionY="108" width="128" height="330"/>
+        <element name="Activity" positionX="0" positionY="0" width="128" height="195"/>
+        <element name="ActivityEvent" positionX="45" positionY="180" width="128" height="90"/>
+        <element name="AppConfig" positionX="36" positionY="171" width="128" height="195"/>
+        <element name="BloodPressureConstraints" positionX="18" positionY="153" width="128" height="60"/>
+        <element name="BooleanConstraints" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="BridgeObject" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="CompoundActivity" positionX="18" positionY="162" width="128" height="120"/>
+        <element name="ConfigReference" positionX="27" positionY="153" width="128" height="90"/>
+        <element name="ConsentSignature" positionX="9" positionY="99" width="128" height="120"/>
+        <element name="ConsentStatus" positionX="0" positionY="90" width="128" height="135"/>
+        <element name="DataGroups" positionX="0" positionY="90" width="128" height="60"/>
+        <element name="DateConstraints" positionX="0" positionY="0" width="128" height="103"/>
+        <element name="DateRangeResourceList" positionX="54" positionY="189" width="128" height="45"/>
+        <element name="DateTimeConstraints" positionX="0" positionY="0" width="128" height="103"/>
+        <element name="DateTimeRangeResourceList" positionX="18" positionY="153" width="128" height="75"/>
+        <element name="DecimalConstraints" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="DurationConstraints" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="ForwardCursorPagedResourceList" positionX="9" positionY="153" width="128" height="120"/>
+        <element name="GuidHolder" positionX="18" positionY="153" width="128" height="60"/>
+        <element name="HeightConstraints" positionX="27" positionY="162" width="128" height="73"/>
+        <element name="IdentifierHolder" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="Image" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="IntegerConstraints" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="MultiValueConstraints" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="OAuthAccessToken" positionX="18" positionY="153" width="128" height="105"/>
+        <element name="Phone" positionX="36" positionY="171" width="128" height="105"/>
+        <element name="PostalCodeConstraints" positionX="27" positionY="153" width="128" height="60"/>
+        <element name="ReportData" positionX="18" positionY="153" width="128" height="105"/>
+        <element name="RequestParams" positionX="36" positionY="171" width="128" height="285"/>
+        <element name="ResourceList" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="Schedule" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="ScheduledActivity" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="SchemaReference" positionX="9" positionY="153" width="128" height="150"/>
+        <element name="SignUp" positionX="27" positionY="162" width="128" height="90"/>
+        <element name="StringConstraints" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="StudyParticipant" positionX="18" positionY="153" width="128" height="90"/>
+        <element name="SubscriptionStatus" positionX="18" positionY="153" width="128" height="90"/>
+        <element name="SubscriptionStatusList" positionX="27" positionY="162" width="128" height="45"/>
+        <element name="Survey" positionX="0" positionY="0" width="128" height="255"/>
+        <element name="SurveyConstraints" positionX="0" positionY="0" width="128" height="88"/>
+        <element name="SurveyElement" positionX="0" positionY="0" width="128" height="165"/>
+        <element name="SurveyInfoScreen" positionX="0" positionY="0" width="128" height="60"/>
+        <element name="SurveyQuestion" positionX="0" positionY="0" width="128" height="75"/>
+        <element name="SurveyQuestionOption" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="SurveyReference" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="SurveyRule" positionX="0" positionY="0" width="128" height="210"/>
+        <element name="TaskReference" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="TimeConstraints" positionX="0" positionY="0" width="128" height="45"/>
+        <element name="UploadRequest" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="UploadSession" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="UserProfile" positionX="0" positionY="0" width="128" height="105"/>
+        <element name="UserSessionInfo" positionX="0" positionY="0" width="128" height="180"/>
+        <element name="WeightConstraints" positionX="36" positionY="171" width="128" height="73"/>
+        <element name="YearConstraints" positionX="27" positionY="153" width="128" height="103"/>
+        <element name="YearMonthConstraints" positionX="36" positionY="162" width="128" height="103"/>
+    </elements>
+</model>
