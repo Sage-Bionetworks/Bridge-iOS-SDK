@@ -940,163 +940,174 @@ NSTimeInterval kSBBDelayForRetries = 5. * 60.; // at least 5 minutes, actually w
     return [newTasks copy];
 }
 
++ (BOOL) isAppExtension
+{
+    return [[[NSBundle mainBundle] executablePath] containsString:@".appex/"];
+}
+
 - (void)checkAndRetryOrphanedUploads
 {
+    if ([SBBUploadManager isAppExtension]) {
+        // App extensions are severely memory constrained, so don't even try this if we're in one.
+        return;
+    }
     NSURLSession *bgSession = ((SBBNetworkManager *)self.networkManager).backgroundSession;
-    void (^block)(NSArray<__kindof NSURLSessionTask *> * _Nullable tasks) = ^(NSArray<__kindof NSURLSessionTask *> *tasks){
-        NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
-        NSFileManager *fileMan = [NSFileManager defaultManager];
-        NSMutableSet *filesRetrying = [NSMutableSet set];
-        
-        // assume any outstanding upload requests without corresponding upload sessions whose files are
-        // more than a day old are orphaned (note that under some unusual circumstances this may lead
-        // to duplication of uploads).
-        static const NSTimeInterval oneDay = 24. * 60. * 60.;
-        NSArray *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey].allKeys;
-        NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
-        NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
-        NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
-        for (NSString *relativePath in uploadRequests.allKeys) {
-            @autoreleasepool {
-                NSString *filePath = [relativePath fullyQualifiedPath];
-                if ([filesRetrying containsObject:filePath]) {
-                    continue; // skip it, we're already retrying this one
-                }
-                if (!uploadSessions[relativePath]) {
-                    // get the modification date of the file, if it still exists
-                    NSURL *fileURL = [NSURL fileURLWithPath:filePath];
-                    __block NSDictionary *fileAttrs;
-                    [fileCoordinator coordinateReadingItemAtURL:fileURL options:NSFileCoordinatorReadingImmediatelyAvailableMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
-                        fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
-                    }];
-                    
-                    if (fileAttrs) {
-                        NSDate *modified = [fileAttrs fileModificationDate];
-                        if ([modified timeIntervalSinceNow] < -oneDay) {
-                            // it's more than a day old, so we will retry now
-                            // but first, if it's in the retry queue, take it out
-                            [self setRetryTime:nil forFile:filePath];
-                            
-                            // ...and update its modification date so we don't keep thinking it's due for a retry
-                            [fileCoordinator coordinateWritingItemAtURL:fileURL options:NSFileCoordinatorWritingContentIndependentMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
-                                [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
-                            }];
-                            
-                            // ...and cancel any existing tasks trying to upload the same file
-                            tasks = [self cancelTasksForFile:filePath inTasks:tasks];
+    void (^block)(NSArray<__kindof NSURLSessionTask *> * _Nullable tasks) = ^(NSArray<__kindof NSURLSessionTask *> *tasks) {
+        @autoreleasepool {
+            NSUserDefaults *defaults = [BridgeSDK sharedUserDefaults];
+            NSFileManager *fileMan = [NSFileManager defaultManager];
+            NSMutableSet *filesRetrying = [NSMutableSet set];
+            
+            // assume any outstanding upload requests without corresponding upload sessions whose files are
+            // more than a day old are orphaned (note that under some unusual circumstances this may lead
+            // to duplication of uploads).
+            static const NSTimeInterval oneDay = 24. * 60. * 60.;
+            NSArray *uploadFiles = [defaults dictionaryForKey:kUploadFilesKey].allKeys;
+            NSDictionary *uploadRequests = [defaults dictionaryForKey:kUploadRequestsKey];
+            NSDictionary *uploadSessions = [defaults dictionaryForKey:kUploadSessionsKey];
+            NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+            for (NSString *relativePath in uploadRequests.allKeys) {
+                @autoreleasepool {
+                    NSString *filePath = [relativePath fullyQualifiedPath];
+                    if ([filesRetrying containsObject:filePath]) {
+                        continue; // skip it, we're already retrying this one
+                    }
+                    if (!uploadSessions[relativePath]) {
+                        // get the modification date of the file, if it still exists
+                        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+                        __block NSDictionary *fileAttrs;
+                        [fileCoordinator coordinateReadingItemAtURL:fileURL options:NSFileCoordinatorReadingImmediatelyAvailableMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                            fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
+                        }];
+                        
+                        if (fileAttrs) {
+                            NSDate *modified = [fileAttrs fileModificationDate];
+                            if ([modified timeIntervalSinceNow] < -oneDay) {
+                                // it's more than a day old, so we will retry now
+                                // but first, if it's in the retry queue, take it out
+                                [self setRetryTime:nil forFile:filePath];
+                                
+                                // ...and update its modification date so we don't keep thinking it's due for a retry
+                                [fileCoordinator coordinateWritingItemAtURL:fileURL options:NSFileCoordinatorWritingContentIndependentMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                                    [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
+                                }];
+                                
+                                // ...and cancel any existing tasks trying to upload the same file
+                                tasks = [self cancelTasksForFile:filePath inTasks:tasks];
 
-                            // ok, now do the retry
-                            NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
-                            [filesRetrying addObject:filePath];
-                            SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
-                            if (completion && uploadRequestJSON) {
-                                // just re-try the actual upload
-                                [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
-                            } else {
-                                [self retryOrphanedUploadFromScratch:filePath];
+                                // ok, now do the retry
+                                NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
+                                [filesRetrying addObject:filePath];
+                                SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
+                                if (completion && uploadRequestJSON) {
+                                    // just re-try the actual upload
+                                    [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
+                                } else {
+                                    [self retryOrphanedUploadFromScratch:filePath];
+                                }
                             }
+                        } else {
+                            // it's gone, just delete its upload request etc. so we don't keep seeing it here
+                            [self setUploadRequestJSON:nil forFile:filePath];
+                            [self cleanUpTempFile:filePath];
                         }
-                    } else {
-                        // it's gone, just delete its upload request etc. so we don't keep seeing it here
-                        [self setUploadRequestJSON:nil forFile:filePath];
-                        [self cleanUpTempFile:filePath];
                     }
                 }
             }
-        }
-        
-        // assume any outstanding upload sessions at or past their expiration date are orphaned
-        for (NSString *relativePath in uploadSessions.allKeys) {
-            @autoreleasepool {
-                NSString *filePath = [relativePath fullyQualifiedPath];
-                if ([filesRetrying containsObject:filePath]) {
-                    continue; // skip it, we're already retrying this one
+            
+            // assume any outstanding upload sessions at or past their expiration date are orphaned
+            for (NSString *relativePath in uploadSessions.allKeys) {
+                @autoreleasepool {
+                    NSString *filePath = [relativePath fullyQualifiedPath];
+                    if ([filesRetrying containsObject:filePath]) {
+                        continue; // skip it, we're already retrying this one
+                    }
+                    SBBUploadSession *session = [self uploadSessionForFile:filePath];
+                    if ([session.expires timeIntervalSinceNow] <= 0.) {
+                        // clear out the old session info
+                        [self setUploadSessionJSON:nil forFile:filePath];
+                        
+                        // 'touch' the file so it doesn't look orphaned again too soon
+                        [fileCoordinator coordinateWritingItemAtURL:[NSURL fileURLWithPath:filePath] options:NSFileCoordinatorWritingContentIndependentMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                            [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
+                        }];
+                        
+                        // ...and cancel any existing tasks trying to upload the same file
+                        tasks = [self cancelTasksForFile:filePath inTasks:tasks];
+                        
+                        // if an old upload request and completion block still exist for this file, reuse them
+                        NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
+                        SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
+                        if (completion && uploadRequestJSON) {
+                            [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
+                        } else {
+                            // earlier version of SDK cleaned up saved UploadRequests prematurely, so just start over
+                            // from scratch if we don't have one, or if the completion block is lost due to app relaunch
+                            [self retryOrphanedUploadFromScratch:filePath];
+                        }
+                        [filesRetrying addObject:filePath];
+                    }
                 }
-                SBBUploadSession *session = [self uploadSessionForFile:filePath];
-                if ([session.expires timeIntervalSinceNow] <= 0.) {
-                    // clear out the old session info
-                    [self setUploadSessionJSON:nil forFile:filePath];
-                    
-                    // 'touch' the file so it doesn't look orphaned again too soon
-                    [fileCoordinator coordinateWritingItemAtURL:[NSURL fileURLWithPath:filePath] options:NSFileCoordinatorWritingContentIndependentMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
-                        [fileMan setAttributes:@{NSFileModificationDate:[NSDate date]} ofItemAtPath:filePath error:nil];
-                    }];
-                    
-                    // ...and cancel any existing tasks trying to upload the same file
-                    tasks = [self cancelTasksForFile:filePath inTasks:tasks];
-                    
-                    // if an old upload request and completion block still exist for this file, reuse them
-                    NSDictionary *uploadRequestJSON = [self uploadRequestJSONForFile:filePath];
-                    SBBUploadManagerCompletionBlock completion = [self completionBlockForFile:filePath];
-                    if (completion && uploadRequestJSON) {
-                        [self kickOffUploadForFile:filePath uploadRequestJSON:uploadRequestJSON];
-                    } else {
-                        // earlier version of SDK cleaned up saved UploadRequests prematurely, so just start over
-                        // from scratch if we don't have one, or if the completion block is lost due to app relaunch
+            }
+            
+            // assume any upload files with no upload request and no upload session are orphaned
+            for (NSString *relativePath in uploadFiles) {
+                @autoreleasepool {
+                    NSString *filePath = [relativePath fullyQualifiedPath];
+                    if ([filesRetrying containsObject:filePath]) {
+                        continue; // skip it, we're already retrying this one
+                    }
+                    if (!uploadRequests[relativePath] && !uploadSessions[relativePath]) {
+                        // first cancel any existing tasks trying to upload the same file
+                        tasks = [self cancelTasksForFile:filePath inTasks:tasks];
+                        [filesRetrying addObject:filePath];
                         [self retryOrphanedUploadFromScratch:filePath];
                     }
-                    [filesRetrying addObject:filePath];
                 }
             }
-        }
-        
-        // assume any upload files with no upload request and no upload session are orphaned
-        for (NSString *relativePath in uploadFiles) {
-            @autoreleasepool {
-                NSString *filePath = [relativePath fullyQualifiedPath];
-                if ([filesRetrying containsObject:filePath]) {
-                    continue; // skip it, we're already retrying this one
+            
+            // last but not least, any files lingering in the app support directory that weren't even
+            // in the uploadFiles list (because older versions didn't actually ever put files in that list)
+            // and are >24 hours old are assumed to be orphaned
+            // (age check because retries above will add new files to the temp upload dir, but the code to
+            // add them to the upload files list won't have been able to run yet because we're blocking that queue,
+            // so even re-getting the list and checking against "original" files wouldn't catch those to weed out)
+            NSURL *tempDir = [self tempUploadDirURL];
+            NSArray *tempContents = [self filesUnderDirectory:tempDir];
+            NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
+                @autoreleasepool {
+                    NSString *filePath = ((NSURL *)evaluatedObject).path;
+                    BOOL ofInterest = ![uploadFiles containsObject:[filePath sandboxRelativePath]];
+                    if (ofInterest) {
+                        __block NSDictionary *fileAttrs = nil;
+                        [fileCoordinator coordinateReadingItemAtURL:(NSURL *)evaluatedObject options:NSFileCoordinatorReadingImmediatelyAvailableMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
+                            fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
+                        }];
+                        if (fileAttrs) {
+                            NSDate *modified = [fileAttrs fileModificationDate];
+                            if ([modified timeIntervalSinceNow] >= -oneDay) {
+                                ofInterest = NO;
+                            }
+                        }
+                    }
+
+                    return ofInterest;
                 }
-                if (!uploadRequests[relativePath] && !uploadSessions[relativePath]) {
+            }];
+            
+            NSArray *filesOfInterest = [tempContents filteredArrayUsingPredicate:predicate];
+            for (NSURL *fileURL in filesOfInterest) {
+                @autoreleasepool {
+                    NSString *filePath = fileURL.path;
+                    if ([filesRetrying containsObject:filePath]) {
+                        continue; // skip it, we're already retrying this one
+                    }
+                    
                     // first cancel any existing tasks trying to upload the same file
                     tasks = [self cancelTasksForFile:filePath inTasks:tasks];
                     [filesRetrying addObject:filePath];
                     [self retryOrphanedUploadFromScratch:filePath];
                 }
-            }
-        }
-        
-        // last but not least, any files lingering in the app support directory that weren't even
-        // in the uploadFiles list (because older versions didn't actually ever put files in that list)
-        // and are >24 hours old are assumed to be orphaned
-        // (age check because retries above will add new files to the temp upload dir, but the code to
-        // add them to the upload files list won't have been able to run yet because we're blocking that queue,
-        // so even re-getting the list and checking against "original" files wouldn't catch those to weed out)
-        NSURL *tempDir = [self tempUploadDirURL];
-        NSArray *tempContents = [self filesUnderDirectory:tempDir];
-        NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id  _Nonnull evaluatedObject, NSDictionary<NSString *,id> * _Nullable bindings) {
-            @autoreleasepool {
-                NSString *filePath = ((NSURL *)evaluatedObject).path;
-                BOOL ofInterest = ![uploadFiles containsObject:[filePath sandboxRelativePath]];
-                if (ofInterest) {
-                    __block NSDictionary *fileAttrs = nil;
-                    [fileCoordinator coordinateReadingItemAtURL:(NSURL *)evaluatedObject options:NSFileCoordinatorReadingImmediatelyAvailableMetadataOnly error:nil byAccessor:^(NSURL * _Nonnull newURL) {
-                        fileAttrs = [fileMan attributesOfItemAtPath:filePath error:nil];
-                    }];
-                    if (fileAttrs) {
-                        NSDate *modified = [fileAttrs fileModificationDate];
-                        if ([modified timeIntervalSinceNow] >= -oneDay) {
-                            ofInterest = NO;
-                        }
-                    }
-                }
-
-                return ofInterest;
-            }
-        }];
-        
-        NSArray *filesOfInterest = [tempContents filteredArrayUsingPredicate:predicate];
-        for (NSURL *fileURL in filesOfInterest) {
-            @autoreleasepool {
-                NSString *filePath = fileURL.path;
-                if ([filesRetrying containsObject:filePath]) {
-                    continue; // skip it, we're already retrying this one
-                }
-                
-                // first cancel any existing tasks trying to upload the same file
-                tasks = [self cancelTasksForFile:filePath inTasks:tasks];
-                [filesRetrying addObject:filePath];
-                [self retryOrphanedUploadFromScratch:filePath];
             }
         }
     };
