@@ -119,8 +119,8 @@ extern "C" {
 
 #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
 #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
-#define ENGINESDIR "/Users/erinmounts/Library/Developer/Xcode/DerivedData/BridgeSDK-erskuzvmgmcopxacjkemhmxengtn/Build/Intermediates.noindex/ArchiveIntermediates/libOpenSSL/IntermediateBuildFilesPath/openssl.build/Release-iphoneos/libssl.build/DerivedSources/bin/iPhoneOS12.4-arm64.sdk/lib/engines"
-#define OPENSSLDIR "/Users/erinmounts/Library/Developer/Xcode/DerivedData/BridgeSDK-erskuzvmgmcopxacjkemhmxengtn/Build/Intermediates.noindex/ArchiveIntermediates/libOpenSSL/IntermediateBuildFilesPath/openssl.build/Release-iphoneos/libssl.build/DerivedSources/bin/iPhoneOS12.4-arm64.sdk"
+#define ENGINESDIR "/Users/erin/Library/Developer/Xcode/DerivedData/BiAffect-fhdjwwkqjxtjrnbviuayzfeqffxu/Build/Intermediates.noindex/ArchiveIntermediates/libOpenSSL/IntermediateBuildFilesPath/openssl.build/Release-iphoneos/libssl.build/DerivedSources/bin/iPhoneOS14.0-arm64.sdk/lib/engines"
+#define OPENSSLDIR "/Users/erin/Library/Developer/Xcode/DerivedData/BiAffect-fhdjwwkqjxtjrnbviuayzfeqffxu/Build/Intermediates.noindex/ArchiveIntermediates/libOpenSSL/IntermediateBuildFilesPath/openssl.build/Release-iphoneos/libssl.build/DerivedSources/bin/iPhoneOS14.0-arm64.sdk"
 #endif
 #endif
 
