@@ -81,7 +81,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
                 [expectAdminSignin fulfill];
             }];
             
-            [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+            [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
                 if (error) {
                     NSLog(@"Time out error trying to log in to admin account:\n%@", error);
                 }
@@ -113,7 +113,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         }
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error trying to create and sign in to test account:\n%@", error);
         }
@@ -141,7 +141,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         }
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error trying to create and sign in to test account:\n%@", error);
         }
@@ -160,7 +160,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         [expectTestDeleted fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error attempting to delete test user account %@: %@", _testUserEmail, error);
         }
@@ -172,7 +172,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         [expectDevSignedOut fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error attempting to sign out from dev user account %@: %@", _devUserEmail, error);
         }
@@ -188,7 +188,7 @@ NSString * const kUserSessionInfoIdKey = @"id";
         [expectDevDeleted fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Time out error attempting to delete dev user account %@: %@", _devUserEmail, error);
         }
