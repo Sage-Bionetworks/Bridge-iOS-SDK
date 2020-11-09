@@ -73,7 +73,7 @@
         }
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout registering consent signature: %@", error);
         }
@@ -158,7 +158,7 @@
         }
     }];
     
-    [self waitForExpectationsWithTimeout:20.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout registering subpop consent signature: %@", error);
         }
@@ -191,7 +191,7 @@
             [expectReceived fulfill];
         }];
         
-        [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+        [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
             if (error) {
                 NSLog(@"Timeout getting subpop consent signature: %@", error);
             }
@@ -224,7 +224,7 @@
         [expectRetrieved fulfill];
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout retrieving consent signature: %@", error);
         }
@@ -261,7 +261,7 @@
         }
     }];
     
-    [self waitForExpectationsWithTimeout:15.0 handler:^(NSError *error) {
+    [self waitForExpectationsWithTimeout:30.0 handler:^(NSError *error) {
         if (error) {
             NSLog(@"Timeout withdrawing consent: %@", error);
         }
