@@ -41,7 +41,7 @@
 #import "BridgeSDK+Internal.h"
 #import "NSDate+SBBAdditions.h"
 #import "NSString+SBBAdditions.h"
-#import <MobileCoreServices/MobileCoreServices.h>
+#import <CoreServices/CoreServices.h>
 
 #define UPLOAD_API V3_API_PREFIX @"/uploads"
 #define UPLOAD_STATUS_API V3_API_PREFIX @"/uploadstatuses"

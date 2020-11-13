@@ -101,7 +101,6 @@
 /* Begin PBXBuildFile section */
 		600F888A1D42DDC700DAD563 /* SBBUploadManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */; };
 		601E8A101B191DAE00BB02FB /* MockURLSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 601E8A0F1B191DAE00BB02FB /* MockURLSession.m */; };
-		601F7CB51D6246DC00C5FE09 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 601F7CB41D6246DC00C5FE09 /* MobileCoreServices.framework */; };
 		601F7D1C1D67C03400C5FE09 /* NSString+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 601F7D1A1D67C03400C5FE09 /* NSString+SBBAdditions.h */; };
 		601F7D1D1D67C03400C5FE09 /* NSString+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */; };
 		602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */; };
@@ -547,6 +546,7 @@
 		FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */; };
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
+		FF76F329255F3C74008B9CF3 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF76F328255F3C74008B9CF3 /* CoreServices.framework */; };
 		FFEA839C1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FFEA839B1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFF20D27232ABEEE00F501C3 /* _SBBPostalCodeConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FFF20D14232ABEED00F501C3 /* _SBBPostalCodeConstraints.m */; };
 		FFF20D28232ABEEE00F501C3 /* _SBBYearMonthConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FFF20D24232ABEED00F501C3 /* _SBBYearMonthConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -719,7 +719,6 @@
 		600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBUploadManagerUnitTests.m; sourceTree = "<group>"; };
 		601E8A0E1B191DAE00BB02FB /* MockURLSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MockURLSession.h; sourceTree = "<group>"; };
 		601E8A0F1B191DAE00BB02FB /* MockURLSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MockURLSession.m; sourceTree = "<group>"; };
-		601F7CB41D6246DC00C5FE09 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		601F7D1A1D67C03400C5FE09 /* NSString+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBBAdditions.h"; sourceTree = "<group>"; };
 		601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBBAdditions.m"; sourceTree = "<group>"; };
 		602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBCacheManagerUnitTests.m; sourceTree = "<group>"; };
@@ -1224,6 +1223,7 @@
 		FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SBBAdditions.h"; sourceTree = "<group>"; };
 		FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+SBBAdditions.m"; sourceTree = "<group>"; };
 		FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundleSBBAdditionsTests.m; sourceTree = "<group>"; };
+		FF76F328255F3C74008B9CF3 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreServices.framework; sourceTree = DEVELOPER_DIR; };
 		FFEA839B1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeErrorUIDelegate.h; sourceTree = "<group>"; };
 		FFF20D01232ABA1D00F501C3 /* SBBDataModelV17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV17.xcdatamodel; sourceTree = "<group>"; };
 		FFF20D14232ABEED00F501C3 /* _SBBPostalCodeConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBPostalCodeConstraints.m; sourceTree = "<group>"; };
@@ -1257,8 +1257,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				601F7CB51D6246DC00C5FE09 /* MobileCoreServices.framework in Frameworks */,
 				8026D6A019EC46E3008942B0 /* libz.dylib in Frameworks */,
+				FF76F329255F3C74008B9CF3 /* CoreServices.framework in Frameworks */,
 				807D50701E9DACE600FB6F4F /* openssl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1489,6 +1489,7 @@
 		8063FF901E4A9FB1001B0C3D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FF76F328255F3C74008B9CF3 /* CoreServices.framework */,
 				607B127C1E4BCF8A00237EA7 /* openssl.a */,
 				607B127A1E4BCE0B00237EA7 /* openssl */,
 			);
@@ -1555,7 +1556,6 @@
 		80855F4619BE258B006601C7 = {
 			isa = PBXGroup;
 			children = (
-				601F7CB41D6246DC00C5FE09 /* MobileCoreServices.framework */,
 				8026D69E19EC465B008942B0 /* libz.dylib */,
 				80C3D07419DCA03C00DEA044 /* BridgeSDK.hdoc */,
 				80E09AD619F8525C00EB5F0B /* hdocExcludes.txt */,
