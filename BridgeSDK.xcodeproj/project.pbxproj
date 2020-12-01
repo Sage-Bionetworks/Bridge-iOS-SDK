@@ -74,28 +74,6 @@
 			name = BridgeObjects;
 			productName = BridgeObjects;
 		};
-		F50981C91AA57B1E002E2264 /* AppStoreFrameworkBuilder */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = F50981CB1AA57B1E002E2264 /* Build configuration list for PBXAggregateTarget "AppStoreFrameworkBuilder" */;
-			buildPhases = (
-				F50981CA1AA57B1E002E2264 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = AppStoreFrameworkBuilder;
-			productName = FrameworkBuilder;
-		};
-		F52619FB19D9F73400B48C90 /* FrameworkBuilder */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = F52619FE19D9F73400B48C90 /* Build configuration list for PBXAggregateTarget "FrameworkBuilder" */;
-			buildPhases = (
-				F52619FF19D9F73B00B48C90 /* ShellScript */,
-			);
-			dependencies = (
-			);
-			name = FrameworkBuilder;
-			productName = FrameworkBuilder;
-		};
 		FFE275862575DEEB00FA621A /* BuildXCFramework */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = FFE275872575DEEB00FA621A /* Build configuration list for PBXAggregateTarget "BuildXCFramework" */;
@@ -2421,9 +2399,6 @@
 					80F7C32819E5BB1000574800 = {
 						CreatedOnToolsVersion = 6.0.1;
 					};
-					F52619FB19D9F73400B48C90 = {
-						CreatedOnToolsVersion = 6.0.1;
-					};
 					F81BE77720B4951F00EE57D3 = {
 						CreatedOnToolsVersion = 9.3.1;
 						ProvisioningStyle = Automatic;
@@ -2463,11 +2438,9 @@
 				80F7C32819E5BB1000574800 /* BridgeObjects */,
 				80855F4F19BE258C006601C7 /* BridgeSDK */,
 				80855F5A19BE258C006601C7 /* BridgeSDKTests */,
-				F52619FB19D9F73400B48C90 /* FrameworkBuilder */,
 				80E09AD019F8493100EB5F0B /* Documentation */,
 				60FF57211A0AFC5500CE2373 /* TestBridgeObjects */,
 				804545811A1E781D001D41D4 /* RNCryptor */,
-				F50981C91AA57B1E002E2264 /* AppStoreFrameworkBuilder */,
 				807AE2861B603309002588BB /* BridgeSDKIntegration */,
 				807AE29E1B60330C002588BB /* BridgeSDKIntegrationTests */,
 				80B2C4771E3AA70E001F9FEA /* ZipZap */,
@@ -2680,7 +2653,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "OUT_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Built products will be copied to: ${OUT_DIR}\"\nmkdir -p \"${OUT_DIR}\"\n\nrm -f \"${OUT_DIR}/libOpenSSL.a\"\nrm -rf \"${OUT_DIR}/OpenSSL\"\ncp \"${BUILT_PRODUCTS_DIR}/libOpenSSL.a\" \"${OUT_DIR}/libOpenSSL.a\"\ncp -R \"${BUILT_PRODUCTS_DIR}/include/OpenSSL\" \"${OUT_DIR}/OpenSSL\"";
+			shellScript = "OUT_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Built products will be copied to: ${OUT_DIR}\"\nmkdir -p \"${OUT_DIR}\"\n\nrm -f \"${OUT_DIR}/libOpenSSL.a\"\nrm -rf \"${OUT_DIR}/OpenSSL\"\ncp \"${BUILT_PRODUCTS_DIR}/libOpenSSL.a\" \"${OUT_DIR}/libOpenSSL.a\"\ncp -R \"${BUILT_PRODUCTS_DIR}/include/OpenSSL\" \"${OUT_DIR}/OpenSSL\"\n";
 		};
 		809266AA1E4B9D3F000BBEDA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2733,32 +2706,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "SBB_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDK/BridgeAPI/BridgeAPITypes\"\necho \"${SBB_OBJECTS_DIR}\"\nSBB_MACHINE_DIR=\"${SBB_OBJECTS_DIR}/MachineGeneratedDoNotEdit\"\nmkdir -p \"${SBB_MACHINE_DIR}\"\nSBB_DATA_MODEL=\"${SBB_OBJECTS_DIR}/SBBDataModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${SBB_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${SBB_OBJECTS_DIR}\" --machine-dir \"${SBB_MACHINE_DIR}\" --includeh \"${SBB_OBJECTS_DIR}/SBBBridgeObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"\n";
-		};
-		F50981CA1AA57B1E002E2264 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.1 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.1 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DEVICE_DIR=\"${PROJECT_DIR}/Output/arm\"\nSBB_OUTPUT_SIMUL_DIR=\"${PROJECT_DIR}/Output/x86\"\nmkdir -p \"${SBB_OUTPUT_DEVICE_DIR}\"\nmkdir -p \"${SBB_OUTPUT_SIMUL_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DEVICE_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_SIMUL_DIR}\"\n";
-		};
-		F52619FF19D9F73B00B48C90 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.1 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.1 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DIR=\"${PROJECT_DIR}/Output\"\necho \"${SBB_OUTPUT_DIR}\"\nmkdir -p \"${SBB_OUTPUT_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DIR}\"\nlipo -create \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\" -output \"${SBB_OUTPUT_DIR}/${PROJECT_NAME}.framework/${PROJECT_NAME}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3458,34 +3405,6 @@
 			};
 			name = Release;
 		};
-		F50981CC1AA57B1E002E2264 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "FrameworkBuilder copy";
-			};
-			name = Debug;
-		};
-		F50981CD1AA57B1E002E2264 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "FrameworkBuilder copy";
-			};
-			name = Release;
-		};
-		F52619FC19D9F73400B48C90 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		F52619FD19D9F73400B48C90 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		F81BE77D20B4951F00EE57D3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3703,24 +3622,6 @@
 			buildConfigurations = (
 				80F7C32A19E5BB1000574800 /* Debug */,
 				80F7C32B19E5BB1000574800 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F50981CB1AA57B1E002E2264 /* Build configuration list for PBXAggregateTarget "AppStoreFrameworkBuilder" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F50981CC1AA57B1E002E2264 /* Debug */,
-				F50981CD1AA57B1E002E2264 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		F52619FE19D9F73400B48C90 /* Build configuration list for PBXAggregateTarget "FrameworkBuilder" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F52619FC19D9F73400B48C90 /* Debug */,
-				F52619FD19D9F73400B48C90 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
