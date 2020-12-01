@@ -96,6 +96,16 @@
 			name = FrameworkBuilder;
 			productName = FrameworkBuilder;
 		};
+		FFE275862575DEEB00FA621A /* BuildXCFramework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = FFE275872575DEEB00FA621A /* Build configuration list for PBXAggregateTarget "BuildXCFramework" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = BuildXCFramework;
+			productName = BuildXCFramework;
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -2418,14 +2428,16 @@
 						CreatedOnToolsVersion = 9.3.1;
 						ProvisioningStyle = Automatic;
 					};
+					FFE275862575DEEB00FA621A = {
+						CreatedOnToolsVersion = 12.1;
+					};
 				};
 			};
 			buildConfigurationList = 80855F4A19BE258B006601C7 /* Build configuration list for PBXProject "BridgeSDK" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);
@@ -2461,6 +2473,7 @@
 				80B2C4771E3AA70E001F9FEA /* ZipZap */,
 				8063FF881E4A9E4C001B0C3D /* libOpenSSL */,
 				F81BE77720B4951F00EE57D3 /* BridgeSDK-Test */,
+				FFE275862575DEEB00FA621A /* BuildXCFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -2732,7 +2745,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.1 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.1 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DEVICE_DIR=\"${PROJECT_DIR}/Output/arm\"\nSBB_OUTPUT_SIMUL_DIR=\"${PROJECT_DIR}/Output/x86\"\nmkdir -p \"${SBB_OUTPUT_DEVICE_DIR}\"\nmkdir -p \"${SBB_OUTPUT_SIMUL_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DEVICE_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_SIMUL_DIR}\"";
+			shellScript = "xcodebuild -scheme BridgeSDK -sdk iphoneos8.1 ONLY_ACTIVE_ARCH=NO\nxcodebuild -scheme BridgeSDK -sdk iphonesimulator8.1 ONLY_ACTIVE_ARCH=NO\nSBB_DEVICE_DIR=iphoneos\nSBB_SIMUL_DIR=iphonesimulator\nSBB_OUTPUT_DEVICE_DIR=\"${PROJECT_DIR}/Output/arm\"\nSBB_OUTPUT_SIMUL_DIR=\"${PROJECT_DIR}/Output/x86\"\nmkdir -p \"${SBB_OUTPUT_DEVICE_DIR}\"\nmkdir -p \"${SBB_OUTPUT_SIMUL_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_DEVICE_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_DEVICE_DIR}\"\ncp -a -f \"${BUILD_DIR}/${CONFIGURATION}-${SBB_SIMUL_DIR}/${PROJECT_NAME}.framework\" \"${SBB_OUTPUT_SIMUL_DIR}\"\n";
 		};
 		F52619FF19D9F73B00B48C90 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3271,11 +3284,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 4;
 				DYLIB_CURRENT_VERSION = 76;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -3310,12 +3325,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_ENABLE_CODE_COVERAGE = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 4;
 				DYLIB_CURRENT_VERSION = 76;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -3570,6 +3587,24 @@
 			};
 			name = Release;
 		};
+		FFE275882575DEEB00FA621A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KA9Z8R6M6K;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FFE275892575DEEB00FA621A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KA9Z8R6M6K;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3695,6 +3730,15 @@
 			buildConfigurations = (
 				F81BE77D20B4951F00EE57D3 /* Debug */,
 				F81BE77E20B4951F00EE57D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FFE275872575DEEB00FA621A /* Build configuration list for PBXAggregateTarget "BuildXCFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFE275882575DEEB00FA621A /* Debug */,
+				FFE275892575DEEB00FA621A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
