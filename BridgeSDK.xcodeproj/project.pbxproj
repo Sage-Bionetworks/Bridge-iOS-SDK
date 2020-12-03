@@ -29,18 +29,6 @@
 			name = RNCryptor;
 			productName = RNCryptor;
 		};
-		8063FF881E4A9E4C001B0C3D /* libOpenSSL */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = 8063FF891E4A9E4C001B0C3D /* Build configuration list for PBXAggregateTarget "libOpenSSL" */;
-			buildPhases = (
-				8063FF8E1E4A9E59001B0C3D /* ShellScript */,
-			);
-			dependencies = (
-				8063030F1E4AA031001B0C3D /* PBXTargetDependency */,
-			);
-			name = libOpenSSL;
-			productName = libOpenSSL;
-		};
 		80B2C4771E3AA70E001F9FEA /* ZipZap */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = 80B2C4791E3AA70E001F9FEA /* Build configuration list for PBXAggregateTarget "ZipZap" */;
@@ -72,17 +60,10 @@
 			dependencies = (
 			);
 			name = BridgeObjects;
+			packageProductDependencies = (
+				FFB9AF342579872400744DE0 /* openssl */,
+			);
 			productName = BridgeObjects;
-		};
-		FFE275862575DEEB00FA621A /* BuildXCFramework */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = FFE275872575DEEB00FA621A /* Build configuration list for PBXAggregateTarget "BuildXCFramework" */;
-			buildPhases = (
-			);
-			dependencies = (
-			);
-			name = BuildXCFramework;
-			productName = BuildXCFramework;
 		};
 /* End PBXAggregateTarget section */
 
@@ -532,8 +513,8 @@
 		FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */; };
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
 		FF76F329255F3C74008B9CF3 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF76F328255F3C74008B9CF3 /* CoreServices.framework */; };
-		FF76F32B2563138A008B9CF3 /* OpenSSL.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF76F32A2563138A008B9CF3 /* OpenSSL.xcframework */; };
-		FF76F32C2563138A008B9CF3 /* OpenSSL.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF76F32A2563138A008B9CF3 /* OpenSSL.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FFB9AF3E2579876000744DE0 /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFB9AF3D2579876000744DE0 /* openssl.xcframework */; };
+		FFB9AF3F2579876000744DE0 /* openssl.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFB9AF3D2579876000744DE0 /* openssl.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FFEA839C1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FFEA839B1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFF20D27232ABEEE00F501C3 /* _SBBPostalCodeConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FFF20D14232ABEED00F501C3 /* _SBBPostalCodeConstraints.m */; };
 		FFF20D28232ABEEE00F501C3 /* _SBBYearMonthConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FFF20D24232ABEED00F501C3 /* _SBBYearMonthConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -587,13 +568,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 80855F4F19BE258C006601C7;
 			remoteInfo = BridgeSDK;
-		};
-		8063030E1E4AA031001B0C3D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 80B2C4A01E3AAC25001F9FEA;
-			remoteInfo = "OpenSSL (iOS Static Library)";
 		};
 		807AE2A01B60330C002588BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -651,27 +625,6 @@
 			remoteGlobalIDString = D899CF96162C5EC100112F49;
 			remoteInfo = ZipZapTests;
 		};
-		80B2C4651E3AA004001F9FEA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 60674AE31B30A93900A1917D;
-			remoteInfo = openssl;
-		};
-		80B2C4671E3AA004001F9FEA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 60674AEE1B30A93900A1917D;
-			remoteInfo = opensslTests;
-		};
-		80B2C5961E3AB5B3001F9FEA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 80B2C4A11E3AAC25001F9FEA;
-			remoteInfo = "OpenSSL (iOS Static Library)";
-		};
 		80DB6BA61BACB27C0062D1EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
@@ -700,13 +653,13 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FF76F32D2563138A008B9CF3 /* Embed Frameworks */ = {
+		FFB9AF402579876000744DE0 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FF76F32C2563138A008B9CF3 /* OpenSSL.xcframework in Embed Frameworks */,
+				FFB9AF3F2579876000744DE0 /* openssl.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1039,7 +992,6 @@
 		80B2C4431E3A5CED001F9FEA /* SBBDataArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBDataArchive.h; sourceTree = "<group>"; };
 		80B2C4441E3A5CED001F9FEA /* SBBDataArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBDataArchive.m; sourceTree = "<group>"; };
 		80B2C4471E3A9FED001F9FEA /* ZipZap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ZipZap.xcodeproj; path = Submodules/ZipZap/ZipZap.xcodeproj; sourceTree = "<group>"; };
-		80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openssl.xcodeproj; path = Submodules/CMSSupport/openssl/openssl.xcodeproj; sourceTree = "<group>"; };
 		80B2C4901E3AA80D001F9FEA /* ZipZap+Namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ZipZap+Namespace.h"; sourceTree = SOURCE_ROOT; };
 		80B2C6031E3AD493001F9FEA /* ZipZap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipZap.h; sourceTree = "<group>"; };
 		80B2C6041E3AD493001F9FEA /* ZZArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZZArchive.h; sourceTree = "<group>"; };
@@ -1222,6 +1174,7 @@
 		FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSBundleSBBAdditionsTests.m; sourceTree = "<group>"; };
 		FF76F328255F3C74008B9CF3 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/CoreServices.framework; sourceTree = DEVELOPER_DIR; };
 		FF76F32A2563138A008B9CF3 /* OpenSSL.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = OpenSSL.xcframework; path = libOpenSSLBuilds/OpenSSL.xcframework; sourceTree = "<group>"; };
+		FFB9AF3D2579876000744DE0 /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = "/Users/syoung/Library/Developer/Xcode/DerivedData/BridgeSDK-beebjjtatkhkvefvnjoqnunlbjlp/SourcePackages/checkouts/CMSSupport/openssl/build/openssl.xcframework"; sourceTree = "<absolute>"; };
 		FFEA839B1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBBridgeErrorUIDelegate.h; sourceTree = "<group>"; };
 		FFF20D01232ABA1D00F501C3 /* SBBDataModelV17.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV17.xcdatamodel; sourceTree = "<group>"; };
 		FFF20D14232ABEED00F501C3 /* _SBBPostalCodeConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _SBBPostalCodeConstraints.m; sourceTree = "<group>"; };
@@ -1255,7 +1208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF76F32B2563138A008B9CF3 /* OpenSSL.xcframework in Frameworks */,
+				FFB9AF3E2579876000744DE0 /* openssl.xcframework in Frameworks */,
 				FF76F329255F3C74008B9CF3 /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1486,6 +1439,7 @@
 			isa = PBXGroup;
 			children = (
 				FF76F32A2563138A008B9CF3 /* OpenSSL.xcframework */,
+				FFB9AF3D2579876000744DE0 /* openssl.xcframework */,
 				FF76F328255F3C74008B9CF3 /* CoreServices.framework */,
 				607B127C1E4BCF8A00237EA7 /* openssl.a */,
 				607B127A1E4BCE0B00237EA7 /* openssl */,
@@ -1557,7 +1511,6 @@
 				80E09AD619F8525C00EB5F0B /* hdocExcludes.txt */,
 				80C3D07519DCA03C00DEA044 /* TemplateIcon2x.png */,
 				606FDE0B1A1D70ED00898466 /* generate_namespace_header.sh */,
-				80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */,
 				80B2C4471E3A9FED001F9FEA /* ZipZap.xcodeproj */,
 				606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */,
 				80855F5219BE258C006601C7 /* BridgeSDK */,
@@ -1703,16 +1656,6 @@
 				80B2C45A1E3A9FED001F9FEA /* ZipZap.framework */,
 				80B2C45C1E3A9FED001F9FEA /* libZipZap.a */,
 				80B2C45E1E3A9FED001F9FEA /* ZipZapTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		80B2C4601E3AA004001F9FEA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				80B2C4661E3AA004001F9FEA /* openssl.framework */,
-				80B2C4681E3AA004001F9FEA /* opensslTests.xctest */,
-				80B2C5971E3AB5B3001F9FEA /* libopenssl.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2302,12 +2245,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 80855F6319BE258C006601C7 /* Build configuration list for PBXNativeTarget "BridgeSDK" */;
 			buildPhases = (
-				809266AA1E4B9D3F000BBEDA /* ShellScript */,
 				80855F4B19BE258C006601C7 /* Sources */,
 				80855F4C19BE258C006601C7 /* Frameworks */,
 				80855F4D19BE258C006601C7 /* Headers */,
 				80855F4E19BE258C006601C7 /* Resources */,
-				FF76F32D2563138A008B9CF3 /* Embed Frameworks */,
+				FFB9AF402579876000744DE0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2368,10 +2310,6 @@
 					804545811A1E781D001D41D4 = {
 						CreatedOnToolsVersion = 6.1;
 					};
-					8063FF881E4A9E4C001B0C3D = {
-						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
-					};
 					807AE2861B603309002588BB = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = 4B822CZK9N;
@@ -2403,9 +2341,6 @@
 						CreatedOnToolsVersion = 9.3.1;
 						ProvisioningStyle = Automatic;
 					};
-					FFE275862575DEEB00FA621A = {
-						CreatedOnToolsVersion = 12.1;
-					};
 				};
 			};
 			buildConfigurationList = 80855F4A19BE258B006601C7 /* Build configuration list for PBXProject "BridgeSDK" */;
@@ -2417,13 +2352,12 @@
 				Base,
 			);
 			mainGroup = 80855F4619BE258B006601C7;
+			packageReferences = (
+				FFB9AF332579872400744DE0 /* XCRemoteSwiftPackageReference "CMSSupport" */,
+			);
 			productRefGroup = 80855F5119BE258C006601C7 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
-				{
-					ProductGroup = 80B2C4601E3AA004001F9FEA /* Products */;
-					ProjectRef = 80B2C45F1E3AA004001F9FEA /* openssl.xcodeproj */;
-				},
 				{
 					ProductGroup = 606FDDE81A1D6F5200898466 /* Products */;
 					ProjectRef = 606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */;
@@ -2444,9 +2378,7 @@
 				807AE2861B603309002588BB /* BridgeSDKIntegration */,
 				807AE29E1B60330C002588BB /* BridgeSDKIntegrationTests */,
 				80B2C4771E3AA70E001F9FEA /* ZipZap */,
-				8063FF881E4A9E4C001B0C3D /* libOpenSSL */,
 				F81BE77720B4951F00EE57D3 /* BridgeSDK-Test */,
-				FFE275862575DEEB00FA621A /* BuildXCFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -2527,27 +2459,6 @@
 			fileType = wrapper.cfbundle;
 			path = ZipZapTests.xctest;
 			remoteRef = 80B2C45D1E3A9FED001F9FEA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		80B2C4661E3AA004001F9FEA /* openssl.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = openssl.framework;
-			remoteRef = 80B2C4651E3AA004001F9FEA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		80B2C4681E3AA004001F9FEA /* opensslTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = opensslTests.xctest;
-			remoteRef = 80B2C4671E3AA004001F9FEA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		80B2C5971E3AB5B3001F9FEA /* libopenssl.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libopenssl.a;
-			remoteRef = 80B2C5961E3AB5B3001F9FEA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		80E5681E1FD9D0E400BB644E /* RNCryptor.framework */ = {
@@ -2642,32 +2553,6 @@
 			shellPath = /bin/sh;
 			shellScript = "${PROJECT_DIR}/generate_namespace_header.sh";
 		};
-		8063FF8E1E4A9E59001B0C3D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "OUT_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Built products will be copied to: ${OUT_DIR}\"\nmkdir -p \"${OUT_DIR}\"\n\nrm -f \"${OUT_DIR}/libOpenSSL.a\"\nrm -rf \"${OUT_DIR}/OpenSSL\"\ncp \"${BUILT_PRODUCTS_DIR}/libOpenSSL.a\" \"${OUT_DIR}/libOpenSSL.a\"\ncp -R \"${BUILT_PRODUCTS_DIR}/include/OpenSSL\" \"${OUT_DIR}/OpenSSL\"\n";
-		};
-		809266AA1E4B9D3F000BBEDA /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# first copy the correct libOpenSSL.a build variant into place\nSOURCE_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Copying contents of ${SOURCE_DIR}\"\nrm -f ./openssl.a\nrm -rf ./openssl\ncp -pR \"${SOURCE_DIR}/OpenSSL\" ./openssl\n\n# we have to rename the library so Xcode doesn't find implicit\n# dependencies and try to rebuild it\ncp -p \"${SOURCE_DIR}/libOpenSSL.a\" ./openssl.a\n";
-		};
 		80B2C4781E3AA70E001F9FEA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2679,7 +2564,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/generate_namespace_header.sh";
+			shellScript = "${PROJECT_DIR}/generate_namespace_header.sh\n";
 		};
 		80E09AD519F8495000EB5F0B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2974,11 +2859,6 @@
 			target = 80855F4F19BE258C006601C7 /* BridgeSDK */;
 			targetProxy = 8017AF6919D9E67C001AF9BA /* PBXContainerItemProxy */;
 		};
-		8063030F1E4AA031001B0C3D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "OpenSSL (iOS Static Library)";
-			targetProxy = 8063030E1E4AA031001B0C3D /* PBXContainerItemProxy */;
-		};
 		807AE2A11B60330C002588BB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 807AE2861B603309002588BB /* BridgeSDKIntegration */;
@@ -3033,20 +2913,6 @@
 			name = Debug;
 		};
 		804545841A1E781D001D41D4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		8063FF8A1E4A9E4C001B0C3D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		8063FF8B1E4A9E4C001B0C3D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3539,24 +3405,6 @@
 			};
 			name = Release;
 		};
-		FFE275882575DEEB00FA621A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KA9Z8R6M6K;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		FFE275892575DEEB00FA621A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = KA9Z8R6M6K;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3574,15 +3422,6 @@
 			buildConfigurations = (
 				804545831A1E781D001D41D4 /* Debug */,
 				804545841A1E781D001D41D4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		8063FF891E4A9E4C001B0C3D /* Build configuration list for PBXAggregateTarget "libOpenSSL" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				8063FF8A1E4A9E4C001B0C3D /* Debug */,
-				8063FF8B1E4A9E4C001B0C3D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -3668,16 +3507,26 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FFE275872575DEEB00FA621A /* Build configuration list for PBXAggregateTarget "BuildXCFramework" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				FFE275882575DEEB00FA621A /* Debug */,
-				FFE275892575DEEB00FA621A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FFB9AF332579872400744DE0 /* XCRemoteSwiftPackageReference "CMSSupport" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/syoung-smallwisdom/CMSSupport.git";
+			requirement = {
+				branch = swiftPM;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FFB9AF342579872400744DE0 /* openssl */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FFB9AF332579872400744DE0 /* XCRemoteSwiftPackageReference "CMSSupport" */;
+			productName = openssl;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */ = {
