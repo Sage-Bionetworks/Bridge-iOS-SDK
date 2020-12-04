@@ -61,7 +61,7 @@
 			);
 			name = BridgeObjects;
 			packageProductDependencies = (
-				FFB9AF342579872400744DE0 /* openssl */,
+				FF312940257AD6DD00870CFB /* openssl */,
 			);
 			productName = BridgeObjects;
 		};
@@ -525,7 +525,6 @@
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
 		FF76F329255F3C74008B9CF3 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF76F328255F3C74008B9CF3 /* CoreServices.framework */; };
 		FFB9AF3E2579876000744DE0 /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFB9AF3D2579876000744DE0 /* openssl.xcframework */; };
-		FFB9AF3F2579876000744DE0 /* openssl.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FFB9AF3D2579876000744DE0 /* openssl.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FFEA839C1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = FFEA839B1C0E58FF000E7560 /* SBBBridgeErrorUIDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFF20D27232ABEEE00F501C3 /* _SBBPostalCodeConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FFF20D14232ABEED00F501C3 /* _SBBPostalCodeConstraints.m */; };
 		FFF20D28232ABEEE00F501C3 /* _SBBYearMonthConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FFF20D24232ABEED00F501C3 /* _SBBYearMonthConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -660,17 +659,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				80DB6BA51BACB27C0062D1EF /* BridgeSDK.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FFB9AF402579876000744DE0 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				FFB9AF3F2579876000744DE0 /* openssl.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2260,7 +2248,6 @@
 				80855F4C19BE258C006601C7 /* Frameworks */,
 				80855F4D19BE258C006601C7 /* Headers */,
 				80855F4E19BE258C006601C7 /* Resources */,
-				FFB9AF402579876000744DE0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2367,7 +2354,7 @@
 			);
 			mainGroup = 80855F4619BE258B006601C7;
 			packageReferences = (
-				FFB9AF332579872400744DE0 /* XCRemoteSwiftPackageReference "CMSSupport" */,
+				FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */,
 			);
 			productRefGroup = 80855F5119BE258C006601C7 /* Products */;
 			projectDirPath = "";
@@ -3569,20 +3556,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FFB9AF332579872400744DE0 /* XCRemoteSwiftPackageReference "CMSSupport" */ = {
+		FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/syoung-smallwisdom/CMSSupport.git";
+			repositoryURL = "https://github.com/Sage-Bionetworks/CMSSupport";
 			requirement = {
-				branch = swiftPM;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FFB9AF342579872400744DE0 /* openssl */ = {
+		FF312940257AD6DD00870CFB /* openssl */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FFB9AF332579872400744DE0 /* XCRemoteSwiftPackageReference "CMSSupport" */;
+			package = FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */;
 			productName = openssl;
 		};
 /* End XCSwiftPackageProductDependency section */

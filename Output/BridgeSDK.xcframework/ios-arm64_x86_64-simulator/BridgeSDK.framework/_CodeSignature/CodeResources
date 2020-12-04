@@ -4,10 +4,6 @@
 <dict>
 	<key>files</key>
 	<dict>
-		<key>Frameworks/libopenssl.a</key>
-		<data>
-		UMitJwplTpLl3lXSs2h5x2kk2ro=
-		</data>
 		<key>Headers/BridgeSDK.h</key>
 		<data>
 		00QrqpUIKEWh+6sOefuy+greRGY=
@@ -610,7 +606,7 @@
 		</data>
 		<key>SBBDataModel.momd/SBBDataModel.omo</key>
 		<data>
-		/P7rH6MxXT0vHoi7nhnQ/ZtWk88=
+		+QhqhNg/zXToEF16L5mw2Ka2RMI=
 		</data>
 		<key>SBBDataModel.momd/SBBDataModelV1.mom</key>
 		<data>
@@ -711,13 +707,6 @@
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>Frameworks/libopenssl.a</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			cXetlHOBXG5xdHLQbUU1vWurZx8KH9KLRGtGE7XEMRY=
-			</data>
-		</dict>
 		<key>Headers/BridgeSDK.h</key>
 		<dict>
 			<key>hash2</key>
@@ -1765,7 +1754,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			kTgNEqI0cWoyMtN7EL5kOHaLbSwBb0nwsCnCTCTvvNQ=
+			f7tVaI9jOVxrgQczjVBiEmH3vWFpMs+gPWr5CcHgKy8=
 			</data>
 		</dict>
 		<key>SBBDataModel.momd/SBBDataModelV1.mom</key>

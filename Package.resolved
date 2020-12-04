@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "OpenSSL",
+        "repositoryURL": "https://github.com/Sage-Bionetworks/CMSSupport",
+        "state": {
+          "branch": null,
+          "revision": "110620479cac183bb781c8fb0986398adadff609",
+          "version": "1.1.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
