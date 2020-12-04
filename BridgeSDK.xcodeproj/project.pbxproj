@@ -65,6 +65,17 @@
 			);
 			productName = BridgeObjects;
 		};
+		FFB9AF5D2579A64000744DE0 /* BuildXCFramework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = FFB9AF5E2579A64100744DE0 /* Build configuration list for PBXAggregateTarget "BuildXCFramework" */;
+			buildPhases = (
+				FFB9AF6A2579A64B00744DE0 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = BuildXCFramework;
+			productName = BuildXCFramework;
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -2341,6 +2352,9 @@
 						CreatedOnToolsVersion = 9.3.1;
 						ProvisioningStyle = Automatic;
 					};
+					FFB9AF5D2579A64000744DE0 = {
+						CreatedOnToolsVersion = 12.1;
+					};
 				};
 			};
 			buildConfigurationList = 80855F4A19BE258B006601C7 /* Build configuration list for PBXProject "BridgeSDK" */;
@@ -2379,6 +2393,7 @@
 				807AE29E1B60330C002588BB /* BridgeSDKIntegrationTests */,
 				80B2C4771E3AA70E001F9FEA /* ZipZap */,
 				F81BE77720B4951F00EE57D3 /* BridgeSDK-Test */,
+				FFB9AF5D2579A64000744DE0 /* BuildXCFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -2551,7 +2566,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/generate_namespace_header.sh";
+			shellScript = "${PROJECT_DIR}/generate_namespace_header.sh\n";
 		};
 		80B2C4781E3AA70E001F9FEA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2591,6 +2606,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "SBB_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDK/BridgeAPI/BridgeAPITypes\"\necho \"${SBB_OBJECTS_DIR}\"\nSBB_MACHINE_DIR=\"${SBB_OBJECTS_DIR}/MachineGeneratedDoNotEdit\"\nmkdir -p \"${SBB_MACHINE_DIR}\"\nSBB_DATA_MODEL=\"${SBB_OBJECTS_DIR}/SBBDataModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${SBB_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${SBB_OBJECTS_DIR}\" --machine-dir \"${SBB_MACHINE_DIR}\" --includeh \"${SBB_OBJECTS_DIR}/SBBBridgeObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"\n";
+		};
+		FFB9AF6A2579A64B00744DE0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nSCHEME_NAME=\"BridgeSDK\"\nFRAMEWORK_NAME=\"BridgeSDK\"\n\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIR=\"./Output/\"\n\n# Build archives\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n  \nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIR}\"\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIR}/${FRAMEWORK_NAME}.xcframework\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3405,6 +3437,24 @@
 			};
 			name = Release;
 		};
+		FFB9AF5F2579A64100744DE0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KA9Z8R6M6K;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		FFB9AF602579A64100744DE0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KA9Z8R6M6K;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -3503,6 +3553,15 @@
 			buildConfigurations = (
 				F81BE77D20B4951F00EE57D3 /* Debug */,
 				F81BE77E20B4951F00EE57D3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FFB9AF5E2579A64100744DE0 /* Build configuration list for PBXAggregateTarget "BuildXCFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FFB9AF5F2579A64100744DE0 /* Debug */,
+				FFB9AF602579A64100744DE0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

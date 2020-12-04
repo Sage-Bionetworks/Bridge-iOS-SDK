@@ -23,12 +23,13 @@ DerivedData/
 *.hmap
 *.ipa
 *.xcuserstate
-Output
+/Output/*
 Breakpoints_v2.xcbkptlist
 Documentation/
 /OpenSSL
 /libOpenSSL.a
 /OpenSSL.a
+!/Output/BridgeSDK.xcframework
 
 # fastlane specific
 fastlane/report.xml
