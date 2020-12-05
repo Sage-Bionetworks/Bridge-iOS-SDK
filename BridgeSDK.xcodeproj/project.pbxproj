@@ -3558,7 +3558,7 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Sage-Bionetworks/CMSSupport";
+			repositoryURL = "https://github.com/Sage-Bionetworks/CMSSupport.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.1.1;
