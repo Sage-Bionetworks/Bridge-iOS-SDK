@@ -17,7 +17,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
-        .package(name: "OpenSSL", url: "https://github.com/Sage-Bionetworks/CMSSupport", from: "1.1.1"),
+        .package(name: "OpenSSL", url: "https://github.com/Sage-Bionetworks/CMSSupport.git", from: "1.1.1"),
     ],
     targets: [
         .binaryTarget(name: "BridgeSDK",

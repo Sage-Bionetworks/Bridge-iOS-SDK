@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "OpenSSL",
-        "repositoryURL": "https://github.com/Sage-Bionetworks/CMSSupport",
+        "repositoryURL": "https://github.com/Sage-Bionetworks/CMSSupport.git",
         "state": {
           "branch": null,
           "revision": "110620479cac183bb781c8fb0986398adadff609",
