@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBSchedule.h"
+#import <BridgeSDK/_SBBSchedule.h>
 
 @interface SBBSchedule : _SBBSchedule <_SBBSchedule>
 // Custom logic goes here.

@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBRequestParams.h"
+#import <BridgeSDK/_SBBRequestParams.h>
 
 @interface SBBRequestParams : _SBBRequestParams <_SBBRequestParams>
 // Custom logic goes here.

@@ -29,7 +29,7 @@
 //
 //
 
-#import "SBBBridgeAPIManager.h"
+#import <BridgeSDK/SBBBridgeAPIManager.h>
 @class SBBReportData;
 @protocol SBBJSONValue;
 

@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBHeightConstraints.h"
+#import <BridgeSDK/_SBBHeightConstraints.h>
 
 @interface SBBHeightConstraints : _SBBHeightConstraints <_SBBHeightConstraints>
 // Custom logic goes here.

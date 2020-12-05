@@ -29,8 +29,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeAPIManager.h"
-#import "SBBSurvey.h"
+#import <BridgeSDK/SBBBridgeAPIManager.h>
+#import <BridgeSDK/SBBSurvey.h>
 
 /*!
  Completion block called when retrieving a survey from the API.

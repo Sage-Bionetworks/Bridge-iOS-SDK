@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBBooleanConstraints.h"
+#import <BridgeSDK/_SBBBooleanConstraints.h>
 
 @interface SBBBooleanConstraints : _SBBBooleanConstraints <_SBBBooleanConstraints>
 // Custom logic goes here.

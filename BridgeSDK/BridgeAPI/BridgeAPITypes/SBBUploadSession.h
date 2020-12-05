@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBUploadSession.h"
+#import <BridgeSDK/_SBBUploadSession.h>
 
 @interface SBBUploadSession : _SBBUploadSession <_SBBUploadSession>
 // Custom logic goes here.

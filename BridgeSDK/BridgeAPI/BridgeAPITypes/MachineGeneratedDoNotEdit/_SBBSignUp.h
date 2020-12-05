@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBAbstractStudyParticipant.h"
+#import <BridgeSDK/SBBAbstractStudyParticipant.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -2595,7 +2595,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SBB_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDK/BridgeAPI/BridgeAPITypes\"\necho \"${SBB_OBJECTS_DIR}\"\nSBB_MACHINE_DIR=\"${SBB_OBJECTS_DIR}/MachineGeneratedDoNotEdit\"\nmkdir -p \"${SBB_MACHINE_DIR}\"\nSBB_DATA_MODEL=\"${SBB_OBJECTS_DIR}/SBBDataModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${SBB_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${SBB_OBJECTS_DIR}\" --machine-dir \"${SBB_MACHINE_DIR}\" --includeh \"${SBB_OBJECTS_DIR}/SBBBridgeObjects.h\" --template-path \"${SBB_TEMPLATE_PATH}\"\n";
+			shellScript = "SBB_OBJECTS_DIR=\"${PROJECT_DIR}/BridgeSDK/BridgeAPI/BridgeAPITypes\"\necho \"${SBB_OBJECTS_DIR}\"\nSBB_MACHINE_DIR=\"${SBB_OBJECTS_DIR}/MachineGeneratedDoNotEdit\"\nmkdir -p \"${SBB_MACHINE_DIR}\"\nSBB_DATA_MODEL=\"${SBB_OBJECTS_DIR}/SBBDataModel.xcdatamodeld\"\nSBB_TEMPLATE_PATH=\"${PROJECT_DIR}/BridgeSDK/mogenerator_ponso_templates/templates\"\n\"${HOME}/bin/mogenerator\" --v2 --model \"${SBB_DATA_MODEL}\" --ponso-prefix SBB --base-class ModelObject --human-dir \"${SBB_OBJECTS_DIR}\" --machine-dir \"${SBB_MACHINE_DIR}\" --includeh \"${SBB_OBJECTS_DIR}/SBBBridgeObjects.h\" --module-name \"BridgeSDK\" --template-path \"${SBB_TEMPLATE_PATH}\"\n";
 		};
 		FFB9AF6A2579A64B00744DE0 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3069,7 +3069,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 81;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -3123,7 +3123,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 81;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -3156,7 +3156,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 80;
+				DYLIB_CURRENT_VERSION = 81;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3199,7 +3199,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 4;
-				DYLIB_CURRENT_VERSION = 80;
+				DYLIB_CURRENT_VERSION = 81;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3347,12 +3347,12 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 81;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 80;
+				DYLIB_CURRENT_VERSION = 81;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -3401,12 +3401,12 @@
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 80;
+				CURRENT_PROJECT_VERSION = 81;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 80;
+				DYLIB_CURRENT_VERSION = 81;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;

@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBStringConstraints.h"
+#import <BridgeSDK/_SBBStringConstraints.h>
 
 @interface SBBStringConstraints : _SBBStringConstraints <_SBBStringConstraints>
 // Custom logic goes here.

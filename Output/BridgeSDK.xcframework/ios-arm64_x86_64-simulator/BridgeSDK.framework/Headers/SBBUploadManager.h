@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeAPIManager.h"
+#import <BridgeSDK/SBBBridgeAPIManager.h>
 
 typedef void (^SBBUploadManagerCompletionBlock)(NSError *error);
 

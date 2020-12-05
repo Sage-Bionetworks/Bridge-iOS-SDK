@@ -31,9 +31,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import <BridgeSDK/SBBBridgeObject.h>
 
-#import "SBBStudyParticipantCustomAttributes.h"
+#import <BridgeSDK/SBBStudyParticipantCustomAttributes.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

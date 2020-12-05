@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBResourceList.h"
+#import <BridgeSDK/_SBBResourceList.h>
 
 @interface SBBResourceList : _SBBResourceList <_SBBResourceList>
 // Custom logic goes here.

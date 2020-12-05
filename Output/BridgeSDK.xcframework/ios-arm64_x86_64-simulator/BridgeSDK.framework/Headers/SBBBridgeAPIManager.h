@@ -29,7 +29,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBComponent.h"
+#import <BridgeSDK/SBBComponent.h>
 
 @protocol SBBAuthManagerProtocol;
 @protocol SBBNetworkManagerProtocol;

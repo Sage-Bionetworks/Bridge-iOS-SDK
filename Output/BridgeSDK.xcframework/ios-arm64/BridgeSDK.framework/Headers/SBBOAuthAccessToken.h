@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBOAuthAccessToken.h"
+#import <BridgeSDK/_SBBOAuthAccessToken.h>
 
 @interface SBBOAuthAccessToken : _SBBOAuthAccessToken <_SBBOAuthAccessToken>
 // Custom logic goes here.

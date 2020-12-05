@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBResourceList.h"
+#import <BridgeSDK/SBBResourceList.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

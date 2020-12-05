@@ -114,12 +114,12 @@ static NSMutableDictionary *gCoreDataCacheIOContextsByPersistentStoreName;
         // No one could be using this instance of SBBCacheManager yet so we don't need to serialize access to its members
         self.objectsCachedByTypeAndID = [NSMutableDictionary dictionary];
         self.appWillTerminateObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillTerminateNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if (_cacheIOContext) {
+            if (self->_cacheIOContext) {
                 [self saveCacheIOContext];
             }
         }];
         self.memoryWarningObserver = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidReceiveMemoryWarningNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
-            if (_cacheIOContext) {
+            if (self->_cacheIOContext) {
                 [self.cacheIOContext performBlockAndWait:^{
                     // clear out anything in the in-mem cache that's not currently being held somewhere else
                     // -- first copy everything to a strong-to-weak map table
@@ -676,7 +676,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     if (!_cacheIOContext) {
         [self dispatchSyncToCacheManagerCoreDataQueue:^{
             // Check again in case it got set before we got our turn in the core data queue.
-            if (_cacheIOContext != nil) {
+            if (self->_cacheIOContext != nil) {
                 return;
             }
             
@@ -689,7 +689,7 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
                 cacheIOContext.undoManager = [[NSUndoManager alloc] init];
                 gCoreDataCacheIOContextsByPersistentStoreName[self.persistentStoreName] = cacheIOContext;
             }
-            _cacheIOContext = cacheIOContext;
+            self->_cacheIOContext = cacheIOContext;
         }];
     }
     
@@ -755,20 +755,20 @@ void removeCoreDataQueueForPersistentStoreName(NSString *name)
     __block BOOL reset = NO;
     
     [self dispatchSyncToCacheManagerCoreDataQueue:^{
-        [_cacheIOContext performBlockAndWait:^{
-            [_cacheIOContext reset];
+        [self->_cacheIOContext performBlockAndWait:^{
+            [self->_cacheIOContext reset];
             
-            if (_persistentStoreCoordinator) {
-                if (![_persistentStoreCoordinator removePersistentStore:self.persistentStore error:&error]) {
+            if (self->_persistentStoreCoordinator) {
+                if (![self->_persistentStoreCoordinator removePersistentStore:self.persistentStore error:&error]) {
                     NSLog(@"Unable to remove persistent store: error %@, %@", error, [error userInfo]);
                     return;
                 }
             }
-            _persistentStoreCoordinator = nil;
-            _cacheIOContext= nil;
-            _managedObjectModel = nil;
+            self->_persistentStoreCoordinator = nil;
+            self->_cacheIOContext= nil;
+            self->_managedObjectModel = nil;
             
-            if (![_persistentStoreType isEqualToString:NSInMemoryStoreType]) {
+            if (![self->_persistentStoreType isEqualToString:NSInMemoryStoreType]) {
                 NSURL *storeDirURL = [self storeDirURL];
                 NSFileManager *fm = [NSFileManager defaultManager];
                 if ([fm fileExistsAtPath:storeDirURL.path]) {

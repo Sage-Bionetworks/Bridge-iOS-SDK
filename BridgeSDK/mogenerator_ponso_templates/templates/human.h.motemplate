@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_<$generatedObjectClassName$>.h"
+#import <$if hasModuleName$><<$moduleName$>/_<$generatedObjectClassName$>.h><$else$>"_<$generatedObjectClassName$>.h"<$endif$>
 
 @interface <$generatedObjectClassName$> : _<$generatedObjectClassName$> <_<$generatedObjectClassName$>>
 // Custom logic goes here.

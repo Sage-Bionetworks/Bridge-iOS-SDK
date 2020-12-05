@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBPhone.h"
+#import <BridgeSDK/_SBBPhone.h>
 
 @interface SBBPhone : _SBBPhone <_SBBPhone>
 // Custom logic goes here.

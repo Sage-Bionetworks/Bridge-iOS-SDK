@@ -30,7 +30,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "SBBComponent.h"
+#import <BridgeSDK/SBBComponent.h>
 
 /*!
  Session identifier for the Bridge SDK's background session.

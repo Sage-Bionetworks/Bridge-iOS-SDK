@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBDateConstraints.h"
+#import <BridgeSDK/_SBBDateConstraints.h>
 
 @interface SBBDateConstraints : _SBBDateConstraints <_SBBDateConstraints>
 // Custom logic goes here.

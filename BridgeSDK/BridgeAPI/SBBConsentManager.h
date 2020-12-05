@@ -32,8 +32,8 @@
 
 #import <Foundation/Foundation.h>
 @import UIKit;
-#import "SBBBridgeAPIManager.h"
-#import "SBBParticipantManager.h"
+#import <BridgeSDK/SBBBridgeAPIManager.h>
+#import <BridgeSDK/SBBParticipantManager.h>
 
 /*!
  Completion block for SBBConsentManagerProtocol methods.

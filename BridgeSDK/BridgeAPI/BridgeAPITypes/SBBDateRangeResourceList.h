@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBDateRangeResourceList.h"
+#import <BridgeSDK/_SBBDateRangeResourceList.h>
 
 @interface SBBDateRangeResourceList : _SBBDateRangeResourceList <_SBBDateRangeResourceList>
 // Custom logic goes here.

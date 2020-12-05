@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBSurveyInfoScreen.h"
+#import <BridgeSDK/_SBBSurveyInfoScreen.h>
 
 @interface SBBSurveyInfoScreen : _SBBSurveyInfoScreen <_SBBSurveyInfoScreen>
 // Custom logic goes here.

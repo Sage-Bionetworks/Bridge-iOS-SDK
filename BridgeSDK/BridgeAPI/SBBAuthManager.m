@@ -347,7 +347,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     [self clearOldKeychainOnReinstall];
 
     dispatchSyncToAuthQueue(^{
-        _sessionToken = self.savedSessionToken;
+        self->_sessionToken = self.savedSessionToken;
     });
 }
 
@@ -453,7 +453,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 {
     __block NSString *token = nil;
     dispatchSyncToAuthQueue(^{
-        token = _sessionToken;
+        token = self->_sessionToken;
     });
     return token;
 }
@@ -594,7 +594,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     if (sessionToken.length) {
         // Sign-in was successful.
         dispatchSyncToAuthQueue(^{
-            _sessionToken = sessionToken;
+            self->_sessionToken = sessionToken;
         });
         
         // UserSessionInfo will always include a sessionToken.
@@ -649,7 +649,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
             });
         }
         [self.authCompletionHandlers removeAllObjects];
-        _authCallInProgress = NO;
+        self->_authCallInProgress = NO;
     });
 }
 
@@ -686,7 +686,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
     __block BOOL wasInProgress;
     dispatchSyncToAuthAttemptQueue(^{
         wasInProgress = self.authCallInProgress;
-        _authCallInProgress = YES;
+        self->_authCallInProgress = YES;
         [self.authCompletionHandlers addObject:completion];
     });
     
@@ -823,7 +823,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
                 [self.authCompletionHandlers removeObject:completion];
                 
                 // allow the stored-credentials attempt to actually call Bridge
-                _authCallInProgress = NO;
+                self->_authCallInProgress = NO;
             });
 
             completion(task, responseObject, error);
@@ -1221,7 +1221,7 @@ void dispatchSyncToKeychainQueue(dispatch_block_t dispatchBlock)
 - (void)setSessionToken:(NSString *)sessionToken
 {
     dispatchSyncToAuthQueue(^{
-        _sessionToken = sessionToken;
+        self->_sessionToken = sessionToken;
     });
     
     if (sessionToken) {

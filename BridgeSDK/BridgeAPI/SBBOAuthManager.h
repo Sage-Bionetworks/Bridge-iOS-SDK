@@ -28,8 +28,8 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "SBBBridgeAPIManager.h"
-#import "SBBOAuthAccessToken.h"
+#import <BridgeSDK/SBBBridgeAPIManager.h>
+#import <BridgeSDK/SBBOAuthAccessToken.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

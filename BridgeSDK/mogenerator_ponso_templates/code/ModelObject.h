@@ -19,7 +19,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SBBObjectManager.h"
+#import <BridgeSDK/SBBObjectManager.h>
 @import CoreData;
 
 /*!

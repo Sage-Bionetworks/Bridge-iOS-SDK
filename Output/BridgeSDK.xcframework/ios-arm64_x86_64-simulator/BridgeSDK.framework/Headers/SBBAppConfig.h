@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBAppConfig.h"
+#import <BridgeSDK/_SBBAppConfig.h>
 
 @interface SBBAppConfig : _SBBAppConfig <_SBBAppConfig>
 // Custom logic goes here.

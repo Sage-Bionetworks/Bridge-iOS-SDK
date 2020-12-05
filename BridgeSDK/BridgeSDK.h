@@ -142,7 +142,7 @@ extern NSString * const _Nonnull kSBBAppConfigInfoKey;
  *  @param completionHandler The completion handler passed to your app delegate.
  *  @return YES if the session belonged to BridgeSDK and was restored by this method, NO otherwise.
  */
-+ (BOOL)restoreBackgroundSession:(nonnull NSString *)identifier completionHandler:(nonnull void (^)())completionHandler;
++ (BOOL)restoreBackgroundSession:(nonnull NSString *)identifier completionHandler:(nonnull void (^)(void))completionHandler;
 
 /*!
  * Get the AppConfig for this app/platform/version/etc. as retrieved from the Bridge study.

@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBComponent.h"
+#import <BridgeSDK/SBBComponent.h>
 
 /*!
  This protocol defines the interface to the SBBObjectManager's non-constructor, non-initializer methods. The interface is

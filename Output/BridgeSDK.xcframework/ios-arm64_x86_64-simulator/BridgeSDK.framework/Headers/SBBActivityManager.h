@@ -29,8 +29,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeAPIManager.h"
-#import "SBBScheduledActivity.h"
+#import <BridgeSDK/SBBBridgeAPIManager.h>
+#import <BridgeSDK/SBBScheduledActivity.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

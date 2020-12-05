@@ -29,7 +29,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeAPIManager.h"
+#import <BridgeSDK/SBBBridgeAPIManager.h>
 
 /*!
  * @typedef SBBUserDataSharingScope

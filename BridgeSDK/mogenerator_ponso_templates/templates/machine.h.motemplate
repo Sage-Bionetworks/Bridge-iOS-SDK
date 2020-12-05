@@ -32,11 +32,11 @@
 
 
 #import <Foundation/Foundation.h>
-<$if hasCustomSuperentity$>#import "<$customSuperentity$>.h"<$endif$>
+<$if hasCustomSuperentity$>#import <$if hasModuleName$><<$moduleName$>/<$customSuperentity$>.h><$else$>"<$customSuperentity$>.h"<$endif$><$endif$>
 <$if hasAdditionalHeaderFile$>
-#import "<$additionalHeaderFileName$>"
+#import <$if hasModuleName$><<$moduleName$>/<$additionalHeaderFileName$>><$else$>"<$additionalHeaderFileName$>"<$endif$>
 <$endif$>
-<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasTransformableAttributeType$><$if Attribute.userInfo.attributeValueClassName$><$if Attribute.userInfo.importHeaderForClass$>#import "<$Attribute.userInfo.attributeValueClassName$>.h"
+<$foreach Attribute noninheritedAttributes do$><$if Attribute.hasTransformableAttributeType$><$if Attribute.userInfo.attributeValueClassName$><$if Attribute.userInfo.importHeaderForClass$>#import <$if hasModuleName$><<$moduleName$>/<$Attribute.userInfo.attributeValueClassName$>.h><$else$>"<$Attribute.userInfo.attributeValueClassName$>.h"<$endif$><BridgeSDK/<$Attribute.userInfo.attributeValueClassName$>.h>
 <$endif$><$endif$><$endif$><$endforeach do$>
 NS_ASSUME_NONNULL_BEGIN
 <$checkNonTransientRelationshipCycles $>

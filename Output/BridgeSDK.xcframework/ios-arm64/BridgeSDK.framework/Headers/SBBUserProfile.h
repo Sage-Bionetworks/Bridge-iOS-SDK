@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBUserProfile.h"
+#import <BridgeSDK/_SBBUserProfile.h>
 
 @interface SBBUserProfile : _SBBUserProfile <_SBBUserProfile>
 // Custom logic goes here.

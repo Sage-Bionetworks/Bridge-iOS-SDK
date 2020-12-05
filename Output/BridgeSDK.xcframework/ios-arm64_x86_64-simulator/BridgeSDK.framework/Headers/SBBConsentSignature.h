@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBConsentSignature.h"
+#import <BridgeSDK/_SBBConsentSignature.h>
 
 @interface SBBConsentSignature : _SBBConsentSignature <_SBBConsentSignature>
 // Custom logic goes here.

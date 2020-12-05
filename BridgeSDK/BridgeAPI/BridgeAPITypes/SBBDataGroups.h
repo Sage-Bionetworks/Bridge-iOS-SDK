@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBDataGroups.h"
+#import <BridgeSDK/_SBBDataGroups.h>
 
 @interface SBBDataGroups : _SBBDataGroups <_SBBDataGroups>
 // Custom logic goes here.

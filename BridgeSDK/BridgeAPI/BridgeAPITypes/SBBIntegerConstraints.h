@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBIntegerConstraints.h"
+#import <BridgeSDK/_SBBIntegerConstraints.h>
 
 @interface SBBIntegerConstraints : _SBBIntegerConstraints <_SBBIntegerConstraints>
 // Custom logic goes here.

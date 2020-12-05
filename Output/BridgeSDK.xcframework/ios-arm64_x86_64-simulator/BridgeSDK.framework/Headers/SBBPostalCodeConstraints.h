@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBPostalCodeConstraints.h"
+#import <BridgeSDK/_SBBPostalCodeConstraints.h>
 
 @interface SBBPostalCodeConstraints : _SBBPostalCodeConstraints <_SBBPostalCodeConstraints>
 // Custom logic goes here.

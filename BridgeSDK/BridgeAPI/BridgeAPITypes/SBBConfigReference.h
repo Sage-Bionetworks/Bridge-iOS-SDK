@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBConfigReference.h"
+#import <BridgeSDK/_SBBConfigReference.h>
 
 @interface SBBConfigReference : _SBBConfigReference <_SBBConfigReference>
 // Custom logic goes here.

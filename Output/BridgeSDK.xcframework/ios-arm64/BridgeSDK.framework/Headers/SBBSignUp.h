@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBSignUp.h"
+#import <BridgeSDK/_SBBSignUp.h>
 
 @interface SBBSignUp : _SBBSignUp <_SBBSignUp>
 // Custom logic goes here.
