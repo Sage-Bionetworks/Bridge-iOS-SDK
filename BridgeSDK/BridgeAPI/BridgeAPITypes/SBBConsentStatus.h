@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBConsentStatus.h"
+#import <BridgeSDK/_SBBConsentStatus.h>
 
 @interface SBBConsentStatus : _SBBConsentStatus <_SBBConsentStatus>
 // Custom logic goes here.

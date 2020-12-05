@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBActivityEvent.h"
+#import <BridgeSDK/_SBBActivityEvent.h>
 
 @interface SBBActivityEvent : _SBBActivityEvent <_SBBActivityEvent>
 // Custom logic goes here.

@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBIdentifierHolder.h"
+#import <BridgeSDK/_SBBIdentifierHolder.h>
 
 @interface SBBIdentifierHolder : _SBBIdentifierHolder <_SBBIdentifierHolder>
 // Custom logic goes here.

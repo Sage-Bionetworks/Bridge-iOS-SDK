@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBSurvey.h"
+#import <BridgeSDK/_SBBSurvey.h>
 
 @interface SBBSurvey : _SBBSurvey <_SBBSurvey>
 // Custom logic goes here.

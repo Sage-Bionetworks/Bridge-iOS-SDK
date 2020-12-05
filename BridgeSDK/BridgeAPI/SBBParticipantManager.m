@@ -215,7 +215,7 @@ NSString * const kSBBParticipantDataSharingScopeStrings[] = {
 {
     // If it's null, we want to send json null to the endpoint, to clear the value there. The participants
     // endpoint accepts partial JSON and ignores missing values.
-    id (^jsonValue)() = ^id(){
+    id (^jsonValue)(void) = ^id(){
         return (value == nil) ? [NSNull null] : [self.objectManager bridgeJSONFromObject:value];
     };
     

@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBDecimalConstraints.h"
+#import <BridgeSDK/_SBBDecimalConstraints.h>
 
 @interface SBBDecimalConstraints : _SBBDecimalConstraints <_SBBDecimalConstraints>
 // Custom logic goes here.

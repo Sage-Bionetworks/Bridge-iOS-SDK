@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBForwardCursorPagedResourceList.h"
+#import <BridgeSDK/_SBBForwardCursorPagedResourceList.h>
 
 @interface SBBForwardCursorPagedResourceList : _SBBForwardCursorPagedResourceList <_SBBForwardCursorPagedResourceList>
 // Custom logic goes here.

@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBBloodPressureConstraints.h"
+#import <BridgeSDK/_SBBBloodPressureConstraints.h>
 
 @interface SBBBloodPressureConstraints : _SBBBloodPressureConstraints <_SBBBloodPressureConstraints>
 // Custom logic goes here.

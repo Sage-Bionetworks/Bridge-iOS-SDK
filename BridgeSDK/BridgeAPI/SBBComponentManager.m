@@ -81,7 +81,7 @@ dispatch_queue_t CMQueue() {
   return q;
 }
 
-void dispatchSyncToCMQueue(void(^dispatchBlock)()) {
+void dispatchSyncToCMQueue(void(^dispatchBlock)(void)) {
   dispatch_sync(CMQueue(), dispatchBlock);
 }
 

@@ -164,7 +164,7 @@ SBBAppConfig *gSBBAppConfig = nil;
     return bridgeUserDefaults;
 }
 
-+ (BOOL)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
++ (BOOL)restoreBackgroundSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
     BOOL restored = NO;
     if ([identifier hasPrefix:kBackgroundSessionIdentifier]) {

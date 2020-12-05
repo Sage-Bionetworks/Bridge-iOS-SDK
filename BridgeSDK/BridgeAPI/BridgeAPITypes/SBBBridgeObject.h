@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBBridgeObject.h"
+#import <BridgeSDK/_SBBBridgeObject.h>
 
 @interface SBBBridgeObject : _SBBBridgeObject <_SBBBridgeObject>
 // Custom logic goes here.

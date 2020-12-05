@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBUserSessionInfo.h"
+#import <BridgeSDK/_SBBUserSessionInfo.h>
 
 @interface SBBUserSessionInfo : _SBBUserSessionInfo <_SBBUserSessionInfo>
 // Custom logic goes here.

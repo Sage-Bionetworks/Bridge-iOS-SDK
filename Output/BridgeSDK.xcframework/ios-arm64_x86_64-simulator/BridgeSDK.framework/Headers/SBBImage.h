@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBImage.h"
+#import <BridgeSDK/_SBBImage.h>
 
 @interface SBBImage : _SBBImage <_SBBImage>
 // Custom logic goes here.

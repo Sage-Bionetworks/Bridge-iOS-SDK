@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBAbstractStudyParticipant.h"
+#import <BridgeSDK/_SBBAbstractStudyParticipant.h>
 
 @interface SBBAbstractStudyParticipant : _SBBAbstractStudyParticipant <_SBBAbstractStudyParticipant>
 // Custom logic goes here.

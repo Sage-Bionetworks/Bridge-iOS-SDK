@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBDurationConstraints.h"
+#import <BridgeSDK/_SBBDurationConstraints.h>
 
 @interface SBBDurationConstraints : _SBBDurationConstraints <_SBBDurationConstraints>
 // Custom logic goes here.

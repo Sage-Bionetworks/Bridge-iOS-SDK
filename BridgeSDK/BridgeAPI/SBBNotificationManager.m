@@ -119,7 +119,7 @@ static NSString *kSBBSubscriptionRequest = @"SubscriptionRequest";
             [self.objectManager objectFromBridgeJSON:responseObject];
             
             // update the local guid too
-            _registrationGuid = ((NSDictionary *)responseObject)[NSStringFromSelector(@selector(guid))];
+            self->_registrationGuid = ((NSDictionary *)responseObject)[NSStringFromSelector(@selector(guid))];
         }
         
         if (completion) {

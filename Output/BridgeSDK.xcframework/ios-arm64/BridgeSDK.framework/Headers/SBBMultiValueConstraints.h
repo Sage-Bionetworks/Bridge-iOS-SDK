@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBMultiValueConstraints.h"
+#import <BridgeSDK/_SBBMultiValueConstraints.h>
 
 @interface SBBMultiValueConstraints : _SBBMultiValueConstraints <_SBBMultiValueConstraints>
 // Custom logic goes here.

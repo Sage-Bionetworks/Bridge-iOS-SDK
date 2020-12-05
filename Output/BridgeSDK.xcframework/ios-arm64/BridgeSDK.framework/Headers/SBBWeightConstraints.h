@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBWeightConstraints.h"
+#import <BridgeSDK/_SBBWeightConstraints.h>
 
 @interface SBBWeightConstraints : _SBBWeightConstraints <_SBBWeightConstraints>
 

@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ModelObject.h"
+#import <BridgeSDK/ModelObject.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

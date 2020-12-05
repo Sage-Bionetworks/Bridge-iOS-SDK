@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBYearMonthConstraints.h"
+#import <BridgeSDK/_SBBYearMonthConstraints.h>
 
 @interface SBBYearMonthConstraints : _SBBYearMonthConstraints <_SBBYearMonthConstraints>
 // Custom logic goes here.

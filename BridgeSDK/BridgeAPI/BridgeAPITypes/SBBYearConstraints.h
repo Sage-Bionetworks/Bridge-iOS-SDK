@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBYearConstraints.h"
+#import <BridgeSDK/_SBBYearConstraints.h>
 
 @interface SBBYearConstraints : _SBBYearConstraints <_SBBYearConstraints>
 // Custom logic goes here.

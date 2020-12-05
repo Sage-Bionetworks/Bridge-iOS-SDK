@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBActivity.h"
+#import <BridgeSDK/_SBBActivity.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

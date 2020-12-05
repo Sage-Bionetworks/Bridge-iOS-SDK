@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBReportData.h"
+#import <BridgeSDK/_SBBReportData.h>
 
 @interface SBBReportData : _SBBReportData <_SBBReportData>
 // Custom logic goes here.

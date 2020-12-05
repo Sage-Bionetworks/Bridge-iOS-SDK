@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBSurveyReference.h"
+#import <BridgeSDK/_SBBSurveyReference.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

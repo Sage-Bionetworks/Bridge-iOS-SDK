@@ -27,7 +27,7 @@
 //	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import "_SBBSubscriptionStatus.h"
+#import <BridgeSDK/_SBBSubscriptionStatus.h>
 
 @interface SBBSubscriptionStatus : _SBBSubscriptionStatus <_SBBSubscriptionStatus>
 // Custom logic goes here.
