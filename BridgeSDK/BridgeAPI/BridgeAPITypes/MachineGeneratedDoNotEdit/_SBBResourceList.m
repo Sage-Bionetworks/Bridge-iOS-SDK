@@ -35,7 +35,7 @@
 #import "ModelObjectInternal.h"
 #import "NSDate+SBBAdditions.h"
 
-#import <BridgeSDK/SBBBridgeObject.h>
+#import "SBBBridgeObject.h"
 #import "SBBRequestParams.h"
 
 @interface _SBBResourceList()
