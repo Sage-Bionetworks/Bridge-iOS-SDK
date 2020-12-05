@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeAPIManager.h"
+#import <BridgeSDK/SBBBridgeAPIManager.h>
 
 /*!
  Completion block called when retrieving user schedules from the API.

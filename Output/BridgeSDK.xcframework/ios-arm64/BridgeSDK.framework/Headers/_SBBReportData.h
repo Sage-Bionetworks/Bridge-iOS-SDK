@@ -31,9 +31,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBBridgeObject.h"
+#import <BridgeSDK/SBBBridgeObject.h>
 
-#import "SBBJSONValue.h"
+#import <BridgeSDK/SBBJSONValue.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

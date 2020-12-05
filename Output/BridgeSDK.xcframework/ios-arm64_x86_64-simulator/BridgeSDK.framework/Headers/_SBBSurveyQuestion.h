@@ -31,7 +31,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBSurveyElement.h"
+#import <BridgeSDK/SBBSurveyElement.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

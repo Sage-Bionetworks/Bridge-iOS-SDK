@@ -29,10 +29,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBBComponent.h"
-#import "SBBNetworkManager.h"
-#import "SBBStudyParticipant.h"
-#import "SBBSignUp.h"
+#import <BridgeSDK/SBBComponent.h>
+#import <BridgeSDK/SBBNetworkManager.h>
+#import <BridgeSDK/SBBStudyParticipant.h>
+#import <BridgeSDK/SBBSignUp.h>
 
 extern NSString * const _Nonnull kSBBUserSessionUpdatedNotification;
 extern NSString * const _Nonnull kSBBUserSessionInfoKey;
