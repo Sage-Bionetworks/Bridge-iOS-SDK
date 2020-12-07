@@ -520,7 +520,7 @@
 		FF0493AD235A5ADC006F0703 /* _SBBYearConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0493AB235A5ADC006F0703 /* _SBBYearConstraints.m */; };
 		FF0493B0235A5B09006F0703 /* SBBYearConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0493AE235A5B09006F0703 /* SBBYearConstraints.m */; };
 		FF0493B1235A5B09006F0703 /* SBBYearConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FF0493AF235A5B09006F0703 /* SBBYearConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FF378FBE257ED48E00F364BC /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF378FBD257ED48E00F364BC /* openssl.xcframework */; };
+		FF1EC203257EEFE000C32167 /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = FF1EC202257EEFE000C32167 /* openssl */; };
 		FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */; };
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
@@ -1208,8 +1208,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FF378FBE257ED48E00F364BC /* openssl.xcframework in Frameworks */,
 				FF76F329255F3C74008B9CF3 /* CoreServices.framework in Frameworks */,
+				FF1EC203257EEFE000C32167 /* openssl in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2257,6 +2257,7 @@
 			);
 			name = BridgeSDK;
 			packageProductDependencies = (
+				FF1EC202257EEFE000C32167 /* openssl */,
 			);
 			productName = BridgeSDK;
 			productReference = 80855F5019BE258C006601C7 /* BridgeSDK.framework */;
@@ -3571,6 +3572,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		FF1EC202257EEFE000C32167 /* openssl */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */;
+			productName = openssl;
+		};
 		FF312940257AD6DD00870CFB /* openssl */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */;
