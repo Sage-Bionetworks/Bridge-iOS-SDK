@@ -61,7 +61,6 @@
 			);
 			name = BridgeObjects;
 			packageProductDependencies = (
-				FF312940257AD6DD00870CFB /* openssl */,
 			);
 			productName = BridgeObjects;
 		};
@@ -520,7 +519,8 @@
 		FF0493AD235A5ADC006F0703 /* _SBBYearConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0493AB235A5ADC006F0703 /* _SBBYearConstraints.m */; };
 		FF0493B0235A5B09006F0703 /* SBBYearConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FF0493AE235A5B09006F0703 /* SBBYearConstraints.m */; };
 		FF0493B1235A5B09006F0703 /* SBBYearConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FF0493AF235A5B09006F0703 /* SBBYearConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FF1EC203257EEFE000C32167 /* openssl in Frameworks */ = {isa = PBXBuildFile; productRef = FF1EC202257EEFE000C32167 /* openssl */; };
+		FF1EC248257F044F00C32167 /* openssl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF1EC247257F044F00C32167 /* openssl.xcframework */; };
+		FF1EC249257F044F00C32167 /* openssl.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FF1EC247257F044F00C32167 /* openssl.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FF757D5A1C0429DA0075AEF6 /* NSBundle+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FF757D5B1C0429DA0075AEF6 /* NSBundle+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D591C0429DA0075AEF6 /* NSBundle+SBBAdditions.m */; };
 		FF757D5E1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FF757D5D1C042BE00075AEF6 /* NSBundleSBBAdditionsTests.m */; };
@@ -659,6 +659,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				80DB6BA51BACB27C0062D1EF /* BridgeSDK.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF1EC24A257F044F00C32167 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FF1EC249257F044F00C32167 /* openssl.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1167,6 +1178,7 @@
 		FF0493AF235A5B09006F0703 /* SBBYearConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBYearConstraints.h; sourceTree = "<group>"; };
 		FF0493C4235E2354006F0703 /* SBBDataModeV20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModeV20.xcdatamodel; sourceTree = "<group>"; };
 		FF1A144023610237004F2060 /* SBBDataModelV21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV21.xcdatamodel; sourceTree = "<group>"; };
+		FF1EC247257F044F00C32167 /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = Submodules/CMSSupport/openssl/build/openssl.xcframework; sourceTree = "<group>"; };
 		FF378FBD257ED48E00F364BC /* openssl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = openssl.xcframework; path = "/Users/syoung/Library/Developer/Xcode/DerivedData/BridgeSDK-eozktdappmmtqjemyfxmakqmffff/SourcePackages/checkouts/CMSSupport/openssl/build/openssl.xcframework"; sourceTree = "<absolute>"; };
 		FF65D4D52398381E00747BED /* SBBDataModelV22.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SBBDataModelV22.xcdatamodel; sourceTree = "<group>"; };
 		FF757D581C0429DA0075AEF6 /* NSBundle+SBBAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+SBBAdditions.h"; sourceTree = "<group>"; };
@@ -1208,8 +1220,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF1EC248257F044F00C32167 /* openssl.xcframework in Frameworks */,
 				FF76F329255F3C74008B9CF3 /* CoreServices.framework in Frameworks */,
-				FF1EC203257EEFE000C32167 /* openssl in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1438,6 +1450,7 @@
 		8063FF901E4A9FB1001B0C3D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FF1EC247257F044F00C32167 /* openssl.xcframework */,
 				FF76F32A2563138A008B9CF3 /* OpenSSL.xcframework */,
 				FF378FBD257ED48E00F364BC /* openssl.xcframework */,
 				FFB9AF3D2579876000744DE0 /* openssl.xcframework */,
@@ -2250,6 +2263,7 @@
 				80855F4C19BE258C006601C7 /* Frameworks */,
 				80855F4D19BE258C006601C7 /* Headers */,
 				80855F4E19BE258C006601C7 /* Resources */,
+				FF1EC24A257F044F00C32167 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2257,7 +2271,6 @@
 			);
 			name = BridgeSDK;
 			packageProductDependencies = (
-				FF1EC202257EEFE000C32167 /* openssl */,
 			);
 			productName = BridgeSDK;
 			productReference = 80855F5019BE258C006601C7 /* BridgeSDK.framework */;
@@ -2359,7 +2372,6 @@
 			);
 			mainGroup = 80855F4619BE258B006601C7;
 			packageReferences = (
-				FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */,
 			);
 			productRefGroup = 80855F5119BE258C006601C7 /* Products */;
 			projectDirPath = "";
@@ -3559,30 +3571,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Sage-Bionetworks/CMSSupport.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		FF1EC202257EEFE000C32167 /* openssl */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */;
-			productName = openssl;
-		};
-		FF312940257AD6DD00870CFB /* openssl */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = FF31293F257AD6DD00870CFB /* XCRemoteSwiftPackageReference "CMSSupport" */;
-			productName = openssl;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		60FF571E1A0AF87C00CE2373 /* TestModel.xcdatamodeld */ = {
