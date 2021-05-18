@@ -2,7 +2,7 @@
 //  BridgeSDK.h
 //  BridgeSDK
 //
-//	Copyright (c) 2014-2019, Sage Bionetworks
+//	Copyright (c) 2014-2021, Sage Bionetworks
 //	All rights reserved.
 //
 //	Redistribution and use in source and binary forms, with or without
@@ -70,6 +70,7 @@ extern const unsigned char BridgeSDKVersionString[];
 #import <BridgeSDK/NSData+SBBAdditions.h>
 #import <BridgeSDK/NSDate+SBBAdditions.h>
 #import <BridgeSDK/NSBundle+SBBAdditions.h>
+#import <BridgeSDK/NSString+SBBAdditions.h>
 #import <BridgeSDK/UIDevice+Hardware.h>
 
     
