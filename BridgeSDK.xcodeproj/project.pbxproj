@@ -80,7 +80,7 @@
 /* Begin PBXBuildFile section */
 		600F888A1D42DDC700DAD563 /* SBBUploadManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 600F88891D42DDC700DAD563 /* SBBUploadManagerUnitTests.m */; };
 		601E8A101B191DAE00BB02FB /* MockURLSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 601E8A0F1B191DAE00BB02FB /* MockURLSession.m */; };
-		601F7D1C1D67C03400C5FE09 /* NSString+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 601F7D1A1D67C03400C5FE09 /* NSString+SBBAdditions.h */; };
+		601F7D1C1D67C03400C5FE09 /* NSString+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 601F7D1A1D67C03400C5FE09 /* NSString+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		601F7D1D1D67C03400C5FE09 /* NSString+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 601F7D1B1D67C03400C5FE09 /* NSString+SBBAdditions.m */; };
 		602EEE5D1A520EBA00C776FC /* SBBDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 80F7C33919E5DC0D00574800 /* SBBDataModel.xcdatamodeld */; };
 		602EEE631A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 602EEE621A5B0E9E00C776FC /* SBBCacheManagerUnitTests.m */; };
@@ -231,7 +231,7 @@
 		80104A6619D4CFE5001F2573 /* SBBObjectManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 80104A6419D4CFE5001F2573 /* SBBObjectManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		80104A6719D4CFE6001F2573 /* SBBObjectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 80104A6519D4CFE5001F2573 /* SBBObjectManager.m */; };
 		8017AF6819D9D909001AF9BA /* SBBObjectManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6719D9D909001AF9BA /* SBBObjectManagerUnitTests.m */; };
-		8017AF7019DA0359001AF9BA /* NSError+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF6C19DA0359001AF9BA /* NSError+SBBAdditions.h */; };
+		8017AF7019DA0359001AF9BA /* NSError+SBBAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF6C19DA0359001AF9BA /* NSError+SBBAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8017AF7119DA0359001AF9BA /* NSError+SBBAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6D19DA0359001AF9BA /* NSError+SBBAdditions.m */; };
 		8017AF7219DA0359001AF9BA /* UIDevice+Hardware.h in Headers */ = {isa = PBXBuildFile; fileRef = 8017AF6E19DA0359001AF9BA /* UIDevice+Hardware.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8017AF7319DA0359001AF9BA /* UIDevice+Hardware.m in Sources */ = {isa = PBXBuildFile; fileRef = 8017AF6F19DA0359001AF9BA /* UIDevice+Hardware.m */; };
