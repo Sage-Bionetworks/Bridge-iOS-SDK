@@ -504,7 +504,6 @@
 		D4FA37FD1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D4FA37FC1A2B004B00E7CF1E /* SBBConsentManagerUnitTests.m */; };
 		D4FA38031A2B144000E7CF1E /* sample-signature.png in Resources */ = {isa = PBXBuildFile; fileRef = D4FA38021A2B144000E7CF1E /* sample-signature.png */; };
 		F81BE77C20B4951F00EE57D3 /* BridgeSDK_Test.h in Headers */ = {isa = PBXBuildFile; fileRef = F81BE77A20B4951F00EE57D3 /* BridgeSDK_Test.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F81BE78F20B4962500EE57D3 /* BridgeSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80855F5019BE258C006601C7 /* BridgeSDK.framework */; };
 		F81BE79220B497E700EE57D3 /* SBBBridgeTestHarness.h in Headers */ = {isa = PBXBuildFile; fileRef = F81BE79020B497E700EE57D3 /* SBBBridgeTestHarness.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F81BE79320B497E700EE57D3 /* SBBBridgeTestHarness.m in Sources */ = {isa = PBXBuildFile; fileRef = F81BE79120B497E700EE57D3 /* SBBBridgeTestHarness.m */; };
 		F81BE79420B49A7100EE57D3 /* MockURLSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 601E8A0F1B191DAE00BB02FB /* MockURLSession.m */; };
@@ -533,6 +532,7 @@
 		FFF20D30232AC01B00F501C3 /* SBBYearMonthConstraints.m in Sources */ = {isa = PBXBuildFile; fileRef = FFF20D2C232AC01B00F501C3 /* SBBYearMonthConstraints.m */; };
 		FFF20D31232AC01B00F501C3 /* SBBYearMonthConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FFF20D2D232AC01B00F501C3 /* SBBYearMonthConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FFF20D32232AC01B00F501C3 /* SBBPostalCodeConstraints.h in Headers */ = {isa = PBXBuildFile; fileRef = FFF20D2E232AC01B00F501C3 /* SBBPostalCodeConstraints.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FFFBD8F427330E140049DBC2 /* BridgeSDK.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = FFFBD8F327330E140049DBC2 /* BridgeSDK.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1180,6 +1180,7 @@
 		FFF20D2C232AC01B00F501C3 /* SBBYearMonthConstraints.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBBYearMonthConstraints.m; sourceTree = "<group>"; };
 		FFF20D2D232AC01B00F501C3 /* SBBYearMonthConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBYearMonthConstraints.h; sourceTree = "<group>"; };
 		FFF20D2E232AC01B00F501C3 /* SBBPostalCodeConstraints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBBPostalCodeConstraints.h; sourceTree = "<group>"; };
+		FFFBD8F327330E140049DBC2 /* BridgeSDK.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = BridgeSDK.xcframework; path = Output/BridgeSDK.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1215,11 +1216,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F81BE77420B4951F00EE57D3 /* Frameworks */ = {
+		FFFBD8F227330DF80049DBC2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F81BE78F20B4962500EE57D3 /* BridgeSDK.framework in Frameworks */,
+				FFFBD8F427330E140049DBC2 /* BridgeSDK.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1433,6 +1434,7 @@
 		8063FF901E4A9FB1001B0C3D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FFFBD8F327330E140049DBC2 /* BridgeSDK.xcframework */,
 				FF1EC247257F044F00C32167 /* openssl.xcframework */,
 				FF76F328255F3C74008B9CF3 /* CoreServices.framework */,
 			);
@@ -2277,9 +2279,9 @@
 			buildConfigurationList = F81BE78E20B4951F00EE57D3 /* Build configuration list for PBXNativeTarget "BridgeSDK-Test" */;
 			buildPhases = (
 				F81BE77320B4951F00EE57D3 /* Sources */,
-				F81BE77420B4951F00EE57D3 /* Frameworks */,
 				F81BE77520B4951F00EE57D3 /* Headers */,
 				F81BE77620B4951F00EE57D3 /* Resources */,
+				FFFBD8F227330DF80049DBC2 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -2603,7 +2605,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nSCHEME_NAME=\"BridgeSDK\"\nFRAMEWORK_NAME=\"BridgeSDK\"\n\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIR=\"./Output/\"\n\n# Build archives\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n  \nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIR}\"\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIR}/${FRAMEWORK_NAME}.xcframework\n\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nSCHEME_NAME=\"BridgeSDK\"\nFRAMEWORK_NAME=\"BridgeSDK\"\nSCHEME_TEST_NAME=\"BridgeSDK-Test\"\nFRAMEWORK_TEST_NAME=\"BridgeSDK_Test\"\n\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nSIMULATOR_TEST_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_TEST_NAME}-iphonesimulator.xcarchive\"\nDEVICE_TEST_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_TEST_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIR=\"./Output/\"\n\n# Build archives\nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n  \nxcodebuild archive \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n  \nxcodebuild archive \\\n  -scheme ${SCHEME_TEST_NAME} \\\n  -archivePath ${SIMULATOR_TEST_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n  \nxcodebuild archive \\\n  -scheme ${SCHEME_TEST_NAME} \\\n  -archivePath ${DEVICE_TEST_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIR}\"\n\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIR}/${FRAMEWORK_NAME}.xcframework\n  \nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_TEST_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_TEST_NAME}.framework \\\n  -framework ${DEVICE_TEST_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_TEST_NAME}.framework \\\n  -output ${OUTPUT_DIR}/${FRAMEWORK_TEST_NAME}.xcframework\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

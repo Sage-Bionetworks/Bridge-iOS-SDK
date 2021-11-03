@@ -6,7 +6,7 @@
 	<dict>
 		<key>Headers/BridgeSDK.h</key>
 		<data>
-		FknCii8S81NOL3hYIabn+V/MzKQ=
+		OrVHXj0DyCviMdf/56eIYrxenzw=
 		</data>
 		<key>Headers/ModelObject.h</key>
 		<data>
@@ -23,6 +23,14 @@
 		<key>Headers/NSDate+SBBAdditions.h</key>
 		<data>
 		ALBjizst3gRO5JG/YWoUUzzLT2g=
+		</data>
+		<key>Headers/NSError+SBBAdditions.h</key>
+		<data>
+		CokcHuzS2OseRsc7PzzDuZWcYl0=
+		</data>
+		<key>Headers/NSString+SBBAdditions.h</key>
+		<data>
+		8vQEL0CSPOrwcIIkiVSqwoGHTdg=
 		</data>
 		<key>Headers/SBBAbstractStudyParticipant.h</key>
 		<data>
@@ -82,7 +90,7 @@
 		</data>
 		<key>Headers/SBBBridgeNetworkManager.h</key>
 		<data>
-		mAaJV2MNALBg7QdO51aWP4XauP0=
+		8FVlW7GxdgH4rRJKgNLyMd//f5A=
 		</data>
 		<key>Headers/SBBBridgeObject.h</key>
 		<data>
@@ -590,7 +598,7 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		gDUaD7ydsfFmW4dR7sfGVFjhBJ8=
+		CUUfwWgxvELi5Bjn42fH/PIIbWg=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -606,7 +614,7 @@
 		</data>
 		<key>SBBDataModel.momd/SBBDataModel.omo</key>
 		<data>
-		B0cXyXiHkmkc0RF+P2WzlymmeQ8=
+		2aCN8qDNXZYtnCzC876BbKxE0dA=
 		</data>
 		<key>SBBDataModel.momd/SBBDataModelV1.mom</key>
 		<data>
@@ -711,7 +719,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			qGCEwqB+hbnlDscfeT1W0lSPgSg8VVBmAUshPX2JLDQ=
+			atKvnq1imSEsfD5xqkrOBS5rm9mkbljf23eNhBRei80=
 			</data>
 		</dict>
 		<key>Headers/ModelObject.h</key>
@@ -740,6 +748,20 @@
 			<key>hash2</key>
 			<data>
 			x6e78dazvWOrDx7G1GgJZChVSe/nqjFw49inL3aIsHM=
+			</data>
+		</dict>
+		<key>Headers/NSError+SBBAdditions.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			fBC6sCejXzsYhdZor2bVwIP//sGuREWnHVjCVbh8kKQ=
+			</data>
+		</dict>
+		<key>Headers/NSString+SBBAdditions.h</key>
+		<dict>
+			<key>hash2</key>
+			<data>
+			ScxUeNjNkzBrsiZ6AZqegDgGloZwexC/qoD1O3Dj+j0=
 			</data>
 		</dict>
 		<key>Headers/SBBAbstractStudyParticipant.h</key>
@@ -844,7 +866,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			B1vXfAr4XrES6Dqo7BwCJ5yHxTnWP4SzMBDaEU0CmCo=
+			2oVYDoSSOhJ9Eq7V1VGhgxuiRwHaJeZj6D86rAwAEnQ=
 			</data>
 		</dict>
 		<key>Headers/SBBBridgeObject.h</key>
@@ -1754,7 +1776,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			YCT+BKEcUlQQHfwTEPOwWorTufRGp1NQr28uTyzVCZ4=
+			traaxEvrRPvCPAqwwHpVNKiSxe2arhTSpLqP7FZCCOI=
 			</data>
 		</dict>
 		<key>SBBDataModel.momd/SBBDataModelV1.mom</key>

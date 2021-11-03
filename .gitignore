@@ -30,6 +30,7 @@ Documentation/
 /libOpenSSL.a
 /OpenSSL.a
 !/Output/BridgeSDK.xcframework
+!/Output/BridgeSDK_Test.xcframework
 
 # fastlane specific
 fastlane/report.xml
