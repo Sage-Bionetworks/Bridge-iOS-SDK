@@ -41,7 +41,7 @@
 
 @interface SBBBridgeNetworkManager : SBBNetworkManager<SBBBridgeNetworkManagerProtocol>
 
-@property (readonly, getter=isUnsupportedAppVersion) BOOL unsupportedAppVersion;
+@property (getter=isUnsupportedAppVersion) BOOL unsupportedAppVersion;
 
 - (instancetype)initWithAuthManager:(id<SBBAuthManagerProtocol>)authManager ;
 
