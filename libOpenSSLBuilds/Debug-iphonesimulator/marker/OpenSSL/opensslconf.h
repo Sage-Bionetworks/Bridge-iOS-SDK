@@ -107,8 +107,8 @@ extern "C" {
 
 #if !(defined(VMS) || defined(__VMS)) /* VMS uses logical names instead */
 #if defined(HEADER_CRYPTLIB_H) && !defined(OPENSSLDIR)
-#define ENGINESDIR "/Users/erin/Library/Developer/Xcode/DerivedData/BridgeSDK-cgqqoulqrtujdudklchtawabqscy/Build/Intermediates/openssl.build/Debug-iphonesimulator/libssl.build/DerivedSources/bin/iPhoneOS10.2-arm64.sdk/lib/engines"
-#define OPENSSLDIR "/Users/erin/Library/Developer/Xcode/DerivedData/BridgeSDK-cgqqoulqrtujdudklchtawabqscy/Build/Intermediates/openssl.build/Debug-iphonesimulator/libssl.build/DerivedSources/bin/iPhoneOS10.2-arm64.sdk"
+#define ENGINESDIR "/Users/erin/Library/Developer/Xcode/DerivedData/fphs-aszowocogfxdqvhfdlslcabqtdyx/Build/Intermediates.noindex/openssl.build/Debug-iphonesimulator/libssl.build/DerivedSources/bin/iPhoneOS16.2-arm64.sdk/lib/engines"
+#define OPENSSLDIR "/Users/erin/Library/Developer/Xcode/DerivedData/fphs-aszowocogfxdqvhfdlslcabqtdyx/Build/Intermediates.noindex/openssl.build/Debug-iphonesimulator/libssl.build/DerivedSources/bin/iPhoneOS16.2-arm64.sdk"
 #endif
 #endif
 

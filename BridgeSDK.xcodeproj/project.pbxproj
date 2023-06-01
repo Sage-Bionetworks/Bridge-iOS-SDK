@@ -512,6 +512,13 @@
 			remoteGlobalIDString = 80B2C4A01E3AAC25001F9FEA;
 			remoteInfo = "OpenSSL (iOS Static Library)";
 		};
+		80650F0D29D5E7B4008C9610 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 606FDDE71A1D6F5200898466 /* RNCryptor.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 659134E91B14262B00B82A96;
+			remoteInfo = "RNCryptor iOS";
+		};
 		807AE2A01B60330C002588BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 80855F4719BE258B006601C7 /* Project object */;
@@ -1068,6 +1075,7 @@
 				606FDDF11A1D6F5200898466 /* RNCryptor.framework */,
 				606FDDF31A1D6F5200898466 /* RNCryptorTests.xctest */,
 				606FDDF51A1D6F5200898466 /* rncrypt */,
+				80650F0E29D5E7B4008C9610 /* RNCryptor.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2005,6 +2013,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -2070,6 +2079,13 @@
 			fileType = "compiled.mach-o.executable";
 			path = rncrypt;
 			remoteRef = 606FDDF41A1D6F5200898466 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		80650F0E29D5E7B4008C9610 /* RNCryptor.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = RNCryptor.framework;
+			remoteRef = 80650F0D29D5E7B4008C9610 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		80B2C4521E3A9FED001F9FEA /* ZipZap.framework */ = {
@@ -2229,7 +2245,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "OUT_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Built products will be copied to: ${OUT_DIR}\"\nmkdir -p \"${OUT_DIR}\"\n\nrm -f \"${OUT_DIR}/libOpenSSL.a\"\nrm -rf \"${OUT_DIR}/OpenSSL\"\ncp \"${BUILT_PRODUCTS_DIR}/libOpenSSL.a\" \"${OUT_DIR}/libOpenSSL.a\"\ncp -R \"${BUILT_PRODUCTS_DIR}/include/OpenSSL\" \"${OUT_DIR}/OpenSSL\"";
+			shellScript = "OUT_DIR=\"./libOpenSSLBuilds/${CONFIGURATION}${EFFECTIVE_PLATFORM_NAME}/${BITCODE_GENERATION_MODE}\"\necho \"Built products will be copied to: ${OUT_DIR}\"\nmkdir -p \"${OUT_DIR}\"\n\nrm -f \"${OUT_DIR}/libOpenSSL.a\"\nrm -rf \"${OUT_DIR}/OpenSSL\"\ncp \"${BUILT_PRODUCTS_DIR}/libOpenSSL.a\" \"${OUT_DIR}/libOpenSSL.a\"\ncp -R \"${BUILT_PRODUCTS_DIR}/include/OpenSSL\" \"${OUT_DIR}/OpenSSL\"\n";
 		};
 		809266AA1E4B9D3F000BBEDA /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2702,7 +2718,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
@@ -2741,7 +2757,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2771,6 +2787,7 @@
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
 				INFOPLIST_FILE = BridgeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2803,6 +2820,7 @@
 				HEADER_SEARCH_PATHS = "$(SRCROOT)";
 				INFOPLIST_FILE = BridgeSDK/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
